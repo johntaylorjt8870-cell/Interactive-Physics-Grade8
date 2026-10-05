@@ -1,0 +1,181 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { LESSON_PAGES, PYTHAGORAS_LINES, pageTextBlocks } from '../src/lesson-content.js';
+import { DIAGRAMS } from '../src/diagrams.js';
+import {
+  V_F1, V_F2, V_F3, V_F, V_W, V_R, V_OM, V_OX, V_OY,
+} from '../src/math.js';
+
+const page = (number) => LESSON_PAGES.find((item) => item.page === number);
+const vectorBetween = (start, end) => ({ x: end.x - start.x, y: end.y - start.y });
+const vectorLength = (vector) => Math.hypot(vector.x, vector.y);
+const dot = (first, second) => first.x * second.x + first.y * second.y;
+const nearly = (actual, expected, tolerance = 0.02) => {
+  assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} differs from ${expected}`);
+};
+
+function listItemCount(markup, className) {
+  const match = markup.match(new RegExp(`<ol class="source-list ${className}">([\\s\\S]*?)<\\/ol>`));
+  assert.ok(match, `Expected ordered list ${className}`);
+  return (match[1].match(/<li\b/g) ?? []).length;
+}
+
+test('lesson navigation follows textbook pages 55 through 62 in order', () => {
+  assert.deepEqual(LESSON_PAGES.map((item) => item.page), [55, 56, 57, 58, 59, 60, 61, 62]);
+  assert.ok(LESSON_PAGES.every((item) => item.blocks.some((block) => block.type === 'book')));
+});
+
+test('page 55 preserves objectives and leaves the unavailable photograph as a source slot', () => {
+  const content = pageTextBlocks(page(55));
+  for (const phrase of [
+    'يتعرّف القوى المتلاقية.',
+    'يوضّح بالرسم القوى المتلاقية.',
+    'يحدّد عناصر محصلة قوتين متلاقيتين.',
+    'يحلّل القوة إلى مركبتين متعامدتين.',
+    'القوى المتلاقية – تحليل القوة.',
+    'أين تلتقي حبال المظلّة؟',
+  ]) assert.ok(content.includes(phrase), `Missing source phrase: ${phrase}`);
+  const slot = page(55).blocks.find((block) => block.type === 'platform');
+  assert.equal(slot.kind, 'source-slot');
+  assert.match(slot.html, /موضع الصورة الأصلية/);
+  assert.doesNotMatch(slot.html, /<img\b/);
+});
+
+test('page 56 has seven experiment steps and marks unresolved apparatus wording', () => {
+  const content = pageTextBlocks(page(56));
+  assert.equal(listItemCount(content, 'experiment-list'), 7);
+  assert.ok(content.includes('خطوات التجربة:'));
+  assert.ok(content.includes('جسم مزود بخطاف - خيوط ربط.'));
+  assert.ok(content.includes('بداية سطر الأدوات/اسم اللوح غير محسوم'));
+});
+
+test('page 56 concurrent arrows begin at O, point in the source directions, and meet on their carriers', () => {
+  const { geometry, svg } = DIAGRAMS.concurrent;
+  const { origin, forceTips, carriers } = geometry;
+  assert.ok(forceTips.F1.x > origin.x && forceTips.F1.y < origin.y);
+  assert.ok(forceTips.F2.x < origin.x && forceTips.F2.y < origin.y);
+  assert.ok(forceTips.w.x === origin.x && forceTips.w.y > origin.y);
+  for (const tip of Object.values(forceTips)) {
+    assert.ok(svg.includes(`x1="${origin.x}" y1="${origin.y}" x2="${tip.x}" y2="${tip.y}"`));
+  }
+  for (const carrier of carriers) {
+    const direction = vectorBetween(carrier.start, carrier.end);
+    const toOrigin = vectorBetween(carrier.start, origin);
+    nearly(direction.x * toOrigin.y - direction.y * toOrigin.x, 0, 1);
+  }
+});
+
+test('page 57 parallelogram uses common-origin forces and the O-to-M diagonal', () => {
+  const { geometry, svg } = DIAGRAMS.parallelogram;
+  const expectedResult = {
+    x: geometry.firstTip.x + geometry.secondTip.x - geometry.origin.x,
+    y: geometry.firstTip.y + geometry.secondTip.y - geometry.origin.y,
+  };
+  nearly(geometry.result.x, expectedResult.x);
+  nearly(geometry.result.y, expectedResult.y);
+  assert.ok(svg.includes(`x1="${geometry.origin.x}" y1="${geometry.origin.y}" x2="${geometry.firstTip.x}" y2="${geometry.firstTip.y}"`));
+  assert.ok(svg.includes(`x1="${geometry.origin.x}" y1="${geometry.origin.y}" x2="${geometry.secondTip.x}" y2="${geometry.secondTip.y}"`));
+  assert.ok(svg.includes(`x1="${geometry.origin.x}" y1="${geometry.origin.y}" x2="${geometry.result.x}" y2="${geometry.result.y}"`));
+});
+
+test('page 58 diagram keeps the 4:3 construction at 60 degrees without replacing the approximate result', () => {
+  const { geometry, svg, platformNote } = DIAGRAMS['oblique-example'];
+  const first = vectorBetween(geometry.origin, geometry.firstTip);
+  const second = vectorBetween(geometry.origin, geometry.secondTip);
+  const firstLength = vectorLength(first);
+  const secondLength = vectorLength(second);
+  const angle = Math.acos(dot(first, second) / (firstLength * secondLength)) * 180 / Math.PI;
+  nearly(firstLength / geometry.scalePixelsPerCentimeter, 4);
+  nearly(secondLength / geometry.scalePixelsPerCentimeter, 3);
+  nearly(angle, 60, 0.05);
+  assert.ok(svg.includes('60°'));
+  assert.ok(svg.includes('4 cm'));
+  assert.ok(svg.includes('3 cm'));
+  assert.match(platformNote, /لا يقيس القطر/);
+  const content = pageTextBlocks(page(58));
+  for (const phrase of ['60°', '1 cm = 1 N', 'F₁ = 4 N', 'F₂ = 3 N', 'تقريباً', '6 cm', 'F = 6 × 1 = 6 N']) {
+    assert.ok(content.includes(phrase), `Missing page 58 detail: ${phrase}`);
+  }
+});
+
+test('page 59 rectangle is a right-angle 3–4–5 construction at the stated scale', () => {
+  const { geometry, svg } = DIAGRAMS['right-angle-resultant'];
+  const first = vectorBetween(geometry.origin, geometry.firstTip);
+  const second = vectorBetween(geometry.origin, geometry.secondTip);
+  const resultant = vectorBetween(geometry.origin, geometry.result);
+  nearly(dot(first, second), 0);
+  const scale = vectorLength(first) / geometry.sourceMagnitudesCentimeters.F1;
+  nearly(vectorLength(second) / scale, 4);
+  nearly(vectorLength(resultant) / scale, 5);
+  for (const label of ['3 cm', '4 cm', '5 cm']) assert.ok(svg.includes(label));
+  const content = pageTextBlocks(page(59));
+  assert.ok(content.includes('1 cm'));
+  assert.ok(content.includes('20 N'));
+  assert.ok(content.includes('F = 100 N'));
+  assert.ok(content.includes('aria-label="F = 5 × 20"'));
+  assert.equal((content.match(/class="formula-line"/g) ?? []).length, 5); // two scale lines plus the three printed Pythagoras lines
+  assert.deepEqual(PYTHAGORAS_LINES, [
+    'F = √(F₁² + F₂²)',
+    'F = √((60)² + (80)²)',
+    'F = 100 N',
+  ]);
+  assert.equal((content.match(/data-source-line=/g) ?? []).length, 3);
+});
+
+test('page 59 component axes are orthogonal and the diagonal is the component sum', () => {
+  const { geometry, svg } = DIAGRAMS['components-xy'];
+  const first = vectorBetween(geometry.origin, geometry.firstTip);
+  const second = vectorBetween(geometry.origin, geometry.secondTip);
+  nearly(dot(first, second), 0);
+  nearly(geometry.result.x, geometry.firstTip.x + geometry.secondTip.x - geometry.origin.x);
+  nearly(geometry.result.y, geometry.firstTip.y + geometry.secondTip.y - geometry.origin.y);
+  assert.ok(svg.includes('>x</text>'));
+  assert.ok(svg.includes('>y</text>'));
+});
+
+test('MathML vectors isolate direction and subscripts for all audited symbols', () => {
+  for (const markup of [V_F1, V_F2, V_F3, V_F, V_W, V_R, V_OM, V_OX, V_OY]) {
+    assert.match(markup, /<math[^>]+dir="ltr"/);
+    assert.match(markup, /<mover accent="true">/);
+    assert.match(markup, /<mo stretchy="true">→<\/mo>/);
+  }
+  assert.match(V_F1, /<msub><mover accent="true"><mi>F<\/mi><mo stretchy="true">→<\/mo><\/mover><mn>1<\/mn><\/msub>/);
+  assert.match(V_F3, /<msub><mover accent="true"><mi>F<\/mi><mo stretchy="true">→<\/mo><\/mover><mn>3<\/mn><\/msub>/);
+  assert.match(V_OM, /<mover accent="true"><mrow><mi>O<\/mi><mi>M<\/mi><\/mrow>/);
+  assert.match(V_OX, /<mover accent="true"><mrow><mi>O<\/mi><mi>X<\/mi><\/mrow>/);
+  assert.match(V_OY, /<mover accent="true"><mrow><mi>O<\/mi><mi>Y<\/mi><\/mrow>/);
+  const p60Reference = page(60).blocks.find((block) => block.type === 'platform');
+  assert.ok(p60Reference.html.includes(V_R));
+  assert.ok(p60Reference.html.includes('Latin lowercase a'));
+});
+
+test('page 60 retains six experiment steps and uses a source-reference treatment for the unclear inclined-plane figure', () => {
+  const selectedPage = page(60);
+  const content = pageTextBlocks(selectedPage);
+  assert.equal(listItemCount(content, 'experiment-list'), 6);
+  assert.ok(selectedPage.blocks.some((block) => block.type === 'platform' && block.title === 'مرجع شكل النشاط · الصفحة 60'));
+  assert.ok(selectedPage.blocks.some((block) => block.type === 'simulation' && block.id === 'force-resolution'));
+  const figureReference = selectedPage.blocks.find((block) => block.type === 'platform' && block.title === 'مرجع شكل النشاط · الصفحة 60');
+  assert.ok(figureReference.html.includes('Latin lowercase a'));
+  assert.match(figureReference.html, /<mi mathvariant="italic">a<\/mi>/);
+  assert.doesNotMatch(figureReference.html, /α|θ/);
+  assert.doesNotMatch(content, /محاكاة تفاعلية من المنصة/);
+  assert.ok(!selectedPage.blocks.some((block) => block.type === 'diagram'));
+});
+
+test('pages 61–62 retain textbook questions without answers', () => {
+  assert.equal((pageTextBlocks(page(61)).match(/<li class="question-item">/g) ?? []).length, 2);
+  const content = pageTextBlocks(page(62));
+  assert.equal((content.match(/<li class="question-item">/g) ?? []).length, 4);
+  assert.ok(content.includes(`{${V_F1}, ${V_F2}, ${V_F}, ${V_F3}}`));
+  assert.ok(content.includes('المسألة الأولى:'));
+  assert.ok(content.includes('المسألة الثانية:'));
+  assert.doesNotMatch(content, /الإجابة الصحيحة هي|الحل النموذجي/);
+});
+
+test('textbook blocks keep platform simulations and assessments separate', () => {
+  const allBookText = LESSON_PAGES.map(pageTextBlocks).join('\n');
+  assert.doesNotMatch(allBookText, /محاكاة تفاعلية|نتيجة المحاكاة|منطقة المعلم|وحدة الاختبار/);
+  assert.ok(allBookText.includes('أختبر نفسي:')); // textbook self-check remains source content
+  assert.deepEqual(LESSON_PAGES.filter((item) => item.blocks.some((block) => block.type === 'simulation')).map((item) => item.page), [56, 57, 59, 60]);
+});

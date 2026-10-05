@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f7f8" />
+    <meta name="description" content="منطقة المعلم المنفصلة لدرس القوى المتلاقية، الصفحات 55–62." />
+    <title>منطقة المعلم — القوى المتلاقية</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/teacher.css" />
+  </head>
+  <body class="teacher-page">
+    <a class="teacher-skip-link" href="#teacher-main">انتقل إلى المحتوى</a>
+    <div class="teacher-shell">
+      <header class="teacher-topbar">
+        <a class="teacher-back-link" href="./index.html" aria-label="العودة إلى درس الطالب">
+          <span aria-hidden="true">←</span>
+          <span>صفحة الطالب</span>
+        </a>
+        <div class="teacher-heading-lockup">
+          <p class="teacher-kicker">مساحة مستقلة عن صفحات الطالب</p>
+          <h1>منطقة المعلم</h1>
+        </div>
+        <span class="teacher-scope-badge">درس واحد · p55–p62</span>
+      </header>
+
+      <main class="teacher-main" id="teacher-main">
+        <section class="teacher-intro" aria-labelledby="teacher-intro-heading">
+          <div class="teacher-intro-copy">
+            <p class="teacher-eyebrow">الصف الثامن · الفيزياء</p>
+            <h2 id="teacher-intro-heading">الوحدة الثانية — الحركة والقوى</h2>
+            <p class="teacher-lesson-name">القوى المتلاقية <span dir="ltr">· p55–p62</span></p>
+            <p class="teacher-intro-note">إرشادات المعلم، تفسير الأنشطة، وحلول أسئلة الكتاب، مع فصل واضح بين نص المصدر والشرح الإضافي.</p>
+          </div>
+          <div class="teacher-source-stamp" aria-label="المصدر صفحات 55 إلى 62">
+            <span>المصدر</span>
+            <strong dir="ltr">p55–p62</strong>
+          </div>
+        </section>
+
+        <section class="teacher-gate" aria-labelledby="teacher-gate-heading">
+          <div class="teacher-gate-icon" aria-hidden="true">م</div>
+          <div class="teacher-gate-copy">
+            <h2 id="teacher-gate-heading">دخول المعلم</h2>
+            <p>أدخل كلمة المرور لعرض الشرح والحلول. لا تُحمَّل مادة المعلم إلى مساحة الصفحة قبل اجتياز التحقق.</p>
+            <form id="teacher-login" class="teacher-login-form" novalidate>
+              <label for="teacher-password">كلمة مرور منطقة المعلم</label>
+              <div class="teacher-login-row">
+                <input id="teacher-password" name="password" type="password" required autocomplete="current-password" aria-describedby="teacher-gate-help" />
+                <button id="teacher-login-submit" type="submit">تحقق من كلمة المرور</button>
+              </div>
+              <p id="teacher-gate-help" class="teacher-gate-help">لا تُحفظ كلمة المرور في هذه الصفحة. استخدم اتصالاً آمناً للوصول.</p>
+              <p id="teacher-auth-message" class="teacher-auth-message" role="alert" aria-live="assertive" hidden></p>
+            </form>
+          </div>
+        </section>
+
+        <section id="teacher-workspace" class="teacher-workspace" aria-label="محتوى منطقة المعلم" hidden></section>
+      </main>
+
+      <footer class="teacher-footer">
+        <span>مساحة المعلم · درس القوى المتلاقية فقط</span>
+        <a href="./index.html">العودة إلى الدرس</a>
+      </footer>
+    </div>
+    <script type="module" src="./src/teacher.js"></script>
+  </body>
+</html>
