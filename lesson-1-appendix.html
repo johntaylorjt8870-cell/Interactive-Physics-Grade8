@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta name="description" content="ملحق تفاعلي مستقل لدرس القوى المتلاقية: مختبر قوى متلاقية، أمثلة محلولة، وتحديات استكشافية من المنصة." />
+    <title>ملحق الدرس الأول — القوى المتلاقية | فيزياء ٨</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/lesson-1-appendix.css" />
+  </head>
+  <body class="appendix-page">
+    <a class="appendix-skip-link" href="#appendix-main">انتقل إلى المختبر التفاعلي</a>
+    <div class="appendix-shell">
+      <header class="appendix-topbar">
+        <a class="appendix-brand" href="./" aria-label="العودة إلى الرئيسية">
+          <span class="appendix-brand-mark" aria-hidden="true">ف</span>
+          <span class="appendix-brand-copy"><strong dir="ltr">Interactive Physics</strong><small>ملحقات الدروس · الصف الثامن</small></span>
+        </a>
+        <nav class="appendix-breadcrumb" aria-label="مسار الموقع">
+          <a href="./">الرئيسية</a>
+          <span aria-hidden="true">/</span>
+          <a href="./appendices.html">ملحقات الدروس</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">ملحق الدرس الأول</span>
+        </nav>
+      </header>
+
+      <main id="appendix-main" data-appendix-app>
+        <section class="appendix-hero" aria-labelledby="appendix-title">
+          <div class="appendix-hero-copy">
+            <p class="appendix-eyebrow">مختبر الاستكشاف · الصف الثامن</p>
+            <h1 id="appendix-title">ملحق الدرس الأول</h1>
+            <p class="appendix-hero-subtitle">القوى المتلاقية</p>
+            <span class="appendix-extension-label"><span aria-hidden="true">✦</span> ملحق تفاعلي — <bdi dir="ltr">Platform Extension</bdi></span>
+            <p class="appendix-hero-description">لا تكتفِ برؤية الأسهم. حرّك قوى متعددة، اختبر محصلتها، وشاهد كيف تستجيب حركة الجسم للنموذج التعليمي.</p>
+            <div class="appendix-hero-actions">
+              <a class="appendix-primary-link" href="#interactive-lab">ادخل المختبر <span aria-hidden="true">↓</span></a>
+              <a class="appendix-secondary-link" href="./appendices.html">العودة إلى ملحقات الدروس</a>
+            </div>
+          </div>
+          <div class="appendix-hero-art" aria-hidden="true">
+            <span class="hero-vector hero-vector-one"></span>
+            <span class="hero-vector hero-vector-two"></span>
+            <span class="hero-vector hero-vector-three"></span>
+            <span class="hero-result-vector"></span>
+            <span class="hero-object"><i></i></span>
+            <span class="hero-orbit hero-orbit-one"></span>
+            <span class="hero-orbit hero-orbit-two"></span>
+          </div>
+        </section>
+
+        <section class="appendix-howto" aria-labelledby="howto-heading">
+          <div class="appendix-section-heading appendix-howto-heading">
+            <div>
+              <p class="appendix-section-kicker">رحلة قصيرة في المختبر</p>
+              <h2 id="howto-heading">جرّب قبل أن تقرأ التفسير</h2>
+            </div>
+            <p>كل تغيير في القوة يعيد حساب المتجهات فوراً؛ شغّل الحركة عندما تصبح مستعداً للمقارنة.</p>
+          </div>
+          <ol class="appendix-howto-steps">
+            <li><span dir="ltr">01</span><strong>لاحظ</strong><small>انظر إلى الأسهم والجسم.</small></li>
+            <li><span dir="ltr">02</span><strong>توقّع</strong><small>ما جهة المحصلة؟</small></li>
+            <li><span dir="ltr">03</span><strong>غيّر</strong><small>عدّل المقدار أو الزاوية.</small></li>
+            <li><span dir="ltr">04</span><strong>شغّل وقارن</strong><small>اربط النتيجة بالحركة.</small></li>
+          </ol>
+        </section>
+
+        <section class="appendix-lab-section" id="interactive-lab" aria-labelledby="lab-heading">
+          <header class="appendix-section-heading appendix-lab-heading">
+            <div>
+              <p class="appendix-section-kicker">جرّب · لاحظ · قارن</p>
+              <h2 id="lab-heading" tabindex="-1">مختبر القوى المتلاقية</h2>
+              <p>ابدأ بتجربة جاهزة، ثم غيّر قواها بنفسك. الأسهم والمحصلة والرسم الحركي متصلة بالحالة نفسها.</p>
+            </div>
+            <span class="appendix-lab-index"><span dir="ltr">LAB 01</span><span>نقطة تأثير مشتركة</span></span>
+          </header>
+
+          <section class="appendix-preset-panel" aria-labelledby="preset-heading">
+            <div class="appendix-preset-heading">
+              <div>
+                <span class="appendix-mini-label">تجارب إضافية من المنصة</span>
+                <h3 id="preset-heading">اختر حالة للاستكشاف</h3>
+              </div>
+              <p>كل حالة تضبط قوى فعلية وتوضح سؤالاً محدداً للملاحظة.</p>
+            </div>
+            <div class="appendix-preset-grid" id="preset-buttons" role="group" aria-label="التجارب الجاهزة"></div>
+            <p class="appendix-preset-observation" id="preset-observation" aria-live="polite">غيّر زاوية القوة الثانية، وتوقّع كيف يتبدل اتجاه المحصلة.</p>
+          </section>
+
+          <div class="appendix-workbench">
+            <figure class="appendix-scene-panel" aria-labelledby="scene-heading">
+              <div class="appendix-scene-heading">
+                <div>
+                  <span class="appendix-mini-label">المشهد المتجهي</span>
+                  <h3 id="scene-heading" tabindex="-1">القوى عند الجسم والمحصلة</h3>
+                </div>
+                <span class="appendix-scene-scale"><span class="scale-dot" aria-hidden="true"></span> مقياس سهم موحّد يتكيّف مع المشهد</span>
+              </div>
+              <div class="appendix-svg-wrap">
+                <svg id="force-diagram" viewBox="0 0 760 540" role="img" aria-labelledby="force-diagram-title force-diagram-description">
+                  <title id="force-diagram-title">قوى متلاقية ومحصّلتها وحركة جسم</title>
+                  <desc id="force-diagram-description">يبدأ الجسم من السكون في مركز المشهد. تنطلق أسهم القوى والمحصلة من نقطة التأثير نفسها.</desc>
+                  <defs>
+                    <pattern id="lab-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#e7eaf0" stroke-width="1" />
+                    </pattern>
+                    <marker id="lab-force-arrow-1" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#16706b" /></marker>
+                    <marker id="lab-force-arrow-2" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#46629f" /></marker>
+                    <marker id="lab-force-arrow-3" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6a22" /></marker>
+                    <marker id="lab-result-arrow" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c96a4f" /></marker>
+                    <marker id="lab-axis-arrow" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#a4adbd" /></marker>
+                  </defs>
+                  <rect x="1" y="1" width="758" height="538" rx="18" fill="#fbfcfe" />
+                  <rect x="1" y="1" width="758" height="538" rx="18" fill="url(#lab-grid)" />
+                  <line class="lab-axis-line" x1="45" y1="260" x2="715" y2="260" marker-end="url(#lab-axis-arrow)" />
+                  <line class="lab-axis-line" x1="380" y1="500" x2="380" y2="38" marker-end="url(#lab-axis-arrow)" />
+                  <text class="lab-axis-label" x="710" y="246" direction="ltr">+x</text>
+                  <text class="lab-axis-label" x="391" y="48" direction="ltr">+y</text>
+                  <line class="lab-motion-trail" id="motion-trail" x1="380" y1="260" x2="380" y2="260" />
+                  <g id="force-vector-layer"></g>
+                  <line class="lab-result-vector" id="resultant-vector" x1="380" y1="260" x2="380" y2="260" marker-end="url(#lab-result-arrow)" visibility="hidden" />
+                  <circle class="lab-result-zero" id="resultant-zero" cx="380" cy="260" r="11" visibility="hidden" />
+                  <circle class="lab-origin-point" cx="380" cy="260" r="3.5" />
+                  <g class="lab-body" id="lab-body" transform="translate(380 260)">
+                    <circle class="lab-body-halo" r="33" />
+                    <rect class="lab-body-block" x="-23" y="-23" width="46" height="46" rx="13" />
+                    <circle class="lab-body-core" r="7" />
+                  </g>
+                </svg>
+              </div>
+              <div class="appendix-force-legend" id="force-legend" role="group" aria-label="مفتاح المتجهات"></div>
+              <figcaption>يتكيف مقياس الرسم مع أكبر سهم في الحالة، لكنه يبقى واحداً لجميع قوى التجربة ومحصّلتها.</figcaption>
+            </figure>
+
+            <section class="appendix-control-panel" aria-labelledby="controls-heading">
+              <div class="appendix-result-card" aria-labelledby="result-heading">
+                <div class="appendix-result-head">
+                  <span class="appendix-mini-label">نتيجة حيّة من جمع المركبات</span>
+                  <h3 id="result-heading">المحصلة</h3>
+                  <span id="result-vector-symbol" class="appendix-result-symbol" aria-hidden="true"></span>
+                </div>
+                <div class="appendix-result-stats">
+                  <div class="appendix-result-stat">
+                    <span id="result-magnitude-label">مقدار المحصلة</span>
+                    <output id="result-magnitude" aria-labelledby="result-magnitude-label"></output>
+                  </div>
+                  <div class="appendix-result-stat">
+                    <span id="result-direction-label">اتجاه المحصلة من محور x الموجب</span>
+                    <output id="result-direction" aria-labelledby="result-direction-label"></output>
+                  </div>
+                  <div class="appendix-result-stat appendix-acceleration-stat">
+                    <span id="result-acceleration-label">التسارع في النموذج</span>
+                    <output id="result-acceleration" aria-labelledby="result-acceleration-label"></output>
+                  </div>
+                </div>
+                <p class="appendix-mass-note">كتلة النموذج ثابتة: <bdi dir="ltr">2 kg</bdi></p>
+              </div>
+
+              <div class="appendix-control-heading">
+                <div>
+                  <span class="appendix-mini-label">غيّر الحالة</span>
+                  <h3 id="controls-heading">القوى المؤثرة</h3>
+                </div>
+                <span id="force-count" class="appendix-count-badge">قوتان</span>
+              </div>
+              <div class="appendix-force-controls" id="force-controls" aria-live="off"></div>
+              <div class="appendix-force-actions">
+                <button class="appendix-button appendix-add-button" id="add-force" type="button">+ إضافة قوة</button>
+              </div>
+              <div class="appendix-motion-actions">
+                <button class="appendix-button appendix-play-button" id="toggle-motion" type="button" aria-pressed="false">
+                  <span class="motion-play-mark" aria-hidden="true">▶</span><span id="motion-button-label">شغّل الحركة</span>
+                </button>
+                <button class="appendix-button appendix-reset-button" id="reset-motion" type="button">إعادة التجربة</button>
+              </div>
+              <p class="appendix-model-label"><strong>Educational simplified model</strong><br />تسارع انتقالي فقط؛ لا يحاكي الدوران أو الاحتكاك أو التصادمات. العرض الحركي ليس مقياساً مكانياً أو زمنياً واقعياً، ويتوقف عند حدّ إطار الرسم.</p>
+              <p class="appendix-lab-status" id="lab-status" role="status" aria-live="polite" aria-atomic="true">غيّر قوة أو اختر تجربة، ثم شغّل الحركة لمقارنة الاستجابة.</p>
+            </section>
+          </div>
+
+          <section class="appendix-observation-panel" aria-labelledby="observation-heading">
+            <div class="appendix-observation-mark" aria-hidden="true">01</div>
+            <div>
+              <p class="appendix-mini-label">تأمل الحالة التي أمامك</p>
+              <h3 id="observation-heading">ماذا تلاحظ؟</h3>
+              <p id="live-observation">تتجه المحصلة بحسب مجموع مركبات القوى؛ قارن اتجاه السهم المرجاني باتجاه حركة الجسم عند تشغيل التجربة.</p>
+            </div>
+          </section>
+        </section>
+
+        <section class="appendix-explanation-section" aria-labelledby="platform-explanation-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">افهم ما شاهدته</p>
+              <h2 id="platform-explanation-heading">من السهم إلى المحصلة</h2>
+            </div>
+            <span class="appendix-extension-label appendix-extension-label-light"><span aria-hidden="true">✦</span> شرح المنصة · <bdi dir="ltr">Platform Explanation</bdi></span>
+          </div>
+          <div class="appendix-concept-grid" id="platform-concepts"></div>
+        </section>
+
+        <section class="appendix-example-section" aria-labelledby="worked-example-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">حلّها خطوةً خطوة</p>
+              <h2 id="worked-example-heading">مثال محلول تفاعلي</h2>
+            </div>
+            <span class="appendix-extension-label appendix-extension-label-light"><span aria-hidden="true">✦</span> مثال تدريبي من المنصة</span>
+          </div>
+          <article class="appendix-worked-example">
+            <div class="appendix-example-intro">
+              <span class="appendix-example-number" aria-hidden="true" dir="ltr">01</span>
+              <div>
+                <h3 id="worked-example-title">قوتان متعامدتان: من المركبات إلى المحصلة</h3>
+                <p>لا يظهر الحل دفعة واحدة. اكشف كل خطوة، وحاول توقع ما يأتي قبل المتابعة.</p>
+              </div>
+            </div>
+            <div class="appendix-example-progress" id="worked-example-progress" aria-live="polite">الخطوة الأولى من سبع</div>
+            <div class="appendix-example-steps" id="worked-example-steps"></div>
+            <div class="appendix-example-actions">
+              <button class="appendix-button appendix-play-button" id="next-example-step" type="button">أظهر الخطوة التالية</button>
+              <button class="appendix-button appendix-reset-button" id="reset-example" type="button">ابدأ المثال من جديد</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="appendix-practice-section" aria-labelledby="practice-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">توقّع ثم اختبر تجربتك</p>
+              <h2 id="practice-heading">اختبر فهمك</h2>
+            </div>
+            <span class="appendix-extension-label appendix-extension-label-light">استكشاف وتدريب · ليس اختباراً رسمياً</span>
+          </div>
+          <div class="appendix-practice-grid" id="practice-questions"></div>
+        </section>
+
+        <section class="appendix-challenge-section" aria-labelledby="challenge-heading">
+          <div class="appendix-challenge-copy">
+            <p class="appendix-section-kicker">المرحلة الأخيرة · استخدم المختبر</p>
+            <h2 id="challenge-heading">تحدي الفيزيائي</h2>
+            <p>أبقِ القوتين الأولى والثانية كما هما، وعدّل مقدار القوة الثالثة واتجاهها حتى توازن المحصلة. لا يكفي أن تذكر الجواب: كوّن الحالة في المختبر ثم تحقّق.</p>
+            <span class="appendix-challenge-target"><span>الهدف</span><span id="challenge-target-symbol"></span><strong>محصلة تساوي صفراً</strong></span>
+            <div class="appendix-challenge-actions">
+              <button class="appendix-button appendix-challenge-start" id="start-challenge" type="button">ابدأ التحدي في المختبر</button>
+              <button class="appendix-button appendix-challenge-check" id="check-challenge" type="button" hidden>تحقّق من التحدي</button>
+              <button class="appendix-button appendix-challenge-reset" id="reset-challenge" type="button" hidden>أعد المحاولة</button>
+            </div>
+            <p id="challenge-status" class="appendix-challenge-status" role="status" aria-live="polite" aria-atomic="true">في البداية: قوتان ثابتتان، وقوة ثالثة يمكنك تعديلها.</p>
+          </div>
+          <div class="appendix-challenge-visual" aria-hidden="true">
+            <span class="challenge-ring challenge-ring-one"></span>
+            <span class="challenge-ring challenge-ring-two"></span>
+            <span class="challenge-vector challenge-vector-one"></span>
+            <span class="challenge-vector challenge-vector-two"></span>
+            <span class="challenge-vector challenge-vector-three"></span>
+            <span class="challenge-center"></span>
+            <span class="challenge-zero" dir="ltr">0</span>
+          </div>
+        </section>
+
+        <section class="appendix-summary-section" aria-labelledby="summary-heading">
+          <p class="appendix-section-kicker">خذ الفكرة معك</p>
+          <h2 id="summary-heading">الخلاصة</h2>
+          <div id="summary-equation" class="appendix-summary-equation"></div>
+          <p>المحصلة ليست جمعاً آلياً للمقادير؛ إنها جمع متجهي للقوى، ثم تفسير لما يعنيه ذلك لحركة الجسم في النموذج.</p>
+        </section>
+      </main>
+
+      <footer class="appendix-footer">
+        <a href="./appendices.html">← العودة إلى ملحقات الدروس</a>
+        <a href="./">العودة إلى الرئيسية</a>
+        <span>ملحق تفاعلي مستقل · لا يغيّر محتوى الدرس أو الاختبار</span>
+      </footer>
+    </div>
+    <noscript><p class="appendix-noscript">يحتاج المختبر إلى JavaScript لعرض المتجهات وتحديث التجربة. يمكن العودة إلى <a href="./lesson-1.html">محتوى الدرس الأصلي</a>.</p></noscript>
+    <script type="module" src="./src/lesson-1-appendix.js"></script>
+  </body>
+</html>
