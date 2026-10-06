@@ -13,5 +13,6 @@ await cp(resolve(projectDirectory, 'index.html'), resolve(outputDirectory, 'inde
 await cp(resolve(projectDirectory, 'teacher.html'), resolve(outputDirectory, 'teacher.html'));
 await cp(resolve(projectDirectory, 'lesson-test.html'), resolve(outputDirectory, 'lesson-test.html'));
 await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), { recursive: true });
+await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
 
 console.log('Production static build written to dist/.');

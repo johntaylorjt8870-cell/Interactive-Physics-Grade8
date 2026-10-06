@@ -287,7 +287,7 @@ test('page 56 interactive markup remains a schematic source reference with keybo
   assert.match(markup, /aria-label="تحريك نقطة التأثير رأسياً"/);
   assert.match(markup, /aria-valuetext=/);
   assert.match(markup, /role="status" aria-live="polite"/);
-  assert.match(markup, /<math[^>]+dir="ltr"/);
+  assert.match(markup, /<span class="math math-inline" dir="ltr"/);
   assert.equal((markup.match(/type="range"/g) ?? []).length, 2);
   assert.match(markup, /simulation-concurrency-carrier/);
   assert.match(markup, /sim-vector-weight/);
@@ -352,7 +352,7 @@ test('page 60 markup uses isolated OX and OY vector notation and labeled native 
   assert.match(markup, /aria-label="زاوية القوة من محور OX بالدرجات"/);
   assert.match(markup, /aria-valuetext=/);
   assert.match(markup, /role="status" aria-live="polite"/);
-  assert.match(markup, /<math[^>]+dir="ltr"/);
+  assert.match(markup, /<span class="math math-inline" dir="ltr"/);
   assert.match(markup, /aria-label="vector OM equals vector OX plus vector OY"/);
   assert.match(markup, /aria-label="vector O X"/);
   assert.match(markup, /aria-label="vector O Y"/);
@@ -360,7 +360,8 @@ test('page 60 markup uses isolated OX and OY vector notation and labeled native 
   assert.match(markup, /simulation-construction/);
   assert.equal((markup.match(/type="range"/g) ?? []).length, 2);
   assert.doesNotMatch(markup, /[αθ]/);
-  assert.doesNotMatch(markup, /<button\b/);
+  assert.equal((markup.match(/<button\b/g) ?? []).length, 1, 'only the guided angle sweep is a button');
+  assert.match(markup, /data-sweep="sim-d-angle"/);
 });
 
 test('simulation controls are native accessible ranges and results are announced', () => {
@@ -371,8 +372,10 @@ test('simulation controls are native accessible ranges and results are announced
     assert.match(markup, /type="range"/);
     assert.match(markup, /aria-valuetext=/);
     assert.match(markup, /role="status" aria-live="polite"/);
-    assert.doesNotMatch(markup, /<button\b/);
   }
+  assert.equal((perpendicular.match(/<button\b/g) ?? []).length, 0);
+  assert.equal((concurrent.match(/<button\b/g) ?? []).length, 1, 'the only button is the guided angle sweep');
+  assert.match(concurrent, /data-sweep="sim-a-angle"/);
   assert.equal((concurrent.match(/type="range"/g) ?? []).length, 3);
   assert.equal((perpendicular.match(/type="range"/g) ?? []).length, 2);
   assert.match(concurrent, /aria-label="الزاوية بين F1 وF2 بالدرجات"/);

@@ -1,8 +1,8 @@
-import { ltrText, mathML, V_F, V_F1, V_F2, V_OM, V_OX, V_OY, V_R } from './math.js';
+import { LATIN_A, P_M, P_O, ltrText, tex, V_F, V_F1, V_F2, V_OM, V_OX, V_OY, V_R } from './math.js';
 
-const latinA = mathML('<mi mathvariant="italic">a</mi>', 'Latin lowercase a');
-const pointO = mathML('<mi>O</mi>', 'O');
-const pointM = mathML('<mi>M</mi>', 'M');
+const latinA = LATIN_A;
+const pointO = P_O;
+const pointM = P_M;
 const forceComponents = `${V_F1} و${V_F2}`;
 
 export const LESSON_TEST = Object.freeze({
@@ -128,9 +128,9 @@ export const LESSON_TEST = Object.freeze({
       id: 'q13', lessonId: 'unit2-lesson1', sourcePages: [60], difficulty: 'medium', type: 'diagram-interpretation', diagram: 'perpendicular-components',
       prompt: `يُظهر الرسم مركبتين متعامدتين تنطلقان من ${pointO}، وقطراً يصل ${pointO} بالنقطة ${pointM}. أي علاقة متجهية يوضحها؟`,
       options: [
-        { id: 'vector-difference', content: mathML('<mover accent="true"><mrow><mi>O</mi><mi>M</mi></mrow><mo stretchy="true">→</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>O</mi><mi>X</mi></mrow><mo stretchy="true">→</mo></mover><mo>−</mo><mover accent="true"><mrow><mi>O</mi><mi>Y</mi></mrow><mo stretchy="true">→</mo></mover>', 'vector OM equals vector OX minus vector OY') },
+        { id: 'vector-difference', content: tex('\\vec{\\mathrm{OM}}=\\vec{\\mathrm{OX}}-\\vec{\\mathrm{OY}}', 'vector OM equals vector OX minus vector OY') },
         { id: 'equal-components', content: `${V_OX} = ${V_OY}` },
-        { id: 'vector-sum', content: mathML('<mover accent="true"><mrow><mi>O</mi><mi>M</mi></mrow><mo stretchy="true">→</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>O</mi><mi>X</mi></mrow><mo stretchy="true">→</mo></mover><mo>+</mo><mover accent="true"><mrow><mi>O</mi><mi>Y</mi></mrow><mo stretchy="true">→</mo></mover>', 'vector OM equals vector OX plus vector OY') },
+        { id: 'vector-sum', content: tex('\\vec{\\mathrm{OM}}=\\vec{\\mathrm{OX}}+\\vec{\\mathrm{OY}}', 'vector OM equals vector OX plus vector OY') },
         { id: 'collinear', content: `${V_OX} و${V_OY} على حامل واحد.` },
       ],
     },

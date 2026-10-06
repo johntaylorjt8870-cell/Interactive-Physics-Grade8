@@ -183,13 +183,17 @@ test('source values and p59 Pythagoras block remain exact; teacher arithmetic is
   assert.match(teacherMarkup, /تحقق رياضي إضافي للمعلم[^]*لا يحل محل القياس والنتيجة المطبوعة/);
 });
 
-test('p60 MathML keeps OX, OY and lowercase Latin a; p62 force-set order and F3 limit are preserved', () => {
+test('p60 keeps OX, OY and lowercase Latin a; p62 force-set order and F3 limit are preserved', () => {
   assert.ok(teacherMarkup.includes(V_OX));
   assert.ok(teacherMarkup.includes(V_OY));
   assert.ok(teacherMarkup.includes(V_OM));
-  assert.ok(teacherMarkup.includes('<mi mathvariant="italic">a</mi>'));
-  assert.doesNotMatch(teacherMarkup, /<mi mathvariant="italic">[αθ]<\/mi>/);
-  const orderedSet = `{${V_F1}, ${V_F2}, ${V_F}, ${V_F3}}`;
+  assert.match(teacherMarkup, /<annotation encoding="application\/x-tex">a<\/annotation>/);
+  const p60Section = teacherMarkup.slice(
+    teacherMarkup.indexOf('data-teacher-explanation="p60"'),
+    teacherMarkup.indexOf('data-teacher-explanation="p58"'),
+  );
+  assert.doesNotMatch(p60Section, /[αθ]/, 'the p60 figure reference never substitutes a Greek angle symbol for the printed Latin a');
+  const orderedSet = '\\{\\vec{F}_{1},\\ \\vec{F}_{2},\\ \\vec{F},\\ \\vec{F}_{3}\\}';
   assert.ok(pageTextBlocks(page(62)).includes(orderedSet));
   assert.ok(teacherMarkup.includes(orderedSet));
   assert.ok(teacherMarkup.includes('المصدر لا يعرّف'));

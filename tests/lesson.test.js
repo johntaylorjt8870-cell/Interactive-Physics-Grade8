@@ -37,8 +37,8 @@ test('page 55 preserves objectives and leaves the unavailable photograph as a so
     'القوى المتلاقية – تحليل القوة.',
     'أين تلتقي حبال المظلّة؟',
   ]) assert.ok(content.includes(phrase), `Missing source phrase: ${phrase}`);
-  const slot = page(55).blocks.find((block) => block.type === 'platform');
-  assert.equal(slot.kind, 'source-slot');
+  const slot = page(55).blocks.find((block) => block.type === 'platform' && block.kind === 'source-slot');
+  assert.ok(slot, 'the unavailable photograph stays a labelled source slot');
   assert.match(slot.html, /موضع الصورة الأصلية/);
   assert.doesNotMatch(slot.html, /<img\b/);
 });
@@ -135,18 +135,21 @@ test('page 59 component axes are orthogonal and the diagonal is the component su
   assert.ok(svg.includes('>y</text>'));
 });
 
-test('MathML vectors isolate direction and subscripts for all audited symbols', () => {
+test('rendered vectors are KaTeX expressions isolated as LTR with true accents and subscripts', () => {
   for (const markup of [V_F1, V_F2, V_F3, V_F, V_W, V_R, V_OM, V_OX, V_OY]) {
-    assert.match(markup, /<math[^>]+dir="ltr"/);
-    assert.match(markup, /<mover accent="true">/);
-    assert.match(markup, /<mo stretchy="true">→<\/mo>/);
+    assert.match(markup, /class="math math-inline" dir="ltr"/);
+    assert.match(markup, /class="katex"/);
+    assert.match(markup, /<annotation encoding="application\/x-tex">/);
   }
-  assert.match(V_F1, /<msub><mover accent="true"><mi>F<\/mi><mo stretchy="true">→<\/mo><\/mover><mn>1<\/mn><\/msub>/);
-  assert.match(V_F3, /<msub><mover accent="true"><mi>F<\/mi><mo stretchy="true">→<\/mo><\/mover><mn>3<\/mn><\/msub>/);
-  assert.match(V_OM, /<mover accent="true"><mrow><mi>O<\/mi><mi>M<\/mi><\/mrow>/);
-  assert.match(V_OX, /<mover accent="true"><mrow><mi>O<\/mi><mi>X<\/mi><\/mrow>/);
-  assert.match(V_OY, /<mover accent="true"><mrow><mi>O<\/mi><mi>Y<\/mi><\/mrow>/);
-  const p60Reference = page(60).blocks.find((block) => block.type === 'platform');
+  const annotationOf = (markup) => markup.match(/<annotation encoding="application\/x-tex">([^<]*)<\/annotation>/)[1];
+  assert.equal(annotationOf(V_F1), '\\vec{F}_{1}');
+  assert.equal(annotationOf(V_F3), '\\vec{F}_{3}');
+  assert.equal(annotationOf(V_F), '\\vec{F}');
+  assert.equal(annotationOf(V_OM), '\\vec{\\mathrm{OM}}');
+  assert.equal(annotationOf(V_OX), '\\vec{\\mathrm{OX}}');
+  assert.equal(annotationOf(V_OY), '\\vec{\\mathrm{OY}}');
+  const p60Reference = page(60).blocks.find((block) => block.type === 'platform' && block.title === 'مرجع شكل النشاط · الصفحة 60');
+  assert.ok(p60Reference, 'p60 keeps its source-reference block for the unclear figure');
   assert.ok(p60Reference.html.includes(V_R));
   assert.ok(p60Reference.html.includes('Latin lowercase a'));
 });
@@ -159,7 +162,7 @@ test('page 60 retains six experiment steps and uses a source-reference treatment
   assert.ok(selectedPage.blocks.some((block) => block.type === 'simulation' && block.id === 'force-resolution'));
   const figureReference = selectedPage.blocks.find((block) => block.type === 'platform' && block.title === 'مرجع شكل النشاط · الصفحة 60');
   assert.ok(figureReference.html.includes('Latin lowercase a'));
-  assert.match(figureReference.html, /<mi mathvariant="italic">a<\/mi>/);
+  assert.match(figureReference.html, /<annotation encoding="application\/x-tex">a<\/annotation>/);
   assert.doesNotMatch(figureReference.html, /α|θ/);
   assert.doesNotMatch(content, /محاكاة تفاعلية من المنصة/);
   assert.ok(!selectedPage.blocks.some((block) => block.type === 'diagram'));
@@ -169,7 +172,7 @@ test('pages 61–62 retain textbook questions without answers', () => {
   assert.equal((pageTextBlocks(page(61)).match(/<li class="question-item">/g) ?? []).length, 2);
   const content = pageTextBlocks(page(62));
   assert.equal((content.match(/<li class="question-item">/g) ?? []).length, 4);
-  assert.ok(content.includes(`{${V_F1}, ${V_F2}, ${V_F}, ${V_F3}}`));
+  assert.ok(content.includes('\\{\\vec{F}_{1},\\ \\vec{F}_{2},\\ \\vec{F},\\ \\vec{F}_{3}\\}'), 'the printed set keeps its exact order F1, F2, F, F3');
   assert.ok(content.includes('المسألة الأولى:'));
   assert.ok(content.includes('المسألة الثانية:'));
   assert.doesNotMatch(content, /الإجابة الصحيحة هي|الحل النموذجي/);
@@ -214,9 +217,9 @@ test('ordinary calculations stay on a single horizontal line in the student less
   assert.doesNotMatch(p59, /aria-label="F = 5 × 20"/);
   for (const pageNumber of [61, 62]) {
     const content = pageTextBlocks(page(pageNumber));
-    assert.doesNotMatch(content, /class="math-block"/, `p${pageNumber} keeps relations inline, not stacked`);
+    assert.doesNotMatch(content, /math-display/, `p${pageNumber} keeps relations inline, not stacked`);
   }
-  assert.match(pageTextBlocks(page(59)), /class="math-block"/); // the printed three-line Pythagoras block remains a source stack
+  assert.match(pageTextBlocks(page(59)), /math-display/); // the printed three-line Pythagoras block remains a source stack
 });
 
 test('student entry imports every notation helper it references', async () => {
@@ -247,7 +250,7 @@ test('textbook self-check answer key matches the printed option order and grades
   const letterIndex = { a: 0, b: 1, c: 2, d: 3 };
   const expectedPhrase = {
     '61-1': 'متوازي أضلاع', '61-2': 'مستطيل', '62-1': 'مربع',
-    '62-2': '20 N', '62-3': '30 N', '62-4': 'msqrt',
+    '62-2': '20 N', '62-3': '30 N', '62-4': '\\sqrt{',
   };
   for (const [key, entry] of Object.entries(SELF_CHECK_ANSWERS)) {
     const [pageNumber, ordinal] = key.split('-').map(Number);

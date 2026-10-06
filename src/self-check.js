@@ -55,6 +55,7 @@ function enhanceQuestionItem(item, key) {
     choice.innerHTML = `<label class="option-label" for="${inputId}">
       <input class="option-input" id="${inputId}" type="radio" name="selfcheck-${key}" value="${letter}"
         data-selfcheck-option="${letter}" data-selfcheck-key="${key}" aria-label="الخيار ${letter}" />
+      <span class="option-letter" aria-hidden="true">${letter}</span>
       <span class="option-copy">${copy}</span>
     </label>`;
   });
