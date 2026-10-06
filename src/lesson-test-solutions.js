@@ -5,7 +5,7 @@ const pointM = mathML('<mi>M</mi>', 'M');
 const latinA = mathML('<mi mathvariant="italic">a</mi>', 'Latin lowercase a');
 const eq = (body, label) => `<div class="assessment-formula">${formula(body, label)}</div>`;
 const ltr = (text) => ltrText(text);
-const vectorRelation = mathML(
+const vectorRelation = formula(
   '<mover accent="true"><mrow><mi>O</mi><mi>M</mi></mrow><mo stretchy="true">→</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>O</mi><mi>X</mi></mrow><mo stretchy="true">→</mo></mover><mo>+</mo><mover accent="true"><mrow><mi>O</mi><mi>Y</mi></mrow><mo stretchy="true">→</mo></mover>',
   'vector OM equals vector OX plus vector OY',
 );

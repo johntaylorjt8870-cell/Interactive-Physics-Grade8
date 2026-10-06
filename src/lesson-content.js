@@ -231,8 +231,7 @@ export const LESSON_PAGES = [
               <p>لإيجاد المحصلة أكمل الشكل إلى مستطيل ثم أرسم القطر المار من النقطة ${O} وليكن ${V_OM}.</p>
               <p>بقياس طول القطر ${V_OM} أجده مساوياً ${ltrText('5 cm')} وبحسب مقياس الرسم تكون شدة المحصلة:</p>
               <div class="formula-stack scale-result-stack" role="group" aria-label="حساب شدة المحصلة بمقياس الرسم">
-                <div class="formula-line">${forceResultEquation('<mi>F</mi>', '<mn>5</mn><mo>×</mo><mn>20</mn>', 'F = 5 × 20')}</div>
-                <div class="formula-line">${forceResultEquation('<mi>F</mi>', '<mn>100</mn><mtext>&nbsp;N</mtext>', 'F = 100 N')}</div>
+                <div class="formula-line">${forceResultEquation('<mi>F</mi>', '<mn>5</mn><mo>×</mo><mn>20</mn><mo>=</mo><mn>100</mn><mtext>&nbsp;N</mtext>', 'F = 5 × 20 = 100 N')}</div>
               </div>
               <p>ويمكن أن نحسب شدة المحصلة لقوتين متعامدتين بتطبيق قانون فيثاغورث في المثلث القائم:</p>
               ${pythagorasBlock()}
@@ -342,7 +341,7 @@ export const LESSON_PAGES = [
                 <li><strong>نقطة التأثير:</strong> النقطة المشتركة للقوتين ${O}.</li>
                 <li><strong>الحامل:</strong> قطر المستطيل ${V_OM} المنشأ على القوتين.</li>
                 <li><strong>الجهة:</strong> من ${O} إلى الرأس المقابل ${M}.</li>
-                <li><strong>الشدة:</strong> تحسب من العلاقة: ${formula(`<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>`, 'F = √(F₁² + F₂²)')} أو من الرسم.</li>
+                <li><strong>الشدة:</strong> تحسب من العلاقة: ${mathML(`<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>`, 'F = √(F₁² + F₂²)')} أو من الرسم.</li>
               </ul>
             </li>
             <li>
@@ -411,7 +410,7 @@ export const LESSON_PAGES = [
               <ol class="option-list" type="a">
                 <li>${forceResultEquation('<mi>F</mi>', '<msub><mi>F</mi><mn>1</mn></msub><mo>+</mo><msub><mi>F</mi><mn>2</mn></msub>', 'F = F₁ + F₂')}.</li>
                 <li>${forceResultEquation('<mi>F</mi>', '<msub><mi>F</mi><mn>1</mn></msub><mo>−</mo><msub><mi>F</mi><mn>2</mn></msub>', 'F = F₁ − F₂')}.</li>
-                <li>${formula(`<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>`, 'F = √(F₁² + F₂²')}.</li>
+                <li>${mathML(`<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>`, 'F = √(F₁² + F₂²')}.</li>
                 <li>${forceResultEquation('<mi>F</mi>', '<msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup>', 'F = F₁² + F₂²')}.</li>
               </ol>
             </li>

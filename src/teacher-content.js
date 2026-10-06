@@ -163,7 +163,7 @@ function renderActivities() {
       <h4>نشاط تحليل القوة إلى مركبتين متعامدتين · p60</h4>
       ${teacherExplanation(60, `
         <p>ابدأ بقوة واحدة ${V_OM} عند O، وارسم من النقطة نفسها محورين متعامدين ${V_OX} و${V_OY}. أسقط من رأس القوة عموداً على كل محور؛ المسقطان هما مركبتا القوة. جمع المركبتين متجهياً يعيد القوة الأصلية:</p>
-        <div class="teacher-formula">${mathML(`<mover accent="true"><mrow><mi>O</mi><mi>M</mi></mrow><mo stretchy="true">→</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>O</mi><mi>X</mi></mrow><mo stretchy="true">→</mo></mover><mo>+</mo><mover accent="true"><mrow><mi>O</mi><mi>Y</mi></mrow><mo stretchy="true">→</mo></mover>`, 'vector OM equals vector OX plus vector OY')}</div>
+        <div class="teacher-formula">${formula(`<mover accent="true"><mrow><mi>O</mi><mi>M</mi></mrow><mo stretchy="true">→</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>O</mi><mi>X</mi></mrow><mo stretchy="true">→</mo></mover><mo>+</mo><mover accent="true"><mrow><mi>O</mi><mi>Y</mi></mrow><mo stretchy="true">→</mo></mover>`, 'vector OM equals vector OX plus vector OY')}</div>
         <ul>
           <li>المركبتان متعامدتان لأن حامليهما ${V_OX} و${V_OY} متعامدان، وتبدآن من نقطة التأثير نفسها في تمثيل متوازي الأضلاع/المستطيل.</li>
           <li>تُحدَّد شدة كل مركبة من طول مسقطها مع مقياس رسم معلوم، أو بالحساب إذا عُرف مقدار القوة وزاويتها. لا يورد نص النشاط قيمة عددية أو زاوية محددة.</li>

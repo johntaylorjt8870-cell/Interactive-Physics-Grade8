@@ -8,7 +8,6 @@ const unit = (vector) => {
   const magnitude = length(vector);
   return { x: vector.x / magnitude, y: vector.y / magnitude };
 };
-const sum = (first, second) => ({ x: first.x + second.x, y: first.y + second.y });
 
 const MARKER_COLORS = {
   blue: '#536fc4',
@@ -32,10 +31,33 @@ function vectorLine(prefix, start, end, color) {
   return line(start.x, start.y, end.x, end.y, `vector-line force-${color}`, `marker-end="url(#${prefix}-${color}-arrow)"`);
 }
 
-function pointMarker(pointValue, label) {
+function pointMarker(pointValue, label, offset = { x: -14, y: 24 }) {
   return `<g class="point-marker">
     <circle cx="${fmt(pointValue.x)}" cy="${fmt(pointValue.y)}" r="5" />
-    <text x="${fmt(pointValue.x - 14)}" y="${fmt(pointValue.y + 24)}" class="diagram-point-label" direction="ltr">${label}</text>
+    <text x="${fmt(pointValue.x + offset.x)}" y="${fmt(pointValue.y + offset.y)}" class="diagram-point-label" direction="ltr">${label}</text>
+  </g>`;
+}
+
+/* Force symbols are drawn inside the SVG as explicit LTR groups: the vector arrow is a
+   path placed above the letter it belongs to, and the subscript is a separate glyph
+   anchored to that same letter. Absolute SVG coordinates keep the arrow and subscript
+   attached to the intended symbol no matter what the surrounding RTL document does. */
+const SYMBOL_WIDTHS = { F: 12.4, w: 16.2, R: 13.6 };
+
+function forceSymbol(x, y, { letter = 'F', subscript = null, color = 'blue', arrow = true } = {}) {
+  const letterWidth = SYMBOL_WIDTHS[letter] ?? 13;
+  const arrowY = y - 13.6;
+  const head = 3.5;
+  const arrowPath = arrow
+    ? `<path class="force-vec-arrow" stroke="currentColor" d="M ${fmt(x - 0.8)} ${fmt(arrowY)} H ${fmt(x + letterWidth + 0.8)} m 0 0 l ${fmt(-head)} ${fmt(-head * 0.7)} m ${fmt(head)} ${fmt(head * 0.7)} l ${fmt(-head)} ${fmt(head * 0.7)}" />`
+    : '';
+  const subscriptMarkup = subscript === null
+    ? ''
+    : `<text class="force-sub" fill="currentColor" x="${fmt(x + letterWidth - 0.4)}" y="${fmt(y + 5.6)}" direction="ltr">${subscript}</text>`;
+  return `<g class="force-symbol-group sym-${color}">
+    ${arrowPath}
+    <text class="force-symbol" fill="currentColor" x="${fmt(x)}" y="${fmt(y)}" direction="ltr">${letter}</text>
+    ${subscriptMarkup}
   </g>`;
 }
 
@@ -53,8 +75,11 @@ function angleMarkup(origin, firstVector, secondVector, angleDegrees, radius = 5
   const secondUnit = unit(secondVector);
   const start = add(origin, { x: secondUnit.x * radius, y: secondUnit.y * radius });
   const end = add(origin, { x: firstUnit.x * radius, y: firstUnit.y * radius });
-  const bisector = unit(sum(firstUnit, secondUnit));
-  const label = add(origin, { x: bisector.x * (radius + 23), y: bisector.y * (radius + 23) });
+  // Place the degree label inside the wedge but off the bisector: when the two forces
+  // have comparable lengths the bisector coincides with the resultant, which would
+  // strike the label. Biasing toward the second vector keeps the measure readable.
+  const labelDirection = unit(add({ x: secondUnit.x * 0.68, y: secondUnit.y * 0.68 }, { x: firstUnit.x * 0.32, y: firstUnit.y * 0.32 }));
+  const label = add(origin, { x: labelDirection.x * (radius + 26), y: labelDirection.y * (radius + 26) });
   return `<path d="M ${fmt(start.x)} ${fmt(start.y)} A ${fmt(radius)} ${fmt(radius)} 0 0 0 ${fmt(end.x)} ${fmt(end.y)}" class="angle-arc" />
     <text x="${fmt(label.x)}" y="${fmt(label.y)}" class="diagram-measure" direction="ltr" text-anchor="middle">${angleDegrees}°</text>`;
 }
@@ -74,12 +99,23 @@ function parallelogramSvg(id, title, description, geometry, measurements = []) {
   const labels = measurements.map(({ x, y, value }) =>
     `<text x="${fmt(x)}" y="${fmt(y)}" class="diagram-measure" direction="ltr" text-anchor="middle">${value}</text>`).join('');
   const resultLabel = pointMarker(result, 'M');
+  const beyond = (tip, vector, distance = 30) => {
+    const direction = unit(vector);
+    return add(tip, { x: direction.x * distance - 4, y: direction.y * distance + 6 });
+  };
+  const firstLabel = beyond(firstTip, firstVector);
+  const secondLabel = beyond(secondTip, secondVector);
+  const resultVector = subtract(result, origin);
+  const resultLabelPosition = beyond(result, resultVector, 32);
   return {
     svg: svgFrame(id, title, description, `${construction}
       ${vectorLine(id, origin, firstTip, 'teal')}
       ${vectorLine(id, origin, secondTip, 'coral')}
       ${vectorLine(id, origin, result, 'blue')}
       ${angle}${labels}
+      ${forceSymbol(firstLabel.x, firstLabel.y, { letter: 'F', subscript: '1', color: 'teal' })}
+      ${forceSymbol(secondLabel.x, secondLabel.y, { letter: 'F', subscript: '2', color: 'coral' })}
+      ${forceSymbol(resultLabelPosition.x, resultLabelPosition.y, { letter: 'F', color: 'blue' })}
       ${pointMarker(origin, 'O')}${resultLabel}`),
     result,
   };
@@ -107,6 +143,9 @@ const concurrentSvg = svgFrame(
     ${vectorLine('concurrent', concurrentGeometry.origin, concurrentGeometry.forceTips.F1, 'teal')}
     ${vectorLine('concurrent', concurrentGeometry.origin, concurrentGeometry.forceTips.F2, 'blue')}
     ${vectorLine('concurrent', concurrentGeometry.origin, concurrentGeometry.forceTips.w, 'coral')}
+    ${forceSymbol(516, 52, { letter: 'F', subscript: '1', color: 'teal' })}
+    ${forceSymbol(88, 46, { letter: 'F', subscript: '2', color: 'blue' })}
+    ${forceSymbol(334, 330, { letter: 'w', color: 'coral' })}
     ${pointMarker(concurrentGeometry.origin, 'O')}`,
 );
 
@@ -169,8 +208,11 @@ const rightAngleSvg = svgFrame(
     <path d="M ${fmt(rightAngleA.x)} ${fmt(rightAngleA.y)} L ${fmt(rightAngleC.x)} ${fmt(rightAngleC.y)} L ${fmt(rightAngleB.x)} ${fmt(rightAngleB.y)}" class="right-angle-mark" />
     <text x="205" y="268" class="diagram-measure" direction="ltr" text-anchor="middle">3 cm</text>
     <text x="407" y="263" class="diagram-measure" direction="ltr" text-anchor="middle">4 cm</text>
-    <text x="362" y="184" class="diagram-measure" direction="ltr" text-anchor="middle">5 cm</text>
-    ${pointMarker(rightAngleGeometry.origin, 'O')}${pointMarker(rightResult, 'M')}`,
+    <text x="330" y="192" class="diagram-measure" direction="ltr" text-anchor="middle">5 cm</text>
+    ${forceSymbol(192, 172, { letter: 'F', subscript: '1', color: 'teal' })}
+    ${forceSymbol(498, 190, { letter: 'F', subscript: '2', color: 'blue' })}
+    ${forceSymbol(394, 57, { letter: 'F', color: 'coral' })}
+    ${pointMarker(rightAngleGeometry.origin, 'O')}${pointMarker(rightResult, 'M', { x: 12, y: 6 })}`,
 );
 
 const componentsGeometry = {
@@ -190,7 +232,10 @@ const componentsSvg = svgFrame(
     ${vectorLine('components', componentsGeometry.origin, componentsGeometry.firstTip, 'teal')}
     ${vectorLine('components', componentsGeometry.origin, componentsGeometry.secondTip, 'blue')}
     ${vectorLine('components', componentsGeometry.origin, componentsGeometry.result, 'coral')}
-    ${pointMarker(componentsGeometry.origin, 'O')}${pointMarker(componentsGeometry.result, 'M')}
+    ${forceSymbol(452, 344, { letter: 'F', subscript: '1', color: 'teal' })}
+    ${forceSymbol(66, 82, { letter: 'F', subscript: '2', color: 'blue' })}
+    ${forceSymbol(452, 78, { letter: 'F', color: 'coral' })}
+    ${pointMarker(componentsGeometry.origin, 'O')}${pointMarker(componentsGeometry.result, 'M', { x: 12, y: 24 })}
     <text x="565" y="329" class="diagram-axis-label" direction="ltr">x</text>
     <text x="105" y="42" class="diagram-axis-label" direction="ltr">y</text>`,
 );

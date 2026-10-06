@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { LESSON_PAGES, PYTHAGORAS_LINES, pageTextBlocks } from '../src/lesson-content.js';
 import { DIAGRAMS } from '../src/diagrams.js';
+import { SELF_CHECK_ANSWERS, selfCheckAnswer } from '../src/self-check-answers.js';
+import { gradeSelfCheck } from '../src/self-check.js';
 import {
   V_F1, V_F2, V_F3, V_F, V_W, V_R, V_OM, V_OX, V_OY,
 } from '../src/math.js';
@@ -112,8 +114,8 @@ test('page 59 rectangle is a right-angle 3–4–5 construction at the stated sc
   assert.ok(content.includes('1 cm'));
   assert.ok(content.includes('20 N'));
   assert.ok(content.includes('F = 100 N'));
-  assert.ok(content.includes('aria-label="F = 5 × 20"'));
-  assert.equal((content.match(/class="formula-line"/g) ?? []).length, 5); // two scale lines plus the three printed Pythagoras lines
+  assert.ok(content.includes('aria-label="F = 5 × 20 = 100 N"'));
+  assert.equal((content.match(/class="formula-line"/g) ?? []).length, 4); // one scale line plus the three printed Pythagoras lines
   assert.deepEqual(PYTHAGORAS_LINES, [
     'F = √(F₁² + F₂²)',
     'F = √((60)² + (80)²)',
@@ -178,4 +180,83 @@ test('textbook blocks keep platform simulations and assessments separate', () =>
   assert.doesNotMatch(allBookText, /محاكاة تفاعلية|نتيجة المحاكاة|منطقة المعلم|وحدة الاختبار/);
   assert.ok(allBookText.includes('أختبر نفسي:')); // textbook self-check remains source content
   assert.deepEqual(LESSON_PAGES.filter((item) => item.blocks.some((block) => block.type === 'simulation')).map((item) => item.page), [56, 57, 59, 60]);
+});
+
+const symbolGroups = (svg) => [...svg.matchAll(/<g class="force-symbol-group sym-\w+">([\s\S]*?)<\/g>/g)].map((match) => match[1]);
+const symbolArrowY = (group) => Number(/<path class="force-vec-arrow"[^>]*d="M [-\d.]+ ([-\d.]+)/.exec(group)[1]);
+const symbolLetterY = (group) => Number(/<text class="force-symbol"[^>]*y="([-\d.]+)"/.exec(group)[1]);
+
+test('every force diagram labels its arrows with LTR force symbols and vector arrows above the letter', () => {
+  const expected = {
+    concurrent: [['F', '1'], ['F', '2'], ['w', null]],
+    parallelogram: [['F', '1'], ['F', '2'], ['F', null]],
+    'oblique-example': [['F', '1'], ['F', '2'], ['F', null]],
+    'right-angle-resultant': [['F', '1'], ['F', '2'], ['F', null]],
+    'components-xy': [['F', '1'], ['F', '2'], ['F', null]],
+  };
+  for (const [id, symbols] of Object.entries(expected)) {
+    const groups = symbolGroups(DIAGRAMS[id].svg);
+    assert.equal(groups.length, symbols.length, `${id} exposes one labelled symbol per force arrow`);
+    groups.forEach((group, index) => {
+      const [letter, subscript] = symbols[index];
+      assert.match(group, new RegExp(`<text class="force-symbol"[^>]*direction="ltr">${letter}</text>`), `${id} symbol ${index} letter`);
+      assert.match(group, /<path class="force-vec-arrow"[^>]*direction="ltr"|<path class="force-vec-arrow"/, `${id} symbol ${index} has a vector arrow`);
+      assert.ok(symbolArrowY(group) < symbolLetterY(group), `${id} symbol ${index}: the vector arrow sits above the letter`);
+      if (subscript === null) assert.doesNotMatch(group, /force-sub/);
+      else assert.match(group, new RegExp(`<text class="force-sub"[^>]*direction="ltr">${subscript}</text>`), `${id} symbol ${index} subscript`);
+    });
+  }
+});
+
+test('ordinary calculations stay on a single horizontal line in the student lesson', () => {
+  const p59 = pageTextBlocks(page(59));
+  assert.match(p59, /aria-label="F = 5 × 20 = 100 N"/);
+  assert.doesNotMatch(p59, /aria-label="F = 5 × 20"/);
+  for (const pageNumber of [61, 62]) {
+    const content = pageTextBlocks(page(pageNumber));
+    assert.doesNotMatch(content, /class="math-block"/, `p${pageNumber} keeps relations inline, not stacked`);
+  }
+  assert.match(pageTextBlocks(page(59)), /class="math-block"/); // the printed three-line Pythagoras block remains a source stack
+});
+
+test('student entry imports every notation helper it references', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const source = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
+  const mathImport = /import \{([^}]*)\} from '\.\/math\.js';/.exec(source);
+  assert.ok(mathImport, 'main.js imports the notation helpers it smoke-checks');
+  for (const name of ['V_F1', 'V_F2', 'V_F', 'V_W']) {
+    assert.ok(mathImport[1].includes(name), `main.js imports ${name}`);
+  }
+});
+
+test('self-check interactivity is a student-page enhancement, never source text', () => {
+  for (const pageNumber of [61, 62]) {
+    const content = pageTextBlocks(page(pageNumber));
+    assert.doesNotMatch(content, /<input|type="radio"/, `p${pageNumber} book text stays verbatim`);
+    assert.match(content, /option-list/);
+  }
+});
+
+test('textbook self-check answer key matches the printed option order and grades purely', () => {
+  assert.deepEqual(Object.keys(SELF_CHECK_ANSWERS).sort(), ['61-1', '61-2', '62-1', '62-2', '62-3', '62-4']);
+  const optionText = (pageNumber, itemOrdinal, letterIndex) => {
+    const items = pageTextBlocks(page(pageNumber)).split('<li class="question-item">').slice(1);
+    const options = [...items[itemOrdinal - 1].matchAll(/<li>([\s\S]*?)<\/li>/g)].map((match) => match[1]);
+    return options[letterIndex];
+  };
+  const letterIndex = { a: 0, b: 1, c: 2, d: 3 };
+  const expectedPhrase = {
+    '61-1': 'متوازي أضلاع', '61-2': 'مستطيل', '62-1': 'مربع',
+    '62-2': '20 N', '62-3': '30 N', '62-4': 'msqrt',
+  };
+  for (const [key, entry] of Object.entries(SELF_CHECK_ANSWERS)) {
+    const [pageNumber, ordinal] = key.split('-').map(Number);
+    const text = optionText(pageNumber, ordinal, letterIndex[entry.correct]);
+    assert.ok(text.includes(expectedPhrase[key]), `${key} key letter ${entry.correct} points at the printed option`);
+    assert.equal(selfCheckAnswer(key), entry);
+  }
+  const graded = gradeSelfCheck({ '61-1': 'd', '61-2': 'a' }, SELF_CHECK_ANSWERS);
+  assert.deepEqual(graded.find((row) => row.key === '61-1'), { key: '61-1', selected: 'd', correct: 'd', isCorrect: true, isAnswered: true });
+  assert.equal(graded.find((row) => row.key === '61-2').isCorrect, false);
+  assert.equal(gradeSelfCheck({}, SELF_CHECK_ANSWERS).every((row) => !row.isCorrect && !row.isAnswered), true);
 });

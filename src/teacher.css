@@ -162,7 +162,7 @@
 .teacher-source-note { margin-top: 12px; padding: 11px 14px; color: #5b5040; font-size: 12px; background: #fbf6eb; border-inline-start: 3px solid #d0a75f; border-radius: 7px; }
 .teacher-source-note strong { color: #765a2e; }
 .teacher-formula { margin: 9px 0; padding: 10px 12px; overflow-x: auto; direction: ltr; text-align: center; background: #f4f8f8; border: 1px solid #e2ebeb; border-radius: 9px; unicode-bidi: isolate; }
-.teacher-formula math { display: inline-block; direction: ltr; }
+.teacher-formula math { display: inline-block; direction: ltr; white-space: nowrap; }
 .teacher-formula-caption { margin: 5px 0 0 !important; color: #6c7d80 !important; font-size: 11px !important; }
 .teacher-page-question { margin: 7px 0; padding: 9px 11px; color: #365660; font-size: 12px; background: #f4f8f7; border-inline-start: 3px solid #a8ceca; border-radius: 7px; }
 .teacher-answer { margin: 9px 0; padding: 10px 13px; background: #f2f8f6; border: 1px solid #deebe8; border-radius: 9px; }
@@ -188,6 +188,10 @@
 .teacher-footer a:hover { text-decoration: underline; }
 .teacher-page :focus-visible { outline: 2px solid #4a8985; outline-offset: 3px; }
 .teacher-page [dir="ltr"], .teacher-page .math-inline, .teacher-page .math-block { unicode-bidi: isolate; }
+/* Ordinary operations stay on one clean horizontal line; the scrollable formula
+   boxes above absorb any overflow instead of letting operators stack vertically. */
+.teacher-page math { direction: ltr; white-space: nowrap; }
+.teacher-source-body .book-copy math { white-space: nowrap; }
 
 @media (max-width: 1000px) {
   .teacher-shell { padding-inline: 22px; }

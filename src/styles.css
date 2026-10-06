@@ -410,6 +410,26 @@ button { color: inherit; }
 .diagram-measure { fill: #566680; font: 15px 'Manrope', Arial, sans-serif; }
 .angle-arc { fill: none; stroke: #d4a64a; stroke-width: 2.3; }
 .right-angle-mark { fill: none; stroke: #d4a64a; stroke-width: 2.7; }
+
+/* Force symbols drawn inside each diagram: an LTR group whose vector arrow is a path
+   above the letter and whose subscript is anchored to the same letter, so RTL page
+   direction can never detach the arrow or the index from its symbol. */
+.force-symbol-group { color: #33415c; }
+.sym-teal { color: #0e7476; }
+.sym-blue { color: #3d579e; }
+.sym-coral { color: #bd5941; }
+.force-symbol, .force-sub {
+  paint-order: stroke;
+  stroke: #fbfcff;
+  stroke-width: 4.5px;
+  stroke-linejoin: round;
+  font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
+  font-style: italic;
+  font-weight: 700;
+}
+.force-symbol { font-size: 21px; }
+.force-sub { font-size: 13.5px; font-style: italic; }
+.force-vec-arrow { fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
 .diagram-legend { margin: 12px 0 5px; padding: 0; display: flex; flex-wrap: wrap; gap: 9px 17px; list-style: none; }
 .diagram-legend li { display: inline-flex; align-items: center; gap: 8px; color: #3f4f6c; font-size: 12px; }
 .legend-swatch { width: 22px; height: 3px; flex: 0 0 auto; border-radius: 99px; }
@@ -513,9 +533,79 @@ button { color: inherit; }
 .question-list { padding-inline-start: 27px; }
 .question-item { margin: 15px 0 21px !important; padding: 0 0 10px 0; border-bottom: 1px solid #eff1f5; }
 .question-item > p { margin: 0 0 8px; }
-.option-list { margin: 4px 0 5px; padding-inline-start: 26px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 16px; color: #52607a; list-style-type: lower-alpha; }
+.option-list { margin: 6px 0 5px; padding-inline-start: 26px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; color: #52607a; list-style-type: lower-alpha; }
 .option-list li { padding-inline-start: 3px; }
 .option-list li::marker { color: #778bbd; font-weight: 700; }
+
+/* Selectable textbook choices: the a/b/c/d list markers stay exactly as printed,
+   while each choice becomes a real radio control with a clear selected state. */
+.option-label {
+  min-height: 42px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #fbfcfe;
+  border: 1px solid #e4e9f2;
+  border-radius: 10px;
+  transition: background 130ms ease, border-color 130ms ease, box-shadow 130ms ease;
+}
+.option-label:hover { background: #f4f7fc; border-color: #ccd7ea; }
+.option-label:focus-within { outline: 2px solid #6c83cb; outline-offset: 2px; }
+.option-input { width: 16px; height: 16px; flex: 0 0 auto; margin: 6px 0 0; accent-color: var(--blue); }
+.option-copy { min-width: 0; display: block; line-height: 1.85; }
+.option-copy math { white-space: nowrap; }
+.option-choice.is-selected .option-label {
+  color: #2b3f76;
+  background: var(--blue-soft);
+  border-color: #c3d1f1;
+  box-shadow: inset 0 0 0 1px #c3d1f1;
+}
+.option-choice.is-selected .option-copy { font-weight: 600; }
+.option-choice.is-revealed-correct .option-label { background: #ecf7f1; border-color: #bcdccb; box-shadow: inset 0 0 0 1px #bcdccb; }
+.option-choice.is-revealed-wrong .option-label { background: #fdf1ee; border-color: #eacbc3; box-shadow: inset 0 0 0 1px #eacbc3; }
+
+.selfcheck-actions { margin: 16px 0 4px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.selfcheck-submit {
+  min-height: 42px;
+  padding: 8px 22px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  background: linear-gradient(140deg, #4a63ad, #33509c);
+  border: 0;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(51, 80, 156, 0.18);
+  cursor: pointer;
+  transition: filter 130ms ease, transform 130ms ease;
+}
+.selfcheck-submit:hover:not(:disabled) { filter: brightness(1.06); }
+.selfcheck-submit:active:not(:disabled) { transform: translateY(1px); }
+.selfcheck-submit:disabled { opacity: 0.6; cursor: progress; }
+.selfcheck-note { margin: 0; color: #8b96aa; font-size: 11px; }
+
+.selfcheck-results { margin-top: 14px; }
+.selfcheck-result-card {
+  padding: 14px 18px 15px;
+  background: #f8fafd;
+  border: 1px solid #e2e8f2;
+  border-inline-start: 3px solid var(--blue);
+  border-radius: 12px;
+}
+.selfcheck-result-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.selfcheck-result-kicker { color: var(--blue-dark); font-size: 12px; font-weight: 700; }
+.selfcheck-result-score { color: #33509c; font: 700 15px 'Manrope', Arial, sans-serif; }
+.selfcheck-result-list { margin: 10px 0 6px; padding: 0; display: grid; gap: 7px; list-style: none; }
+.selfcheck-result-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 12.5px; color: #4c5b74; }
+.selfcheck-result-index { font-weight: 700; color: #3c4c68; }
+.selfcheck-result-state { padding: 1px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.selfcheck-result-row.is-correct .selfcheck-result-state { color: #1c6b4f; background: #e2f3ea; }
+.selfcheck-result-row.is-wrong .selfcheck-result-state { color: #9c4a38; background: #fbeae6; }
+.selfcheck-letter, .selfcheck-letter-missing { font: 700 12px 'Manrope', Arial, sans-serif; }
+.selfcheck-letter { display: inline-block; min-width: 17px; padding: 0 4px; text-align: center; color: #33509c; background: #e8eefb; border-radius: 5px; }
+.selfcheck-letter-missing { color: #98a2b4; font-size: 11px; }
+.selfcheck-result-note { margin: 6px 0 0; color: #8b96aa; font-size: 10.5px; }
 .continuation-section { margin-top: 0; }
 .textbook-problems { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
 .problem-list { margin-top: 6px; }
