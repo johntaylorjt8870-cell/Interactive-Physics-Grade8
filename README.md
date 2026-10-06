@@ -1,6 +1,6 @@
-# Interactive Physics Grade 8 — Lesson 1: Concurrent Forces
+# Interactive Physics Grade 8 — Course Home
 
-Arabic (RTL) interactive lesson on **Concurrent Forces and Force Resolution** for Grade 8 physics, based on textbook pages 55–62.
+Arabic (RTL) interactive physics platform for Grade 8. The course home is the root entry; the currently published Lesson 1 covers **Concurrent Forces and Force Resolution** based on textbook pages 55–62.
 
 The student area keeps the textbook wording, order, values, and examples, while the platform layer adds clearly-labelled explanations, accessible SVG diagrams, four guided simulations, interactive self-check, a separate Teacher Area, and a 20-question Lesson Test.
 
@@ -29,7 +29,8 @@ python3 -m http.server 4173
 
 Then open:
 
-- Student lesson: http://127.0.0.1:4173/index.html
+- Course Home: http://127.0.0.1:4173/index.html
+- Student Lesson 1: http://127.0.0.1:4173/lesson-1.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
 - Teacher Area: http://127.0.0.1:4173/teacher.html
 
@@ -38,7 +39,8 @@ Modules and vendored fonts must be served over HTTP; opening the HTML files dire
 ## Project structure
 
 ```text
-index.html                  Sequential student lesson
+index.html                  Course Home / platform entry
+lesson-1.html               Published Lesson 1 student page
 teacher.html                Separate Teacher Area page
 lesson-test.html            20-question Lesson Test page
 scripts/build.mjs           Static production build
@@ -58,7 +60,8 @@ src/
   lesson-test-solutions.js  Answer key and worked solutions (loaded only at submission)
   lesson-test-diagrams.js   Static diagrams used by the test
   fonts.css                 @font-face rules pointing at the vendored fonts
-  styles.css                Student design system
+  home.css                  Course Home design system
+  styles.css                Student lesson design system
   teacher.css / lesson-test.css
 vendor/
   katex/                    KaTeX 0.16 (ES module + trimmed CSS + woff2 math fonts)
@@ -86,6 +89,12 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 - Platform additions are visually separated and labelled («شرح من المنصة», «رسم توضيحي من المنصة», «محاكاة تفاعلية من المنصة»).
 - Blurred or unreadable source artwork is **not** replaced with invented reconstructions: a labelled source slot marks its position, and ambiguous symbols (e.g. the small arrow printed as `R` on p60, the angle letter `a`) are disclosed as unresolved rather than guessed.
 - The printed approximate result on p58 (measured from the drawing) is preserved and explained; the exact trigonometric verification is labelled as teacher-only extended content.
+
+## Course navigation
+
+- The root URL (`index.html`) is the Course Home, not a lesson.
+- The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
+- The unit and lesson list is structured as a single current lesson entry, so additional published entries can be added without showing placeholders to students.
 
 ## Student experience
 
@@ -127,9 +136,9 @@ Every simulation is explicit that it is a platform interaction, states what it d
 ## Tests and build
 
 ```bash
-npm test          # 70 Node tests: content fidelity, diagram geometry, simulation logic,
+npm test          # 71 Node tests: content fidelity, routing, diagram geometry, simulation logic,
                   # grading purity, assessment flow, teacher area
 npm run build     # static build into dist/ (html + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the three HTML pages, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lesson 1, Lesson Test, Teacher Area, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.

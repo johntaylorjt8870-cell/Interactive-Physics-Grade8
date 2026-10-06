@@ -59,7 +59,7 @@ function fakeGate(verifyPassword, loadContent) {
 
 test('Teacher Area is a separate accessible page with a password gate and hidden workspace', async () => {
   const [studentPage, teacherPage, studentEntry, teacherBootstrap] = await Promise.all([
-    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../lesson-1.html', import.meta.url), 'utf8'),
     readFile(new URL('../teacher.html', import.meta.url), 'utf8'),
     readFile(new URL('../src/main.js', import.meta.url), 'utf8'),
     readFile(new URL('../src/teacher.js', import.meta.url), 'utf8'),
