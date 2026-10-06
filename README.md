@@ -2,7 +2,7 @@
 
 Arabic (RTL) interactive physics platform for Grade 8. The course home is the root entry; the currently published Lesson 1 covers **Concurrent Forces and Force Resolution** based on textbook pages 55–62.
 
-The student area keeps the textbook wording, order, values, and examples, while the platform layer adds clearly-labelled explanations, accessible SVG diagrams, four guided lesson simulations, interactive self-check, a separate Teacher Area, and a 20-question Lesson Test. A separate Lesson 1 Appendix adds a multi-force exploration lab without changing the published lesson.
+The student area keeps the textbook wording, order, values, and examples, while the platform layer adds clearly-labelled explanations, accessible SVG diagrams, four guided lesson simulations, interactive self-check, a separate Teacher Area, and a 20-question Lesson Test. The Unit 1 review at `unit-questions.html` presents the original textbook questions from pages 71–72 as a standalone review (not a third lesson), with worked solutions in its password-gated Teacher Area. A separate Lesson 1 Appendix adds a multi-force exploration lab without changing the published lesson.
 
 ## Contents
 
@@ -13,6 +13,7 @@ The student area keeps the textbook wording, order, values, and examples, while 
 - [Course navigation](#course-navigation)
 - [Lesson Appendices](#lesson-appendices)
 - [Student experience](#student-experience)
+- [Unit Questions review](#unit-questions-review)
 - [Interactive simulations](#interactive-simulations)
 - [Teacher Area](#teacher-area)
 - [Lesson Test](#lesson-test)
@@ -37,6 +38,8 @@ Then open:
 - Lesson 1 Appendix: http://127.0.0.1:4173/lesson-1-appendix.html
 - Lesson 2: http://127.0.0.1:4173/lesson-2.html
 - Lesson 2 Appendix: http://127.0.0.1:4173/lesson-2-appendix.html
+- Unit 1 Questions: http://127.0.0.1:4173/unit-questions.html
+- Unit 1 Questions Teacher Area: http://127.0.0.1:4173/unit-questions-teacher.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
 - Teacher Area: http://127.0.0.1:4173/teacher.html
 
@@ -51,8 +54,11 @@ appendices.html             Published appendices library
 lesson-1-appendix.html      Standalone Lesson 1 interactive appendix
 lesson-2.html               Published Lesson 2 student page (preserved)
 lesson-2-appendix.html      Standalone Lesson 2 interactive appendix (parallel forces)
-teacher.html                Separate Teacher Area page
+unit-questions.html         Unit 1 textbook-question review (pages 71–72)
+unit-questions-teacher.html Password-gated worked-solution Area for the review
+teacher.html                Separate Lesson 1 Teacher Area page
 lesson-test.html            20-question Lesson Test page
+docs/unit-1-questions-source-audit.md Source Audit for pages 71–72
 scripts/build.mjs           Static production build
 src/
   main.js                   Lesson-page navigation and mounting
@@ -82,6 +88,12 @@ src/
   lesson-2-appendix-content.js Authored «من الكتاب» / «شرح المنصة» content, presets and challenges
   lesson-2-appendix.js      Parallel-forces lab, SVG scene, controls and interactions
   lesson-2-appendix.css     Isolated responsive lab design for the parallel-forces lab
+  unit-questions-content.js Source text, page audit, and platform-only hints for pp71–72
+  unit-questions-teacher-content.js Lazily loaded worked solutions and teacher diagrams
+  unit-questions.js         Student Area mount for the standalone review
+  unit-questions-teacher.js Password-gated Teacher Area mount
+  unit-questions.css        Responsive Unit Questions student-page styles
+  unit-questions-teacher.css Isolated teacher-diagram styles
   teacher.css / lesson-test.css
 tests/
   appendices.test.js        Navigation, practice flow, direct-page and preservation checks
@@ -116,6 +128,8 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 
 - The root URL (`index.html`) is the Course Home, not a lesson.
 - The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
+- `unit-questions.html` is a separate Unit 1 review for textbook pages 71–72, linked from the Unit 1 panel and Lesson 2; it is not part of the lesson list and is not the Unit 1 Test.
+- `unit-questions-teacher.html` is the review's separate, password-gated Teacher Area. It reuses the existing verifier and lazy-loads its solutions only after authorization.
 - The appendices library is `appendices.html`; its two entries link to `lesson-1-appendix.html` and `lesson-2-appendix.html`.
 - Every appendix page is a static direct URL with ordinary relative links, so refresh does not depend on a client-side router.
 - The unit and lesson list keeps only the published lessons; no future appendix cards or placeholders are shown.
@@ -136,6 +150,13 @@ The Lesson 2 Appendix («ملحق الدرس الثاني — القوى الم�
 - Each page: learning goal → verbatim textbook content → platform explanation → diagram/simulation → worked structure where the book solves an example.
 - Self-check answers (p61–62) are interactive, graded locally against the frozen printed key, with explanations after checking.
 
+## Unit Questions review
+
+- The review reproduces the three numbered prompts on pages 71–72 in printed order: four multiple-choice items, one written resultant task, and two problems with three parts each.
+- Each page excerpt is labelled with its printed page reference. Page 72 continues the first problem before introducing the second.
+- Platform hints are labelled separately from the source. No preprinted diagram or table appears on the supplied pages; the requested drawings are student tasks. Teacher-only solution diagrams are labelled as platform illustrations.
+- The full page-by-page source audit is `docs/unit-1-questions-source-audit.md`; the KaTeX source blocks and page map are covered by `tests/unit-questions.test.js`.
+
 ## Interactive simulations
 
 Four simulations (p56, 57, 59, 60) are built on pure functions in `simulation-logic.js` (unit-tested):
@@ -151,7 +172,7 @@ Every simulation is explicit that it is a platform interaction, states what it d
 
 ## Teacher Area
 
-`teacher.html` is password-gated (the project password), separate from the student bundle. It provides page-by-page teaching objectives, exact source content in collapsible disclosures, step-by-step worked solutions (answer separated from explanation), limitations of each simulation, common misconceptions, and clearly-labelled extended mathematics (e.g. the cosine law for p58).
+`teacher.html` is the Lesson 1 password-gated Teacher Area, separate from the student bundle. It provides page-by-page teaching objectives, exact source content in collapsible disclosures, step-by-step worked solutions (answer separated from explanation), limitations of each simulation, common misconceptions, and clearly-labelled extended mathematics (e.g. the cosine law for p58). `lesson-2-teacher.html` covers Lesson 2. `unit-questions-teacher.html` is the separate Teacher Area for the Unit 1 review; it reuses the existing password verifier and includes worked answers for every page 71–72 item, with source excerpts and teacher-only diagrams.
 
 ## Lesson Test
 
@@ -170,9 +191,9 @@ Every simulation is explicit that it is a platform interaction, states what it d
 ## Tests and build
 
 ```bash
-npm test          # 137 Node tests: source fidelity, navigation, simulation and appendix physics,
-                  # practice feedback, assessment flow, teacher area
+npm test          # 147 Node tests: source fidelity, navigation, simulation and appendix physics,
+                  # Unit Questions coverage, practice feedback, assessment flow, teacher area
 npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, the appendices library, the Lesson 1 and Lesson 2 appendices, the Lesson 2 test and teacher pages, the Unit 1 test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, the standalone Unit 1 Questions student and teacher pages, the appendices library and two appendices, Lesson 2 test and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.

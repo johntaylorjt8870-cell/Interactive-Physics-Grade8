@@ -409,6 +409,55 @@ button, a { font: inherit; }
 .future-space strong { display: block; color: var(--home-muted); font-size: 12.5px; font-weight: 700; }
 .future-space p { margin: 1px 0 0; font-size: 12px; line-height: 1.7; }
 
+/* Unit questions are a review inside Unit 1, not another lesson or appendix. */
+.unit-review-entry {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 17px;
+  margin: 2px 24px 22px;
+  padding: 16px 19px;
+  background: linear-gradient(110deg, #fbfaf6 0%, #f4f6fa 100%);
+  border: 1px solid #e0e4eb;
+  border-inline-start: 4px solid var(--home-accent);
+  border-radius: 12px;
+}
+.unit-review-mark {
+  width: 58px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--home-accent-deep);
+  font: 700 12px var(--home-font-latin);
+  background: #e9edf4;
+  border-radius: 10px;
+}
+.unit-review-mark span + span { padding-inline-start: 4px; border-inline-start: 1px solid #c9d2e2; }
+.unit-review-copy { min-width: 0; }
+.unit-review-kicker { margin: 0 0 2px; color: var(--home-teal); font-size: 10.5px; font-weight: 700; }
+.unit-review-copy h3 { margin: 0; color: var(--home-ink); font-size: 18px; line-height: 1.5; }
+.unit-review-copy > p:last-child { margin: 3px 0 0; color: var(--home-muted); font-size: 11.5px; line-height: 1.75; }
+.unit-review-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 40px;
+  padding: 8px 13px;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--home-accent);
+  border-radius: 8px;
+  transition: background 140ms ease, transform 140ms ease;
+}
+.unit-review-action:hover { background: var(--home-accent-deep); transform: translateY(-1px); }
+.unit-review-action:focus-visible { outline: 2px solid var(--home-accent-deep); outline-offset: 3px; }
+.unit-review-action span:last-child { font: 700 16px var(--home-font-latin); }
+
 .home-footer {
   display: flex;
   justify-content: space-between;
@@ -462,6 +511,11 @@ button, a { font: inherit; }
   .lesson-entry { grid-template-columns: auto minmax(0, 1fr); gap: 13px; padding: 21px 18px 20px; }
   .lesson-copy h4 { font-size: 19px; }
   .lesson-start-action { grid-column: 2; justify-self: start; min-height: 40px; margin-top: 3px; font-size: 12px; }
+  .unit-review-entry { grid-template-columns: 48px minmax(0,1fr); gap: 11px; margin: 0 18px 18px; padding: 14px; }
+  .unit-review-mark { width: 46px; height: 44px; font-size: 10px; }
+  .unit-review-copy h3 { font-size: 16px; }
+  .unit-review-copy > p:last-child { font-size: 11px; }
+  .unit-review-action { grid-column: 2; justify-self: start; min-height: 36px; margin-top: 1px; }
   .future-space { margin-inline: 18px; }
 }
 

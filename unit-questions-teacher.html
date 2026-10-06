@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta name="description" content="منطقة المعلم المنفصلة لحلول أسئلة الوحدة الأولى من الكتاب، الصفحتان 71 و72." />
+    <title>منطقة المعلم — أسئلة الوحدة الأولى</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/teacher.css" />
+    <link rel="stylesheet" href="./src/unit-questions-teacher.css" />
+  </head>
+  <body class="teacher-page unit-questions-teacher-page">
+    <a class="teacher-skip-link" href="#teacher-main">انتقل إلى المحتوى</a>
+    <div class="teacher-shell">
+      <header class="teacher-topbar">
+        <a class="teacher-back-link" href="./unit-questions.html" aria-label="العودة إلى أسئلة الوحدة الأولى">
+          <span aria-hidden="true">←</span><span>أسئلة الوحدة الأولى</span>
+        </a>
+        <div class="teacher-heading-lockup">
+          <p class="teacher-kicker">مساحة مستقلة عن صفحات الطالب</p>
+          <h1>منطقة المعلم</h1>
+        </div>
+        <span class="teacher-scope-badge">أسئلة الوحدة الأولى · p71–p72</span>
+      </header>
+
+      <main class="teacher-main" id="teacher-main">
+        <section class="teacher-intro" aria-labelledby="unit-teacher-intro-heading">
+          <div class="teacher-intro-copy">
+            <p class="teacher-eyebrow">الصف الثامن · الفيزياء</p>
+            <h2 id="unit-teacher-intro-heading">الوحدة الأولى — الحركة والقوى</h2>
+            <p class="teacher-lesson-name">أسئلة الوحدة الأولى <span dir="ltr">· p71–p72</span></p>
+            <p class="teacher-intro-note">حلول أسئلة الكتاب كاملةً، مع خطوات الحساب والتحقق ومراجع الصفحات، منفصلةً عن اختبار الوحدة التفاعلي.</p>
+          </div>
+          <div class="teacher-source-stamp" aria-label="المصدر صفحات 71 إلى 72">
+            <span>المصدر</span><strong dir="ltr">p71–p72</strong>
+          </div>
+        </section>
+
+        <section class="teacher-gate" aria-labelledby="teacher-gate-heading">
+          <div class="teacher-gate-icon" aria-hidden="true">م</div>
+          <div class="teacher-gate-copy">
+            <h2 id="teacher-gate-heading">دخول المعلم</h2>
+            <p>أدخل كلمة المرور لعرض الحلول وإرشادات المعلم. لا تُحمّل مادة المعلم إلى مساحة الصفحة قبل اجتياز التحقق.</p>
+            <form id="teacher-login" class="teacher-login-form" novalidate>
+              <label for="teacher-password">كلمة مرور منطقة المعلم</label>
+              <div class="teacher-login-row">
+                <input id="teacher-password" name="password" type="password" required autocomplete="current-password" aria-describedby="teacher-gate-help" />
+                <button id="teacher-login-submit" type="submit">تحقق من كلمة المرور</button>
+              </div>
+              <p id="teacher-gate-help" class="teacher-gate-help">لا تُحفظ كلمة المرور في هذه الصفحة. استخدم اتصالاً آمناً للوصول.</p>
+              <p id="teacher-auth-message" class="teacher-auth-message" role="alert" aria-live="assertive" hidden></p>
+            </form>
+          </div>
+        </section>
+
+        <section id="teacher-workspace" class="teacher-workspace" aria-label="حلول أسئلة الوحدة الأولى في منطقة المعلم" hidden></section>
+      </main>
+
+      <footer class="teacher-footer">
+        <span>منطقة المعلم · أسئلة الوحدة الأولى</span>
+        <a href="./unit-questions.html">العودة إلى أسئلة الطالب</a>
+      </footer>
+    </div>
+    <script type="module" src="./src/unit-questions-teacher.js"></script>
+  </body>
+</html>
