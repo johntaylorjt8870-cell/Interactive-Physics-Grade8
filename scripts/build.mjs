@@ -10,6 +10,7 @@ await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(resolve(outputDirectory, 'src'), { recursive: true });
 
 await cp(resolve(projectDirectory, 'index.html'), resolve(outputDirectory, 'index.html'));
+await cp(resolve(projectDirectory, 'lesson-1.html'), resolve(outputDirectory, 'lesson-1.html'));
 await cp(resolve(projectDirectory, 'teacher.html'), resolve(outputDirectory, 'teacher.html'));
 await cp(resolve(projectDirectory, 'lesson-test.html'), resolve(outputDirectory, 'lesson-test.html'));
 await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), { recursive: true });

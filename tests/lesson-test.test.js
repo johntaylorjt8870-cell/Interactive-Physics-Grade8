@@ -414,7 +414,7 @@ test('answer-key schema validation rejects malformed values and unit mismatches'
 test('lesson-test entry is accessible, RTL, separate from Teacher Area and the sequential lesson, and linked minimally', async () => {
   const [pageHtml, homeHtml, appSource, css, buildSource, lessonEntry, teacherPage] = await Promise.all([
     readFile(new URL('../lesson-test.html', import.meta.url), 'utf8'),
-    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../lesson-1.html', import.meta.url), 'utf8'),
     readFile(new URL('../src/lesson-assessment.js', import.meta.url), 'utf8'),
     readFile(new URL('../src/lesson-test.css', import.meta.url), 'utf8'),
     readFile(new URL('../scripts/build.mjs', import.meta.url), 'utf8'),
@@ -479,7 +479,7 @@ test('final results expose the exact four solution groups, score totals, and per
 
 test('Phase 5 adds no Unit Test page, route, completion behavior, or future test entry', async () => {
   const [homeHtml, testPage, appSource, buildSource, packageJson] = await Promise.all([
-    readFile(new URL('../index.html', import.meta.url), 'utf8'),
+    readFile(new URL('../lesson-1.html', import.meta.url), 'utf8'),
     readFile(new URL('../lesson-test.html', import.meta.url), 'utf8'),
     readFile(new URL('../src/lesson-assessment.js', import.meta.url), 'utf8'),
     readFile(new URL('../scripts/build.mjs', import.meta.url), 'utf8'),
