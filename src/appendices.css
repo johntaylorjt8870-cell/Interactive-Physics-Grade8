@@ -313,6 +313,61 @@
 .appendix-start-action:hover { color: #fff; background: var(--home-accent-deep); }
 .appendix-start-action:focus-visible { outline-color: var(--home-accent); }
 
+/* The library lists more than one appendix: keep the card rhythm of the
+   existing entry and give the Lesson 2 card its own parallel-force art. */
+
+.appendix-library-card + .appendix-library-card { margin-top: 16px; }
+
+.appendix-card-art-parallel {
+  background:
+    radial-gradient(circle at 52% 46%, rgba(255, 255, 255, 0.92), transparent 11%),
+    radial-gradient(circle at 52% 46%, rgba(201, 106, 79, 0.12), transparent 42%),
+    linear-gradient(140deg, #eef1f6, #ecf1f0 52%, #e6eef2);
+}
+.appendix-card-art-parallel::before, .appendix-card-art-parallel::after { content: none; }
+.appendix-art-rod {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 13%;
+  width: 74%;
+  height: 14px;
+  background: linear-gradient(90deg, #e9e2d8, #f5f0e9 48%, #e5ded2);
+  border: 1px solid rgba(213, 204, 190, 0.75);
+  border-radius: 7px;
+  transform: translateY(-50%);
+}
+.appendix-art-carrier {
+  position: absolute;
+  top: 13%;
+  bottom: 13%;
+  width: 1px;
+  border-inline-start: 1px dashed rgba(84, 104, 134, 0.34);
+}
+.appendix-art-carrier-one { inset-inline-start: 30%; }
+.appendix-art-carrier-two { inset-inline-start: 70%; }
+.appendix-art-carrier-result { inset-inline-start: 51%; border-inline-start: 2px solid rgba(201, 106, 79, 0.55); }
+.appendix-art-parallel, .appendix-art-parallel-result {
+  position: absolute;
+  bottom: 50%;
+  width: 4px;
+  border-radius: 99px;
+  transform-origin: 50% 100%;
+}
+.appendix-art-parallel::after, .appendix-art-parallel-result::after {
+  position: absolute;
+  top: -9px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  content: '';
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid currentColor;
+}
+.appendix-art-parallel-one { inset-inline-start: 30%; height: 58px; color: #16706b; background: currentColor; }
+.appendix-art-parallel-two { inset-inline-start: 70%; height: 92px; color: #46629f; background: currentColor; }
+.appendix-art-parallel-result { inset-inline-start: 51%; width: 5px; height: 120px; color: #c96a4f; background: currentColor; }
+
 .appendices-library-page .home-footer a { color: var(--home-accent-deep); font-weight: 600; text-decoration: none; }
 .appendices-library-page .home-footer a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
