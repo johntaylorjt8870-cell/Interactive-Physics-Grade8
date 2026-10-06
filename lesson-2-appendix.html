@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta name="description" content="ملحق تفاعلي مستقل لدرس القوى المتوازية: مختبر حامل المحصلة، حالتا الجهة الواحدة والجهتين المتعاكستين، وتحديات استكشافية من المنصة." />
+    <title>ملحق الدرس الثاني — القوى المتوازية | فيزياء ٨</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/lesson-1-appendix.css" />
+    <link rel="stylesheet" href="./src/lesson-2-appendix.css" />
+  </head>
+  <body class="appendix-page lesson-2-appendix-page">
+    <a class="appendix-skip-link" href="#parallel-lab">انتقل إلى مختبر القوى المتوازية</a>
+    <div class="appendix-shell">
+      <header class="appendix-topbar">
+        <a class="appendix-brand" href="./" aria-label="العودة إلى الرئيسية">
+          <span class="appendix-brand-mark" aria-hidden="true">ف</span>
+          <span class="appendix-brand-copy"><strong dir="ltr">Interactive Physics</strong><small>ملحقات الدروس · الصف الثامن</small></span>
+        </a>
+        <nav class="appendix-breadcrumb" aria-label="مسار الموقع">
+          <a href="./">الرئيسية</a>
+          <span aria-hidden="true">/</span>
+          <a href="./appendices.html">ملحقات الدروس</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">ملحق الدرس الثاني</span>
+        </nav>
+      </header>
+
+      <main id="appendix-main" data-lesson-2-appendix>
+        <section class="appendix-hero parallel-hero" aria-labelledby="appendix-title">
+          <div class="appendix-hero-copy">
+            <p class="appendix-eyebrow">ملحقات الدروس · مختبر الاستكشاف</p>
+            <h1 id="appendix-title">ملحق الدرس الثاني</h1>
+            <p class="appendix-hero-subtitle">القوى المتوازية</p>
+            <span class="appendix-extension-label"><span aria-hidden="true">✦</span> ملحق تفاعلي — <bdi dir="ltr">Platform Extension</bdi></span>
+            <p class="appendix-hero-description">
+              هذا ملحق للدرس الثاني (صفحات 63–70)، وليس درساً جديداً. حرّك قوتين متوازيتين على ساق أفقية، وغيّر شدتيهما وموضعيهما وجهتيهما، ثم راقب كيف تتغير شدة المحصلة وأين ينتقل حاملها.
+            </p>
+            <div class="appendix-hero-actions">
+              <a class="appendix-primary-link" href="#parallel-lab">ادخل المختبر <span aria-hidden="true">↓</span></a>
+              <a class="appendix-secondary-link" href="./appendices.html">العودة إلى ملحقات الدروس</a>
+              <a class="appendix-secondary-link" href="./lesson-2.html">مراجعة الدرس الثاني</a>
+            </div>
+          </div>
+          <div class="parallel-hero-art" aria-hidden="true">
+            <span class="parallel-hero-rod"></span>
+            <span class="parallel-hero-carrier parallel-hero-carrier-one"></span>
+            <span class="parallel-hero-carrier parallel-hero-carrier-two"></span>
+            <span class="parallel-hero-carrier parallel-hero-carrier-result"></span>
+            <span class="parallel-hero-force parallel-hero-force-one"></span>
+            <span class="parallel-hero-force parallel-hero-force-two"></span>
+            <span class="parallel-hero-result"></span>
+            <span class="parallel-hero-point parallel-hero-point-c"></span>
+          </div>
+        </section>
+
+        <section class="appendix-howto" aria-labelledby="howto-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">أربع خطوات في المختبر</p>
+              <h2 id="howto-heading">جرّب، ثم فسّر ما حدث</h2>
+            </div>
+            <p>كل تغيير في الشدة أو في الموضع يعيد رسم القوتين وحامل المحصلة فوراً، مع الحساب المرافق.</p>
+          </div>
+          <ol class="appendix-howto-steps">
+            <li><span dir="ltr">01</span><strong>لاحظ</strong><small>أين يقع حامل المحصلة الآن؟</small></li>
+            <li><span dir="ltr">02</span><strong>توقّع</strong><small>ماذا سيحدث لو زادت إحدى القوتين؟</small></li>
+            <li><span dir="ltr">03</span><strong>غيّر</strong><small>عدّل الشدة أو الموضع أو الجهة.</small></li>
+            <li><span dir="ltr">04</span><strong>تحقّق</strong><small>قارن الجداءين والنتيجة.</small></li>
+          </ol>
+        </section>
+
+        <section class="parallel-source-section" aria-labelledby="book-source-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">قبل أي إعداد من المنصة</p>
+              <h2 id="book-source-heading">من الكتاب — صفحات 63–70</h2>
+              <p>تعريف القوى المتوازية، وعناصر المحصلة في الحالتين، والعلاقة التي تحدد موقع حاملها.</p>
+            </div>
+            <span class="parallel-source-badge"><span aria-hidden="true">◆</span> من الكتاب · الصفحات 64–69</span>
+          </div>
+          <p class="parallel-definition" id="book-definition"></p>
+          <div class="parallel-source-grid" id="book-cases"></div>
+          <p class="parallel-source-note">
+            ما سبق هو محتوى الدرس الثاني كما هو؛ أما النموذج التفاعلي والحسابات المساعدة في هذا الملحق فهي من إعداد المنصة وموسومة بوضوح أدناه.
+          </p>
+        </section>
+
+        <section class="appendix-lab-section" id="parallel-lab" aria-labelledby="lab-heading">
+          <header class="appendix-section-heading appendix-lab-heading">
+            <div>
+              <p class="appendix-section-kicker">جرّب · لاحظ · قارن</p>
+              <h2 id="lab-heading" tabindex="-1">مختبر القوى المتوازية</h2>
+              <p>ساق أفقية مهملة الكتلة تؤثر فيها قوتان متوازيتان. غيّر الشدتين والموضعين والجهتين، وراقب المحصلة وحاملها والمسافتين.</p>
+            </div>
+            <span class="appendix-lab-index"><span dir="ltr">LAB 02</span><span>ملحق الدرس 2</span></span>
+          </header>
+
+          <section class="appendix-preset-panel" aria-labelledby="preset-heading">
+            <div class="appendix-preset-heading">
+              <div>
+                <span class="appendix-mini-label">حالات جاهزة للاستكشاف</span>
+                <h3 id="preset-heading">اختر حالة ثم توقّع نتيجتها</h3>
+              </div>
+              <p>كل حالة تضبط الشدتين والموضعين والجهة، وتطرح سؤالاً واحداً للملاحظة.</p>
+            </div>
+            <div class="parallel-preset-grid" id="preset-buttons" role="group" aria-label="الحالات الجاهزة في المختبر"></div>
+            <p class="appendix-preset-observation" id="preset-observation" aria-live="polite">الحالة المعروضة هي تطبيق الكتاب المحلول: قوتان بجهة واحدة شدتاهما <bdi dir="ltr">20 N</bdi> و<bdi dir="ltr">30 N</bdi>.</p>
+          </section>
+
+          <div class="parallel-workbench">
+            <figure class="parallel-scene-panel" aria-labelledby="scene-heading">
+              <div class="parallel-scene-heading">
+                <div>
+                  <span class="appendix-mini-label">المشهد المتجهي</span>
+                  <h3 id="scene-heading" tabindex="-1">الساق، القوتان، وحامل المحصلة</h3>
+                  <p class="parallel-model-badge">نموذج تعليمي مبسّط — <bdi dir="ltr">Educational simplified model</bdi></p>
+                </div>
+                <span class="parallel-scene-scale"><span class="scale-dot" aria-hidden="true"></span> مقياس سهم واحد لكل أسهم المشهد</span>
+              </div>
+              <div class="parallel-svg-wrap">
+                <svg id="parallel-diagram" viewBox="0 0 900 470" role="img" aria-labelledby="parallel-diagram-title parallel-diagram-desc">
+                  <title id="parallel-diagram-title">قوتان متوازيتان على ساق أفقية ومحصلتهما</title>
+                  <desc id="parallel-diagram-desc">قوتان متوازيتان تؤثران في نقطتين على ساق أفقية، وتظهر معهما المسافات وحامل المحصلة.</desc>
+                  <defs>
+                    <pattern id="parallel-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#e8ebf1" stroke-width="1" />
+                    </pattern>
+                    <marker id="parallel-arrow-force-1" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#16706b" /></marker>
+                    <marker id="parallel-arrow-force-2" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#46629f" /></marker>
+                    <marker id="parallel-arrow-result" viewBox="0 0 10 10" refX="8.4" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c96a4f" /></marker>
+                  </defs>
+                  <rect class="parallel-canvas" x="1" y="1" width="898" height="468" rx="18" />
+                  <rect class="parallel-canvas-grid" x="1" y="1" width="898" height="468" rx="18" fill="url(#parallel-grid)" />
+                  <g id="carrier-layer"></g>
+                  <rect class="parallel-rod" id="parallel-rod" x="250" y="242" width="390" height="16" rx="7" />
+                  <g id="distance-layer"></g>
+                  <g id="force-layer"></g>
+                  <g id="resultant-layer" class="parallel-resultant-layer">
+                    <line class="parallel-resultant-carrier" x1="0" y1="74" x2="0" y2="432" />
+                    <line class="parallel-resultant-vector" id="resultant-vector" x1="0" y1="242" x2="0" y2="242" marker-end="url(#parallel-arrow-result)" visibility="hidden" />
+                    <circle class="parallel-resultant-point" id="resultant-point" cx="0" cy="250" r="7" />
+                    <text class="parallel-carrier-label" x="0" y="424" direction="ltr">C</text>
+                    <text class="parallel-resultant-tag" id="resultant-tag" x="0" y="64" text-anchor="middle" direction="rtl">المحصلة</text>
+                  </g>
+                  <g id="zero-layer"></g>
+                  <g id="edge-layer"></g>
+                  <g id="point-layer"></g>
+                </svg>
+              </div>
+              <div class="appendix-force-legend" id="parallel-legend" role="group" aria-label="مفتاح رموز المشهد"></div>
+              <figcaption>الحوامل خطوط رأسية متقطعة، والساق هي <bdi dir="ltr">AB</bdi>. سهم المحصلة بلون ونمط مختلفين، وطوله بمقياس الأسهم نفسه.</figcaption>
+            </figure>
+
+            <section class="parallel-control-panel" aria-labelledby="controls-heading">
+              <fieldset class="parallel-mode-field">
+                <legend>جهتا القوتين</legend>
+                <label class="parallel-mode-option">
+                  <input type="radio" name="parallel-sense-mode" value="same" data-lab-mode checked />
+                  <span>القوتان إلى الأعلى <span class="parallel-sense-glyphs" aria-hidden="true" dir="ltr">↑ ↑</span></span>
+                </label>
+                <label class="parallel-mode-option">
+                  <input type="radio" name="parallel-sense-mode" value="opposite" data-lab-mode />
+                  <span>الأولى إلى الأعلى والثانية إلى الأسفل <span class="parallel-sense-glyphs" aria-hidden="true" dir="ltr">↑ ↓</span></span>
+                </label>
+              </fieldset>
+
+              <h3 id="controls-heading" class="parallel-controls-heading">غيّر الشدتين والموضعين</h3>
+
+              <div class="parallel-slider-group">
+                <div class="parallel-slider">
+                  <div class="parallel-slider-head">
+                    <label for="force-1-magnitude">شدة القوة الأولى <span class="parallel-symbol" data-tex="F_{1}" data-aria="القوة الأولى" aria-hidden="true"></span></label>
+                    <output id="force-1-magnitude-output" for="force-1-magnitude"><bdi dir="ltr">20 N</bdi></output>
+                  </div>
+                  <input id="force-1-magnitude" type="range" min="5" max="80" step="5" value="20" data-lab-input="force1" aria-valuetext="20 نيوتن" aria-describedby="force-1-help" />
+                  <p class="parallel-slider-help" id="force-1-help">من <bdi dir="ltr">5 N</bdi> إلى <bdi dir="ltr">80 N</bdi> بخطوة <bdi dir="ltr">5 N</bdi>.</p>
+                </div>
+
+                <div class="parallel-slider">
+                  <div class="parallel-slider-head">
+                    <label for="force-2-magnitude">شدة القوة الثانية <span class="parallel-symbol" data-tex="F_{2}" data-aria="القوة الثانية" aria-hidden="true"></span></label>
+                    <output id="force-2-magnitude-output" for="force-2-magnitude"><bdi dir="ltr">30 N</bdi></output>
+                  </div>
+                  <input id="force-2-magnitude" type="range" min="5" max="80" step="5" value="30" data-lab-input="force2" aria-valuetext="30 نيوتن" aria-describedby="force-2-help" />
+                  <p class="parallel-slider-help" id="force-2-help">لا تعني زيادة <span class="parallel-symbol" data-tex="F_{2}" data-aria="القوة الثانية" aria-hidden="true"></span> دائماً زيادة المحصلة؛ راجع الجهة المختارة.</p>
+                </div>
+
+                <div class="parallel-slider">
+                  <div class="parallel-slider-head">
+                    <label for="force-1-position">موضع القوة الأولى على الساق <span class="parallel-symbol" data-tex="x_{1}" data-aria="موضع القوة الأولى" aria-hidden="true"></span></label>
+                    <output id="force-1-position-output" for="force-1-position"><bdi dir="ltr">0 cm</bdi></output>
+                  </div>
+                  <input id="force-1-position" type="range" min="0" max="60" step="5" value="0" data-lab-input="position1" aria-valuetext="0 سنتيمتر من النقطة A" aria-describedby="force-1-position-help" />
+                  <p class="parallel-slider-help" id="force-1-position-help">المسافة من النقطة <bdi dir="ltr">A</bdi> إلى <bdi dir="ltr">B</bdi> هي <bdi dir="ltr">60 cm</bdi>.</p>
+                </div>
+
+                <div class="parallel-slider">
+                  <div class="parallel-slider-head">
+                    <label for="force-2-position">موضع القوة الثانية على الساق <span class="parallel-symbol" data-tex="x_{2}" data-aria="موضع القوة الثانية" aria-hidden="true"></span></label>
+                    <output id="force-2-position-output" for="force-2-position"><bdi dir="ltr">50 cm</bdi></output>
+                  </div>
+                  <input id="force-2-position" type="range" min="0" max="60" step="5" value="50" data-lab-input="position2" aria-valuetext="50 سنتيمتر من النقطة A" aria-describedby="force-2-position-help" />
+                  <p class="parallel-slider-help" id="force-2-position-help">يبقى الحاملان متباعدين <bdi dir="ltr">10 cm</bdi> على الأقل، ولا يتطابقان أبداً.</p>
+                </div>
+              </div>
+
+              <div class="parallel-result-card" role="group" aria-labelledby="result-heading">
+                <div class="parallel-result-head">
+                  <span class="appendix-mini-label">نتيجة حيّة من المحاكاة</span>
+                  <h3 id="result-heading">محصلة القوتين</h3>
+                </div>
+                <dl class="parallel-result-stats">
+                  <div>
+                    <dt id="result-magnitude-label">شدة المحصلة <bdi dir="ltr">F</bdi></dt>
+                    <dd><output id="result-magnitude" aria-labelledby="result-magnitude-label"></output></dd>
+                  </div>
+                  <div>
+                    <dt id="result-sense-label">جهة المحصلة</dt>
+                    <dd><output id="result-sense" aria-labelledby="result-sense-label"></output></dd>
+                  </div>
+                  <div>
+                    <dt id="result-position-label">حامل المحصلة من <bdi dir="ltr">A</bdi></dt>
+                    <dd><output id="result-position" aria-labelledby="result-position-label"></output></dd>
+                  </div>
+                  <div>
+                    <dt id="result-distance-1-label">البعد <span class="parallel-symbol" data-tex="d_{1}" data-aria="بعد المحصلة عن القوة الأولى" aria-hidden="true"></span> عن <span class="parallel-symbol" data-tex="F_{1}" data-aria="القوة الأولى" aria-hidden="true"></span></dt>
+                    <dd><output id="result-distance-1" aria-labelledby="result-distance-1-label"></output></dd>
+                  </div>
+                  <div>
+                    <dt id="result-distance-2-label">البعد <span class="parallel-symbol" data-tex="d_{2}" data-aria="بعد المحصلة عن القوة الثانية" aria-hidden="true"></span> عن <span class="parallel-symbol" data-tex="F_{2}" data-aria="القوة الثانية" aria-hidden="true"></span></dt>
+                    <dd><output id="result-distance-2" aria-labelledby="result-distance-2-label"></output></dd>
+                  </div>
+                  <div class="parallel-moment-stat">
+                    <dt id="result-moments-label">التحقق بالعزم <span class="parallel-symbol" data-tex="F_{1}\times d_{1}" data-aria="جداء القوة الأولى في بعدها" aria-hidden="true"></span> و<span class="parallel-symbol" data-tex="F_{2}\times d_{2}" data-aria="جداء القوة الثانية في بعدها" aria-hidden="true"></span></dt>
+                    <dd><output id="result-moments" aria-labelledby="result-moments-label"></output></dd>
+                  </div>
+                </dl>
+                <p class="parallel-result-note" id="result-note"></p>
+              </div>
+
+              <div class="parallel-actions">
+                <button class="appendix-button appendix-play-button" id="sweep-lab" type="button" aria-describedby="sweep-help">شاهد حامل المحصلة يتحرك</button>
+                <button class="appendix-button appendix-reset-button" id="reset-lab" type="button">أعد ضبط المختبر</button>
+              </div>
+              <p class="parallel-sweep-help" id="sweep-help">تزداد القوة الثانية تدريجياً ثم تعود، فينتقل حامل المحصلة وفق علاقة الكتاب.</p>
+
+              <p class="appendix-model-label">
+                <strong>Educational simplified model</strong><br />
+                ساق مهملة الكتلة، قوتان شاقوليتان متوازيتان، ولا احتكاك ولا وزن للساق ولا دوران مرسوم. المقادير تُقاس من الرسم لا من أدوات مختبرية، والغرض توضيح المحصلة وحاملها.
+              </p>
+              <p class="appendix-lab-status" id="lab-status" role="status" aria-live="polite" aria-atomic="true">المختبر جاهز: غيّر الشدة أو الموضع أو الجهة، وستتحدث النتيجة والرسم معاً.</p>
+            </section>
+          </div>
+
+          <section class="parallel-calc-panel" aria-labelledby="live-calc-heading">
+            <div class="parallel-calc-head">
+              <div>
+                <span class="appendix-mini-label">من الرسم إلى الحساب</span>
+                <h3 id="live-calc-heading">الحساب الحالي خطوةً بخطوة</h3>
+              </div>
+              <span class="parallel-platform-badge"><span aria-hidden="true">✦</span> <bdi dir="ltr">Platform Explanation</bdi></span>
+            </div>
+            <div class="parallel-equations" id="live-equations"></div>
+          </section>
+
+          <section class="appendix-observation-panel" aria-labelledby="observation-heading">
+            <div class="appendix-observation-mark" aria-hidden="true">02</div>
+            <div>
+              <p class="appendix-mini-label">تأمل الحالة التي أمامك</p>
+              <h3 id="observation-heading">ماذا تلاحظ؟</h3>
+              <p id="live-observation">حامل المحصلة يقع بين حاملي القوتين في وضع الجهة الواحدة، ويقترب من القوة الأكبر.</p>
+            </div>
+          </section>
+        </section>
+
+        <section class="appendix-explanation-section" aria-labelledby="platform-explanation-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">افهم ما شاهدته</p>
+              <h2 id="platform-explanation-heading">شرح المنصة الموسّع</h2>
+              <p>هذه البطاقات من إعداد المنصة، وتشرح ما يظهر في المختبر؛ وهي ليست نصاً إضافياً في الكتاب.</p>
+            </div>
+            <span class="appendix-extension-label appendix-extension-label-light"><span aria-hidden="true">✦</span> شرح المنصة · <bdi dir="ltr">Platform Explanation</bdi></span>
+          </div>
+          <div class="appendix-concept-grid" id="platform-concepts"></div>
+        </section>
+
+        <section class="parallel-book-example-section" aria-labelledby="book-example-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">حل الكتاب نفسه</p>
+              <h2 id="book-example-heading">تطبيق الكتاب المحلول</h2>
+            </div>
+            <span class="parallel-source-badge"><span aria-hidden="true">◆</span> من الكتاب · ص 66–67</span>
+          </div>
+          <article class="parallel-book-example" id="book-example"></article>
+        </section>
+
+        <section class="parallel-challenge-section" aria-labelledby="challenge-heading">
+          <div class="appendix-section-heading">
+            <div>
+              <p class="appendix-section-kicker">استكشاف موجّه بالمختبر</p>
+              <h2 id="challenge-heading">تحديات تفاعلية</h2>
+              <p>لكل تحدٍّ هدف واضح قابل للتحقيق. لا يوجد تصحيح تلقائي: جرّب بحرية، ثم اطلب التحقق عندما تصل إلى الهدف.</p>
+            </div>
+            <span class="appendix-extension-label appendix-extension-label-light">استكشاف وتدريب · ليس اختباراً رسمياً</span>
+          </div>
+          <div class="parallel-challenge-grid" id="challenge-list"></div>
+        </section>
+
+        <section class="appendix-summary-section" aria-labelledby="summary-heading">
+          <p class="appendix-section-kicker">خذ الفكرة معك</p>
+          <h2 id="summary-heading">الخلاصة</h2>
+          <div class="appendix-summary-equation" id="summary-equations"></div>
+          <p>في وضع الجهة الواحدة تجمع الشدتان ويقع الحامل بين القوتين، وفي وضع الجهتين المتعاكستين تُطرح الشدتان ويقع الحامل خارج القطعة من جهة القوة الأكبر. في الحالتين يحدد موضعَ الحامل تعادلُ أثرَي الدوران، لا جمع المقادير.</p>
+        </section>
+      </main>
+
+      <footer class="appendix-footer">
+        <a href="./appendices.html">← العودة إلى ملحقات الدروس</a>
+        <a href="./">العودة إلى الرئيسية</a>
+        <a href="./lesson-2.html">مراجعة الدرس الثاني — القوى المتوازية</a>
+        <span>ملحق تفاعلي مستقل · لا يغيّر محتوى الدرس أو الاختبار</span>
+      </footer>
+    </div>
+    <noscript><p class="appendix-noscript">يحتاج المختبر إلى JavaScript لعرض القوى وحامل المحصلة. يمكن العودة إلى <a href="./lesson-2.html">محتوى الدرس الأصلي</a> أو إلى <a href="./appendices.html">ملحقات الدروس</a>.</p></noscript>
+    <script type="module" src="./src/lesson-2-appendix.js"></script>
+  </body>
+</html>

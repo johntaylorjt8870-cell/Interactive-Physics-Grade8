@@ -35,6 +35,8 @@ Then open:
 - Student Lesson 1: http://127.0.0.1:4173/lesson-1.html
 - Lesson Appendices: http://127.0.0.1:4173/appendices.html
 - Lesson 1 Appendix: http://127.0.0.1:4173/lesson-1-appendix.html
+- Lesson 2: http://127.0.0.1:4173/lesson-2.html
+- Lesson 2 Appendix: http://127.0.0.1:4173/lesson-2-appendix.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
 - Teacher Area: http://127.0.0.1:4173/teacher.html
 
@@ -47,6 +49,8 @@ index.html                  Course Home / platform entry
 lesson-1.html               Published Lesson 1 student page (preserved)
 appendices.html             Published appendices library
 lesson-1-appendix.html      Standalone Lesson 1 interactive appendix
+lesson-2.html               Published Lesson 2 student page (preserved)
+lesson-2-appendix.html      Standalone Lesson 2 interactive appendix (parallel forces)
 teacher.html                Separate Teacher Area page
 lesson-test.html            20-question Lesson Test page
 scripts/build.mjs           Static production build
@@ -74,6 +78,10 @@ src/
   appendices.css            Course Home appendices entry + library page
   styles.css                Student lesson design system + shared math styles
   lesson-1-appendix.css     Isolated responsive lab design
+  lesson-2-appendix-physics.js Parallel-force model: intensities, carriers, resultant position, challenges
+  lesson-2-appendix-content.js Authored «من الكتاب» / «شرح المنصة» content, presets and challenges
+  lesson-2-appendix.js      Parallel-forces lab, SVG scene, controls and interactions
+  lesson-2-appendix.css     Isolated responsive lab design for the parallel-forces lab
   teacher.css / lesson-test.css
 tests/
   appendices.test.js        Navigation, practice flow, direct-page and preservation checks
@@ -108,9 +116,9 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 
 - The root URL (`index.html`) is the Course Home, not a lesson.
 - The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
-- The appendices library is `appendices.html`; its only current entry links to `lesson-1-appendix.html`.
-- Both appendix pages are static direct URLs with ordinary relative links, so refresh does not depend on a client-side router.
-- The unit and lesson list remains a single current lesson entry; no future appendix cards are shown.
+- The appendices library is `appendices.html`; its two entries link to `lesson-1-appendix.html` and `lesson-2-appendix.html`.
+- Every appendix page is a static direct URL with ordinary relative links, so refresh does not depend on a client-side router.
+- The unit and lesson list keeps only the published lessons; no future appendix cards or placeholders are shown.
 
 ## Lesson Appendices
 
@@ -119,6 +127,8 @@ The Lesson 1 Appendix is an independent platform extension; it does not edit or 
 The lab uses a fixed educational mass of 2 kg and `a = F_R / m`. Motion has no drag, rotation, or collisions; animation time and screen position are explicitly not real-world measurements. A force preset updates the controls, vectors, resultant and explanatory prompt together. The page also includes a stepped KaTeX worked example, submit-to-check practice with explanatory feedback, and a challenge that asks the student to balance three forces using the lab.
 
 All of this material is labelled as a platform extension. It is practice/exploration, not textbook wording or part of the official Lesson Test.
+
+The Lesson 2 Appendix («ملحق الدرس الثاني — القوى المتوازية») follows the same architecture for pages 63–70. Its lab puts two parallel forces on a horizontal rod and lets the student change `F_{1}`, `F_{2}` and both carrier positions in the same-sense and opposite-sense cases. `src/lesson-2-appendix-physics.js` owns the model (slider clamping, the resultant's intensity, sense, carrier position and the moment products) and delegates both textbook cases to the published Lesson 2 model in `src/lesson-2-physics.js`; the platform-only derivation of the carrier position is labelled «شرح المنصة», while the quoted relations stay labelled «من الكتاب». Equal-and-opposite forces are shown as a zero resultant with no single carrier, drawn as a rotational effect instead of an arrow. The four exploratory challenges are verified reachable on the real slider grid by the test suite and are checked only when the student asks; the scene keeps a `prefers-reduced-motion` path and carries the «نموذج تعليمي مبسّط — Educational simplified model» label.
 
 ## Student experience
 
@@ -160,9 +170,9 @@ Every simulation is explicit that it is a platform interaction, states what it d
 ## Tests and build
 
 ```bash
-npm test          # 97 Node tests: source fidelity, navigation, simulation and appendix physics,
+npm test          # 137 Node tests: source fidelity, navigation, simulation and appendix physics,
                   # practice feedback, assessment flow, teacher area
 npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lesson 1, appendices library, Lesson 1 Appendix, Lesson Test, Teacher Area, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, the appendices library, the Lesson 1 and Lesson 2 appendices, the Lesson 2 test and teacher pages, the Unit 1 test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.

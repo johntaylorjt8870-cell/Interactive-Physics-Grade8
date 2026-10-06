@@ -1,0 +1,446 @@
+/*
+ * Lesson 2 appendix — extension layer.
+ *
+ * The page reuses the shared appendix shell (`lesson-1-appendix.css`: topbar,
+ * hero, section headings, buttons, legend, model label, footer) and adds here
+ * only the parallel-forces components: the scene, the two carriers, the
+ * distances, the live calculation strip and the challenges.
+ *
+ * Tokens come from `styles.css` (`--paper`, `--ink`, `--rule`, `--accent`,
+ * `--teal`, `--gold`, `--font-ar`, `--font-latin`).
+ */
+
+.lesson-2-appendix-page {
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(51, 86, 143, 0.05), transparent 32%),
+    var(--paper);
+}
+
+/* ------------------------------------------------------------- hero art -- */
+
+.parallel-hero-art { position: relative; z-index: 1; justify-self: center; width: 270px; height: 210px; }
+.parallel-hero-rod {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 216px;
+  height: 15px;
+  background: linear-gradient(90deg, #efe6e0, #f6f1ec 45%, #eae2d8);
+  border: 1px solid rgba(233, 224, 214, 0.5);
+  border-radius: 7px;
+  transform: translate(-50%, -50%);
+}
+.parallel-hero-carrier {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  width: 1px;
+  border-inline-start: 1px dashed rgba(226, 233, 242, 0.42);
+}
+.parallel-hero-carrier-one { inset-inline-start: 52px; }
+.parallel-hero-carrier-two { inset-inline-start: 152px; }
+.parallel-hero-carrier-result { inset-inline-start: 108px; border-inline-start-style: solid; border-inline-start-color: rgba(233, 138, 111, 0.6); }
+.parallel-hero-force, .parallel-hero-result {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  transform-origin: 50% 100%;
+  border-radius: 99px;
+}
+.parallel-hero-force::after, .parallel-hero-result::after {
+  position: absolute;
+  top: -9px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  content: '';
+  border-inline-start: 5.5px solid transparent;
+  border-inline-end: 5.5px solid transparent;
+  border-bottom: 9px solid currentColor;
+}
+.parallel-hero-force-one { inset-inline-start: 52px; height: 66px; color: #6bb3aa; background: currentColor; }
+.parallel-hero-force-two { inset-inline-start: 152px; height: 96px; color: #91a4d2; background: currentColor; }
+.parallel-hero-result { inset-inline-start: 108px; height: 122px; width: 4px; color: #e68b72; background: currentColor; }
+.parallel-hero-point {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 108px;
+  width: 15px;
+  height: 15px;
+  background: #fff;
+  border: 4px solid rgba(233, 138, 111, 0.7);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.parallel-hero::before {
+  position: absolute;
+  top: -120px;
+  inset-inline-start: 44%;
+  width: 320px;
+  height: 320px;
+  content: '';
+  border: 1px solid rgba(226, 241, 243, 0.09);
+  border-radius: 50%;
+}
+
+/* ------------------------------------------------------- source (book) -- */
+
+.parallel-source-section { padding-top: 46px; }
+.parallel-source-badge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold-line);
+  border-radius: 999px;
+}
+.parallel-source-badge > span:first-child { font-size: 9px; }
+.parallel-definition {
+  margin: 0 0 14px;
+  padding: 15px 18px;
+  color: #4d4230;
+  font-size: 13.5px;
+  line-height: 1.95;
+  background: #fff;
+  border: 1px solid var(--gold-line);
+  border-inline-start: 4px solid var(--gold);
+  border-radius: 11px;
+}
+.parallel-definition strong { color: #6d5220; }
+.parallel-source-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.parallel-source-card {
+  min-width: 0;
+  padding: 18px 20px 15px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--gold);
+  border-radius: 12px;
+}
+.parallel-source-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+.parallel-source-card-head h3 { margin: 0; color: var(--ink-strong); font-size: 16px; line-height: 1.55; }
+.parallel-sense-glyphs { color: var(--gold); font: 800 14px var(--font-latin); letter-spacing: 0.04em; }
+.parallel-source-elements { display: grid; gap: 8px; margin: 0; }
+.parallel-source-elements > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; align-items: start; }
+.parallel-source-elements dt { color: #6d5220; font-size: 11.5px; font-weight: 700; line-height: 1.8; }
+.parallel-source-elements dd { min-width: 0; margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.9; }
+.parallel-source-elements dd .math { font-size: 1.05em; }
+.parallel-source-laws { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule-soft); }
+.parallel-source-laws .equation { margin: 7px 0 0; padding: 8px 12px; background: #fbf9f4; border: 1px solid var(--gold-line); }
+.parallel-source-ref { margin: 9px 0 0; color: var(--faint); font-size: 10px; line-height: 1.7; }
+.parallel-source-ref .source-reference-inline { font-size: 10px; }
+.parallel-source-note { max-width: 900px; margin: 14px 0 0; color: var(--muted); font-size: 12px; line-height: 1.85; }
+
+/* ---------------------------------------------------------------- lab -- */
+
+.parallel-workbench { display: grid; grid-template-columns: minmax(0, 1.32fr) minmax(330px, 0.68fr); align-items: start; gap: 15px; }
+.parallel-preset-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
+
+.parallel-scene-panel {
+  min-width: 0;
+  margin: 0;
+  padding: 16px 16px 13px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(36, 48, 74, 0.035);
+}
+.parallel-scene-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 0 2px 11px; }
+.parallel-scene-heading h3 { margin: 1px 0 0; color: var(--ink-strong); font-size: 15px; }
+.parallel-scene-scale { display: inline-flex; align-items: center; gap: 7px; color: var(--faint); font-size: 10px; }
+.parallel-svg-wrap { overflow: hidden; background: #fbfcfe; border: 1px solid #e7eaf0; border-radius: 11px; }
+.parallel-svg-wrap svg { display: block; width: 100%; height: auto; }
+
+.parallel-canvas { fill: #fbfcfe; stroke: #e6eaf1; }
+.parallel-canvas-grid { opacity: 0.5; }
+.parallel-rod { fill: #eef1f6; stroke: #c3cddc; stroke-width: 1.2; }
+.parallel-carrier { fill: none; stroke: #b6c0d1; stroke-width: 1.3; stroke-dasharray: 7 7; }
+.parallel-carrier-2 { stroke-dasharray: 2 6; }
+.parallel-carrier-label, .parallel-point-label {
+  fill: #57637a;
+  font: 700 16px var(--font-latin);
+  text-anchor: middle;
+}
+.parallel-point-label { fill: var(--ink-strong); font-weight: 800; }
+.parallel-endpoint { fill: var(--ink-strong); }
+
+.parallel-force-line { stroke-width: 4.2; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.force-1 .parallel-force-line { stroke: #16706b; }
+.force-2 .parallel-force-line { stroke: #46629f; stroke-dasharray: 10 5; }
+.parallel-force-label {
+  fill: var(--ink-strong);
+  font: 800 17px var(--font-latin);
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+.parallel-resultant-layer { transition: transform 280ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+.parallel-resultant-carrier { stroke: #e2a894; stroke-width: 2; stroke-dasharray: 12 7; }
+.parallel-resultant-vector { stroke: #c96a4f; stroke-width: 6.5; stroke-linecap: round; stroke-dasharray: 14 5; vector-effect: non-scaling-stroke; }
+.parallel-resultant-point { fill: #fff; stroke: #c96a4f; stroke-width: 4.5; }
+.parallel-resultant-tag { fill: #a24f2f; font: 700 16px var(--font-ar); }
+.parallel-dimension line { stroke: #8d97ac; stroke-width: 1.3; }
+.parallel-dimension-1 line { stroke-dasharray: 6 3; }
+.parallel-dimension-2 line { stroke-dasharray: 3 3; }
+.parallel-dimension-separation line { stroke: #a9b2c1; }
+.parallel-dimension text { fill: #5b6780; font: 700 16px var(--font-latin); text-anchor: middle; }
+.parallel-couple-arc { fill: none; stroke: #c96a4f; stroke-width: 3; stroke-dasharray: 9 6; }
+.parallel-couple-text { fill: #8a4a37; font: 700 15px var(--font-ar); }
+.parallel-zero-marker { fill: #fff; stroke: #c96a4f; stroke-width: 3; }
+.parallel-zero-text { fill: #a24f2f; font: 800 16px var(--font-latin); }
+.parallel-zero-couple { font-size: 18px; }
+.parallel-edge-notice text { fill: #8a4a37; font: 700 15px var(--font-ar); }
+
+.parallel-legend-wrap { margin-top: 11px; }
+.parallel-scene-panel figcaption { margin-top: 8px; color: var(--faint); font-size: 10.5px; line-height: 1.75; }
+
+/* ---------------------------------------------------- control panel -- */
+
+.parallel-control-panel {
+  min-width: 0;
+  display: grid;
+  gap: 13px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(36, 48, 74, 0.035);
+}
+.parallel-mode-field { display: grid; gap: 7px; margin: 0; padding: 0; border: 0; }
+.parallel-mode-field legend { padding: 0; color: var(--ink-strong); font-size: 13px; font-weight: 700; }
+.parallel-mode-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  color: var(--ink);
+  font-size: 11.5px;
+  line-height: 1.6;
+  background: #fbfaf7;
+  border: 1px solid var(--rule);
+  border-radius: 9px;
+  cursor: pointer;
+}
+.parallel-mode-option:hover { background: #f7f7f3; border-color: #c9d4e8; }
+.parallel-mode-option input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+.parallel-mode-option:has(input:checked) { background: var(--accent-soft); border-color: #aebfda; }
+.parallel-mode-option:has(input:focus-visible) { outline: 3px solid rgba(51, 86, 143, 0.35); outline-offset: 2px; }
+.parallel-mode-option .parallel-sense-glyphs { color: var(--accent-deep); }
+
+.parallel-controls-heading { margin: 0; color: var(--ink-strong); font-size: 13px; }
+.parallel-slider-group { display: grid; gap: 11px; }
+.parallel-slider { min-width: 0; }
+.parallel-slider[data-locked] { opacity: 0.72; }
+.parallel-slider-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.parallel-slider-head label { color: var(--muted); font-size: 11.5px; font-weight: 600; }
+.parallel-slider-head output { color: var(--accent-deep); font: 700 12px var(--font-latin); }
+.parallel-slider input[type='range'] { display: block; width: 100%; height: 22px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+.parallel-slider input[type='range']:focus-visible { outline: 3px solid rgba(51, 86, 143, 0.36); outline-offset: 2px; border-radius: 8px; }
+.parallel-slider input[type='range']:disabled { cursor: not-allowed; opacity: 0.6; }
+.parallel-slider-help { margin: 2px 0 0; color: var(--faint); font-size: 10px; line-height: 1.65; }
+.parallel-lock-note { color: #8a4a37; font-weight: 700; }
+
+.parallel-result-card { padding: 15px 15px 13px; color: #fff; background: linear-gradient(132deg, #243554 0%, #1a2438 84%); border-radius: 12px; }
+.parallel-result-head .appendix-mini-label { color: #9bcac3; }
+.parallel-result-head h3 { margin: 2px 0 0; color: #fff; font-size: 18px; }
+.parallel-result-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 12px 0 0; }
+.parallel-result-stats > div { min-width: 0; display: grid; gap: 4px; padding: 9px 10px; background: rgba(255, 255, 255, 0.075); border: 1px solid rgba(226, 236, 248, 0.1); border-radius: 9px; }
+.parallel-result-stats dt { color: #bdc9dc; font-size: 10px; line-height: 1.6; }
+.parallel-result-stats dd { min-width: 0; margin: 0; color: #fff; font: 700 13px var(--font-latin); line-height: 1.7; }
+.parallel-result-stats dd .math { color: #fff; }
+.parallel-result-stats dd .katex { font-size: 1.08em; }
+.parallel-moment-stat { grid-column: 1 / -1; }
+.parallel-moment-stat dd { font-size: 12px; }
+.parallel-undefined { color: #e8b7a5; font-weight: 700; }
+.parallel-zero-word { color: #e8b7a5; font-weight: 700; }
+.parallel-result-note { margin: 10px 0 0; color: #b7c3d5; font-size: 10.5px; line-height: 1.8; }
+.parallel-result-note .math { color: #f0c4b3; }
+
+.parallel-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.parallel-sweep-help { margin: 0; color: var(--faint); font-size: 10px; line-height: 1.65; }
+
+/* ------------------------------------------------- live calculation -- */
+
+.parallel-calc-panel {
+  margin-top: 15px;
+  padding: 17px 20px 19px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(36, 48, 74, 0.03);
+}
+.parallel-calc-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+.parallel-calc-head h3 { margin: 2px 0 0; color: var(--ink-strong); font-size: 16px; }
+.parallel-platform-badge {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  color: var(--teal-deep);
+  font-size: 10.5px;
+  font-weight: 700;
+  background: var(--teal-soft);
+  border: 1px solid var(--teal-line);
+  border-radius: 999px;
+}
+.parallel-equation-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.parallel-equation-row {
+  min-width: 0;
+  display: grid;
+  gap: 9px;
+  align-content: start;
+  padding: 14px 15px 15px;
+  background: #fbfaf7;
+  border: 1px solid var(--rule);
+  border-radius: 11px;
+}
+.parallel-equation-row[data-source='book'] { background: #fdfaf3; border-color: var(--gold-line); }
+.parallel-equation-tag {
+  justify-self: start;
+  padding: 4px 10px;
+  color: var(--teal-deep);
+  font-size: 10px;
+  font-weight: 700;
+  background: #fff;
+  border: 1px solid var(--teal-line);
+  border-radius: 999px;
+}
+.parallel-equation-row[data-source='book'] .parallel-equation-tag { color: #6d5220; border-color: var(--gold-line); background: #fff; }
+.parallel-equation-body { min-width: 0; color: var(--ink); font-size: 12px; line-height: 1.9; }
+.parallel-equation-body p { margin: 0 0 6px; color: var(--muted); font-size: 11.5px; line-height: 1.85; }
+.parallel-equation-body .equation { margin: 8px 0; padding: 8px 11px; background: #fff; border: 1px solid var(--rule-soft); border-radius: 8px; }
+.parallel-equation-body .equation .katex-display > .katex { font-size: 1.02em; }
+.parallel-equation-body .katex-display { overflow-x: auto; overflow-y: hidden; }
+.parallel-equation-note { color: var(--muted); font-size: 10.5px; line-height: 1.8; }
+
+/* ------------------------------------------------------ book example -- */
+
+.parallel-book-example-section { padding-top: 47px; }
+.parallel-book-example { padding: 20px 24px 18px; background: #fff; border: 1px solid var(--gold-line); border-inline-start: 4px solid var(--gold); border-radius: 14px; }
+.parallel-example-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding-bottom: 13px; border-bottom: 1px solid var(--rule-soft); }
+.parallel-example-head h3 { margin: 0; color: var(--ink-strong); font-size: 17px; }
+.parallel-example-head p { max-width: 760px; margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+.parallel-example-steps { display: grid; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+.parallel-example-steps li { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; align-items: start; padding-top: 10px; border-top: 1px solid var(--rule-soft); }
+.parallel-example-steps li:first-child { padding-top: 0; border-top: 0; }
+.parallel-example-label { color: #6d5220; font-size: 11.5px; font-weight: 700; line-height: 1.8; }
+.parallel-example-body { min-width: 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+.parallel-example-body p { margin: 0 0 6px; }
+.parallel-example-body .equation { margin: 7px 0; padding: 8px 11px; background: #fdfaf3; border: 1px solid var(--gold-line); border-radius: 8px; }
+.parallel-example-body .katex-display { overflow-x: auto; overflow-y: hidden; }
+.parallel-example-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule-soft); }
+.parallel-example-hint { color: var(--faint); font-size: 11px; }
+
+/* -------------------------------------------------------- challenges -- */
+
+.parallel-challenge-section { padding-top: 47px; }
+.parallel-challenge-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.parallel-challenge-card {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 18px 20px 16px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 13px;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+.parallel-challenge-card[data-active='true'] { border-color: #8fbeb6; box-shadow: 0 0 0 2px rgba(22, 112, 107, 0.12); }
+.parallel-challenge-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+.parallel-challenge-index { width: 28px; height: 28px; display: grid; place-items: center; color: var(--accent-deep); font: 800 10px var(--font-latin); background: var(--accent-soft); border-radius: 8px; }
+.parallel-challenge-head h3 { margin: 0; color: var(--ink-strong); font-size: 14.5px; line-height: 1.6; }
+.parallel-challenge-state { padding: 4px 10px; color: var(--faint); font-size: 10px; font-weight: 700; background: #f4f5f8; border: 1px solid var(--rule); border-radius: 999px; }
+.parallel-challenge-card[data-active='true'] .parallel-challenge-state { color: var(--teal-deep); background: var(--teal-soft); border-color: var(--teal-line); }
+.parallel-challenge-brief { margin: 0; color: var(--ink); font-size: 12.5px; line-height: 1.9; }
+.parallel-challenge-brief .math { font-size: 1.05em; }
+.parallel-challenge-hint { margin: 0; padding: 9px 11px; color: #5c6a80; font-size: 11px; line-height: 1.85; background: #f7f8fb; border-inline-start: 3px solid #c3ccdb; border-radius: 7px; }
+.parallel-challenge-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.parallel-challenge-status { margin: 0; padding: 9px 11px; color: #35524f; font-size: 11px; line-height: 1.85; background: #f1f7f5; border: 1px solid var(--teal-line); border-radius: 8px; }
+.parallel-challenge-status[data-complete='true'] { color: #1f5a3f; background: #e6f3ea; border-color: #bcdcc7; }
+.parallel-challenge-status[data-complete='false'] { color: #6a5145; background: #fbf3ee; border-color: #edd5ca; }
+
+/* ------------------------------------------------------- concepts -- */
+
+.parallel-concept-card[data-source='platform'] { border-color: var(--rule); }
+.parallel-concept-note { margin: 7px 0 0; padding-top: 7px; color: var(--teal-deep); font-size: 10px; line-height: 1.8; border-top: 1px dashed var(--teal-line); }
+
+/* ------------------------------------------------------ responsive -- */
+
+@media (max-width: 1240px) {
+  .parallel-preset-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .parallel-equation-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1120px) {
+  .parallel-workbench { grid-template-columns: minmax(0, 1fr); }
+  .parallel-scene-panel { order: 0; }
+  .parallel-control-panel { order: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .parallel-mode-field, .parallel-controls-heading, .parallel-slider-group, .parallel-result-card,
+  .parallel-actions, .parallel-sweep-help { grid-column: 1 / -1; }
+  .parallel-slider-group { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 920px) {
+  .parallel-source-grid { grid-template-columns: minmax(0, 1fr); }
+  .parallel-hero-art { transform: scale(0.88); }
+  .parallel-challenge-grid { grid-template-columns: minmax(0, 1fr); }
+  .parallel-equation-list { grid-template-columns: minmax(0, 1fr); }
+  .parallel-example-steps li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}
+
+@media (max-width: 680px) {
+  .parallel-hero-art { position: absolute; inset-inline-end: -30px; bottom: -34px; width: 190px; height: 165px; opacity: 0.22; transform: scale(0.82); }
+  .parallel-source-section, .parallel-challenge-section, .parallel-book-example-section { padding-top: 34px; }
+  .parallel-definition { padding: 12px 13px; font-size: 12px; }
+  .parallel-source-card { padding: 14px 14px 12px; }
+  .parallel-source-card-head h3 { font-size: 14px; }
+  .parallel-source-elements > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .parallel-source-elements dt { font-size: 11px; }
+  .parallel-source-elements dd { font-size: 11.5px; }
+  .parallel-preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .parallel-scene-panel { padding: 11px 10px 10px; }
+  .parallel-scene-heading { align-items: flex-start; }
+  .parallel-scene-heading h3 { font-size: 13px; }
+  .parallel-scene-scale { max-width: 130px; font-size: 9px; }
+  .parallel-control-panel { grid-template-columns: minmax(0, 1fr); gap: 11px; padding: 12px; }
+  .parallel-slider-group { grid-template-columns: minmax(0, 1fr); }
+  .parallel-actions { grid-template-columns: minmax(0, 1fr); }
+  .parallel-result-stats { grid-template-columns: minmax(0, 1fr); }
+  .parallel-calc-panel { padding: 14px 13px 15px; }
+  .parallel-calc-head { display: block; }
+  .parallel-platform-badge { margin-top: 8px; }
+  .parallel-equation-row { padding: 12px 12px 13px; }
+  .parallel-book-example { padding: 15px 14px 14px; }
+  .parallel-example-head { display: block; }
+  .parallel-example-head h3 { font-size: 15px; }
+  .parallel-challenge-card { padding: 15px 14px 14px; }
+  .parallel-challenge-head { grid-template-columns: auto minmax(0, 1fr); }
+  .parallel-challenge-state { grid-column: 1 / -1; justify-self: start; }
+}
+
+@media (max-width: 430px) {
+  .parallel-preset-grid { grid-template-columns: minmax(0, 1fr); }
+  .parallel-source-elements dd .math { font-size: 1em; }
+}
+
+.parallel-model-badge {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--teal-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallel-resultant-layer { transition-duration: 0.01ms !important; }
+  .parallel-challenge-card { transition-duration: 0.01ms !important; }
+  .parallel-hero-force, .parallel-hero-result { transition: none; }
+}
