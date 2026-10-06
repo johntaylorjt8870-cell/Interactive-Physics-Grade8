@@ -60,7 +60,7 @@ export const LESSON_PAGES = [
     blocks: [
       textBlock(`
         <section class="source-title-block">
-          <p class="source-unit-title">الوحدة الثانية — الحركة والقوى</p>
+          <p class="source-unit-title">الوحدة الأولى — الحركة والقوى</p>
           <h3>القوى المتلاقية</h3>
         </section>
         <section class="source-section">

@@ -403,3 +403,11 @@ button, select, input { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
+
+/* Parallel-force diagrams shared by Lesson 2 and Unit 1 assessments. */
+.assessment-figure .assessment-axis { stroke:#758198; stroke-width:7; stroke-linecap:round; }
+.assessment-figure .assessment-resultant { stroke:#33568f; stroke-width:4.5; vector-effect:non-scaling-stroke; }
+.assessment-figure text { fill:#24304a; font:italic 16px Georgia,serif; text-anchor:middle; }
+.unit-assessment .question-index { grid-template-columns:repeat(6,minmax(0,1fr)); }
+@media(max-width:780px){.unit-assessment .question-index{grid-template-columns:repeat(10,minmax(0,1fr));}}
+@media(max-width:560px){.unit-assessment .question-index{grid-template-columns:repeat(6,minmax(0,1fr));}}

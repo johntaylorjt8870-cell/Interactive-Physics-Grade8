@@ -984,6 +984,8 @@ kbd {
   .app-frame { padding-inline: 24px; }
   .lesson-layout { grid-template-columns: 236px minmax(0, 1fr); gap: 26px; }
   .topbar { gap: 18px; }
+  .topbar-links { flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+  .topbar-link { padding-inline: 11px; }
   .breadcrumb { gap: 7px; font-size: 12px; }
   .simulation-workbench { grid-template-columns: minmax(0, 1fr); }
   .simulation-visual { order: 1; }
@@ -996,7 +998,7 @@ kbd {
   .topbar { min-height: 68px; gap: 14px; }
   .brand-copy { display: none; }
   .topbar-link { padding: 7px 11px; font-size: 12px; }
-  .topbar-tag { font-size: 11px; padding: 6px 11px; }
+  .topbar-tag { display: none; }
   .lesson-layout { display: flex; flex-direction: column; gap: 22px; margin-top: 22px; }
   .lesson-sidebar { position: static; width: 100%; padding: 16px; background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; }
   .sidebar-intro { padding: 0 2px 12px; }

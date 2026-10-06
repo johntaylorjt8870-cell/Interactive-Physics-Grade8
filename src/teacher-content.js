@@ -355,7 +355,7 @@ export function renderTeacherContent() {
     <div>
       <p class="teacher-workspace-eyebrow">دليل المعلم · المصدر p55–p62</p>
       <h2 id="teacher-workspace-heading" tabindex="-1">القوى المتلاقية</h2>
-      <p>الصف الثامن · الوحدة الثانية — الحركة والقوى · شرح، حلول، وحدود موثقة للمصدر</p>
+      <p>الصف الثامن · الوحدة الأولى — الحركة والقوى · شرح، حلول، وحدود موثقة للمصدر</p>
     </div>
     <button class="teacher-logout-button" type="button" data-teacher-logout>إنهاء الجلسة</button>
   </header>
