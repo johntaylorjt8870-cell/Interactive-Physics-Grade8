@@ -15,6 +15,10 @@ await cp(resolve(projectDirectory, 'appendices.html'), resolve(outputDirectory, 
 await cp(resolve(projectDirectory, 'lesson-1-appendix.html'), resolve(outputDirectory, 'lesson-1-appendix.html'));
 await cp(resolve(projectDirectory, 'teacher.html'), resolve(outputDirectory, 'teacher.html'));
 await cp(resolve(projectDirectory, 'lesson-test.html'), resolve(outputDirectory, 'lesson-test.html'));
+await cp(resolve(projectDirectory, 'lesson-2.html'), resolve(outputDirectory, 'lesson-2.html'));
+await cp(resolve(projectDirectory, 'lesson-2-teacher.html'), resolve(outputDirectory, 'lesson-2-teacher.html'));
+await cp(resolve(projectDirectory, 'lesson-2-test.html'), resolve(outputDirectory, 'lesson-2-test.html'));
+await cp(resolve(projectDirectory, 'unit-1-test.html'), resolve(outputDirectory, 'unit-1-test.html'));
 await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), { recursive: true });
 await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
 

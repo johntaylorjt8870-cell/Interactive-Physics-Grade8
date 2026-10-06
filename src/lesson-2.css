@@ -1,0 +1,31 @@
+/* Lesson 2 additions. The core lesson design system remains in styles.css. */
+.source-reference-inline { display: inline-block; padding: 2px 8px; color: #785520; font-size: .86em; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 6px; }
+.source-scene-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin: 18px 0; }
+.source-scene-card { min-height: 150px; display: grid; align-content: center; justify-items: center; gap: 8px; padding: 18px; color: var(--accent-deep); text-align: center; background: linear-gradient(145deg,#eef5f3,#eef2f9); border: 1px solid #d9e4e5; border-radius: 15px; }
+.source-scene-card > span { font: 800 46px/1 var(--font-latin); color: var(--teal); }
+.source-scene-card small { color: var(--muted); font-size: 11px; }
+.lesson2-simulation .parallel-mode-control { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 16px; padding: 13px; border: 1px solid var(--rule); border-radius: 10px; }
+.parallel-mode-control legend { padding-inline: 6px; color: var(--ink); font-size: 13px; font-weight: 700; }
+.parallel-mode-control label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; cursor: pointer; }
+.parallel-mode-control input { inline-size: 18px; block-size: 18px; accent-color: var(--accent); }
+.diagram-canvas .parallel-bar { fill: #2d9a86; opacity: .9; }
+.diagram-canvas .carrier-line { stroke: #a8b0bf; stroke-width: 1.5; stroke-dasharray: 5 6; }
+.diagram-canvas .parallel-force { stroke-width: 4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.diagram-canvas .parallel-force-up { stroke: #168b78; }
+.diagram-canvas .parallel-force-down,.diagram-canvas .parallel-resultant-down { stroke: #d45f50; }
+.diagram-canvas .parallel-resultant { stroke: #33568f; }
+.diagram-canvas .parallel-point { fill: #fff; stroke: #24304a; stroke-width: 2; }
+.diagram-canvas .parallel-label,.diagram-canvas .parallel-svg-force-label { fill: #24304a; font: italic 20px Georgia,serif; }
+.diagram-canvas .diagram-point-label { fill: #24304a; font: italic 17px Georgia,serif; }
+.diagram-canvas .diagram-measure { fill: #5f6b84; font: 600 15px var(--font-latin); }
+.diagram-canvas .distance-line { stroke: #6682c0; stroke-width: 1.5; stroke-dasharray: 5 5; }
+.parallel-lab-bar { stroke: #56647d; stroke-width: 11; stroke-linecap: round; }
+.parallel-lab-carrier,.parallel-lab-result-carrier { stroke: #a8b0bf; stroke-width: 1.5; stroke-dasharray: 6 7; }
+.parallel-lab-result-carrier { stroke: #6682c0; }
+.parallel-lab-force { stroke-width: 4.5; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.parallel-lab-force.f1 { stroke: #168b78; }.parallel-lab-force.f2 { stroke: #d45f50; }.parallel-lab-force.result { stroke: #33568f; stroke-width: 5.5; }
+.parallel-lab-result-point { fill: #fff; stroke: #33568f; stroke-width: 3; }
+.parallel-svg-force-label { fill: #24304a; font: italic 19px Georgia,serif; }
+.parallel-svg-force-label.result,.result-label { fill: #26406e; font-weight: 700; }
+@media(max-width:560px){.source-scene-grid{grid-template-columns:1fr}.source-scene-card{min-height:115px}.lesson2-simulation .parallel-mode-control{display:grid}}
+@media(prefers-reduced-motion:reduce){.parallel-lab-force,.parallel-lab-result-point,.parallel-lab-result-carrier{transition:none!important}}

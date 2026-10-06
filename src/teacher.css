@@ -356,3 +356,7 @@
   .teacher-source-body .book-copy { font-size: 14.5px; }
   .teacher-footer { font-size: 11px; }
 }
+
+.teacher-compare-table { width:100%; border-collapse:collapse; margin:14px 0; font-size:13px; }
+.teacher-compare-table th,.teacher-compare-table td { padding:9px 10px; text-align:right; border:1px solid #e4e0d7; }
+.teacher-compare-table th { color:#26406e; background:#eef2f9; }

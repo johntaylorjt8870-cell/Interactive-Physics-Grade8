@@ -56,7 +56,7 @@ function renderLifecycleState(answers = {}) {
 test('Phase 5 bank contains exactly 20 original lesson questions with the prescribed difficulty split', () => {
   assert.equal(LESSON_ID, 'unit2-lesson1');
   assert.equal(LESSON_TEST.id, LESSON_ID);
-  assert.equal(LESSON_TEST.unit, 'الوحدة الثانية — الحركة والقوى');
+  assert.equal(LESSON_TEST.unit, 'الوحدة الأولى — الحركة والقوى');
   assert.equal(LESSON_TEST.lesson, 'الدرس 1 — القوى المتلاقية');
   assert.deepEqual(LESSON_TEST.sourcePages, [55, 56, 57, 58, 59, 60, 61, 62]);
   assert.equal(QUESTIONS.length, 20);
@@ -477,20 +477,19 @@ test('final results expose the exact four solution groups, score totals, and per
   assert.equal(LESSON_TEST.questions.length, 20);
 });
 
-test('Phase 5 adds no Unit Test page, route, completion behavior, or future test entry', async () => {
-  const [homeHtml, testPage, appSource, buildSource, packageJson] = await Promise.all([
+test('Lesson 1 remains an independent 20-question test after the authorized Unit 1 Test is published', async () => {
+  const [lessonPage, testPage, appSource, buildSource, unitPage] = await Promise.all([
     readFile(new URL('../lesson-1.html', import.meta.url), 'utf8'),
     readFile(new URL('../lesson-test.html', import.meta.url), 'utf8'),
     readFile(new URL('../src/lesson-assessment.js', import.meta.url), 'utf8'),
     readFile(new URL('../scripts/build.mjs', import.meta.url), 'utf8'),
-    readFile(new URL('../package.json', import.meta.url), 'utf8'),
+    readFile(new URL('../unit-1-test.html', import.meta.url), 'utf8'),
   ]);
-  for (const content of [homeHtml, testPage, appSource, buildSource]) {
-    assert.doesNotMatch(content, /unit-test\.html|unit-test\.js|completeUnit|unitCompletion|اختبار الوحدة/iu);
-  }
-  assert.equal(existsSync(new URL('../unit-test.html', import.meta.url)), false);
-  assert.equal(existsSync(new URL('../src/unit-test.js', import.meta.url)), false);
-  assert.doesNotMatch(packageJson, /unit-test/i);
-  assert.equal(LESSON_PAGES.length, 8, 'the existing lesson sequence remains pages 55–62');
+  assert.match(lessonPage, /href="\.\/unit-1-test\.html"/);
+  assert.match(buildSource, /resolve\(projectDirectory, 'unit-1-test\.html'\)/);
+  assert.match(unitPage, /src="\.\/src\/unit-1-assessment\.js"/);
+  assert.equal(existsSync(new URL('../unit-1-test.html', import.meta.url)), true);
+  assert.equal(LESSON_PAGES.length, 8, 'the existing Lesson 1 sequence remains pages 55–62');
+  assert.match(appSource, /QUESTIONS/);
   assert.doesNotMatch(testPage, /<iframe|src="\.\/src\/main\.js"/);
 });

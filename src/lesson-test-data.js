@@ -7,7 +7,7 @@ const forceComponents = `${V_F1} و${V_F2}`;
 
 export const LESSON_TEST = Object.freeze({
   id: 'unit2-lesson1',
-  unit: 'الوحدة الثانية — الحركة والقوى',
+  unit: 'الوحدة الأولى — الحركة والقوى',
   lesson: 'الدرس 1 — القوى المتلاقية',
   sourcePages: Object.freeze([55, 56, 57, 58, 59, 60, 61, 62]),
   questions: Object.freeze([
