@@ -2,7 +2,7 @@
 
 Arabic (RTL) interactive physics platform for Grade 8. The course home is the root entry; the currently published Lesson 1 covers **Concurrent Forces and Force Resolution** based on textbook pages 55–62.
 
-The student area keeps the textbook wording, order, values, and examples, while the platform layer adds clearly-labelled explanations, accessible SVG diagrams, four guided simulations, interactive self-check, a separate Teacher Area, and a 20-question Lesson Test.
+The student area keeps the textbook wording, order, values, and examples, while the platform layer adds clearly-labelled explanations, accessible SVG diagrams, four guided lesson simulations, interactive self-check, a separate Teacher Area, and a 20-question Lesson Test. A separate Lesson 1 Appendix adds a multi-force exploration lab without changing the published lesson.
 
 ## Contents
 
@@ -10,6 +10,8 @@ The student area keeps the textbook wording, order, values, and examples, while 
 - [Project structure](#project-structure)
 - [Rendering architecture](#rendering-architecture)
 - [Textbook fidelity and source disclosure](#textbook-fidelity-and-source-disclosure)
+- [Course navigation](#course-navigation)
+- [Lesson Appendices](#lesson-appendices)
 - [Student experience](#student-experience)
 - [Interactive simulations](#interactive-simulations)
 - [Teacher Area](#teacher-area)
@@ -31,6 +33,8 @@ Then open:
 
 - Course Home: http://127.0.0.1:4173/index.html
 - Student Lesson 1: http://127.0.0.1:4173/lesson-1.html
+- Lesson Appendices: http://127.0.0.1:4173/appendices.html
+- Lesson 1 Appendix: http://127.0.0.1:4173/lesson-1-appendix.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
 - Teacher Area: http://127.0.0.1:4173/teacher.html
 
@@ -40,17 +44,23 @@ Modules and vendored fonts must be served over HTTP; opening the HTML files dire
 
 ```text
 index.html                  Course Home / platform entry
-lesson-1.html               Published Lesson 1 student page
+lesson-1.html               Published Lesson 1 student page (preserved)
+appendices.html             Published appendices library
+lesson-1-appendix.html      Standalone Lesson 1 interactive appendix
 teacher.html                Separate Teacher Area page
 lesson-test.html            20-question Lesson Test page
 scripts/build.mjs           Static production build
 src/
-  main.js                   Page router and lesson mounting
+  main.js                   Lesson-page navigation and mounting
   lesson-content.js         Structured textbook content (verbatim blocks + platform explanations)
-  math.js                   Math rendering API (KaTeX wrapper, vectors, units, LTR isolation)
-  diagrams.js               Static SVG diagrams
-  simulations.js            Interactive simulation markup
-  simulation-logic.js       Pure geometry / physics used by simulations
+  math.js                   Shared KaTeX API (vectors, units, LTR isolation)
+  appendix-physics.js       Independent multi-force/resultant/motion model for the appendix
+  appendix-practice.js      Explicit-submit-only appendix practice state
+  lesson-1-appendix-content.js Presets, worked example, practice and challenge data
+  lesson-1-appendix.js      Appendix lab, SVG, controls and interactions
+  diagrams.js               Static lesson SVG diagrams
+  simulations.js            Existing lesson simulation markup
+  simulation-logic.js       Existing pure geometry / physics used by lesson simulations
   self-check.js             Self-check enhancement layer
   self-check-answers.js     Frozen answer key for the printed self-check
   teacher.js / teacher-content.js / teacher-auth.js
@@ -61,17 +71,21 @@ src/
   lesson-test-diagrams.js   Static diagrams used by the test
   fonts.css                 @font-face rules pointing at the vendored fonts
   home.css                  Course Home design system
-  styles.css                Student lesson design system
+  appendices.css            Course Home appendices entry + library page
+  styles.css                Student lesson design system + shared math styles
+  lesson-1-appendix.css     Isolated responsive lab design
   teacher.css / lesson-test.css
+tests/
+  appendices.test.js        Navigation, practice flow, direct-page and preservation checks
+  appendix-physics.test.js  Resultant, force editing, presets, challenge and motion tests
 vendor/
   katex/                    KaTeX 0.16 (ES module + trimmed CSS + woff2 math fonts)
   fonts/                    IBM Plex Sans Arabic + Manrope woff2 subsets
-tests/                      Node test suites (70 tests)
 ```
 
 ## Rendering architecture
 
-All mathematics is rendered through **KaTeX 0.16** (vendored, server-side rendered to HTML + MathML at module load) behind a single wrapper, `src/math.js`:
+All mathematics is rendered through **KaTeX 0.16** (vendored and rendered to HTML + MathML by the browser-side ES modules at module load) behind a shared wrapper, `src/math.js`:
 
 - `tex(source, label)` / `formula(source, label)` — inline and display math. Every expression carries an `aria-label` describing it in words, and the original TeX is preserved in a MathML `<annotation>`.
 - `vector(symbol, subscript)` — true vector accents (`\vec{F}_{1}`): the arrow sits over the letter and the subscript attaches to the accented symbol.
@@ -94,7 +108,17 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 
 - The root URL (`index.html`) is the Course Home, not a lesson.
 - The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
-- The unit and lesson list is structured as a single current lesson entry, so additional published entries can be added without showing placeholders to students.
+- The appendices library is `appendices.html`; its only current entry links to `lesson-1-appendix.html`.
+- Both appendix pages are static direct URLs with ordinary relative links, so refresh does not depend on a client-side router.
+- The unit and lesson list remains a single current lesson entry; no future appendix cards are shown.
+
+## Lesson Appendices
+
+The Lesson 1 Appendix is an independent platform extension; it does not edit or duplicate the textbook page flow. Its force engine lives in `src/appendix-physics.js` and sums each force's signed x/y components. It supports one to three concurrent forces and has unit-tested add/remove/update operations, preset states, target-resultant evaluation, and a bounded visual motion model.
+
+The lab uses a fixed educational mass of 2 kg and `a = F_R / m`. Motion has no drag, rotation, or collisions; animation time and screen position are explicitly not real-world measurements. A force preset updates the controls, vectors, resultant and explanatory prompt together. The page also includes a stepped KaTeX worked example, submit-to-check practice with explanatory feedback, and a challenge that asks the student to balance three forces using the lab.
+
+All of this material is labelled as a platform extension. It is practice/exploration, not textbook wording or part of the official Lesson Test.
 
 ## Student experience
 
@@ -136,9 +160,9 @@ Every simulation is explicit that it is a platform interaction, states what it d
 ## Tests and build
 
 ```bash
-npm test          # 71 Node tests: content fidelity, routing, diagram geometry, simulation logic,
-                  # grading purity, assessment flow, teacher area
-npm run build     # static build into dist/ (html + src + vendor)
+npm test          # 97 Node tests: source fidelity, navigation, simulation and appendix physics,
+                  # practice feedback, assessment flow, teacher area
+npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lesson 1, Lesson Test, Teacher Area, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lesson 1, appendices library, Lesson 1 Appendix, Lesson Test, Teacher Area, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
