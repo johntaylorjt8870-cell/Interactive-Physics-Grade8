@@ -50,11 +50,10 @@ function renderPlatformBlock(block) {
     if (!diagram) return '';
     return `<aside class="platform-explanation diagram-explanation" aria-label="شرح المنصة: رسم تخطيطي">
       <div class="platform-heading">
-        <span class="platform-label">شرح المنصة</span>
-        <span class="platform-kind">رسم توضيحي</span>
+        <span class="platform-label">رسم توضيحي من المنصة</span>
       </div>
       <h3>${diagram.title}</h3>
-      <p class="platform-copy">${diagram.platformNote}</p>
+      <p class="platform-copy platform-body">${diagram.platformNote}</p>
       <figure class="diagram-figure">
         <div class="diagram-canvas">${diagram.svg}</div>
         ${renderLegend(diagram.legend)}
@@ -63,13 +62,15 @@ function renderPlatformBlock(block) {
     </aside>`;
   }
 
-  return `<aside class="platform-explanation ${block.kind === 'source-slot' ? 'source-slot-explanation' : ''}" aria-label="شرح المنصة: ${escapeHtml(block.title)}">
+  const kindClass = block.kind === 'source-slot' ? ' source-slot-explanation' : '';
+  const kindChip = block.kind === 'source-slot' ? '<span class="platform-kind">موضع مرجعي</span>' : '';
+  return `<aside class="platform-explanation${kindClass}" aria-label="شرح المنصة: ${escapeHtml(block.title)}">
     <div class="platform-heading">
       <span class="platform-label">شرح المنصة</span>
-      ${block.kind === 'source-slot' ? '<span class="platform-kind">موضع مرجعي</span>' : ''}
+      ${kindChip}
     </div>
     <h3>${escapeHtml(block.title)}</h3>
-    <div class="platform-copy">${block.html}</div>
+    <div class="platform-copy platform-body">${block.html}</div>
   </aside>`;
 }
 
@@ -80,22 +81,19 @@ function renderPage(page, index) {
 
   const sourceAndFigureBlocks = page.blocks.filter((block) => block.type !== 'simulation');
   const simulationBlocks = page.blocks.filter((block) => block.type === 'simulation');
-  const blocks = sourceAndFigureBlocks.map((block) => {
-    if (block.type === 'book') return `<div class="book-copy">${block.html}</div>`;
+  const blocks = sourceAndFigureBlocks.map((block, blockIndex) => {
+    if (block.type === 'book') {
+      const startsSourceRun = blockIndex === 0 || sourceAndFigureBlocks[blockIndex - 1].type !== 'book';
+      const marker = startsSourceRun
+        ? `<p class="source-marker" role="note"><span>من الكتاب · الصفحة ${page.page}</span></p>`
+        : '';
+      return `${marker}<div class="book-copy">${block.html}</div>`;
+    }
     return renderPlatformBlock(block);
   }).join('');
   const simulations = simulationBlocks.map(renderPlatformBlock).join('');
 
-  pageContent.innerHTML = `<article class="source-card" aria-labelledby="book-content-heading">
-    <header class="source-card-header">
-      <div>
-        <span class="source-label" id="book-content-heading">محتوى الكتاب</span>
-        <span class="source-caption">الصفحة الأصلية <bdi dir="ltr">${page.page}</bdi></span>
-      </div>
-      <span class="source-lockup" aria-hidden="true"><span>و٢</span><i></i></span>
-    </header>
-    <div class="source-card-body">${blocks}</div>
-  </article>${simulations}`;
+  pageContent.innerHTML = `${blocks}${simulations}`;
   mountSimulationExperiences(pageContent);
   enhanceSelfCheckSections(pageContent, page.page);
 

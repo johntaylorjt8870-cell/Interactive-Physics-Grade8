@@ -161,23 +161,23 @@ test('source audit supports numeric, Pythagoras, force resolution, and p60-only 
   assert.match(p62, /شدة محصلتهما[^]*15 N/);
   assert.deepEqual(question('q17').sourcePages, [60]);
   assert.doesNotMatch(question('q17').prompt, /α|θ/);
-  assert.match(question('q17').prompt, /<mi mathvariant="italic">a<\/mi>/);
+  assert.match(question('q17').prompt, /<annotation encoding="application\/x-tex">a<\/annotation>/);
   assert.ok(question('q17').prompt.includes(V_R));
   assert.deepEqual(question('q20').sourcePages, [60]);
   assert.ok(question('q20').prompt.includes(V_OX));
   assert.ok(question('q20').prompt.includes(V_OY));
   assert.ok(question('q10').prompt.includes(V_OX));
   assert.ok(question('q10').prompt.includes(V_OY));
-  assert.ok(question('q13').options[0].content.includes('<mi>O</mi><mi>M</mi>'));
+  assert.ok(question('q13').options[0].content.includes('\\vec{\\mathrm{OM}}'));
   assert.ok(question('q13').options[0].content.includes('<mover accent="true">'));
-  assert.ok(question('q04').options[2].content.includes('<math class="math-inline" dir="ltr"'));
+  assert.ok(question('q04').options[2].content.includes('<span class="math math-inline" dir="ltr"'));
   assert.ok(question('q05').prompt.includes('class="ltr-isolate"'));
   assert.ok(question('q11').prompt.includes('class="ltr-isolate"'));
   assert.ok(question('q16').fields[0].content.includes('class="ltr-isolate"'));
   assert.ok(question('q19').inputHint.includes('class="ltr-isolate"'));
   assert.ok(SOLUTIONS.q16.answerHtml.includes('class="ltr-isolate"'));
   assert.ok(SOLUTIONS.q17.answerHtml.includes(V_R));
-  assert.ok(SOLUTIONS.q17.answerHtml.includes('<mi mathvariant="italic">a</mi>'));
+  assert.ok(SOLUTIONS.q17.answerHtml.includes('<annotation encoding="application/x-tex">a</annotation>'));
 });
 
 test('static test diagrams are source-neutral, descriptive, and contain no interactive simulation controls', () => {
@@ -440,7 +440,7 @@ test('lesson-test entry is accessible, RTL, separate from Teacher Area and the s
   assert.match(appSource, /مسح الإجابات والبدء من جديد/);
   assert.match(css, /\.assessment-page :focus-visible/);
   assert.match(css, /\.assessment-skip-link/);
-  assert.match(homeHtml, /href="\.\/lesson-test\.html"[^>]*>منطقة الاختبارات<\/a>/);
+  assert.match(homeHtml, /href="\.\/lesson-test\.html"[^>]*>اختبار الدرس<\/a>/);
   assert.equal((homeHtml.match(/href="\.\/lesson-test\.html"/g) ?? []).length, 1);
   assert.match(homeHtml, /href="\.\/teacher\.html"[^>]*>منطقة المعلم/);
   assert.doesNotMatch(pageHtml, /teacher\.html|teacher\.js|teacher-auth|Teacher Area|منطقة المعلم/);

@@ -1,7 +1,6 @@
 import {
-  formula,
-  ltrText,
-  mathML,
+  PYTHAGORAS_LABEL,
+  PYTHAGORAS_TEX,
   V_F1,
   V_F2,
   V_F3,
@@ -11,20 +10,31 @@ import {
   V_OM,
   V_OX,
   V_OY,
+  S_F1,
   S_F2,
   S_F,
+  P_O,
+  P_M,
+  LATIN_A,
+  formula,
+  calculation,
+  qty,
+  degrees,
+  ltrText,
+  solutionSteps,
+  tex,
 } from './math.js';
 
-const O = mathML('<mi>O</mi>', 'O');
-const M = mathML('<mi>M</mi>', 'M');
-const X = mathML('<mi>x</mi>', 'x');
-const Y = mathML('<mi>y</mi>', 'y');
-const latinA = mathML('<mi mathvariant="italic">a</mi>', 'Latin lowercase a');
+const O = P_O;
+const M = P_M;
 
 const textBlock = (html) => ({ type: 'book', html });
 const platformBlock = (title, html, kind = 'note') => ({ type: 'platform', title, html, kind });
 const diagramBlock = (id) => ({ type: 'diagram', id });
 const simulationBlock = (id) => ({ type: 'simulation', id });
+
+/* An inline relation such as F₂ = 3 N stays one locked LTR expression. */
+const rel = (lhs, rhs, label) => tex(`${lhs}=${rhs}`, label);
 
 export const PYTHAGORAS_LINES = [
   'F = √(F₁² + F₂²)',
@@ -32,20 +42,15 @@ export const PYTHAGORAS_LINES = [
   'F = 100 N',
 ];
 
-const pythagorasBlock = () => {
-  const f1Squared = `<msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup>`;
-  const f2Squared = `<msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup>`;
-  const sixtySquared = `<msup><mrow><mo>(</mo><mn>60</mn><mo>)</mo></mrow><mn>2</mn></msup>`;
-  const eightySquared = `<msup><mrow><mo>(</mo><mn>80</mn><mo>)</mo></mrow><mn>2</mn></msup>`;
-  const line1 = formula(`<mi>F</mi><mo>=</mo><msqrt><mrow>${f1Squared}<mo>+</mo>${f2Squared}</mrow></msqrt>`, PYTHAGORAS_LINES[0]);
-  const line2 = formula(`<mi>F</mi><mo>=</mo><msqrt><mrow>${sixtySquared}<mo>+</mo>${eightySquared}</mrow></msqrt>`, PYTHAGORAS_LINES[1]);
-  const line3 = formula('<mi>F</mi><mo>=</mo><mn>100</mn><mtext>&nbsp;N</mtext>', PYTHAGORAS_LINES[2]);
-  return `<div class="formula-stack pythagoras-source-block" data-source-formula="pythagoras" role="group" aria-label="كتلة فيثاغورث المطبوعة من ثلاثة أسطر">${
-    [line1, line2, line3].map((line, index) => `<div class="formula-line" data-source-line="${PYTHAGORAS_LINES[index]}">${line}</div>`).join('')
-  }</div>`;
-};
+const PYTHAGORAS_TEX_LINES = [
+  PYTHAGORAS_TEX,
+  'F=\\sqrt{(60)^{2}+(80)^{2}}',
+  'F=100~\\mathrm{N}',
+];
 
-const forceResultEquation = (lhs, rhs, label) => mathML(`${lhs}<mo>=</mo>${rhs}`, label);
+const pythagorasBlock = () => `<div class="formula-stack pythagoras-source-block" data-source-formula="pythagoras" role="group" aria-label="كتلة فيثاغورث المطبوعة من ثلاثة أسطر">${
+  PYTHAGORAS_TEX_LINES.map((source, index) => `<div class="formula-line" data-source-line="${PYTHAGORAS_LINES[index]}">${formula(source, PYTHAGORAS_LINES[index])}</div>`).join('')
+}</div>`;
 
 export const LESSON_PAGES = [
   {
@@ -72,6 +77,15 @@ export const LESSON_PAGES = [
           <p>القوى المتلاقية – تحليل القوة.</p>
         </section>
       `),
+      platformBlock(
+        'قبل أن نبدأ: حامل القوة، الفكرة التي يقوم عليها الدرس كله',
+        `<p>كل قوة نرسمها سهمًا: <strong>طول السهم</strong> يمثل شدة القوة، و<strong>اتجاه السهم</strong> يمثل جهتها، و<strong>بدايته</strong> هي نقطة تأثيرها. لكن السهم وحده لا يروي القصة كاملة؛ فلكل قوة <strong>حامل</strong>.</p>
+        <p><strong>حامل القوة</strong> هو الخط المستقيم الذي ينطبق عليه السهم ويمتد في الجهتين إلى ما لا نهاية. تخيل أنك مددت خطًا رفيعًا على استقامة السهم نفسه في الاتجاهين؛ هذا الخط هو الحامل. عندما نسأل: «هل هذه القوى متلاقية؟» فنحن في الحقيقة نسأل: <em>هل تمر حواملها جميعًا بنقطة واحدة؟</em> لا هل تلامس الأسهم بعضها.</p>
+        <p>في مشهد المظليّ في الكتاب تؤثر في المظليّ والمظلة قوى أهمها: <strong>ثقله ${V_W}</strong> المتجه رأسيًا إلى أسفل، وقوى <strong>شدّ حبال المظلة</strong> الممتدة على استقامة الحبال نفسها. حبال المظلة تجتمع أعلاها في نقطة واحدة، ولذلك فإن حوامل قوى الشدّ — وحامل الثقل حين يمر بتلك النقطة — <strong>تتلاقى</strong>. هذا بالضبط موضوع الدرس: قوى مختلفة الاتجاه، لكنها تشترك في نقطة تلاقي واحدة.</p>
+        <p><strong>كيف تقرأ رسوم هذا الدرس؟</strong> السهم الملوّن قوة، والخط المتقطع الرمادي حاملها (امتدادها)، والنقطة ${O} هي نقطة التأثير المشتركة، وكل رمز قوة مثل ${V_F1} يعني «القوة الأولى» حيث السهم الصغير فوق الحرف ${tex('F')} يدل على أنها كمية متجهة (لها جهة)، والرقم الصغير ${tex('1')} أسفل الحرف يميّزها عن ${V_F2}.</p>
+        <p>في نهاية الدرس ستتمكن من: التعرف على القوى المتلاقية من رسمها، وإيجاد <strong>محصلة</strong> قوتين متلاقيتين (قوة واحدة تقوم مقامهما) بالرسم والحساب، وتحديد عناصرها الأربعة، ثم عكس العملية: <strong>تحليل</strong> قوة واحدة إلى مركبتين متعامدتين.</p>`,
+        'note',
+      ),
       platformBlock(
         'موضع صورة الكتاب · الصفحة 55',
         `<div class="source-image-slot" role="group" aria-label="موضع صورة المظلي في الصفحة 55">
@@ -124,6 +138,19 @@ export const LESSON_PAGES = [
           <p><strong>القوى المتلاقية:</strong> هي القوى التي تتلاقى حواملها في نقطة واحدة.</p>
         </section>
       `),
+      platformBlock(
+        'لماذا خُططت التجربة بهذه الخطوات؟',
+        `<p>التجربة تبني التعريف أمامك خطوة خطوة بدل أن تعطيه جاهزًا:</p>
+        <ul>
+          <li><strong>الخطوتان 1–2 (ربيعة واحدة):</strong> الجسم المعلّق ساكن، تشده الربيعة إلى أعلى بقوة توتر ويقع عليه ثقله ${V_W} إلى أسفل. حاملا القوتين هنا <em>منطبقان</em>: خط رأسي واحد يمر بنقطة التعليق، والجهتان متعاكستان. هذه أبسط حالة تلاقٍ.</li>
+          <li><strong>الخطوة 3 (ربيعتان):</strong> الآن صار للجسم حاملَا شدٍّ <em>مائلان مختلفان</em>؛ لم يعودا على استقامة واحدة. ومع ذلك يمر الحاملان — إذا مُدّا — بنقطة تعليق الجسم نفسها.</li>
+          <li><strong>الخطوة 4:</strong> حامل الثقل يبقى دائمًا الخط الرأسي المارّ بمركز الجسم؛ اتجاه الثقل لا يتغير بتغير ترتيب الربيعات.</li>
+          <li><strong>الخطوتان 5–7 (الرسم على اللوح):</strong> عندما تنقل الخطوط الثلاثة إلى اللوح ثم ترفع الجهاز، يبقى «أثر» الحوامل مرسومًا، وتكتشف أنها تلتقي كلها في نقطة واحدة هي نقطة تعليق الجسم.</li>
+        </ul>
+        <p><strong>الاستنتاج بصياغتك:</strong> القوى المتلاقية ليست قوى متساوية ولا قوى متزنة بالضرورة؛ هي فقط قوى <em>تمتد حواملها فتمر بنقطة مشتركة</em>. لاحظ الفرق الدقيق: التلاقي خاصية <strong>هندسية</strong> للحوامل، أما الاتزان فيتطلب أن يكون مجموع القوى المتلاقية نفسه صفرًا، وهذا أمر آخر لا تدّعيه التجربة.</p>
+        <p><strong>أخطاء شائعة:</strong> الحكم على التلاقي من تقاطع الأسهم المرسومة لا من امتداد الحوامل؛ ونسيان أن القوى يجب أن تؤثر في الجسم نفسه؛ والخلط بين «متلاقية» و«متزنة».</p>`,
+        'note',
+      ),
       diagramBlock('concurrent'),
       simulationBlock('spring-concurrency'),
     ],
@@ -150,6 +177,21 @@ export const LESSON_PAGES = [
         </section>
       `),
       diagramBlock('parallelogram'),
+      platformBlock(
+        'المحصلة جمعٌ متجهي، لا جمعُ أرقام',
+        `<p><strong>ماذا تعني المحصلة؟</strong> إذا أثرت قوتان ${V_F1} و${V_F2} في النقطة ${O} معًا، فإن أثرهما المجتمَع يكافئ تمامًا أثر قوة <em>واحدة</em> تسمى <strong>المحصلة</strong> ${V_F}. «تكافئ» أي: تحرك الجسم (أو تشدّه) بالطريقة نفسها تمامًا لو عملت وحدها. لذلك نستبدل قوتين بقوة واحدة أبسط في الدراسة.</p>
+        <p><strong>لماذا لا نجمع الشدتين جمعًا عاديًا؟</strong> لأن القوة كمية <em>متجهة</em>: لها شدة وجهة معًا. لو سارت قوتان في الاتجاه نفسه لكانت المحصلة مجموع الشدتين فعلًا، لكن كلما اتسعت الزاوية بينهما «أكل» اختلافُ الاتجاه جزءًا من الأثر. لذلك نجمعها <strong>هندسيًا</strong> بقاعدة متوازي الأضلاع.</p>
+        <p><strong>كيف يعمل الإنشاء؟</strong> من نقطة التأثير المشتركة ${O} ارسم شعاعي ${V_F1} و${V_F2} بمقياس رسم معلوم. من طرف كل شعاع ارسم خطًا موازيًا للشعاع الآخر (الخطان المتقطعان في الرسم). يلتقي الخطان في الرأس المقابل ${M}. القطر ${V_OM} الخارج من ${O} هو شعاع المحصلة: اتجاهه بين اتجاهي القوتين، وطوله يعطي شدتها بعد تحويله بمقياس الرسم.</p>
+        <p><strong>عناصر المحصلة الأربعة</strong> (احفظها بوصفها بطاقة تعريف أي قوة):</p>
+        <ul>
+          <li><strong>نقطة التأثير:</strong> النقطة ${O} المشتركة؛ فالمحصلة تحل محل القوتين حيث تؤثران.</li>
+          <li><strong>الحامل:</strong> الخط الذي يحتوي القطر ${V_OM}.</li>
+          <li><strong>الجهة:</strong> من ${O} نحو الرأس المقابل ${M}، أي جهة السهم نفسه لا عكسها.</li>
+          <li><strong>الشدة:</strong> طول القطر مضروبًا في مقياس الرسم (مثلًا إذا كان ${ltrText('1 cm = 1 N')} وقطرك ${ltrText('6 cm')} فالشدة ${qty(6, 'N')}).</li>
+        </ul>
+        <p><strong>ماذا يحدث لو تغيرت الزاوية؟</strong> جرّب ذلك في المختبر التفاعلي أسفل الصفحة: كلما صغرت الزاوية اقتربت المحصلة من مجموع الشدتين، وكلما كبرت اقتربت من فرقهما، وعند الزاوية القائمة تصبح المسألة حسابية بنظرية فيثاغورث كما سترى في الصفحتين 58 و59.</p>`,
+        'note',
+      ),
       textBlock(`
         <section class="source-section source-conclusion">
           <h4>أستنتج:</h4>
@@ -177,7 +219,7 @@ export const LESSON_PAGES = [
       textBlock(`
         <section class="source-section worked-example">
           <h3>تطبيق محلول:</h3>
-          <p>قوتان ${V_F2}، ${V_F1} متلاقيتان في النقطة ${O} بين حامليهما الزاوية ${ltrText('60°')} شدتهما: ${forceResultEquation('<msub><mi>F</mi><mn>2</mn></msub>', '<mn>3</mn><mtext>&nbsp;N</mtext>', 'F₂ = 3 N')}، ${forceResultEquation('<msub><mi>F</mi><mn>1</mn></msub>', '<mn>4</mn><mtext>&nbsp;N</mtext>', 'F₁ = 4 N')}.</p>
+          <p>قوتان ${V_F2}، ${V_F1} متلاقيتان في النقطة ${O} بين حامليهما الزاوية ${degrees(60)} شدتهما: ${rel('F_{2}', '3~\\mathrm{N}', 'F₂ = 3 N')}، ${rel('F_{1}', '4~\\mathrm{N}', 'F₁ = 4 N')}.</p>
           <h4>المطلوب:</h4>
           <ol class="source-list">
             <li>أمثل القوتين بمقياس رسم مناسب (${ltrText('1 cm = 1 N')}).</li>
@@ -187,26 +229,41 @@ export const LESSON_PAGES = [
           <p>أمثل القوتين بالرسم:</p>
           <ul class="source-list">
             <li>أرسم شعاع القوة الأولى بطول ${ltrText('4 cm')}، بدايته ${O}.</li>
-            <li>أرسم من ${O} شعاع القوة الثانية بطول ${ltrText('3 cm')}، يصنع حاملها زاوية ${ltrText('60°')} مع حامل القوة الأولى.</li>
+            <li>أرسم من ${O} شعاع القوة الثانية بطول ${ltrText('3 cm')}، يصنع حاملها زاوية ${degrees(60)} مع حامل القوة الأولى.</li>
             <li>أكمل الشكل إلى متوازي أضلاع.</li>
             <li>أرسم القطر ${V_OM}.</li>
             <li>أقيس طول القطر ${V_OM}، أجده يساوي تقريباً ${ltrText('6 cm')}.</li>
-            <li>أحسب قيمة شدة المحصلة حسب مقياس الرسم: ${forceResultEquation('<mi>F</mi>', '<mn>6</mn><mo>×</mo><mn>1</mn><mtext>&nbsp;=&nbsp;6&nbsp;N</mtext>', 'F = 6 × 1 = 6 N')}.</li>
+            <li>أحسب قيمة شدة المحصلة حسب مقياس الرسم: ${rel('F', '6\\times 1=6~\\mathrm{N}', 'F = 6 × 1 = 6 N')}.</li>
           </ul>
           <h4>عناصر ${V_F} محصلة هاتين القوتين:</h4>
           <ul class="source-list definition-list">
             <li><strong>نقطة التأثير:</strong> نقطة تأثير القوتين ${O}.</li>
             <li><strong>الحامل:</strong> قطر متوازي الأضلاع ${V_OM} المنشأ على القوتين.</li>
             <li><strong>الجهة:</strong> من ${O} إلى الرأس المقابل ${M}.</li>
-            <li><strong>الشدة:</strong> ${forceResultEquation('<mi>F</mi>', '<mn>6</mn><mtext>&nbsp;N</mtext>', 'F = 6 N')}.</li>
+            <li><strong>الشدة:</strong> ${rel('F', '6~\\mathrm{N}', 'F = 6 N')}.</li>
           </ul>
         </section>
       `),
       diagramBlock('oblique-example'),
+      platformBlock(
+        'قراءة المثال المحلول بطريقة منظمة',
+        `${solutionSteps([
+          { kind: 'givens', label: 'المعطيات', html: `<p>${rel('F_{1}', '4~\\mathrm{N}', 'F₁ = 4 N')} و${rel('F_{2}', '3~\\mathrm{N}', 'F₂ = 3 N')} متلاقيتان في ${O}، والزاوية بين حامليهما ${degrees(60)}، ومقياس الرسم ${ltrText('1 cm = 1 N')}.</p>` },
+          { kind: 'required', label: 'المطلوب', html: `<p>تمثيل القوتين بالرسم، وتحديد عناصر محصلتهما ${V_F}.</p>` },
+          { kind: 'construction', label: 'الإنشاء', html: `<p>شعاع بطول ${ltrText('4 cm')} للقوة الأولى وشعاع بطول ${ltrText('3 cm')} للثانية يصنعان زاوية ${degrees(60)} من ${O}، ثم نكمل متوازي الأضلاع ونرسم القطر ${V_OM}.</p>` },
+          { kind: 'reading', label: 'القراءة من الرسم', html: `<p>نقيس طول القطر بالمسطرة: ${ltrText('≈ 6 cm')} (قيمة تقريبية لأن القياس يدوي).</p>` },
+          { kind: 'substitution', label: 'التحويل بمقياس الرسم', html: `${calculation('F=6\\times 1=6~\\mathrm{N}', 'F = 6 × 1 = 6 N')}` },
+          { kind: 'result', label: 'عناصر المحصلة', html: `<p>نقطة التأثير ${O} · الحامل: قطر متوازي الأضلاع ${V_OM} · الجهة: من ${O} إلى ${M} · الشدة ${qty(6, 'N')}.</p>` },
+          { kind: 'check', label: 'التحقق', html: `<p>منطقيًا يجب أن تكون المحصلة <em>بين</em> فرق الشدتين ومجموعهما: ${tex('|4-3| < F < 4+3', 'between 1 N and 7 N')} أي بين ${qty(1, 'N')} و${qty(7, 'N')}. القيمة ${qty(6, 'N')} تقع في هذا المجال، وهي قريبة من ${qty(7, 'N')} لأن الزاوية ${degrees(60)} حادة فتعاون القوتين كبير. النتيجة إذن معقولة.</p>` },
+        ])}
+        <p class="platform-aside"><strong>لماذا ليست ${qty(7, 'N')}؟</strong> الجمع المباشر ${tex('4+3=7')} يفترض أن القوتين في الاتجاه نفسه تمامًا. وجود زاوية ${degrees(60)} بينهما يجعل كل قوة «تساهم» بجزء من شدتها فقط في اتجاه الأخرى، فتنقص المحصلة عن ${qty(7, 'N')}. القيمة المطبوعة في الكتاب تقريبية لأنها مأخوذة من قياس الرسم؛ أما التحقق الحسابي الدقيق (قانون جيب التمام) فموضوعه منطقة المعلم.</p>
+        <p class="platform-aside"><strong>أخطاء شائعة في هذا المثال:</strong> جمع الشدتين دون مراعاة الزاوية، أو قياس القطر الواصل بين رأسي السهمين بدل القطر المار من ${O}، أو نسيان التحويل بمقياس الرسم (الطول بالسنتيمتر ليس الشدة بالنيوتن).</p>`,
+        'note',
+      ),
       textBlock(`
         <section class="source-section worked-example perpendicular-example">
           <h3>عناصر محصلة قوتين متعامدتين:</h3>
-          <p>قوتان ${V_F1}، ${V_F2} متلاقيتان متعامدتان تؤثران في النقطة ${O} شدتهما ${forceResultEquation('<msub><mi>F</mi><mn>1</mn></msub>', '<mn>60</mn><mtext>&nbsp;N</mtext>', 'F₁ = 60 N')}، ${forceResultEquation('<msub><mi>F</mi><mn>2</mn></msub>', '<mn>80</mn><mtext>&nbsp;N</mtext>', 'F₂ = 80 N')}.</p>
+          <p>قوتان ${V_F1}، ${V_F2} متلاقيتان متعامدتان تؤثران في النقطة ${O} شدتهما ${rel('F_{1}', '60~\\mathrm{N}', 'F₁ = 60 N')}، ${rel('F_{2}', '80~\\mathrm{N}', 'F₂ = 80 N')}.</p>
           <h4>المطلوب:</h4>
           <ol class="source-list">
             <li>أمثل القوتين (${V_F1}، ${V_F2}) بمقياس رسم مناسب.</li>
@@ -225,13 +282,13 @@ export const LESSON_PAGES = [
       textBlock(`
         <section class="source-section worked-example">
           <h3>الحل:</h3>
-          <ol class="source-list solution-steps">
+          <ol class="source-list solution-steps-source">
             <li>أختار مقياس رسم مناسب كل ${ltrText('1 cm')} يمثل ${ltrText('20 N')}.<br />ثم أرسم القوة الأولى بشعاع طوله ${ltrText('3 cm')}، وأرسم القوة الثانية بشعاع طوله ${ltrText('4 cm')}.</li>
             <li>أحسب شدة محصلة القوتين:
               <p>لإيجاد المحصلة أكمل الشكل إلى مستطيل ثم أرسم القطر المار من النقطة ${O} وليكن ${V_OM}.</p>
               <p>بقياس طول القطر ${V_OM} أجده مساوياً ${ltrText('5 cm')} وبحسب مقياس الرسم تكون شدة المحصلة:</p>
               <div class="formula-stack scale-result-stack" role="group" aria-label="حساب شدة المحصلة بمقياس الرسم">
-                <div class="formula-line">${forceResultEquation('<mi>F</mi>', '<mn>5</mn><mo>×</mo><mn>20</mn><mo>=</mo><mn>100</mn><mtext>&nbsp;N</mtext>', 'F = 5 × 20 = 100 N')}</div>
+                <div class="formula-line">${calculation('F=5\\times 20=100~\\mathrm{N}', 'F = 5 × 20 = 100 N')}</div>
               </div>
               <p>ويمكن أن نحسب شدة المحصلة لقوتين متعامدتين بتطبيق قانون فيثاغورث في المثلث القائم:</p>
               ${pythagorasBlock()}
@@ -241,7 +298,7 @@ export const LESSON_PAGES = [
                 <li><strong>نقطة التأثير:</strong> النقطة المشتركة بين القوتين ${O}.</li>
                 <li><strong>الحامل:</strong> قطر المستطيل ${V_OM} المنشأ على القوتين.</li>
                 <li><strong>الجهة:</strong> من ${O} إلى الرأس المقابل ${M}.</li>
-                <li><strong>الشدة:</strong> ${forceResultEquation('<mi>F</mi>', '<mn>100</mn><mtext>&nbsp;N</mtext>', 'F = 100 N')}.</li>
+                <li><strong>الشدة:</strong> ${rel('F', '100~\\mathrm{N}', 'F = 100 N')}.</li>
               </ul>
             </li>
           </ol>
@@ -253,6 +310,27 @@ export const LESSON_PAGES = [
         </aside>
       `),
       diagramBlock('right-angle-resultant'),
+      platformBlock(
+        'الحل المنظّم خطوة بخطوة: لماذا 100 N بالضبط؟',
+        `${solutionSteps([
+          { kind: 'givens', label: 'المعطيات', html: `<p>${rel('F_{1}', '60~\\mathrm{N}', 'F₁ = 60 N')} و${rel('F_{2}', '80~\\mathrm{N}', 'F₂ = 80 N')}، متعامدتان (الزاوية ${degrees(90)})، تتلاقيان في ${O}، ومقياس الرسم ${ltrText('1 cm = 20 N')}.</p>` },
+          { kind: 'required', label: 'المطلوب', html: `<p>شدة المحصلة ${S_F} وعناصرها.</p>` },
+          { kind: 'law', label: 'القانون', html: `<p>لأن القوتين متعامدتان يشكل شعاعاهما ضلعي مثلث قائم، والمحصلة وترُه؛ إذن نستخدم نظرية فيثاغورث:</p>${formula(PYTHAGORAS_TEX, PYTHAGORAS_LABEL)}` },
+          { kind: 'substitution', label: 'التعويض', html: `${formula('F=\\sqrt{(60)^{2}+(80)^{2}}', 'F = √((60)² + (80)²)')}` },
+          { kind: 'arithmetic', label: 'الحساب', html: `${formula('\\begin{aligned}F&=\\sqrt{3600+6400}=\\sqrt{10000}\\\\&=100\\end{aligned}', 'F = √10000 = 100')}` },
+          { kind: 'unit', label: 'الوحدة', html: `<p>${rel('F', '100~\\mathrm{N}', 'F = 100 N')}. الوحدة نيوتن لأن شدتي القوتين بالنيوتن؛ ومجموع مربعين بوحدات ${tex('\\mathrm{N}^{2}')} يعود بعد الجذر إلى ${tex('\\mathrm{N}')}. وبطريقة الرسم: القطر ${ltrText('5 cm')} وكل سنتيمتر يمثل ${ltrText('20 N')} فتكون ${calculation('F=5\\times 20=100~\\mathrm{N}', 'F = 5 × 20 = 100 N')} — الطريقتان تعطيان النتيجة نفسها.</p>` },
+          { kind: 'check', label: 'التحقق', html: `<p>ثلاث ملاحظات تؤكد المعقولية: (1) المحصلة ${qty(100, 'N')} أكبر من كل من ${qty(60, 'N')} و${qty(80, 'N')} وأصغر من مجموعهما ${qty(140, 'N')} — وهذا متوقع لقوتين متعامدتين. (2) الأطوال ${ltrText('3 cm، 4 cm، 5 cm')} هي الثلاثية الفيثاغورية الشهيرة ${tex('3\\text{–}4\\text{–}5')} مضروبة في 20: ${tex('60\\text{–}80\\text{–}100')}. (3) الرسم والحساب اتفقا، وهذا هو هدف ازدواج الطريقتين في الكتاب.</p>` },
+        ])}
+        <p class="platform-aside"><strong>أخطاء شائعة:</strong> جمع ${tex('60+80=140')} (صحيح فقط لو كانت الزاوية صفرًا)، أو حساب ${tex('\\sqrt{60+80}')} بنسيان التربيع، أو الخلط بين أطوال الرسم بالسنتيمتر والشدات بالنيوتن.</p>`,
+        'note',
+      ),
+      platformBlock(
+        'من الرسم إلى القانون… ومن القانون إلى الرسم',
+        `<p>الرسم والقانون وجهان لحقيقة واحدة. في المستطيل المنشأ على ${V_F1} و${V_F2}: <strong>الضلعان القائمان</strong> هما شعاعا القوتين، و<strong>الوتر</strong> (القطر ${V_OM}) هو المحصلة. نظرية فيثاغورث تقول: مربع الوتر = مجموع مربعي الضلعين — وهي بالضبط العلاقة ${tex(PYTHAGORAS_TEX, PYTHAGORAS_LABEL)}.</p>
+        <p>لذلك لديك طريقتان متكاملتان: <strong>الرسم</strong> يعطيك المحصلة طولًا وجهةً بمسطرة ومنقلة (مناسب عندما تكون الزاوية غير قائمة أو تريد رؤية الاتجاه)، و<strong>القانون</strong> يعطيك الشدة بدقة حسابية (مناسب للزاوية القائمة). إذا اختلفت النتيجتان قليلًا فالسبب دقة القياس لا خطأ القانون.</p>
+        <p><strong>كيف تقرأ الرسم المجاور؟</strong> تتبع السهمين من ${O}، ثم الخط المتقطع المرسوم من طرف كل شعاع موازيًا للشعاع الآخر؛ نقطة تقاطعهما هي ${M}، والقطر ${V_OM} هو المحصلة، ومربع الزاوية الصغير عند ${O} يذكّرك بأن الشرط الذي سمح باستخدام فيثاغورث هو التعامد.</p>`,
+        'note',
+      ),
       textBlock(`
         <section class="source-section">
           <h3>تحليل القوة إلى مركبتين متعامدتين:</h3>
@@ -293,6 +371,16 @@ export const LESSON_PAGES = [
           </ul>
         </section>
       `),
+      platformBlock(
+        'التحليل هو الفيلم نفسه يُعرض بالمقلوب',
+        `<p><strong>ما الفكرة؟</strong> في الصفحات السابقة بدأنا بقوتين وبنينا المحصلة (القطر). الآن نبدأ بـ<em>القطر</em> نفسه — قوة واحدة ${V_OM} — ونسأل: ما الضلعان المتعامدان اللذان بُني عليهما؟ الإجابة: <strong>مركبتاها</strong> ${V_F1} و${V_F2} على المحورين ${V_OX} و${V_OY}.</p>
+        <p><strong>كيف نبنيها هندسيًا؟</strong> من رأس القوة ${M} أنزل عمودًا على المحور ${V_OX} وعمودًا على المحور ${V_OY}. المسافة من ${O} إلى قدم العمود الأول هي المركبة ${V_F1}، وإلى قدم العمود الثاني هي ${V_F2}. يتشكل مستطيل قطره ${V_OM} نفسه — أي أن جمع المركبتين جمعًا متجهيًا يعيد القوة الأصلية بالضبط:</p>
+        ${formula('\\vec{\\mathrm{OM}}=\\vec{\\mathrm{OX}}+\\vec{\\mathrm{OY}}', 'vector OM equals vector OX plus vector OY')}
+        <p><strong>لماذا نحلل القوى أصلًا؟</strong> لأن أثر القوة يختلف باختلاف الاتجاه. في نشاط المستوى المائل أدناه مثلًا: مركبة الثقل <em>الموازية</em> للسطح هي التي تجرّ الجسم على الانزلاق، ومركبته <em>العمودية</em> هي التي تضغط الجسم على السطح. فصل القوة إلى مركبتين يسمح لنا بدراسة كل أثر على حدة.</p>
+        <p><strong>امتداد من المنصة (خارج نص الكتاب):</strong> إذا كان ${tex('W')} شدة الثقل وكانت ${LATIN_A} الزاوية بين المستوى المائل والأفق كما في نص النشاط، فإن مقداري المركبتين المعتادين هما ${tex('W_{\\parallel}=W\\sin a')} (موازية للسطح) و${tex('W_{\\perp}=W\\cos a')} (عمودية عليه). لاحظ نمط التحقق: كلما زاد ميل المستوى كبرت ${tex('\\sin a')} فكبرت المركبة المنزلِقة — وهذا يطابق حدسك: الانحدار الأشد يعني انزلاقًا أقوى. وعند ${tex('a=0')} (سطح أفقي) تختفي المركبة الموازية ويبقى الضغط كله عموديًا.</p>
+        <p><strong>أخطاء شائعة:</strong> الاعتقاد أن المركبتين قوتان جديدتان أُضيفتا للجسم (بل هما القوة نفسها مفككة)، أو عكس أدوار ${tex('\\sin')} و${tex('\\cos')}؛ تذكّر أن المركبة الموازية للسطح تتلاشى عندما يختفي الميل، وهي ${tex('W\\sin a')} لأن ${tex('\\sin 0=0')}.</p>`,
+        'note',
+      ),
       textBlock(`
         <section class="source-section activity-section">
           <h3>نشاط:</h3>
@@ -309,7 +397,7 @@ export const LESSON_PAGES = [
           <span class="reference-mark" aria-hidden="true">مرجع شكلي</span>
           <p>المستوى المائل والجسم والأسهم الصغيرة تُراجع في رسم الكتاب الأصلي. لم أعد رسم اتجاهات أو تسميات غير واضحة.</p>
           <p class="reference-symbol">الرمز المقروء في الشكل: ${V_R}. اتجاهه الهندسي يُراجع في الرسم الأصلي.</p>
-          <p class="angle-reference">رمز الزاوية المطبوع في الشكل: ${latinA}</p>
+          <p class="angle-reference">رمز الزاوية المطبوع في الشكل: ${LATIN_A}</p>
         </div>`,
         'source-slot',
       ),
@@ -341,7 +429,7 @@ export const LESSON_PAGES = [
                 <li><strong>نقطة التأثير:</strong> النقطة المشتركة للقوتين ${O}.</li>
                 <li><strong>الحامل:</strong> قطر المستطيل ${V_OM} المنشأ على القوتين.</li>
                 <li><strong>الجهة:</strong> من ${O} إلى الرأس المقابل ${M}.</li>
-                <li><strong>الشدة:</strong> تحسب من العلاقة: ${mathML(`<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>`, 'F = √(F₁² + F₂²)')} أو من الرسم.</li>
+                <li><strong>الشدة:</strong> تحسب من العلاقة: ${tex(PYTHAGORAS_TEX, PYTHAGORAS_LABEL)} أو من الرسم.</li>
               </ul>
             </li>
             <li>
@@ -355,6 +443,17 @@ export const LESSON_PAGES = [
         </section>
       `),
       diagramBlock('parallelogram'),
+      platformBlock(
+        'خريطة الدرس في نظرة واحدة',
+        `<ul class="platform-map-list">
+          <li><strong>قوى متلاقية</strong> ← حواملها تمر بنقطة واحدة (خاصية هندسية، لا تعني اتزانًا).</li>
+          <li><strong>محصلة قوتين متلاقيتين</strong> ← قطر متوازي الأضلاع المار من نقطة التأثير: ${tex('\\vec{F}=\\vec{F}_{1}+\\vec{F}_{2}', 'vector F = vector F1 + vector F2')}، وعناصرها: نقطة التأثير، الحامل، الجهة، الشدة.</li>
+          <li><strong>الحالة المتعامدة</strong> ← المستطيل بدل متوازي الأضلاع، والشدة تُحسب بدقة: ${tex(PYTHAGORAS_TEX, PYTHAGORAS_LABEL)}.</li>
+          <li><strong>تحليل القوة</strong> ← العملية المعاكسة: القوة الواحدة (القطر) تستبدل بمركبتين متعامدتين (الضلعين) على محورين مختارين.</li>
+        </ul>
+        <p><strong>كيف تختار الطريقة في أي مسألة؟</strong> إن كانت الزاوية بين القوتين قائمة فاستخدم فيثاغورث مباشرة. وإن كانت زاوية أخرى فابنِ متوازي الأضلاع بمقياس رسم واقرأ القطر. وإن أعطيت قوة واحدة ومحاور فحلّلها بإسقاط عمودين من رأسها. وفي كل الأحوال تحقّق من النتيجة: المحصلة دائمًا بين ${tex('|F_{1}-F_{2}|')} و${tex('F_{1}+F_{2}')}.</p>`,
+        'note',
+      ),
       textBlock(`
         <section class="source-section self-check-section">
           <h3>أختبر نفسي:</h3>
@@ -388,30 +487,30 @@ export const LESSON_PAGES = [
               <ol class="option-list" type="a"><li>مربع.</li><li>مستطيل.</li><li>معين.</li><li>متوازي أضلاع.</li></ol>
             </li>
             <li class="question-item">
-              <p>قوتان ${V_F1}، ${V_F2} متلاقيتان متعامدتان شدتهما ${ltrText('12 N')}، ${ltrText('16 N')} تؤثران في نقطة ${O} من جسم صلب شدة محصلتهما ${S_F} مساوية:</p>
+              <p>قوتان ${V_F1}، ${V_F2} متلاقيتان متعامدتان شدتهما ${qty(12, 'N')}، ${qty(16, 'N')} تؤثران في نقطة ${O} من جسم صلب شدة محصلتهما ${S_F} مساوية:</p>
               <ol class="option-list" type="a">
-                <li>${forceResultEquation('<mi>F</mi>', '<mn>4</mn><mtext>&nbsp;N</mtext>', 'F = 4 N')}.</li>
-                <li>${forceResultEquation('<mi>F</mi>', '<mn>20</mn><mtext>&nbsp;N</mtext>', 'F = 20 N')}.</li>
-                <li>${forceResultEquation('<mi>F</mi>', '<mn>28</mn><mtext>&nbsp;N</mtext>', 'F = 28 N')}.</li>
-                <li>${forceResultEquation('<mi>F</mi>', '<mn>192</mn><mtext>&nbsp;N</mtext>', 'F = 192 N')}.</li>
+                <li>${rel('F', '4~\\mathrm{N}', 'F = 4 N')}.</li>
+                <li>${rel('F', '20~\\mathrm{N}', 'F = 20 N')}.</li>
+                <li>${rel('F', '28~\\mathrm{N}', 'F = 28 N')}.</li>
+                <li>${rel('F', '192~\\mathrm{N}', 'F = 192 N')}.</li>
               </ol>
             </li>
             <li class="question-item">
-              <p>قوتان متعامدتان تؤثران في نقطة ${O} من جسم صلب شدة محصلتهما ${forceResultEquation('<mi>F</mi>', '<mn>50</mn><mtext>&nbsp;N</mtext>', 'F = 50 N')} شدة القوة الأولى ${forceResultEquation('<msub><mi>F</mi><mn>1</mn></msub>', '<mn>40</mn><mtext>&nbsp;N</mtext>', 'F₁ = 40 N')} فتكون شدة القوة الثانية ${S_F2} مساوية:</p>
+              <p>قوتان متعامدتان تؤثران في نقطة ${O} من جسم صلب شدة محصلتهما ${rel('F', '50~\\mathrm{N}', 'F = 50 N')} شدة القوة الأولى ${rel('F_{1}', '40~\\mathrm{N}', 'F₁ = 40 N')} فتكون شدة القوة الثانية ${S_F2} مساوية:</p>
               <ol class="option-list" type="a">
-                <li>${forceResultEquation('<msub><mi>F</mi><mn>2</mn></msub>', '<mn>90</mn><mtext>&nbsp;N</mtext>', 'F₂ = 90 N')}.</li>
-                <li>${forceResultEquation('<msub><mi>F</mi><mn>2</mn></msub>', '<mn>30</mn><mtext>&nbsp;N</mtext>', 'F₂ = 30 N')}.</li>
-                <li>${forceResultEquation('<msub><mi>F</mi><mn>2</mn></msub>', '<mn>2000</mn><mtext>&nbsp;N</mtext>', 'F₂ = 2000 N')}.</li>
-                <li>${forceResultEquation('<msub><mi>F</mi><mn>2</mn></msub>', '<mn>10</mn><mtext>&nbsp;N</mtext>', 'F₂ = 10 N')}.</li>
+                <li>${rel('F_{2}', '90~\\mathrm{N}', 'F₂ = 90 N')}.</li>
+                <li>${rel('F_{2}', '30~\\mathrm{N}', 'F₂ = 30 N')}.</li>
+                <li>${rel('F_{2}', '2000~\\mathrm{N}', 'F₂ = 2000 N')}.</li>
+                <li>${rel('F_{2}', '10~\\mathrm{N}', 'F₂ = 10 N')}.</li>
               </ol>
             </li>
             <li class="question-item">
               <p>قوتان ${V_F1}، ${V_F2} متلاقيتان متعامدتان مختلفتان شدة، تؤثران في نقطة ${O} من جسم صلب، فإن شدة محصلتهما تحسب من العلاقة:</p>
               <ol class="option-list" type="a">
-                <li>${forceResultEquation('<mi>F</mi>', '<msub><mi>F</mi><mn>1</mn></msub><mo>+</mo><msub><mi>F</mi><mn>2</mn></msub>', 'F = F₁ + F₂')}.</li>
-                <li>${forceResultEquation('<mi>F</mi>', '<msub><mi>F</mi><mn>1</mn></msub><mo>−</mo><msub><mi>F</mi><mn>2</mn></msub>', 'F = F₁ − F₂')}.</li>
-                <li>${mathML(`<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>`, 'F = √(F₁² + F₂²')}.</li>
-                <li>${forceResultEquation('<mi>F</mi>', '<msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup>', 'F = F₁² + F₂²')}.</li>
+                <li>${rel('F', 'F_{1}+F_{2}', 'F = F₁ + F₂')}.</li>
+                <li>${rel('F', 'F_{1}-F_{2}', 'F = F₁ − F₂')}.</li>
+                <li>${tex(PYTHAGORAS_TEX, PYTHAGORAS_LABEL)}.</li>
+                <li>${rel('F', 'F_{1}^{2}+F_{2}^{2}', 'F = F₁² + F₂²')}.</li>
               </ol>
             </li>
           </ol>
@@ -420,15 +519,15 @@ export const LESSON_PAGES = [
           <h3>السؤال الثاني:</h3>
           <p>حل المسألتين الآتيتين:</p>
           <h4>المسألة الأولى:</h4>
-          <p>تؤثر قوتان متعامدتان ${V_F1}، ${V_F2} في نقطة (${O}) من جسم صلب، شدة القوة الثانية ${ltrText('12 N')} وشدة محصلتهما ${ltrText('15 N')}، المطلوب:</p>
+          <p>تؤثر قوتان متعامدتان ${V_F1}، ${V_F2} في نقطة (${O}) من جسم صلب، شدة القوة الثانية ${qty(12, 'N')} وشدة محصلتهما ${qty(15, 'N')}، المطلوب:</p>
           <ol class="source-list problem-list">
             <li>احسب شدة القوة الأولى ${V_F1}.</li>
             <li>حدد بالكتابة عناصر محصلة هاتين القوتين.</li>
             <li>ما قوة ${V_F} التي أثرت في النقطة ${O} إذا جعلت الجسم متوازناً، ثم اكتب عناصرها.</li>
-            <li>مثل بمقياس رسم مناسب كلا من القوى <span class="notation-set" dir="ltr" aria-label="F one, F two, F, F three">{${V_F1}, ${V_F2}, ${V_F}, ${V_F3}}</span>.</li>
+            <li>مثل بمقياس رسم مناسب كلا من القوى ${tex('\\{\\vec{F}_{1},\\ \\vec{F}_{2},\\ \\vec{F},\\ \\vec{F}_{3}\\}', 'the set F one, F two, F, F three')}.</li>
           </ol>
           <h4>المسألة الثانية:</h4>
-          <p>يحمل شخصان حقيبة بواسطة حبلين بينهما زاوية ${ltrText('90°')} شدة قوة الأول ${ltrText('30 N')} وشدة قوة الثاني ${ltrText('40 N')}.</p>
+          <p>يحمل شخصان حقيبة بواسطة حبلين بينهما زاوية ${degrees(90)} شدة قوة الأول ${qty(30, 'N')} وشدة قوة الثاني ${qty(40, 'N')}.</p>
           <h5>المطلوب:</h5>
           <ol class="source-list problem-list">
             <li>احسب شدة محصلة هاتين القوتين.</li>
@@ -437,6 +536,19 @@ export const LESSON_PAGES = [
           </ol>
         </section>
       `),
+      platformBlock(
+        'استراتيجية الحل قبل أن تبدأ (دون إجابات)',
+        `<p>المسألتان أعلاه تدريبان لك؛ حلّهما في دفترك أولًا، والحلول المفصّلة موجودة في <strong>منطقة المعلم</strong>. استخدم هذه الخطوات الخمس في أي مسألة محصلة:</p>
+        <ol>
+          <li><strong>استخرج المعطيات</strong> برموزها ووحداتها (${S_F1}، ${S_F2}، الزاوية، مقياس الرسم إن وجد) واكتب المطلوب.</li>
+          <li><strong>ارسم</strong> القوتين من نقطة التأثير المشتركة بمقياس رسم تعلنه بوضوح.</li>
+          <li><strong>اختر الأداة:</strong> زاوية قائمة؟ فيثاغورث ${tex(PYTHAGORAS_TEX, PYTHAGORAS_LABEL)}. زاوية أخرى؟ متوازي أضلاع وقراءة للقطر. وإذا عرفت المحصلة وإحدى القوتين فالمجهول يُستخرج بعكس العلاقة: ${tex('F_{1}=\\sqrt{F^{2}-F_{2}^{2}}', 'F1 = √(F² − F₂²)')}.</li>
+          <li><strong>احسب بالوحدات</strong> خطوة خطوة، ولا تخلط السنتيمترات بالنيوتنات.</li>
+          <li><strong>تحقق:</strong> هل تقع النتيجة بين ${tex('|F_{1}-F_{2}|')} و${tex('F_{1}+F_{2}')}؟ هل قوة الاتزان تساوي المحصلة شدةً وتعاكسها جهةً؟</li>
+        </ol>
+        <p class="platform-aside"><strong>تلميح للمسألة الأولى:</strong> عندك المحصلة وإحدى القوتين — هذه حالة «وتر وضلع» في المثلث القائم. <strong>وللمسألة الثانية:</strong> زاوية ${degrees(90)} بين الحبلين تعني فيثاغورث مباشرًا؛ والأعداد ${tex('30\\text{–}40')} ستذكّرك بثلاثية مألوفة.</p>`,
+        'note',
+      ),
     ],
   },
 ];

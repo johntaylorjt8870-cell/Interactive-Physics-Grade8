@@ -1,4 +1,4 @@
-import { mathML, V_F1, V_F2, V_F, V_W, V_OM, V_OX, V_OY } from './math.js';
+import { formula, tex, V_F1, V_F2, V_F, V_W, V_OM, V_OX, V_OY } from './math.js';
 import {
   concurrentDiagramGeometry,
   concurrentExperimentGeometry,
@@ -36,24 +36,21 @@ const markerDefs = (prefix) => `<defs>
   <marker id="${prefix}-result-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#d97961" /></marker>
 </defs>`;
 
-const magnitudeFormula = mathML(
-  '<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup><mo>+</mo><mn>2</mn><msub><mi>F</mi><mn>1</mn></msub><msub><mi>F</mi><mn>2</mn></msub><mi>cos</mi><mo>(</mo><mi>φ</mi><mo>)</mo></mrow></msqrt>',
+const magnitudeFormula = formula(
+  'F=\\sqrt{F_{1}^{2}+F_{2}^{2}+2F_{1}F_{2}\\cos\\varphi}',
   'F = square root of F one squared plus F two squared plus two F one F two cosine phi',
-  true,
 );
 
-const simulationAngleSymbol = mathML('<mi>φ</mi>', 'phi');
+const simulationAngleSymbol = tex('\\varphi', 'phi');
 
-const perpendicularFormula = mathML(
-  '<mi>F</mi><mo>=</mo><msqrt><mrow><msup><msub><mi>F</mi><mn>1</mn></msub><mn>2</mn></msup><mo>+</mo><msup><msub><mi>F</mi><mn>2</mn></msub><mn>2</mn></msup></mrow></msqrt>',
+const perpendicularFormula = formula(
+  'F=\\sqrt{F_{1}^{2}+F_{2}^{2}}',
   'F = square root of F one squared plus F two squared',
-  true,
 );
 
-const forceResolutionIdentity = mathML(
-  '<mover accent="true"><mrow><mi>O</mi><mi>M</mi></mrow><mo stretchy="true">→</mo></mover><mo>=</mo><mover accent="true"><mrow><mi>O</mi><mi>X</mi></mrow><mo stretchy="true">→</mo></mover><mo>+</mo><mover accent="true"><mrow><mi>O</mi><mi>Y</mi></mrow><mo stretchy="true">→</mo></mover>',
+const forceResolutionIdentity = formula(
+  '\\vec{\\mathrm{OM}}=\\vec{\\mathrm{OX}}+\\vec{\\mathrm{OY}}',
   'vector OM equals vector OX plus vector OY',
-  true,
 );
 
 function concurrentMarkup() {
@@ -77,6 +74,12 @@ function concurrentMarkup() {
             aria-label="الزاوية بين F1 وF2 بالدرجات" aria-valuetext="45 درجة" aria-describedby="sim-a-angle-help" />
           <div class="range-endpoints" aria-hidden="true"><bdi dir="ltr">0°</bdi><bdi dir="ltr">180°</bdi></div>
           <p class="simulation-control-help" id="sim-a-angle-help">تقاس من اتجاه ${V_F1} إلى ${V_F2} عكس عقارب الساعة.</p>
+        </div>
+        <div class="simulation-sweep-row">
+          <button class="simulation-sweep" type="button" data-sweep="sim-a-angle" aria-describedby="sim-a-sweep-hint">
+            <span aria-hidden="true">▶</span> شاهد المحصلة تتغير
+          </button>
+          <p class="simulation-sweep-hint" id="sim-a-sweep-hint">تتحرك الزاوية تدريجيًا من <bdi dir="ltr">10°</bdi> إلى <bdi dir="ltr">170°</bdi> ثم تعود؛ راقب كيف يقصر القطر ويطول.</p>
         </div>
         <div class="simulation-result-grid">
           <div class="simulation-result-cell">
@@ -300,6 +303,12 @@ function forceResolutionMarkup() {
             aria-label="زاوية القوة من محور OX بالدرجات" aria-valuetext="35 درجة" aria-describedby="sim-d-angle-help" />
           <div class="range-endpoints" aria-hidden="true"><bdi dir="ltr">0°</bdi><bdi dir="ltr">90°</bdi></div>
           <p class="simulation-control-help" id="sim-d-angle-help">تُقاس من الاتجاه الموجب لمحور ${V_OX} نحو محور ${V_OY}.</p>
+        </div>
+        <div class="simulation-sweep-row">
+          <button class="simulation-sweep" type="button" data-sweep="sim-d-angle" aria-describedby="sim-d-sweep-hint">
+            <span aria-hidden="true">▶</span> شاهد المركبتين تتغيران
+          </button>
+          <p class="simulation-sweep-hint" id="sim-d-sweep-hint">تدور القوة من محور <bdi dir="ltr">OX</bdi> إلى محور <bdi dir="ltr">OY</bdi>؛ لاحظ كيف تنتقل الشدة من مركبة إلى الأخرى.</p>
         </div>
         <p class="simulation-control-help" id="sim-d-force-help">طول السهم يتناسب مع مقدار القوة في هذا النموذج التخطيطي.</p>
         <div class="simulation-result-grid">
@@ -542,6 +551,63 @@ function updateForceResolutionSimulation(root) {
   root.querySelector('[data-role="diagram-description"]').textContent = `قوة أصلية مقدارها ${formatNumber(force, 1)} نيوتن عند زاوية ${formatNumber(angle, 0)} درجة من OX؛ مركبتها الأفقية ${componentX} نيوتن والعمودية ${componentY} نيوتن. القطر من O إلى M يساوي مجموع متجهي المركبتين على OX وOY.`;
 }
 
+/* Animation-first exploration: sweeping a range input through its meaningful
+   domain so the student *sees* the relationship, not just a static picture. */
+function runSweep(root, button) {
+  const input = root.querySelector(`#${button.dataset.sweep}`);
+  if (!input || button.disabled) return;
+  const isConcurrentAngle = button.dataset.sweep === 'sim-a-angle';
+  const start = Number(input.value);
+  const waypoints = isConcurrentAngle ? [10, 170, 10, start] : [5, 85, 5, start];
+  const segmentMillis = isConcurrentAngle ? [900, 3400, 3400, 900] : [900, 3000, 3000, 900];
+  const reduced = typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  button.disabled = true;
+  const dispatch = () => input.dispatchEvent(new Event('input', { bubbles: true }));
+
+  const finish = () => { button.disabled = false; };
+
+  if (reduced) {
+    // No smooth motion: step through the extremes so the relationship is still visible.
+    let index = 0;
+    const step = () => {
+      if (index >= waypoints.length) { finish(); return; }
+      input.value = String(waypoints[index]);
+      dispatch();
+      index += 1;
+      window.setTimeout(step, 1200);
+    };
+    step();
+    return;
+  }
+
+  let segment = 0;
+  let segmentStart = null;
+  let from = start;
+  const tick = (timestamp) => {
+    if (segmentStart === null) segmentStart = timestamp;
+    const duration = segmentMillis[segment];
+    const progress = Math.min(1, (timestamp - segmentStart) / duration);
+    const eased = progress < 0.5
+      ? 2 * progress * progress
+      : 1 - ((-2 * progress + 2) ** 2) / 2;
+    const to = waypoints[segment];
+    input.value = String(Math.round((from + (to - from) * eased) * 10) / 10);
+    dispatch();
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+      return;
+    }
+    from = to;
+    segment += 1;
+    segmentStart = null;
+    if (segment < waypoints.length) requestAnimationFrame(tick);
+    else { input.value = String(waypoints.at(-1)); dispatch(); finish(); }
+  };
+  requestAnimationFrame(tick);
+}
+
 export function mountSimulationExperiences(container) {
   const updateByType = {
     concurrent: updateConcurrentSimulation,
@@ -557,6 +623,9 @@ export function mountSimulationExperiences(container) {
     const update = () => updateSimulation(root);
     for (const input of root.querySelectorAll('input[type="range"]')) {
       input.addEventListener('input', update);
+    }
+    for (const button of root.querySelectorAll('[data-sweep]')) {
+      button.addEventListener('click', () => runSweep(root, button));
     }
     update();
   }
