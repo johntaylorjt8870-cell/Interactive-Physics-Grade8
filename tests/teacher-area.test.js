@@ -9,7 +9,8 @@ import { V_F, V_F1, V_F2, V_F3, V_OM, V_OX, V_OY } from '../src/math.js';
 
 const page = (number) => LESSON_PAGES.find((item) => item.page === number);
 const teacherMarkup = renderTeacherContent();
-const TEACHER_PASSPHRASE = 'Teacher-L1-55-62!';
+const TEACHER_PASSPHRASE = 'somer173';
+const RETIRED_TEACHER_PASSPHRASE = 'Teacher-L1-55-62!';
 
 class FakeElement {
   constructor() {
@@ -72,9 +73,17 @@ test('Teacher Area is a separate accessible page with a password gate and hidden
   assert.match(teacherPage, /src="\.\/src\/teacher\.js"/);
   assert.match(teacherBootstrap, /loadContent: \(\) => import\('\.\/teacher-content\.js'\)/);
   assert.doesNotMatch(studentEntry, /teacher-content\.js|teacher-auth\.js/);
-  assert.doesNotMatch(studentPage, /Teacher-L1-55-62!|2069af38a374c2af/);
-  assert.doesNotMatch(teacherPage, /Teacher-L1-55-62!|2069af38a374c2af/);
+  assert.doesNotMatch(studentPage, /Teacher-L1-55-62!|2069af38a374c2af|somer173|b767bb650abe5563/);
+  assert.doesNotMatch(teacherPage, /Teacher-L1-55-62!|2069af38a374c2af|somer173|b767bb650abe5563/);
   assert.doesNotMatch(studentPage, /حل المسألة الأولى|قوة الموازنة.*15 N/);
+});
+
+test('the retired teacher passphrase is gone from the verifier and no longer unlocks', async () => {
+  const authSource = await readFile(new URL('../src/teacher-auth.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(authSource, /Teacher-L1-55-62!/);
+  assert.doesNotMatch(authSource, /2069af38a374c2af211e05a30a7549bfa4fc09985886f07c99edbbe7829e3abc/);
+  assert.equal(await verifyTeacherPassword(RETIRED_TEACHER_PASSPHRASE), false);
+  assert.equal(await verifyTeacherPassword(TEACHER_PASSPHRASE), true);
 });
 
 test('incorrect password keeps teacher content unloaded and leaves the workspace locked', async () => {

@@ -1,6 +1,14 @@
 import { LESSON_PAGES } from './lesson-content.js';
 import { DIAGRAMS } from './diagrams.js';
 import { mountSimulationExperiences, simulationMarkup } from './simulations.js';
+import { V_F1, V_F2, V_F, V_W } from './math.js';
+import {
+  collectSelfCheckSelections,
+  enhanceSelfCheckSections,
+  gradeSelfCheck,
+  markSelfCheckOptions,
+  renderSelfCheckResults,
+} from './self-check.js';
 
 const nav = document.querySelector('#page-nav');
 const pageContent = document.querySelector('#page-content');
@@ -89,6 +97,7 @@ function renderPage(page, index) {
     <div class="source-card-body">${blocks}</div>
   </article>${simulations}`;
   mountSimulationExperiences(pageContent);
+  enhanceSelfCheckSections(pageContent, page.page);
 
   updateProgress(index);
   updateControls(index);
@@ -151,6 +160,55 @@ LESSON_PAGES.forEach((page, index) => {
 
 previousButton.addEventListener('click', () => goToPage(activeIndex - 1, true));
 nextButton.addEventListener('click', () => goToPage(activeIndex + 1, true));
+
+/* Textbook self-check interaction: selecting or changing an answer never reveals
+   correctness. Results appear only when the student deliberately submits. */
+pageContent.addEventListener('change', (event) => {
+  const input = event.target.closest('input[data-selfcheck-option]');
+  if (!input) return;
+  const item = input.closest('[data-selfcheck-item]');
+  if (!item) return;
+  for (const choice of item.querySelectorAll('.option-choice')) {
+    const choiceInput = choice.querySelector('input[data-selfcheck-option]');
+    choice.classList.toggle('is-selected', choiceInput?.checked === true);
+    choice.classList.remove('is-revealed-correct', 'is-revealed-wrong');
+  }
+  const section = item.closest('.self-check-section');
+  const results = section?.querySelector('[data-selfcheck-results]');
+  if (results && !results.hidden) {
+    results.hidden = true;
+    results.innerHTML = '';
+    for (const revealed of section.querySelectorAll('.is-revealed-correct, .is-revealed-wrong')) {
+      revealed.classList.remove('is-revealed-correct', 'is-revealed-wrong');
+    }
+  }
+});
+
+pageContent.addEventListener('click', (event) => {
+  const submitButton = event.target.closest('[data-selfcheck-submit]');
+  if (!submitButton) return;
+  const pageNumber = Number(submitButton.dataset.selfcheckSubmit);
+  const section = pageContent.querySelector(`.self-check-section[data-selfcheck-page="${pageNumber}"]`);
+  if (!section) return;
+  const itemKeys = [...section.querySelectorAll('[data-selfcheck-item]')].map((item) => item.dataset.selfcheckItem);
+  if (!itemKeys.length) return;
+  submitButton.disabled = true;
+  import('./self-check-answers.js')
+    .then((answersModule) => {
+      const answers = {};
+      for (const key of itemKeys) {
+        const entry = answersModule.selfCheckAnswer(key);
+        if (entry) answers[key] = entry;
+      }
+      const selections = collectSelfCheckSelections(section);
+      const graded = gradeSelfCheck(selections, answers);
+      const resultList = section.querySelector('.question-list');
+      const startNumber = Number(resultList?.getAttribute('start') ?? 1);
+      markSelfCheckOptions(section, graded);
+      renderSelfCheckResults(section.querySelector(`[data-selfcheck-results="${pageNumber}"]`), graded, startNumber);
+    })
+    .finally(() => { submitButton.disabled = false; });
+});
 
 window.addEventListener('keydown', (event) => {
   if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
