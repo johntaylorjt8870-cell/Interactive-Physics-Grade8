@@ -28,6 +28,8 @@ test('all textbook elements present',()=>{
  assert.ok(source(81).includes('36')); assert.ok(source(82).includes('مانعة الصواعق'));
  assert.ok(source(83).includes('بنجامين فرانكلين')); assert.ok(source(84).includes('السؤال الثالث'));
  assert.ok(source(85).includes('المسألة الثانية')); assert.ok(source(86).includes('المسألة الثالثة'));
+ assert.ok(source(85).includes('جسم إلكتروناته ذاته السطحية قليل وشديدة الارتباط بالنواة'));
+ { const req=source(86).slice(source(86).indexOf('المطلوب:')); const i1=req.indexOf('بين'), i2=req.indexOf('بين', i1+1), i3=req.indexOf('محصلة القوى'); assert.ok(i1>-1&&i2>i1&&i3>i2,'p86 order'); assert.ok(req.includes('q_{2}')&&req.includes('q_{3}')); }
  assert.ok(source(85).includes('6.02')||source(85).includes('6'));
 });
 test('physics: quantization, Coulomb textbook values, three-charge net, electroscope',()=>{
@@ -51,7 +53,8 @@ test('diagrams and simulations labelled, accessible, reduced motion',async()=>{
 test('teacher covers every page and every exercise with steps',()=>{
  const m=renderTeacherContent();
  for(let p=73;p<=86;p++) assert.ok(m.includes(`data-source-page="p${p}"`),`p${p}`);
- for(const phrase of ['الكاشف الكهربائي','تطبيق محلول','نشاط','التكهرب بالتأثير','السؤال الأول','السؤال الثاني','السؤال الثالث','السؤال الرابع','المسألة الأولى','المسألة الثانية','المسألة الثالثة','5.75','2.32','96320']) assert.ok(m.includes(phrase),phrase);
+ for(const phrase of ['الكاشف الكهربائي','تطبيق محلول','نشاط','التكهرب بالتأثير','السؤال الأول','السؤال الثاني','السؤال الثالث','السؤال الرابع','المسألة الأولى','المسألة الثانية','المسألة الثالثة','5.75','2.32','96320','المطلوب 1','المطلوب 2','المطلوب 3']) assert.ok(m.includes(phrase),phrase);
+ { const a=m.indexOf('المطلوب 1'), b=m.indexOf('المطلوب 2'), c=m.indexOf('المطلوب 3'); assert.ok(a>-1&&b>a&&c>b,'teacher p86 order'); }
  assert.match(m,/المعطيات/); assert.match(m,/المطلوب/); assert.match(m,/التحقق/);
 });
 test('test: exactly 20, distribution 6/7/4/3, hidden keys, groups of 5, no instant score, restart',async()=>{
