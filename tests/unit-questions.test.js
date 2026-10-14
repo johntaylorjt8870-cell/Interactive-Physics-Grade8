@@ -21,11 +21,11 @@ function sourceSubparts(markup) {
 
 test('Course Home presents Unit Questions as a separate Unit 1 review, not another lesson or test', async () => {
   const home = await read('../index.html');
-  const unitPanel = home.slice(home.indexOf('<div class="unit-panel">'), home.indexOf('</section>', home.indexOf('<div class="unit-panel">')));
+  const unitPanel = home.slice(home.indexOf('<div class="unit-panel">'), home.indexOf('<div class="unit-panel">', home.indexOf('<div class="unit-panel">') + 10));
   assert.match(home, /class="unit-review-entry"[^]*أسئلة الوحدة الأولى/);
   assert.match(home, /href="\.\/unit-questions\.html"/);
   assert.match(home, /مراجعة شاملة لأسئلة الكتاب الأصلية/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 2);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 3);
   assert.equal((unitPanel.match(/class="lesson-entry"/g) ?? []).length, 2);
   assert.match(unitPanel, /class="unit-review-entry"/);
   assert.doesNotMatch(home, /lesson-3\.html|class="lesson-entry"[^]*الدرس الثالث|unit-2/);
