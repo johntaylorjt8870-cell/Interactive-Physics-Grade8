@@ -1,0 +1,28 @@
+/* Unit 2 Lesson 1 additions; core system in styles.css */
+.source-reference-inline{display:inline-block;padding:2px 8px;color:#785520;font-size:.86em;background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:6px}
+.u2-match-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.u2-sim select{min-height:40px;padding:6px 10px;border:1px solid var(--rule);border-radius:8px;background:#fff}
+.u2-steps{display:grid;gap:8px}
+.u2-steps button,.simulation-sweep{min-height:42px;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;background:#eef5f3;cursor:pointer;text-align:start}
+.u2-steps button:focus-visible,.simulation-sweep:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #33568f;outline-offset:2px}
+.u2-predict{font-size:.92em;color:var(--muted)}
+.diagram-canvas .u2-metal,.u2-metal{fill:#8a94a8}
+.diagram-canvas .u2-jar,.u2-jar{fill:#e8f1f4;stroke:#9db4c0;stroke-width:2}
+.diagram-canvas .u2-rod,.u2-rod{stroke:#56647d;stroke-width:4}
+.diagram-canvas .u2-leaf,.u2-leaf{stroke:#c9902e;stroke-width:4;stroke-linecap:round}
+.diagram-canvas .u2-base,.u2-base{fill:#7a5230}
+.diagram-canvas .u2-plus,.u2-plus{fill:#f3b8b0;stroke:#c95348;stroke-width:2}
+.diagram-canvas .u2-minus,.u2-minus{fill:#b9cdea;stroke:#33568f;stroke-width:2}
+.u2-svg-sign{fill:#24304a;font:700 22px Georgia,serif}
+.diagram-canvas .u2-carrier,.u2-carrier{stroke:#a8b0bf;stroke-width:1.5;stroke-dasharray:5 6}
+.diagram-canvas .u2-force-r,.u2-force-r{stroke:#c95348;stroke-width:4}
+.diagram-canvas .u2-force-b,.u2-force-b{stroke:#33568f;stroke-width:4}
+.diagram-canvas .u2-rod-charge,.u2-rod-charge{fill:#33568f}
+.diagram-canvas .u2-label,.u2-label{fill:#24304a;font:600 16px var(--font-latin)}
+.diagram-canvas .u2-caption{fill:#24304a;font:600 15px var(--font-latin)}
+.diagram-canvas .u2-cloud{fill:#dfe7f2;stroke:#9db0cc}
+.diagram-canvas .u2-bolt{fill:none;stroke:#e6a817;stroke-width:6;stroke-linejoin:round}
+.diagram-canvas .u2-ground{fill:#b7d3a8}
+.diagram-canvas .u2-building{fill:#e8ddc8;stroke:#9a8a6a}
+@media(max-width:560px){.u2-match-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
