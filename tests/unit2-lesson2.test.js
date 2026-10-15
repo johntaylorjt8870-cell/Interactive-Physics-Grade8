@@ -5,6 +5,7 @@ import { UNIT2L2_PAGES, UNIT2L2_META } from '../src/unit2-lesson2-content.js';
 import { currentFromChargeTime, chargeFromCurrentTime, seriesCurrents, parallelTotal, milliampereToAmpere } from '../src/unit2-lesson2-physics.js';
 import { UNIT2L2_DIAGRAMS } from '../src/unit2-lesson2-diagrams.js';
 import { UNIT2L2_QUESTIONS, UNIT2L2_TEST } from '../src/unit2-lesson2-test-data.js';
+import { unit2l2AssessmentDiagram } from '../src/unit2-lesson2-test-diagrams.js';
 import { ANSWER_KEY, SOLUTIONS, SOLUTION_GROUPS } from '../src/unit2-lesson2-test-solutions.js';
 import { validateAnswerKey, startAssessment, createAssessmentState, recordAnswer, submitAssessment, restartAssessment } from '../src/lesson-test-engine.js';
 import { renderTeacherContent } from '../src/unit2-lesson2-teacher-content.js';
@@ -16,8 +17,9 @@ const source = (n) => UNIT2L2_PAGES.find((p) => p.page === n)?.blocks.filter((b)
 const texOf = (html) => [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)].map((m) => m[1]);
 /* Text a reader sees: drop TeX annotations and tags. */
 const visible = (html) => html.replace(/<annotation[\s\S]*?<\/annotation>/g, '').replace(/<[^>]+>/g, ' ');
-/* Remove every expression rendered by src/math.js (balanced wrapper element), keeping prose only. */
-const withoutMath = (html) => {
+/* Remove every expression rendered by src/math.js (balanced wrapper element), keeping prose only;
+   `replace` may substitute each removed element (it receives the element's HTML). */
+const withoutMath = (html, replace = () => '') => {
   const open = /<(span|div) class="math math-(?:inline|display)[^"]*"[^>]*>/g;
   let out = '';
   let from = 0;
@@ -26,10 +28,21 @@ const withoutMath = (html) => {
     const tag = new RegExp(`<(/?)${m[1]}\\b[^>]*>`, 'g');
     tag.lastIndex = open.lastIndex;
     for (let depth = 1, t; depth && (t = tag.exec(html));) depth += t[1] ? -1 : 1;
+    out += replace(html.slice(m.index, tag.lastIndex));
     from = open.lastIndex = tag.lastIndex;
   }
   return out + html.slice(from);
 };
+/* Polylines of SVG wires drawn with M/H/V commands only. */
+const wirePolylines = (svg) => [...svg.matchAll(/data-wire d="([^"]+)"/g)].map(([, d]) => {
+  const pts = [];
+  for (const [, cmd, args] of d.matchAll(/([MHV])\s*([\d.\s]+)/g)) {
+    const n = args.trim().split(/\s+/).map(Number);
+    const [x, y] = pts.at(-1) ?? [0, 0];
+    pts.push(cmd === 'M' ? [n[0], n[1]] : cmd === 'H' ? [n[0], y] : [x, n[0]]);
+  }
+  return pts;
+});
 const renderedBlock = (block) => {
   if (block.type === 'simulation') return unit2l2SimulationMarkup(block.id);
   if (block.type === 'diagram') {
@@ -338,6 +351,180 @@ test('teacher p96: arithmetic typeset left-to-right, fraction vertical, values a
   assert.doesNotMatch(prose, /\d+(?:\.\d+)?\s*(?:min|mA|A|C|c|s)(?![A-Za-z])/, 'no bare number + unit left in the Arabic prose');
   assert.ok(article.includes('<span class="math math-inline" dir="ltr"'));
   assert.ok(article.includes('خطأ شائع: القسمة على 2 بدل 120.'));
+});
+
+test('u2l2q04: the arrow colours named in the prompt and figure text are the colours drawn (p89 yellow and red); key and options unchanged', async () => {
+  const q = UNIT2L2_QUESTIONS.find((x) => x.id === 'u2l2q04');
+  const svg = unit2l2AssessmentDiagram(q);
+  const css = await read('../src/unit2-lesson2.css');
+  const cssFill = (cls) => css.match(new RegExp(`\\.${cls}\\{fill:(#[0-9a-f]{6})`))[1];
+  const fills = Object.fromEntries([...svg.matchAll(/<polygon data-flow="(\w+)"[^>]*? fill="(#[0-9a-f]{6})"/g)].map(([, flow, fill]) => [flow, fill]));
+  assert.deepEqual(Object.keys(fills).sort(), ['current', 'electron']);
+  assert.equal(fills.current, cssFill('u2l2-arrow-current'), 'same yellow as the p89 current arrows');
+  assert.equal(fills.electron, cssFill('u2l2-arrow-electron'), 'same red as the p89 electron arrows');
+  // A colour change in the drawing must come with the matching word in the text, and vice versa.
+  const COLOUR_NAMES = { '#f6c700': 'أصفر', '#d32f2f': 'أحمر' };
+  const name = (flow) => COLOUR_NAMES[fills[flow]] ?? assert.fail(`no Arabic name for ${fills[flow]}: update the prompt with the drawing`);
+  const desc = svg.match(/<desc[^>]*>([^<]*)<\/desc>/)[1];
+  const caption = svg.match(/<figcaption>([^<]*)<\/figcaption>/)[1];
+  for (const text of [q.prompt, desc, caption]) {
+    assert.ok(text.includes(`سهم ${name('current')} من الموجب إلى السالب`), text);
+    assert.ok(text.includes(`سهم ${name('electron')} بالعكس`), text);
+    for (const word of ['أخضر', 'أزرق', 'أصفر', 'أحمر', 'أسود', 'برتقالي']) {
+      if (text.includes(word)) assert.ok([name('current'), name('electron')].includes(word), `«${word}» is not drawn: ${text}`);
+    }
+  }
+  // The question asks about the current arrow, which is what the key 'conv' means.
+  assert.ok(q.prompt.endsWith(`ماذا يمثّل ال${name('current')}؟`), q.prompt);
+  assert.equal(ANSWER_KEY.u2l2q04, 'conv');
+  assert.deepEqual(q.options.map((o) => [o.id, o.content]), [['conv', 'جهة التيار الاصطلاحية.'], ['elec', 'جهة حركة الإلكترونات.'], ['heat', 'اتجاه الحرارة فقط.'], ['none', 'لا معنى فيزيائي له.']]);
+  assert.deepEqual([q.difficulty, q.type, q.diagram, [...q.sourcePages]], ['basic', 'diagram-interpretation', 'directions', [89]]);
+});
+
+test('u2l2q04 drawing: + and − poles, arrowheads and directions follow the circuit (current from + to − outside the generator, electrons opposite)', () => {
+  const svg = unit2l2AssessmentDiagram({ diagram: 'directions' });
+  const rect = (pole) => {
+    const [x, y, w, h] = svg.match(new RegExp(`<rect data-pole="${pole}" x="([\\d.]+)" y="([\\d.]+)" width="([\\d.]+)" height="([\\d.]+)"`)).slice(1).map(Number);
+    return { x, y, x2: x + w, y2: y + h };
+  };
+  const [cap, pos, neg] = ['cap', 'positive', 'negative'].map(rect);
+  const sign = (pole) => {
+    const m = svg.match(new RegExp(`<text data-terminal="${pole}" x="([\\d.]+)"[^>]*>([^<]*)</text>`));
+    return { x: Number(m[1]), s: m[2] };
+  };
+  const plus = sign('positive');
+  const minus = sign('negative');
+  // One element per sign, inside its own half: nothing for the bidi algorithm to reorder.
+  assert.equal(plus.s, '+');
+  assert.equal(minus.s, '−');
+  assert.ok(plus.x > pos.x && plus.x < pos.x2, '+ inside the positive half');
+  assert.ok(minus.x > neg.x && minus.x < neg.x2, '− inside the negative half');
+  assert.doesNotMatch(svg, />[^<]*\+[^<]*−[^<]*</, 'no text element holds both signs');
+  // As in the lesson's p89 drawing: + on the left with the terminal cap, − on the right.
+  assert.ok(pos.x2 <= neg.x, '+ half left of the − half');
+  assert.ok(cap.x < pos.x && cap.x2 > pos.x, 'terminal cap on the + half');
+  // One closed path: it leaves the + cap, goes round the loop and enters the − half.
+  const wires = wirePolylines(svg);
+  assert.equal(wires.length, 1);
+  const path = wires[0];
+  const [[sx, sy], [ex, ey]] = [path[0], path.at(-1)];
+  assert.ok(sx >= cap.x && sx <= cap.x2 && sy > cap.y && sy < cap.y2, 'wire starts on the + cap');
+  assert.ok(ex === neg.x2 && ey > neg.y && ey < neg.y2, 'wire ends on the − half');
+  const xs = path.map((p) => p[0]);
+  const ys = path.map((p) => p[1]);
+  const loop = { x: Math.min(...xs), x2: Math.max(...xs), y: Math.min(...ys), y2: Math.max(...ys) };
+  const UNIT = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
+  const along = (p, u) => p[0] * u[0] + p[1] * u[1];
+  const segments = path.slice(1).map((q, i) => ({ p: path[i], q, u: [Math.sign(q[0] - path[i][0]), Math.sign(q[1] - path[i][1])] }));
+  const arrows = [...svg.matchAll(/<polygon data-flow="(\w+)" data-dir="(\w+)" points="([^"]+)"/g)].map(([, flow, dir, p]) => {
+    const v = p.trim().split(/\s+/).map((xy) => xy.split(',').map(Number));
+    return { flow, dir, v, c: [v.reduce((s, q) => s + q[0], 0) / v.length, v.reduce((s, q) => s + q[1], 0) / v.length] };
+  });
+  assert.deepEqual(arrows.map((a) => a.flow).sort(), ['current', 'electron']);
+  for (const a of arrows) {
+    const u = UNIT[a.dir];
+    // Arrowhead: a 7-point block arrow with a single vertex furthest along its direction.
+    assert.equal(a.v.length, 7, `${a.flow} arrow has a head`);
+    const tip = Math.max(...a.v.map((q) => along(q, u)));
+    assert.equal(a.v.filter((q) => along(q, u) === tip).length, 1, `${a.flow} arrowhead points ${a.dir}`);
+    // The wire segment it runs along: parallel, beside it (≤ 25 px), the whole arrow within the segment.
+    const normal = [Math.abs(u[1]), Math.abs(u[0])];
+    const seg = segments.find((s) => Math.abs(s.u[0]) === Math.abs(u[0]) && Math.abs(s.u[1]) === Math.abs(u[1])
+      && Math.abs(along(a.c, normal) - along(s.p, normal)) <= 25
+      && Math.min(...a.v.map((q) => along(q, s.u))) >= along(s.p, s.u)
+      && Math.max(...a.v.map((q) => along(q, s.u))) <= along(s.q, s.u));
+    assert.ok(seg, `${a.flow} arrow lies along a wire`);
+    // Walking the wire from + to −: the current arrow points the same way, the electron arrow the opposite way.
+    assert.equal(u[0] === seg.u[0] && u[1] === seg.u[1], a.flow === 'current', `${a.flow} arrow direction`);
+    // p89 convention: current arrows outside the loop, electron arrows inside.
+    const inside = a.c[0] > loop.x && a.c[0] < loop.x2 && a.c[1] > loop.y && a.c[1] < loop.y2;
+    assert.equal(inside, a.flow === 'electron', `${a.flow} arrow side of the wire`);
+  }
+  // I labels the current arrow and e⁻ the electron arrow.
+  const at = (re) => svg.match(re).slice(1, 3).map(Number);
+  const nearest = (p) => arrows.reduce((b, a) => (Math.hypot(a.c[0] - p[0], a.c[1] - p[1]) < Math.hypot(b.c[0] - p[0], b.c[1] - p[1]) ? a : b)).flow;
+  assert.equal(nearest(at(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>I<\/text>/)), 'current');
+  assert.equal(nearest(at(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>e<tspan/)), 'electron');
+});
+
+test('student p96 hint: the conversions and the printed 12 c are LTR math; Arabic wording and punctuation unchanged', () => {
+  const note = UNIT2L2_PAGES.find((p) => p.page === 96).blocks.find((b) => b.type === 'platform' && b.title === 'تلميح دون كشف الناتج').html;
+  assert.deepEqual(texOf(note), ['2\\,\\mathrm{min}=120\\,\\mathrm{s}', '5\\,\\mathrm{min}=300\\,\\mathrm{s}', '12\\,\\mathrm{c}']);
+  assert.equal((note.match(/<span class="math math-inline" dir="ltr"/g) ?? []).length, 3, 'each expression is an isolated LTR span');
+  const prose = visible(withoutMath(note)).replace(/\s+/g, ' ').trim();
+  assert.doesNotMatch(prose, /[0-9A-Za-z]/, 'no number or unit left in the Arabic text');
+  assert.ok(prose.includes('ثوانٍ (، ).'), 'parentheses and Arabic comma stay outside the math');
+  // Each conversion stays on one line with its own punctuation: "(…،" and "…)." cannot be orphaned.
+  assert.match(note, /<span class="u2l2-keep">\(<span class="math math-inline"[\s\S]*?،<\/span> <span class="u2l2-keep"><span class="math math-inline"[\s\S]*?\)\.<\/span>/);
+  // Reading each expression back as plain text restores the original sentence word for word.
+  const plain = (s) => s.replace(/\\,/g, ' ').replace(/\\mathrm\{([^}]*)\}/g, '$1').replace(/=/g, ' = ');
+  const restored = visible(withoutMath(note, (span) => plain(texOf(span)[0]))).replace(/\s+/g, ' ').trim();
+  assert.equal(restored, 'حوّل الدقائق إلى ثوانٍ (2 min = 120 s، 5 min = 300 s). الوحدة المطبوعة 12 c هي كمية الكهرباء بالكولوم كما في اصطلاح الصفحة. لا تخلط بين المولّد الذي يسبب الحركة والمصباح الذي يحوّل الطاقة.');
+});
+
+test('p93 parallel circuit (geometric check of the SVG): closed, A in the main line, branches A1–L1 and A2–lamp between the same two junctions, no short', () => {
+  const svg = UNIT2L2_DIAGRAMS['parallel-circuit'].svg;
+  const key = ([x, y]) => `${x},${y}`;
+  const wires = wirePolylines(svg);
+  const parts = [...svg.matchAll(/<g data-part="(\w+)" data-name="([\w-]+)"([^>]*?)data-terminals="([\d.]+),([\d.]+) ([\d.]+),([\d.]+)">([\s\S]*?)<\/g>/g)]
+    .map(([, part, name, rest, ax, ay, bx, by, inner]) => {
+      const num = (a) => Number(rest.match(new RegExp(`data-${a}="([\\d.]+)"`))?.[1]);
+      return { part, name, a: [Number(ax), Number(ay)], b: [Number(bx), Number(by)], cx: num('cx'), cy: num('cy'), r: num('r'), inner };
+    });
+  assert.deepEqual(parts.map((p) => `${p.part}:${p.name}`), ['generator:G', 'ammeter:A', 'ammeter:A1', 'lamp:L1', 'ammeter:A2', 'lamp:L1-lower']);
+  const [gen, ...round] = parts;
+  const byName = Object.fromEntries(parts.map((p) => [p.name, p]));
+  const [gx, gy, gw, gh] = gen.inner.match(/<rect class="u2-cell" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/).slice(1).map(Number);
+  // Terminals sit on the symbol outlines: circle edge, or the generator's left and right sides.
+  for (const p of round) for (const t of [p.a, p.b]) assert.equal(Math.hypot(t[0] - p.cx, t[1] - p.cy), p.r, `${p.name} terminal on outline`);
+  assert.deepEqual([gen.a, gen.b], [[gx, gy + gh / 2], [gx + gw, gy + gh / 2]]);
+  // + and − are separate signs, + next to the first (positive) terminal.
+  const signX = (pole) => Number(gen.inner.match(new RegExp(`data-terminal="${pole}" x="([\\d.]+)"[^>]*>([^<]*)<`))[1]);
+  assert.match(gen.inner, /data-terminal="positive"[^>]*>\+</);
+  assert.match(gen.inner, /data-terminal="negative"[^>]*>−</);
+  assert.ok(Math.abs(signX('positive') - gen.a[0]) < Math.abs(signX('negative') - gen.a[0]));
+  // Every wire end is a terminal or a junction; each terminal meets one wire; junctions meet three or more, with a dot.
+  const ends = wires.flatMap((w) => [key(w[0]), key(w.at(-1))]);
+  const count = (k) => ends.filter((e) => e === k).length;
+  const terminals = parts.flatMap((p) => [key(p.a), key(p.b)]);
+  const dots = [...svg.matchAll(/data-junction="([\d.]+),([\d.]+)" cx="([\d.]+)" cy="([\d.]+)"/g)].map(([, x, y, cx, cy]) => {
+    assert.equal(`${cx},${cy}`, `${x},${y}`);
+    return `${x},${y}`;
+  });
+  for (const t of terminals) assert.equal(count(t), 1, `terminal ${t} meets exactly one wire`);
+  for (const e of ends) assert.ok(terminals.includes(e) || dots.includes(e), `wire end ${e} is connected`);
+  assert.deepEqual([...new Set(ends.filter((e) => count(e) >= 3))].sort(), [...dots].sort(), 'a dot at every junction and nowhere else');
+  // No wire runs through a symbol (the old drawing ran wires through A, A1, L1, A2 and the lower lamp).
+  for (const w of wires) for (let i = 1; i < w.length; i++) {
+    const [[x1, y1], [x2, y2]] = [w[i - 1], w[i]];
+    for (const p of round) {
+      const cx = Math.max(Math.min(p.cx, Math.max(x1, x2)), Math.min(x1, x2));
+      const cy = Math.max(Math.min(p.cy, Math.max(y1, y2)), Math.min(y1, y2));
+      assert.ok(Math.hypot(p.cx - cx, p.cy - cy) >= p.r, `wire ${x1},${y1}-${x2},${y2} crosses ${p.name}`);
+    }
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    for (let s = 0; s <= len; s++) {
+      const [x, y] = [x1 + ((x2 - x1) * s) / len, y1 + ((y2 - y1) * s) / len];
+      assert.ok(!(x > gx && x < gx + gw && y > gy && y < gy + gh), `wire ${x1},${y1}-${x2},${y2} crosses the generator`);
+    }
+  }
+  // Netlist: each wire joins its two ends; parts touching the same conductor share a node.
+  const parent = new Map();
+  const find = (k) => ((parent.get(k) ?? k) === k ? k : find(parent.get(k)));
+  for (const w of wires) parent.set(find(key(w[0])), find(key(w.at(-1))));
+  const nodes = new Map();
+  for (const p of parts) for (const t of [p.a, p.b]) nodes.set(find(key(t)), [...(nodes.get(find(key(t))) ?? []), p.name]);
+  assert.deepEqual([...nodes.values()].map((names) => names.sort().join(' ')).sort(), [
+    'A A1 A2', // junction after the main ammeter: both branches start here
+    'A G', // main line: generator to A
+    'A1 L1', // upper branch: A1 in series with L1
+    'A2 L1-lower', // lower branch: A2 in series with the lower lamp
+    'G L1 L1-lower', // both branches return to the generator's other terminal
+  ]);
+  // Upper branch A1–L1 above the lower branch A2–lamp; the lower lamp keeps the source's printed label L1.
+  assert.ok(byName.A1.cy === byName.L1.cy && byName.A2.cy === byName['L1-lower'].cy && byName.A1.cy < byName.A2.cy);
+  for (const p of round) assert.match(p.inner, new RegExp(`>${p.name === 'L1-lower' ? 'L1' : p.name}</text>`));
+  assert.ok(svg.includes('I = I1 + I2'));
 });
 
 test('teacher gate unchanged and no plain password in new pages', async () => {

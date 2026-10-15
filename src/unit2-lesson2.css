@@ -79,8 +79,12 @@
 .u2l2-tick-mark{stroke:#24304a;stroke-width:1.5}
 .u2l2-tick{fill:#24304a;font:600 14px var(--font-latin)}
 .u2l2-axis-label{fill:#24304a;font:700 16px var(--font-latin)}
-/* p92 series circuit labels (own classes: .u2-label is shared with other diagrams) */
-.u2l2-series-label{fill:#24304a;font:600 15px var(--font-latin)}
+/* p92/p93 circuit labels and junctions (own classes: .u2-label is shared with other diagrams) */
+.u2l2-circuit-label{fill:#24304a;font:600 15px var(--font-latin)}
 .u2l2-series-gen{fill:#24304a;font:700 15px var(--font-ar)}
-@media(max-width:560px){.u2l2-tick{font-size:30px}.u2l2-axis-label{font-size:30px}.u2l2-series-label{font-size:24px}.u2l2-series-gen{font-size:24px}}
+.u2l2-junction{fill:#4a5a72}
+@media(max-width:560px){.u2l2-tick{font-size:30px}.u2l2-axis-label{font-size:30px}.u2l2-circuit-label{font-size:24px}.u2l2-series-gen{font-size:24px}}
+/* Keep an inline expression with its adjacent Arabic punctuation on one line (KaTeX allows breaks after
+   each part of an expression, which can leave "(" or ")." alone at a line edge on small screens). */
+.u2l2-keep,.u2l2-keep .math-inline{white-space:nowrap}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

@@ -73,9 +73,9 @@ const CURRENT_DIRECTION_SVG = `
    component terminal; data-terminals records those points so tests can verify the
    loop geometrically (no gaps, nothing merely drawn next to the wire). */
 const SERIES = Object.freeze({ left: 75, right: 640, top: 80, bottom: 280 });
-const seriesMeter = (name, cx, cy, r, cls, vertical = false) => {
+const circuitPart = (name, cx, cy, r, cls, vertical = false, label = name) => {
   const terminals = vertical ? `${cx},${cy - r} ${cx},${cy + r}` : `${cx - r},${cy} ${cx + r},${cy}`;
-  return `<g data-part="${cls === 'u2-bulb' ? 'lamp' : 'ammeter'}" data-name="${name}" data-cx="${cx}" data-cy="${cy}" data-r="${r}" data-terminals="${terminals}"><circle cx="${cx}" cy="${cy}" r="${r}" class="${cls}"/><text x="${cx}" y="${cy}" class="u2l2-series-label" text-anchor="middle" dominant-baseline="central" direction="ltr">${name}</text></g>`;
+  return `<g data-part="${cls === 'u2-bulb' ? 'lamp' : 'ammeter'}" data-name="${name}" data-cx="${cx}" data-cy="${cy}" data-r="${r}" data-terminals="${terminals}"><circle cx="${cx}" cy="${cy}" r="${r}" class="${cls}"/><text x="${cx}" y="${cy}" class="u2l2-circuit-label" text-anchor="middle" dominant-baseline="central" direction="ltr">${label}</text></g>`;
 };
 const SERIES_CIRCUIT_SVG = `
       <path class="u2-wire" data-wire d="M${SERIES.left} 140 V${SERIES.top} H178"/>
@@ -91,11 +91,42 @@ const SERIES_CIRCUIT_SVG = `
         <text class="u2l2-terminal-sign" data-terminal="negative" x="${SERIES.left}" y="204" text-anchor="middle">−</text>
       </g>
       ${arTxt(140, 186, 'المولّد', 'u2l2-series-gen')}
-      ${seriesMeter('A1', 200, SERIES.top, 22, 'u2-ammeter')}
-      ${seriesMeter('L1', 360, SERIES.top, 28, 'u2-bulb')}
-      ${seriesMeter('L2', 520, SERIES.top, 28, 'u2-bulb')}
-      ${seriesMeter('A2', SERIES.right, 180, 22, 'u2-ammeter', true)}
-      ${txt(360, 330, 'I = 200 mA = Const', 'u2l2-series-label')}
+      ${circuitPart('A1', 200, SERIES.top, 22, 'u2-ammeter')}
+      ${circuitPart('L1', 360, SERIES.top, 28, 'u2-bulb')}
+      ${circuitPart('L2', 520, SERIES.top, 28, 'u2-bulb')}
+      ${circuitPart('A2', SERIES.right, 180, 22, 'u2-ammeter', true)}
+      ${txt(360, 330, 'I = 200 mA = Const', 'u2l2-circuit-label')}
+    `;
+
+/* p93 parallel circuit. Topology from the lesson text (p93 reference, platform note, teacher
+   solution): ammeter A in the main line; upper branch A1 with lamp L1; lower branch A2 with a
+   lamp that the source also prints as L1 (label kept). Component positions and the + − marking
+   of the generator are those of the original platform drawing; the textbook figure itself is
+   not in the repository. Each wire runs between a component terminal and a junction
+   (data-junction), so tests can rebuild the netlist: no gaps, no short, one return path. */
+const PARALLEL_CIRCUIT_SVG = `
+      <path class="u2-wire" data-wire d="M110 180 H140"/>
+      <path class="u2-wire" data-wire d="M180 180 H220"/>
+      <path class="u2-wire" data-wire d="M220 180 V80 H260"/>
+      <path class="u2-wire" data-wire d="M300 80 H412"/>
+      <path class="u2-wire" data-wire d="M468 80 H500 V280"/>
+      <path class="u2-wire" data-wire d="M220 180 V280 H260"/>
+      <path class="u2-wire" data-wire d="M300 280 H412"/>
+      <path class="u2-wire" data-wire d="M468 280 H500"/>
+      <path class="u2-wire" data-wire d="M500 280 V330 H20 V180 H40"/>
+      <circle class="u2l2-junction" data-junction="220,180" cx="220" cy="180" r="5"/>
+      <circle class="u2l2-junction" data-junction="500,280" cx="500" cy="280" r="5"/>
+      <g data-part="generator" data-name="G" data-terminals="40,180 110,180">
+        <rect class="u2-cell" x="40" y="160" width="70" height="40"/>
+        <text class="u2l2-circuit-label" data-terminal="positive" x="62" y="180" text-anchor="middle" dominant-baseline="central" direction="ltr">+</text>
+        <text class="u2l2-circuit-label" data-terminal="negative" x="88" y="180" text-anchor="middle" dominant-baseline="central" direction="ltr">−</text>
+      </g>
+      ${circuitPart('A', 160, 180, 20, 'u2-ammeter')}
+      ${circuitPart('A1', 280, 80, 20, 'u2-ammeter')}
+      ${circuitPart('L1', 440, 80, 28, 'u2-bulb')}
+      ${circuitPart('A2', 280, 280, 20, 'u2-ammeter')}
+      ${circuitPart('L1-lower', 440, 280, 28, 'u2-bulb', false, 'L1')}
+      ${txt(580, 180, 'I = I1 + I2', 'u2l2-circuit-label')}
     `;
 
 /* p90 q-t graph ticks. Scale = the existing grid (80 px per 5 s, 40 px per 20 C), on which
@@ -152,16 +183,7 @@ export const UNIT2L2_DIAGRAMS = Object.freeze({
     title: 'دارة على التفرع',
     platformNote: 'تخطيط من المنصة لشكل الكتاب ص93: فرعان بمصباحين ومقاييس. في المصدر المصباح الثاني مكتوب L1؛ الرسم يحفظ التفرع دون اختلاق قيم لم تُطبع.',
     description: 'فرعان متوازيان؛ التيار الأصلي مجموع تياري الفرعين.',
-    svg: frame('parallel-circuit', 'وصل على التفرع', 'تيار المصدر ينقسم إلى فرعين ثم يلتقي.', `
-      <rect x="40" y="160" width="70" height="40" class="u2-cell"/>${txt(75, 185, '+ −')}
-      <circle cx="160" cy="180" r="20" class="u2-ammeter"/>${txt(160, 185, 'A')}
-      <circle cx="280" cy="80" r="20" class="u2-ammeter"/>${txt(280, 85, 'A1')}
-      <circle cx="440" cy="80" r="28" class="u2-bulb"/>${txt(440, 85, 'L1')}
-      <circle cx="280" cy="280" r="20" class="u2-ammeter"/>${txt(280, 285, 'A2')}
-      <circle cx="440" cy="280" r="28" class="u2-bulb"/>${txt(440, 285, 'L1')}
-      <path class="u2-wire" d="M110 180 H160"/><path class="u2-wire" d="M180 180 H220 V80 H500 V180 H220 V280 H500 V180"/>
-      ${txt(560, 180, 'I = I1 + I2')}
-    `),
+    svg: frame('parallel-circuit', 'وصل على التفرع', 'دارة مغلقة: من المولّد إلى مقياس الأمبير A في الخط الأصلي، ثم فرعان متوازيان: في الأعلى A1 مع المصباح L1، وفي الأسفل A2 مع مصباح مطبوع عليه L1 في المصدر؛ يلتقي الفرعان ويعود التيار إلى المولّد.', PARALLEL_CIRCUIT_SVG),
     legend: [{ color: 'teal', symbol: 'التيار الأصلي = مجموع تياري الفرعين' }],
   },
 });
