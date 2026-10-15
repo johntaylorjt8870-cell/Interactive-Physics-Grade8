@@ -1,0 +1,27 @@
+/* Unit 2 Lesson 2 — continuous current */
+.source-reference-inline{display:inline-block;padding:2px 8px;color:#785520;font-size:.86em;background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:6px}
+.u2l2-table-wrap{overflow-x:auto}
+.u2l2-data-table{width:100%;border-collapse:collapse;font-size:.95em}
+.u2l2-data-table th,.u2l2-data-table td{border:1px solid var(--rule);padding:8px 10px;text-align:center}
+.u2l2-data-table th{background:#eef4f8}
+.u2l2-sim select{min-height:40px;padding:6px 10px;border:1px solid var(--rule);border-radius:8px;background:#fff}
+.u2l2-steps{display:grid;gap:8px}
+.u2l2-steps button,.simulation-sweep{min-height:42px;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;background:#eef5f3;cursor:pointer;text-align:start}
+.u2l2-steps button:focus-visible,.simulation-sweep:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #33568f;outline-offset:2px}
+.u2l2-predict{font-size:.92em;color:var(--muted)}
+.u2-wire{stroke:#4a5a72;stroke-width:4;fill:none}
+.u2-bulb{fill:#f6e7a8;stroke:#c9a227;stroke-width:2}
+.u2-cell{fill:#f4d27a;stroke:#8a6a20;stroke-width:2}
+.u2-ammeter{fill:#eef5f3;stroke:#33568f;stroke-width:2}
+.u2-electron{fill:#33568f}
+.u2-arrow-e{stroke:#c95348;stroke-width:3;fill:none}
+.u2-arrow-i{stroke:#2a7a5a;stroke-width:3;fill:none}
+.u2-label{fill:#24304a;font:600 15px var(--font-latin)}
+.u2-caption{fill:#24304a;font:600 14px var(--font-latin)}
+.u2-plus{fill:#f3b8b0;stroke:#c95348;stroke-width:2}
+.u2-minus{fill:#b9cdea;stroke:#33568f;stroke-width:2}
+.u2-svg-sign{fill:#24304a;font:700 20px Georgia,serif}
+.u2-grid{stroke:#d5dde8;stroke-width:1}
+.u2-plot{fill:#33568f}
+.u2-axis{stroke:#24304a;stroke-width:1.5}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

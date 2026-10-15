@@ -25,7 +25,7 @@ test('Course Home presents Unit Questions as a separate Unit 1 review, not anoth
   assert.match(home, /class="unit-review-entry"[^]*أسئلة الوحدة الأولى/);
   assert.match(home, /href="\.\/unit-questions\.html"/);
   assert.match(home, /مراجعة شاملة لأسئلة الكتاب الأصلية/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 3);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 4);
   assert.equal((unitPanel.match(/class="lesson-entry"/g) ?? []).length, 2);
   assert.match(unitPanel, /class="unit-review-entry"/);
   assert.doesNotMatch(home, /lesson-3\.html|class="lesson-entry"[^]*الدرس الثالث|unit-2/);

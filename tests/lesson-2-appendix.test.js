@@ -513,7 +513,7 @@ test('the published Lesson 1 appendix, Lesson 2, and the tests of both lessons a
   assert.match(library, /href="\.\/lesson-2-appendix\.html"/);
   assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 2);
 
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 3);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 4);
   assert.match(home, /<section class="appendices-home-entry"[^]*?href="\.\/appendices\.html"/);
   assert.equal((home.match(/lesson-2-appendix/g) ?? []).length, 0, 'Course Home is unchanged and reaches both appendices through the library');
   assert.equal(LESSON_2_QUESTIONS.length, 20);
