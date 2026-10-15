@@ -67,6 +67,54 @@ const CURRENT_DIRECTION_SVG = `
       ${electronSymbol(236, 166)}${electronSymbol(312, 317)}
     `;
 
+/* p92 series circuit: one closed loop, generator -> A1 -> L1 -> L2 -> A2 -> generator.
+   The order follows the p92 textbook reference text in the lesson (A1, then L1 and L2,
+   then A2) and the original component placement. Every wire ends exactly on a
+   component terminal; data-terminals records those points so tests can verify the
+   loop geometrically (no gaps, nothing merely drawn next to the wire). */
+const SERIES = Object.freeze({ left: 75, right: 640, top: 80, bottom: 280 });
+const seriesMeter = (name, cx, cy, r, cls, vertical = false) => {
+  const terminals = vertical ? `${cx},${cy - r} ${cx},${cy + r}` : `${cx - r},${cy} ${cx + r},${cy}`;
+  return `<g data-part="${cls === 'u2-bulb' ? 'lamp' : 'ammeter'}" data-name="${name}" data-cx="${cx}" data-cy="${cy}" data-r="${r}" data-terminals="${terminals}"><circle cx="${cx}" cy="${cy}" r="${r}" class="${cls}"/><text x="${cx}" y="${cy}" class="u2l2-series-label" text-anchor="middle" dominant-baseline="central" direction="ltr">${name}</text></g>`;
+};
+const SERIES_CIRCUIT_SVG = `
+      <path class="u2-wire" data-wire d="M${SERIES.left} 140 V${SERIES.top} H178"/>
+      <path class="u2-wire" data-wire d="M222 ${SERIES.top} H332"/>
+      <path class="u2-wire" data-wire d="M388 ${SERIES.top} H492"/>
+      <path class="u2-wire" data-wire d="M548 ${SERIES.top} H${SERIES.right} V158"/>
+      <path class="u2-wire" data-wire d="M${SERIES.right} 202 V${SERIES.bottom} H${SERIES.left} V210"/>
+      <g data-part="generator" data-name="G" data-terminals="${SERIES.left},140 ${SERIES.left},210">
+        <rect class="u2l2-battery-cap" x="67" y="140" width="16" height="11" rx="3"/>
+        <rect class="u2l2-battery-pos" x="55" y="150" width="40" height="30" rx="5"/>
+        <rect class="u2l2-battery-neg" x="55" y="180" width="40" height="30" rx="5"/>
+        <text class="u2l2-terminal-sign" data-terminal="positive" x="${SERIES.left}" y="174" text-anchor="middle">+</text>
+        <text class="u2l2-terminal-sign" data-terminal="negative" x="${SERIES.left}" y="204" text-anchor="middle">−</text>
+      </g>
+      ${arTxt(140, 186, 'المولّد', 'u2l2-series-gen')}
+      ${seriesMeter('A1', 200, SERIES.top, 22, 'u2-ammeter')}
+      ${seriesMeter('L1', 360, SERIES.top, 28, 'u2-bulb')}
+      ${seriesMeter('L2', 520, SERIES.top, 28, 'u2-bulb')}
+      ${seriesMeter('A2', SERIES.right, 180, 22, 'u2-ammeter', true)}
+      ${txt(360, 330, 'I = 200 mA = Const', 'u2l2-series-label')}
+    `;
+
+/* p90 q-t graph ticks. Scale = the existing grid (80 px per 5 s, 40 px per 20 C), on which
+   the book points (5,20)...(25,100) already sit. Ranges follow the p90 textbook reference
+   text in the lesson (q from 0 to 120, t from 0 to 35); units come from the existing axis
+   labels q (C) and t (s); steps are the existing grid spacing (5 s, 20 C). */
+const QT_TICKS_T = Object.freeze([5, 10, 15, 20, 25, 30, 35]);
+const QT_TICKS_Q = Object.freeze([20, 40, 60, 80, 100, 120]);
+const qtX = (t) => 80 + t * 16;
+const qtY = (q) => 300 - q * 2;
+/* t numbers hang below the axis and q numbers are centred on their tick, so the
+   spacing holds when the font is enlarged on small screens. */
+const tick = (axis, value, x, y, anchor, baseline) => `<text class="u2l2-tick" data-axis="${axis}" data-value="${value}" x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="${baseline}" direction="ltr">${value}</text>`;
+const QT_TICKS = [
+  ...QT_TICKS_T.map((t) => `<line class="u2l2-tick-mark" x1="${qtX(t)}" y1="300" x2="${qtX(t)}" y2="307"/>${tick('t', t, qtX(t), 313, 'middle', 'hanging')}`),
+  ...QT_TICKS_Q.map((q) => `<line class="u2l2-tick-mark" x1="73" y1="${qtY(q)}" x2="80" y2="${qtY(q)}"/>${tick('q', q, 67, qtY(q), 'end', 'central')}`),
+  tick('origin', 0, 67, 313, 'end', 'hanging'),
+].join('');
+
 export const UNIT2L2_DIAGRAMS = Object.freeze({
   'current-direction': {
     title: 'جهة التيار وحركة الإلكترونات',
@@ -82,11 +130,12 @@ export const UNIT2L2_DIAGRAMS = Object.freeze({
     title: 'الخط البياني لكمية الكهرباء بدلالة الزمن',
     platformNote: `إعادة بناء لشبكة الكتاب ص90 بنقاط (5,20) (10,40) (15,60) (20,80) (25,100). الخط المستقيم يعني أن ${tex('\\dfrac{q}{t}', 'q over t')} ثابتة.`,
     description: 'نقاط على خط مستقيم صاعد: كمية الكهرباء تتناسب طرداً مع الزمن عند تيار متواصل ثابت.',
-    svg: frame('qt-graph', 'q versus t', 'نقاط منتظمة على خط مستقيم من (5,20) إلى (25,100).', `
+    svg: frame('qt-graph', 'q versus t', 'المحور الأفقي t من 0 إلى 35 s والمحور العمودي q من 0 إلى 120 C؛ نقاط منتظمة على خط مستقيم من (5,20) إلى (25,100).', `
       <line class="u2-axis" x1="80" y1="300" x2="680" y2="300"/><line class="u2-axis" x1="80" y1="300" x2="80" y2="40"/>
-      ${[0,1,2,3,4,5,6].map((i)=>`<line class="u2-grid" x1="${80+i*80}" y1="300" x2="${80+i*80}" y2="50"/>`).join('')}
+      ${[0,1,2,3,4,5,6,7].map((i)=>`<line class="u2-grid" x1="${80+i*80}" y1="300" x2="${80+i*80}" y2="50"/>`).join('')}
       ${[0,1,2,3,4,5,6].map((i)=>`<line class="u2-grid" x1="80" y1="${300-i*40}" x2="640" y2="${300-i*40}"/>`).join('')}
-      ${txt(40, 50, 'q (C)')}${txt(680, 320, 't (s)')}
+      ${QT_TICKS}
+      ${txt(80, 28, 'q (C)', 'u2l2-axis-label')}${txt(684, 288, 't (s)', 'u2l2-axis-label')}
       <polyline fill="none" stroke="#33568f" stroke-width="3" points="160,260 240,220 320,180 400,140 480,100"/>
       ${[[160,260],[240,220],[320,180],[400,140],[480,100]].map(([x,y])=>`<circle class="u2-plot" cx="${x}" cy="${y}" r="6"/>`).join('')}
     `),
@@ -96,16 +145,7 @@ export const UNIT2L2_DIAGRAMS = Object.freeze({
     title: 'دارة على التسلسل',
     platformNote: `تخطيط من المنصة لشكل الكتاب ص92: مصباحان ومقياسا أمبير والتيار ${tex('200\\,\\mathrm{mA}', '200 mA')} في الجزأين. Educational simplified model.`,
     description: `مسار واحد: التيار نفسه ${tex('200\\,\\mathrm{mA}', '200 mA')} عند A1 و A2.`,
-    svg: frame('series-circuit', 'وصل على التسلسل', 'مسار واحد يمر فيه التيار نفسه في كل الأجهزة.', `
-      <rect x="40" y="150" width="70" height="40" class="u2-cell"/>${txt(75, 175, '+ −')}
-      <circle cx="200" cy="80" r="22" class="u2-ammeter"/>${txt(200, 85, 'A1')}
-      <circle cx="360" cy="80" r="28" class="u2-bulb"/>${txt(360, 85, 'L1')}
-      <circle cx="520" cy="80" r="28" class="u2-bulb"/>${txt(520, 85, 'L2')}
-      <circle cx="640" cy="170" r="22" class="u2-ammeter"/>${txt(640, 175, 'A2')}
-      <path class="u2-wire" d="M110 170 H640 V102"/><path class="u2-wire" d="M640 192 V280 H75 V190"/>
-      <path class="u2-wire" d="M200 102 V80"/><path class="u2-wire" d="M40 170 H75"/>
-      ${txt(360, 330, 'I = 200 mA = Const')}
-    `),
+    svg: frame('series-circuit', 'وصل على التسلسل', 'مسار واحد مغلق: المولّد ثم مقياس الأمبير A1 ثم المصباحان L1 و L2 ثم مقياس الأمبير A2 والعودة إلى المولّد؛ يمر التيار نفسه في كل الأجهزة.', SERIES_CIRCUIT_SVG),
     legend: [{ color: 'blue', symbol: 'I ثابت في كل أجزاء الدارة المغلقة على التسلسل' }],
   },
   'parallel-circuit': {

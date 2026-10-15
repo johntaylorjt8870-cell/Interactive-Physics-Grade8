@@ -16,6 +16,20 @@ const source = (n) => UNIT2L2_PAGES.find((p) => p.page === n)?.blocks.filter((b)
 const texOf = (html) => [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)].map((m) => m[1]);
 /* Text a reader sees: drop TeX annotations and tags. */
 const visible = (html) => html.replace(/<annotation[\s\S]*?<\/annotation>/g, '').replace(/<[^>]+>/g, ' ');
+/* Remove every expression rendered by src/math.js (balanced wrapper element), keeping prose only. */
+const withoutMath = (html) => {
+  const open = /<(span|div) class="math math-(?:inline|display)[^"]*"[^>]*>/g;
+  let out = '';
+  let from = 0;
+  for (let m; (m = open.exec(html));) {
+    out += html.slice(from, m.index);
+    const tag = new RegExp(`<(/?)${m[1]}\\b[^>]*>`, 'g');
+    tag.lastIndex = open.lastIndex;
+    for (let depth = 1, t; depth && (t = tag.exec(html));) depth += t[1] ? -1 : 1;
+    from = open.lastIndex = tag.lastIndex;
+  }
+  return out + html.slice(from);
+};
 const renderedBlock = (block) => {
   if (block.type === 'simulation') return unit2l2SimulationMarkup(block.id);
   if (block.type === 'diagram') {
@@ -25,10 +39,14 @@ const renderedBlock = (block) => {
   return block.html;
 };
 const pageHtml = (n) => UNIT2L2_PAGES.find((p) => p.page === n).blocks.map(renderedBlock).join('');
+/* Teacher-written part of the article for one book page: solutions and explanation,
+   stopping before the article's own "original textbook content" disclosure. */
 const teacherArticle = (html, n) => {
-  const start = html.indexOf(`data-source-page="p${n}"`);
-  const end = html.indexOf('data-source-page="p', start + 1);
-  return html.slice(start, end === -1 ? undefined : end);
+  const start = html.indexOf(`data-page-reference="p${n}"`);
+  assert.ok(start > -1, `teacher article p${n}`);
+  const end = html.indexOf(`data-source-page="p${n}"`, start);
+  assert.ok(end > start && end < html.indexOf('</article>', start), `source disclosure inside teacher article p${n}`);
+  return html.slice(start, end);
 };
 
 test('pages 87-96 in order, meta, entries, build, no unit-2 test', async () => {
@@ -223,6 +241,103 @@ test('tube lab: pushing one or several balls immediately pushes the same number 
   assert.ok(html.includes('لا يعني ذلك أن الإلكترونات نفسها تنتقل فوراً'));
   for (const hook of ['data-tube-push="1"', 'data-tube-push="3"', 'data-tube-reset', 'role="status" aria-live="polite" data-tube-status']) assert.ok(html.includes(hook), hook);
   assert.equal((html.match(/class="u2l2-ball/g) ?? []).length, TUBE_CAPACITY);
+});
+
+test('p92 series circuit is one closed loop: generator, A1, L1, L2, A2 really wired in series', () => {
+  const svg = UNIT2L2_DIAGRAMS['series-circuit'].svg;
+  const key = ([x, y]) => `${x},${y}`;
+  // Wires use only M/H/V commands: rebuild their polylines.
+  const wires = [...svg.matchAll(/data-wire d="([^"]+)"/g)].map(([, d]) => {
+    const pts = [];
+    for (const [, cmd, args] of d.matchAll(/([MHV])\s*([\d.\s]+)/g)) {
+      const n = args.trim().split(/\s+/).map(Number);
+      const [x, y] = pts.at(-1) ?? [0, 0];
+      pts.push(cmd === 'M' ? [n[0], n[1]] : cmd === 'H' ? [n[0], y] : [x, n[0]]);
+    }
+    return pts;
+  });
+  assert.equal(wires.length, 5);
+  assert.doesNotMatch(svg.replace(/<path class="u2-wire" data-wire d="[^"]+"\/>/g, ''), /class="u2-wire"/, 'no stray wire stubs');
+  const parts = [...svg.matchAll(/<g data-part="(\w+)" data-name="(\w+)"([^>]*)data-terminals="([\d.]+),([\d.]+) ([\d.]+),([\d.]+)"/g)]
+    .map(([, part, name, rest, ax, ay, bx, by]) => {
+      const num = (a) => Number(rest.match(new RegExp(`data-${a}="([\\d.]+)"`))?.[1]);
+      return { part, name, a: [Number(ax), Number(ay)], b: [Number(bx), Number(by)], cx: num('cx'), cy: num('cy'), r: num('r') };
+    });
+  assert.deepEqual(parts.map((p) => `${p.part}:${p.name}`), ['generator:G', 'ammeter:A1', 'lamp:L1', 'lamp:L2', 'ammeter:A2']);
+  // Terminals of round symbols lie exactly on their outline, so wires meet the symbol edge.
+  for (const p of parts.filter((x) => x.r)) for (const t of [p.a, p.b]) assert.equal(Math.hypot(t[0] - p.cx, t[1] - p.cy), p.r, `${p.name} terminal on outline`);
+  // Every terminal is met by exactly one wire end and every wire end by exactly one terminal.
+  const ends = wires.flatMap((w) => [key(w[0]), key(w.at(-1))]);
+  const terminals = parts.flatMap((p) => [key(p.a), key(p.b)]);
+  assert.deepEqual([...ends].sort(), [...terminals].sort(), 'no gaps and no dangling wires');
+  assert.equal(new Set(terminals).size, terminals.length);
+  // No wire runs through the inside of a symbol (the old drawing ran a wire through A2).
+  for (const w of wires) for (let i = 1; i < w.length; i++) {
+    const [[x1, y1], [x2, y2]] = [w[i - 1], w[i]];
+    for (const p of parts.filter((x) => x.r)) {
+      const cx = Math.max(Math.min(p.cx, Math.max(x1, x2)), Math.min(x1, x2));
+      const cy = Math.max(Math.min(p.cy, Math.max(y1, y2)), Math.min(y1, y2));
+      assert.ok(Math.hypot(p.cx - cx, p.cy - cy) >= p.r, `wire segment ${x1},${y1}-${x2},${y2} crosses ${p.name}`);
+    }
+  }
+  // Walk the loop leaving the generator through its + terminal: one cycle in the order of the p92 reference text.
+  const wireFrom = new Map(wires.flatMap((w) => [[key(w[0]), key(w.at(-1))], [key(w.at(-1)), key(w[0])]]));
+  const partAt = new Map(parts.flatMap((p) => [[key(p.a), p], [key(p.b), p]]));
+  const order = [];
+  let at = key(parts[0].b); // arrive at the − terminal, so the first step leaves through +
+  for (let step = 0; step < parts.length; step++) {
+    const p = partAt.get(at);
+    order.push(p.name);
+    at = wireFrom.get(key(p.a) === at ? key(p.b) : key(p.a));
+  }
+  assert.deepEqual(order, ['G', 'A1', 'L1', 'L2', 'A2']);
+  assert.equal(at, key(parts[0].b), 'the loop closes back at the generator');
+  assert.match(svg, /data-terminal="positive"/);
+  assert.match(svg, /data-terminal="negative"/);
+  assert.ok(svg.includes('I = 200 mA = Const'));
+});
+
+test('p90 q-t graph: axis ticks from the textbook ranges, aligned with the plotted book points', () => {
+  const svg = UNIT2L2_DIAGRAMS['qt-graph'].svg;
+  const ticks = [...svg.matchAll(/class="u2l2-tick" data-axis="(\w+)" data-value="(\d+)" x="([\d.]+)" y="([\d.]+)" text-anchor="(\w+)" dominant-baseline="\w+" direction="ltr">(\d+)</g)]
+    .map(([, axis, value, x, y, anchor, label]) => ({ axis, value: Number(value), x: Number(x), y: Number(y), anchor, label }));
+  const values = (axis) => ticks.filter((t) => t.axis === axis).map((t) => t.value);
+  // p90 reference text: q axis 0..120, t axis 0..35; steps are the existing grid spacing (5 s, 20 C).
+  assert.deepEqual(values('t'), [5, 10, 15, 20, 25, 30, 35]);
+  assert.deepEqual(values('q'), [20, 40, 60, 80, 100, 120]);
+  assert.deepEqual(values('origin'), [0]);
+  assert.ok(ticks.every((t) => String(t.value) === t.label));
+  const xOf = (t) => 80 + 16 * t;
+  const yOf = (q) => 300 - 2 * q;
+  for (const t of ticks.filter((k) => k.axis === 't')) assert.equal(t.x, xOf(t.value));
+  for (const t of ticks.filter((k) => k.axis === 'q')) assert.equal(t.y, yOf(t.value));
+  for (const t of ticks.filter((k) => k.axis === 't')) assert.ok(t.y > 300, 't numbers below the axis');
+  // The plotted points are exactly the book's (t, q) pairs on the same scale as the ticks.
+  const points = [...svg.matchAll(/<circle class="u2-plot" cx="([\d.]+)" cy="([\d.]+)"/g)].map(([, x, y]) => [Number(x), Number(y)]);
+  assert.deepEqual(points, [[5, 20], [10, 40], [15, 60], [20, 80], [25, 100]].map(([t, q]) => [xOf(t), yOf(q)]));
+  assert.match(svg, />q \(C\)</);
+  assert.match(svg, />t \(s\)</);
+});
+
+test('teacher p96: arithmetic typeset left-to-right, fraction vertical, values and answers unchanged', () => {
+  const article = teacherArticle(renderTeacherContent(), 96);
+  const t = texOf(article);
+  for (const expected of [
+    '5\\,\\mathrm{min}=300\\,\\mathrm{s}',
+    '\\dfrac{5}{2}=2.5',
+    '12\\times2.5=30\\,\\mathrm{C}',
+    'I=\\dfrac{q}{t}',
+    'I=\\frac{q}{t}=\\frac{12}{120}=0.1\\,\\mathrm{A}',
+    'q=It=0.1\\times300=30\\,\\mathrm{C}',
+    '12\\,\\mathrm{c}',
+  ]) assert.ok(t.includes(expected), expected);
+  assert.match(article, /<mfrac>/);
+  const prose = visible(withoutMath(article));
+  assert.doesNotMatch(prose, /[A-Za-z0-9]\s*\/\s*[A-Za-z0-9]/, 'no slash fractions such as 5/2 or I=q/t');
+  assert.doesNotMatch(prose, /\d\s*[×x]\s*\d/, 'no plain-text multiplication');
+  assert.doesNotMatch(prose, /\d+(?:\.\d+)?\s*(?:min|mA|A|C|c|s)(?![A-Za-z])/, 'no bare number + unit left in the Arabic prose');
+  assert.ok(article.includes('<span class="math math-inline" dir="ltr"'));
+  assert.ok(article.includes('خطأ شائع: القسمة على 2 بدل 120.'));
 });
 
 test('teacher gate unchanged and no plain password in new pages', async () => {

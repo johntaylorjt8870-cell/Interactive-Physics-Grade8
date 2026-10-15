@@ -98,11 +98,11 @@ ${ans(`<ol>
 <li><strong>ناقلية المعادن:</strong> تحوي إلكترونات حرة تتحرك باتجاه واحد عند وجود مولّد ودارة مغلقة. العوازل إلكتروناتها مرتبطة فلا يتكوّن تيار متواصل فيها.</li>
 </ol>`)}
 <h4>السؤال الخامس · p96</h4>
-${ans(`<p><strong>المعطيات:</strong> ${tex('q=12\\,\\mathrm{C}', '12 C')} خلال ${tex('2\\,\\mathrm{min}=120\\,\\mathrm{s}', '120 s')} (الكتاب طبع 12 c).</p>
+${ans(`<p><strong>المعطيات:</strong> ${tex('q=12\\,\\mathrm{C}', '12 C')} خلال ${tex('2\\,\\mathrm{min}=120\\,\\mathrm{s}', '120 s')} (الكتاب طبع ${tex('12\\,\\mathrm{c}', '12 c as printed in the book')}).</p>
 <p><strong>1. شدة التيار:</strong></p>
 ${eq('I=\\frac{q}{t}=\\frac{12}{120}=0.1\\,\\mathrm{A}', 'I equals 0.1 A')}
-<p><strong>2. خلال 5 min = 300 s</strong> والتيار ثابت:</p>
+<p><strong>2. خلال ${tex('5\\,\\mathrm{min}=300\\,\\mathrm{s}', '5 min equals 300 s')}</strong> والتيار ثابت:</p>
 ${eq('q=It=0.1\\times300=30\\,\\mathrm{C}', 'q equals 30 C')}
-<p><strong>التحقق:</strong> 5/2 = 2.5 فكمية الكهرباء 12 × 2.5 = 30 C. خطأ شائع: القسمة على 2 بدل 120.</p>`)}
-${expl(96, `<p>حلول التفاعل: مختبر I=q/t عند 60 C و 30 s يعطي 2 A؛ التسلسل نزع يصفّر التيار؛ التفرع يجمع الفرعين.</p>`)}${disc(96)}</article></section>`;
+<p><strong>التحقق:</strong> ${tex('\\dfrac{5}{2}=2.5', '5 over 2 equals 2.5')} فكمية الكهرباء ${tex('12\\times2.5=30\\,\\mathrm{C}', '12 times 2.5 equals 30 C')}. خطأ شائع: القسمة على 2 بدل 120.</p>`)}
+${expl(96, `<p>حلول التفاعل: مختبر ${tex('I=\\dfrac{q}{t}', 'I equals q over t')} عند ${tex('60\\,\\mathrm{C}', '60 C')} و ${tex('30\\,\\mathrm{s}', '30 s')} يعطي ${tex('2\\,\\mathrm{A}', '2 A')}؛ التسلسل نزع يصفّر التيار؛ التفرع يجمع الفرعين.</p>`)}${disc(96)}</article></section>`;
 }
