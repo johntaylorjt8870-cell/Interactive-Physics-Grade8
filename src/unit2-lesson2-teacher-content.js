@@ -26,35 +26,36 @@ ${ans(`<ol>
 <li>التشبيه: الإلكترونات الحرة موجودة في الناقل؛ المولّد يدفعها باتجاه واحد.</li>
 </ol>
 <p><strong>الاستنتاج:</strong> التيار المتواصل انتقال مستمر للإلكترونات الحرة باتجاه واحد. جهتها خارج المولّد من السالب إلى الموجب. المولّد يسبب الحركة.</p>`)}
-${expl(88, `<p>نموذج تعليمي مبسّط: لا يمثّل سرعة الانجراف ولا المقاومة. خطأ شائع: الإلكترون يقطع الدارة بسرعة الضوء.</p>`)}${disc(88)}</article></section>
+${expl(88, `<p>نموذج تعليمي مبسّط: لا يمثّل سرعة الانجراف ولا المقاومة. خطأ شائع: الإلكترون يقطع الدارة بسرعة الضوء.</p>
+<p>مختبر الأنبوب في صفحة الطالب: دفع كرة أو 3 كرات يُخرج العدد نفسه من الطرف الآخر مباشرةً، بينما تتقدّم الكرة المميّزة خانة واحدة لكل كرة مدفوعة. استخدمه لتوضيح أن الذي ينتقل عبر الدارة فوراً تقريباً هو التأثير، لا الإلكترون نفسه.</p>`)}${disc(88)}</article></section>
 
 <section class="teacher-section">${head('الاصطلاح وشدة التيار','89–91','t-current')}
 <article class="teacher-subsection" data-page-reference="p89"><h4>اصطلاح أمبير · p89</h4>
 ${ans(`<p>جهة التيار خارج المولّد من الموجب إلى السالب، عكس حركة الإلكترونات. الإثراء: الخلايا الكهربائية البسيطة والخلايا الضوئية مولّدات تيار مستمر.</p>`)}
 ${expl(89, `<p>فرّق دائماً بين الجهتين على السبورة بلونين. أمبير عالم فيزيائي ورياضي فرنسي كما في الكتاب.</p>`)}${disc(89)}</article>
 <article class="teacher-subsection" data-page-reference="p90"><h4>الجدول والخط البياني · p90</h4>
-${ans(`<p>من ثبات ${tex('q/t=4', 'ratio 4')} ونقاط الرسم:</p>
-<table class="u2l2-data-table"><tr><th>q (C)</th><td>20</td><td>40</td><td>60</td><td>80</td><td>100</td></tr>
-<tr><th>t (s)</th><td>5</td><td>10</td><td>15</td><td>20</td><td>25</td></tr>
-<tr><th>q/t</th><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td></tr></table>
-<p>الخط البياني مستقيم صاعد: تناسب طردي، والميل هو شدة التيار 4 A.</p>`)}
+${ans(`<p>من ثبات ${tex('\\dfrac{q}{t}=4', 'q over t equals 4')} ونقاط الرسم:</p>
+<div class="u2l2-table-wrap"><table class="u2l2-data-table"><tr><th>${tex('q\\,(\\mathrm{C})', 'q in coulombs')}</th><td>20</td><td>40</td><td>60</td><td>80</td><td>100</td></tr>
+<tr><th>${tex('t\\,(\\mathrm{s})', 't in seconds')}</th><td>5</td><td>10</td><td>15</td><td>20</td><td>25</td></tr>
+<tr><th>${tex('\\dfrac{q}{t}', 'q over t')}</th><td>4</td><td>4</td><td>4</td><td>4</td><td>4</td></tr></table></div>
+<p>الخط البياني مستقيم صاعد: تناسب طردي، والميل هو شدة التيار ${tex('4\\,\\mathrm{A}', '4 A')}.</p>`)}
 ${expl(90, `<p>الخلايا الفارغة لم تُطبع في الكتاب؛ الأرقام 15 و 25 وبقية النسب مستنتجة من النقاط المطبوعة وثبات 4. وثّق ذلك للطلاب.</p>`)}${disc(90)}</article>
 <article class="teacher-subsection" data-page-reference="p91"><h4>تطبيق محلول · p91</h4>
-${ans(`<p><strong>المعطيات:</strong> ${tex('q=60\\\\,\\\\mathrm{C},\\\\;t=30\\\\,\\\\mathrm{s}', 'givens')}. <strong>المطلوب 1:</strong> I. <strong>القانون:</strong> ${tex('I=q/t', 'I equals q over t')} لأن التيار متواصل والكمية عبر مقطع في زمن معلوم.</p>
-${eq('I=\\\\frac{60}{30}=2\\\\,\\\\mathrm{A}', 'I equals 2 A')}
-<p><strong>المطلوب 2:</strong> كمية الكهرباء خلال 3 min. حوّل: ${tex('3\\\\times60=180\\\\,\\\\mathrm{s}', '180 s')}. ${tex('q=It', 'q equals I t')}</p>
-${eq('q=2\\\\times180=360\\\\,\\\\mathrm{C}', 'q equals 360 C')}
-<p><strong>التحقق:</strong> 180/30 = 6 أمثال الزمن فستة أمثال 60 C = 360 C. خطأ شائع: ${tex('2\\\\times3=6\\\\,\\\\mathrm{C}', 'wrong 6 C')} دون تحويل الدقائق.</p>`)}
-${expl(91, `<p>الأمبير = 1 C في 1 s. kA و mA و μA كما في الكتاب. التفاعل في صفحة الطالب يعيد قيم هذا التطبيق عند إعادة الضبط.</p>`)}${disc(91)}</article></section>
+${ans(`<p><strong>المعطيات:</strong> ${tex('q=60\\,\\mathrm{C},\\;t=30\\,\\mathrm{s}', 'givens')}. <strong>المطلوب 1:</strong> I. <strong>القانون:</strong> ${tex('I=\\dfrac{q}{t}', 'I equals q over t')} لأن التيار متواصل والكمية عبر مقطع في زمن معلوم.</p>
+${eq('I=\\frac{60}{30}=2\\,\\mathrm{A}', 'I equals 2 A')}
+<p><strong>المطلوب 2:</strong> كمية الكهرباء خلال ${tex('3\\,\\mathrm{min}', '3 min')}. حوّل: ${tex('3\\times60=180\\,\\mathrm{s}', '180 s')}. ${tex('q=It', 'q equals I t')}</p>
+${eq('q=2\\times180=360\\,\\mathrm{C}', 'q equals 360 C')}
+<p><strong>التحقق:</strong> ${tex('\\dfrac{180}{30}=6', '180 over 30 equals 6')} أمثال الزمن، فستة أمثال ${tex('60\\,\\mathrm{C}', '60 C')} تساوي ${tex('360\\,\\mathrm{C}', '360 C')}. خطأ شائع: ${tex('2\\times3=6\\,\\mathrm{C}', 'wrong 6 C')} دون تحويل الدقائق.</p>`)}
+${expl(91, `<p>الأمبير = ${tex('1\\,\\mathrm{C}', '1 C')} في ${tex('1\\,\\mathrm{s}', '1 s')}. ${tex('\\mathrm{kA}', 'kA')} و ${tex('\\mathrm{mA}', 'mA')} و ${tex('\\mu\\mathrm{A}', 'microampere')} كما في الكتاب. التفاعل في صفحة الطالب يعيد قيم هذا التطبيق عند إعادة الضبط.</p>`)}${disc(91)}</article></section>
 
 <section class="teacher-section">${head('التسلسل والتفرع','92–94','t-circuits')}
 <article class="teacher-subsection" data-page-reference="p92"><h4>تجربة التسلسل · p92</h4>
 ${ans(`<ol>
-<li>قراءتا A1 و A2 متساويتان: ${tex('I=200\\\\,\\\\mathrm{mA}', '200 mA')} في الجزأين.</li>
+<li>قراءتا A1 و A2 متساويتان: ${tex('I=200\\,\\mathrm{mA}', '200 mA')} في الجزأين.</li>
 <li>نزع مصباح يقطع التيار فتنطفئ الدارة كلها.</li>
 </ol>
-<p><strong>الاستنتاج:</strong> I = Const في كل أجزاء التسلسل. مقياس الأمبير يوصل على التسلسل.</p>`)}
-${expl(92, `<p>200 mA = 0.2 A. لا توصل الأمبير على التفرع.</p>`)}${disc(92)}</article>
+<p><strong>الاستنتاج:</strong> ${tex('I=\\mathrm{Const}', 'I is constant')} في كل أجزاء التسلسل. مقياس الأمبير يوصل على التسلسل.</p>`)}
+${expl(92, `<p>${tex('200\\,\\mathrm{mA}=0.2\\,\\mathrm{A}', '200 mA equals 0.2 A')}. لا توصل الأمبير على التفرع.</p>`)}${disc(92)}</article>
 <article class="teacher-subsection" data-page-reference="p93"><h4>مولدات وتفرع · p93</h4>
 ${ans(`<p><strong>مثال التسلسل:</strong> موجب كل مولّد إلى سالب الذي يليه؛ الشكل 6 Volts لأربع خلايا.</p>
 <ol>
@@ -97,11 +98,11 @@ ${ans(`<ol>
 <li><strong>ناقلية المعادن:</strong> تحوي إلكترونات حرة تتحرك باتجاه واحد عند وجود مولّد ودارة مغلقة. العوازل إلكتروناتها مرتبطة فلا يتكوّن تيار متواصل فيها.</li>
 </ol>`)}
 <h4>السؤال الخامس · p96</h4>
-${ans(`<p><strong>المعطيات:</strong> ${tex('q=12\\\\,\\\\mathrm{C}', '12 C')} خلال ${tex('2\\\\,\\\\mathrm{min}=120\\\\,\\\\mathrm{s}', '120 s')} (الكتاب طبع 12 c).</p>
+${ans(`<p><strong>المعطيات:</strong> ${tex('q=12\\,\\mathrm{C}', '12 C')} خلال ${tex('2\\,\\mathrm{min}=120\\,\\mathrm{s}', '120 s')} (الكتاب طبع 12 c).</p>
 <p><strong>1. شدة التيار:</strong></p>
-${eq('I=\\\\frac{q}{t}=\\\\frac{12}{120}=0.1\\\\,\\\\mathrm{A}', 'I equals 0.1 A')}
+${eq('I=\\frac{q}{t}=\\frac{12}{120}=0.1\\,\\mathrm{A}', 'I equals 0.1 A')}
 <p><strong>2. خلال 5 min = 300 s</strong> والتيار ثابت:</p>
-${eq('q=It=0.1\\\\times300=30\\\\,\\\\mathrm{C}', 'q equals 30 C')}
+${eq('q=It=0.1\\times300=30\\,\\mathrm{C}', 'q equals 30 C')}
 <p><strong>التحقق:</strong> 5/2 = 2.5 فكمية الكهرباء 12 × 2.5 = 30 C. خطأ شائع: القسمة على 2 بدل 120.</p>`)}
 ${expl(96, `<p>حلول التفاعل: مختبر I=q/t عند 60 C و 30 s يعطي 2 A؛ التسلسل نزع يصفّر التيار؛ التفرع يجمع الفرعين.</p>`)}${disc(96)}</article></section>`;
 }

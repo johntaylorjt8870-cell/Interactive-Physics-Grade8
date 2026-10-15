@@ -1,28 +1,86 @@
+import { tex } from './math.js';
+
 const defs = (id) => `<defs><marker id="${id}-i" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2a7a5a"/></marker><marker id="${id}-e" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c95348"/></marker></defs>`;
-const frame = (id, t, d, body) => `<svg viewBox="0 0 720 360" role="img" aria-labelledby="${id}-title ${id}-desc" xmlns="http://www.w3.org/2000/svg"><title id="${id}-title">${t}</title><desc id="${id}-desc">${d}</desc>${defs(id)}${body}</svg>`;
+const frame = (id, t, d, body, height = 360) => `<svg viewBox="0 0 720 ${height}" role="img" aria-labelledby="${id}-title ${id}-desc" xmlns="http://www.w3.org/2000/svg"><title id="${id}-title">${t}</title><desc id="${id}-desc">${d}</desc>${defs(id)}${body}</svg>`;
 const txt = (x, y, s, cls = 'u2-label') => `<text x="${x}" y="${y}" class="${cls}" text-anchor="middle" direction="ltr">${s}</text>`;
+/* Arabic SVG label: RTL base direction so punctuation such as parentheses stays in place. */
+const arTxt = (x, y, s, cls = 'u2l2-part-label') => `<text x="${x}" y="${y}" class="${cls}" text-anchor="middle" direction="rtl">${s}</text>`;
+
+/* Book-style block arrow centred on (cx, cy). The data-* attributes record the physics
+   (which flow, which wire segment, which direction) so tests can check the convention. */
+const ARROW_ANGLE = Object.freeze({ right: 0, down: 90, left: 180, up: 270 });
+function blockArrow(cx, cy, dir, flow, segment) {
+  const half = 22; const shaft = 5.5; const head = 12; const headLength = 17;
+  const outline = [[-half, -shaft], [half - headLength, -shaft], [half - headLength, -head], [half, 0], [half - headLength, head], [half - headLength, shaft], [-half, shaft]];
+  const rad = (ARROW_ANGLE[dir] * Math.PI) / 180;
+  const cos = Math.round(Math.cos(rad)); const sin = Math.round(Math.sin(rad));
+  const points = outline.map(([x, y]) => `${cx + x * cos - y * sin},${cy + x * sin + y * cos}`).join(' ');
+  const cls = flow === 'current' ? 'u2l2-arrow-current' : 'u2l2-arrow-electron';
+  return `<polygon class="${cls}" data-flow="${flow}" data-segment="${segment}" data-dir="${dir}" points="${points}"/>`;
+}
+
+/* p89 circuit, laid out as in the textbook figure: generator on top (+ left, − right),
+   lamp on the left branch, switch on the right branch, wires closing the loop.
+   Conventional current (yellow, outside the loop) leaves + and returns to −;
+   electrons e⁻ (red, inside the loop) move the opposite way on every segment. */
+const LOOP = Object.freeze({ left: 170, right: 550, top: 110, bottom: 330 });
+const CURRENT_FLOW = Object.freeze({ 'top-left': 'left', left: 'down', bottom: 'right', right: 'up', 'top-right': 'left' });
+const OPPOSITE = Object.freeze({ left: 'right', right: 'left', up: 'down', down: 'up' });
+const ARROW_SPOTS = Object.freeze({
+  'top-left': { current: [236, 90], electron: [236, 130] },
+  left: { current: [150, 290], electron: [190, 290] },
+  bottom: { current: [360, 350], electron: [360, 310] },
+  right: { current: [570, 290], electron: [530, 290] },
+  'top-right': { current: [482, 90], electron: [482, 130] },
+});
+const flowArrows = Object.entries(ARROW_SPOTS).map(([segment, spot]) => `${blockArrow(...spot.current, CURRENT_FLOW[segment], 'current', segment)}${blockArrow(...spot.electron, OPPOSITE[CURRENT_FLOW[segment]], 'electron', segment)}`).join('');
+const electronSymbol = (x, y) => `<text x="${x}" y="${y}" class="u2l2-sym u2l2-sym-electron" text-anchor="middle" direction="ltr">e<tspan dy="-8" font-size="14">−</tspan></text>`;
+const currentSymbol = (x, y) => `<text x="${x}" y="${y}" class="u2l2-sym u2l2-sym-current" text-anchor="middle" direction="ltr">I</text>`;
+const CURRENT_DIRECTION_SVG = `
+      <path class="u2-wire" d="M302 ${LOOP.top} H${LOOP.left} V192"/>
+      <path class="u2-wire" d="M${LOOP.left} 248 V${LOOP.bottom} H${LOOP.right} V246"/>
+      <path class="u2-wire" d="M410 ${LOOP.top} H${LOOP.right} V194"/>
+      <g data-part="generator" data-x="360" data-y="${LOOP.top}">
+        <rect class="u2l2-battery-cap" x="300" y="101" width="11" height="18" rx="3"/>
+        <rect class="u2l2-battery-pos" x="310" y="88" width="50" height="44" rx="6"/>
+        <rect class="u2l2-battery-neg" x="360" y="88" width="50" height="44" rx="6"/>
+        <text class="u2l2-terminal-sign" data-terminal="positive" x="335" y="119" text-anchor="middle">+</text>
+        <text class="u2l2-terminal-sign" data-terminal="negative" x="385" y="119" text-anchor="middle">−</text>
+      </g>
+      ${arTxt(335, 154, 'موجب', 'u2l2-part-sub')}${arTxt(385, 154, 'سالب', 'u2l2-part-sub')}
+      ${arTxt(360, 48, 'المولّد', 'u2l2-part-label is-title')}${arTxt(360, 72, 'مصدر الطاقة الكهربائية', 'u2l2-part-sub')}
+      <g data-part="lamp" data-x="${LOOP.left}" data-y="220">
+        <circle class="u2l2-lamp-glow" cx="${LOOP.left}" cy="220" r="40"/>
+        <circle class="u2l2-lamp" cx="${LOOP.left}" cy="220" r="28"/>
+        <path class="u2l2-lamp-x" d="M150.2 200.2 L189.8 239.8 M189.8 200.2 L150.2 239.8"/>
+      </g>
+      ${arTxt(78, 212, 'جهاز كهربائي')}${arTxt(78, 234, 'مستهلك (مصباح)')}
+      <g data-part="switch" data-x="${LOOP.right}" data-y="220">
+        <line class="u2l2-switch-lever" x1="${LOOP.right}" y1="246" x2="${LOOP.right}" y2="194"/>
+        <circle class="u2l2-switch-contact" cx="${LOOP.right}" cy="194" r="5.5"/>
+        <circle class="u2l2-switch-contact" cx="${LOOP.right}" cy="246" r="5.5"/>
+      </g>
+      ${arTxt(640, 214, 'مفتاح (قاطعة)')}${arTxt(640, 236, 'مغلق', 'u2l2-part-sub')}
+      ${arTxt(360, 402, 'موصل كهربائي (أسلاك التوصيل)')}
+      ${flowArrows}
+      ${currentSymbol(236, 68)}${currentSymbol(314, 357)}
+      ${electronSymbol(236, 166)}${electronSymbol(312, 317)}
+    `;
 
 export const UNIT2L2_DIAGRAMS = Object.freeze({
   'current-direction': {
     title: 'جهة التيار وحركة الإلكترونات',
-    platformNote: 'إعادة بناء تخطيطية من المنصة لشكل الكتاب ص89: اصطلاح أمبير — التيار خارج المولّد من الموجب إلى السالب، والإلكترونات بالعكس. Educational simplified model.',
-    description: 'دارة مغلقة بمولّد ومصباح ومفتاح. أسهم خضراء لجهة التيار الاصطلاحية وأسهم حمراء لحركة الإلكترونات.',
-    svg: frame('current-direction', 'جهة التيار والإلكترونات', 'تيار اصطلاحي من الموجب إلى السالب خارج المولد، وإلكترونات بالعكس.', `
-      <rect x="300" y="40" width="120" height="48" rx="8" class="u2-cell"/>${txt(360, 70, '+  −')}
-      ${txt(360, 28, 'مولّد')}
-      <circle cx="120" cy="200" r="36" class="u2-bulb"/>${txt(120, 206, 'مصباح')}
-      <rect x="520" y="180" width="70" height="28" rx="4" fill="#ddd" stroke="#555"/>${txt(555, 199, 'مفتاح')}
-      <path class="u2-wire" d="M300 64 H120 V164"/><path class="u2-wire" d="M120 236 V300 H590 V208"/>
-      <path class="u2-wire" d="M420 64 H590 V180"/>
-      <path class="u2-arrow-i" marker-end="url(#current-direction-i)" d="M200 64 L250 64"/>
-      <path class="u2-arrow-e" marker-end="url(#current-direction-e)" d="M250 300 L200 300"/>
-      ${txt(225, 52, 'I')} ${txt(225, 330, 'e')}
-    `),
-    legend: [{ color: 'teal', symbol: 'جهة التيار الاصطلاحية (+ → − خارج المولّد)' }, { color: 'coral', symbol: 'حركة الإلكترونات (− → + خارج المولّد)' }],
+    platformNote: `إعادة بناء تخطيطية من المنصة لشكل الكتاب ص89: المولّد في الأعلى (القطب الموجب يساراً والسالب يميناً)، والمصباح يساراً والقاطعة يميناً. الأسهم الصفراء لجهة التيار الاصطلاحية (اصطلاح أمبير)، والأسهم الحمراء ${tex('e^{-}', 'electrons')} لحركة الإلكترونات في الاتجاه المعاكس. Educational simplified model.`,
+    description: 'دارة مغلقة: المولّد (مصدر الطاقة الكهربائية) في الأعلى، والمصباح (الجهاز الكهربائي المستهلك) يساراً، والمفتاح (القاطعة) يميناً، وتصل بينها أسلاك التوصيل (الموصل الكهربائي). الأسهم الصفراء خارج الحلقة تبيّن جهة التيار الاصطلاحية، والأسهم الحمراء داخلها تبيّن حركة الإلكترونات بالاتجاه المعاكس.',
+    svg: frame('current-direction', 'جهة التيار الاصطلاحية وحركة الإلكترونات', 'المولّد في الأعلى وقطبه الموجب يساراً والسالب يميناً، والمصباح يساراً والمفتاح يميناً. أسهم صفراء للتيار الاصطلاحي من القطب الموجب إلى القطب السالب خارج المولّد، وأسهم حمراء للإلكترونات بالاتجاه المعاكس.', CURRENT_DIRECTION_SVG, 420),
+    legend: [
+      { color: 'yellow', symbol: `أسهم صفراء: جهة التيار الاصطلاحية ${tex('I', 'I')} — من القطب الموجب (+) إلى القطب السالب (−) خارج المولّد` },
+      { color: 'red', symbol: `أسهم حمراء: حركة الإلكترونات ${tex('e^{-}', 'electrons')} — من القطب السالب (−) إلى القطب الموجب (+) خارج المولّد، عكس جهة التيار` },
+    ],
   },
   'qt-graph': {
     title: 'الخط البياني لكمية الكهرباء بدلالة الزمن',
-    platformNote: 'إعادة بناء لشبكة الكتاب ص90 بنقاط (5,20) (10,40) (15,60) (20,80) (25,100). الخط المستقيم يعني q/t ثابتة.',
+    platformNote: `إعادة بناء لشبكة الكتاب ص90 بنقاط (5,20) (10,40) (15,60) (20,80) (25,100). الخط المستقيم يعني أن ${tex('\\dfrac{q}{t}', 'q over t')} ثابتة.`,
     description: 'نقاط على خط مستقيم صاعد: كمية الكهرباء تتناسب طرداً مع الزمن عند تيار متواصل ثابت.',
     svg: frame('qt-graph', 'q versus t', 'نقاط منتظمة على خط مستقيم من (5,20) إلى (25,100).', `
       <line class="u2-axis" x1="80" y1="300" x2="680" y2="300"/><line class="u2-axis" x1="80" y1="300" x2="80" y2="40"/>
@@ -32,12 +90,12 @@ export const UNIT2L2_DIAGRAMS = Object.freeze({
       <polyline fill="none" stroke="#33568f" stroke-width="3" points="160,260 240,220 320,180 400,140 480,100"/>
       ${[[160,260],[240,220],[320,180],[400,140],[480,100]].map(([x,y])=>`<circle class="u2-plot" cx="${x}" cy="${y}" r="6"/>`).join('')}
     `),
-    legend: [{ color: 'blue', symbol: 'نقاط الكتاب: تيار ثابت 4 A' }],
+    legend: [{ color: 'blue', symbol: `نقاط الكتاب: تيار ثابت ${tex('4\\,\\mathrm{A}', '4 A')}` }],
   },
   'series-circuit': {
     title: 'دارة على التسلسل',
-    platformNote: 'تخطيط من المنصة لشكل الكتاب ص92: مصباحان ومقياسا أمبير والتيار 200 mA في الجزأين. Educational simplified model.',
-    description: 'مسار واحد: التيار نفسه 200 mA عند A1 و A2.',
+    platformNote: `تخطيط من المنصة لشكل الكتاب ص92: مصباحان ومقياسا أمبير والتيار ${tex('200\\,\\mathrm{mA}', '200 mA')} في الجزأين. Educational simplified model.`,
+    description: `مسار واحد: التيار نفسه ${tex('200\\,\\mathrm{mA}', '200 mA')} عند A1 و A2.`,
     svg: frame('series-circuit', 'وصل على التسلسل', 'مسار واحد يمر فيه التيار نفسه في كل الأجهزة.', `
       <rect x="40" y="150" width="70" height="40" class="u2-cell"/>${txt(75, 175, '+ −')}
       <circle cx="200" cy="80" r="22" class="u2-ammeter"/>${txt(200, 85, 'A1')}

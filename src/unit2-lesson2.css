@@ -6,7 +6,7 @@
 .u2l2-data-table th{background:#eef4f8}
 .u2l2-sim select{min-height:40px;padding:6px 10px;border:1px solid var(--rule);border-radius:8px;background:#fff}
 .u2l2-steps{display:grid;gap:8px}
-.u2l2-steps button,.simulation-sweep{min-height:42px;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;background:#eef5f3;cursor:pointer;text-align:start}
+.u2l2-steps button,.simulation-sweep{min-height:42px;padding:9px 12px;color:var(--ink);border:1px solid var(--rule);border-radius:10px;background:#eef5f3;cursor:pointer;text-align:start}
 .u2l2-steps button:focus-visible,.simulation-sweep:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #33568f;outline-offset:2px}
 .u2l2-predict{font-size:.92em;color:var(--muted)}
 .u2-wire{stroke:#4a5a72;stroke-width:4;fill:none}
@@ -24,4 +24,55 @@
 .u2-grid{stroke:#d5dde8;stroke-width:1}
 .u2-plot{fill:#33568f}
 .u2-axis{stroke:#24304a;stroke-width:1.5}
+/* p89 current-direction diagram (book layout: yellow current, red electrons) */
+.u2l2-arrow-current{fill:#f6c700;stroke:#7a5b00;stroke-width:1.5;stroke-linejoin:round}
+.u2l2-arrow-electron{fill:#d32f2f;stroke:#7f1414;stroke-width:1.2;stroke-linejoin:round}
+.u2l2-sym{font:italic 400 24px KaTeX_Math,Georgia,'Times New Roman',serif}
+.u2l2-sym-current{fill:#7a5b00}
+.u2l2-sym-electron{fill:#b3261e}
+.u2l2-part-label{fill:#24304a;font:700 15px var(--font-ar)}
+.u2l2-part-label.is-title{font-size:18px}
+.u2l2-part-sub{fill:#5f6b84;font:600 13.5px var(--font-ar)}
+.u2l2-battery-cap{fill:#bdb6a6;stroke:#5a5446;stroke-width:1.5}
+.u2l2-battery-pos{fill:#f7d0c7;stroke:#8a3b2e;stroke-width:2}
+.u2l2-battery-neg{fill:#cddcf1;stroke:#2f4d7e;stroke-width:2}
+.u2l2-terminal-sign{fill:#24304a;font:800 26px var(--font-latin)}
+.u2l2-lamp-glow{fill:rgba(255,206,0,.22)}
+.u2l2-lamp{fill:#fff4b8;stroke:#a07c12;stroke-width:2.5}
+.u2l2-lamp-x{stroke:#a07c12;stroke-width:2.5;fill:none}
+.u2l2-switch-lever{stroke:#24304a;stroke-width:5;stroke-linecap:round}
+.u2l2-switch-contact{fill:#fff;stroke:#24304a;stroke-width:2.5}
+.legend-swatch.yellow{height:6px;background:#f6c700;box-shadow:0 0 0 1px #7a5b00}
+.legend-swatch.red{height:6px;background:#d32f2f}
+/* I = q/t lab: live typeset substitution */
+.u2l2-live-equation{color:var(--ink);font-size:15px}
+/* p88 tube-and-balls lab */
+.u2l2-model-notice{display:grid;gap:6px;margin:0 0 18px;padding:14px 18px;color:#4a3a12;background:#fff7e0;border:1px solid #e9c46a;border-inline-start:5px solid #d39b00;border-radius:10px}
+.u2l2-model-notice p{margin:0;font-size:14.5px;line-height:1.85}
+.u2l2-model-notice .u2l2-model-notice-title{display:flex;align-items:center;gap:8px;color:#6b4e00;font-size:16px;font-weight:800}
+.u2l2-model-notice-title::before{content:'!';display:inline-grid;place-items:center;width:22px;height:22px;flex:0 0 auto;border-radius:50%;color:#fff;background:#d39b00;font:800 14px var(--font-latin)}
+.u2l2-result-wide{grid-column:1/-1}
+.u2l2-tube{fill:rgba(196,224,242,.38);stroke:#6f8fa8;stroke-width:2.5}
+.u2l2-tube-shine{stroke:rgba(255,255,255,.9);stroke-width:4;stroke-linecap:round;fill:none}
+.u2l2-zone{fill:#f6f8fb;stroke:#b9c4d4;stroke-width:1.5;stroke-dasharray:6 5}
+.u2l2-zone-exit{fill:#fdf1ed;stroke:#d79b88}
+.u2l2-tube-label{fill:#24304a;font:700 14px var(--font-ar)}
+.u2l2-tube-sub{fill:#5f6b84;font:600 13px var(--font-ar)}
+.u2l2-push-arrow{fill:#2a7a5a;opacity:.4;transition:opacity .2s ease}
+.u2l2-push-arrow.is-active{opacity:1}
+.u2l2-ball{transition:transform .45s cubic-bezier(.3,.7,.3,1)}
+.u2l2-ball circle{fill:#d9e1ec;stroke:#5b6b82;stroke-width:2;transition:fill .3s ease,stroke .3s ease}
+.u2l2-ball.is-new circle{fill:#bfe3d0;stroke:#2a7a5a}
+.u2l2-ball.is-out circle{fill:#f3c1b6;stroke:#b2553f}
+.u2l2-ball.is-marked circle{fill:#33568f;stroke:#1d335a}
+.u2l2-key-dot{width:14px;height:14px;flex:0 0 auto;border-radius:50%;border:2px solid #5b6b82;background:#d9e1ec}
+.u2l2-key-dot.is-marked{background:#33568f;border-color:#1d335a}
+.u2l2-key-dot.is-new{background:#bfe3d0;border-color:#2a7a5a}
+.u2l2-key-dot.is-out{background:#f3c1b6;border-color:#b2553f}
+.u2l2-sim-wide .simulation-workbench{grid-template-columns:minmax(0,1fr)}
+.u2l2-sim-wide .u2l2-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+.u2l2-sim-wide .u2l2-steps button{text-align:center}
+.u2l2-sim-wide .simulation-result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.u2l2-sim-wide .u2l2-result-wide{grid-column:auto}
+@media(max-width:560px){.u2l2-sim-wide .u2l2-steps{grid-template-columns:minmax(0,1fr)}.u2l2-sim-wide .simulation-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.u2l2-sim-wide .u2l2-result-wide{grid-column:1/-1}.u2l2-tube-label{font-size:22px}.u2l2-tube-sub{font-size:19px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
