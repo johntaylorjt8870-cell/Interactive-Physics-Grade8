@@ -1,0 +1,34 @@
+import { tex, ltrText } from './math.js';
+const ltr = (v) => ltrText(v);
+const tf = Object.freeze([{ id: 'true', content: 'صح' }, { id: 'false', content: 'خطأ' }]);
+const q = (id, difficulty, type, sourcePages, config) => Object.freeze({ id, lessonId: 'unit2-lesson2', difficulty, type, sourcePages, ...config });
+
+export const UNIT2L2_TEST = Object.freeze({
+  id: 'unit2-lesson2',
+  unit: 'الوحدة الثانية — الكهرباء',
+  lesson: 'الدرس 2 — التيار الكهربائي المتواصل',
+  sourcePages: Object.freeze([87, 88, 89, 90, 91, 92, 93, 94, 95, 96]),
+  questions: Object.freeze([
+    q('u2l2q01', 'basic', 'single-choice', [88], { prompt: 'التيار الكهربائي المتواصل هو:', options: [{ id: 'flow', content: 'انتقال مستمر للإلكترونات الحرة باتجاه واحد في الناقل.' }, { id: 'static', content: 'شحنات ساكنة على طرف عازل.' }, { id: 'create', content: 'إنتاج إلكترونات جديدة داخل المولّد.' }, { id: 'ac', content: 'حركة إلكترونات يتبدل اتجاهها كل لحظة.' }] }),
+    q('u2l2q02', 'basic', 'true-false', [89], { prompt: 'اصطلاح أمبير يجعل جهة التيار خارج المولّد من القطب الموجب إلى السالب.', options: tf }),
+    q('u2l2q03', 'basic', 'single-choice', [91], { prompt: 'وحدة شدة التيار في النظام المستخدم في الدرس هي:', options: [{ id: 'amp', content: 'الأمبير (A).' }, { id: 'coul', content: 'الكولوم فقط دون زمن.' }, { id: 'volt', content: 'الفولت.' }, { id: 'ohm', content: 'الأوم.' }] }),
+    q('u2l2q04', 'basic', 'diagram-interpretation', [89], { diagram: 'directions', prompt: 'في الرسم سهم أخضر من الموجب إلى السالب خارج المولّد وسهم أحمر بالعكس. ماذا يمثّل الأخضر؟', options: [{ id: 'conv', content: 'جهة التيار الاصطلاحية.' }, { id: 'elec', content: 'جهة حركة الإلكترونات.' }, { id: 'heat', content: 'اتجاه الحرارة فقط.' }, { id: 'none', content: 'لا معنى فيزيائي له.' }] }),
+    q('u2l2q05', 'basic', 'numeric', [91], { numericUnit: 'A', prompt: `كمية كهرباء ${ltr('40 C')} خلال ${ltr('10 s')}. احسب شدة التيار.`, inputHint: 'I = q/t بوحدة الأمبير.' }),
+    q('u2l2q06', 'basic', 'multiple-select', [92, 94], { prompt: 'اختر كل ما يصح في الوصل على التسلسل.', options: [{ id: 'same', content: 'شدة التيار ثابتة في كل أجزاء الدارة.' }, { id: 'open', content: 'نزع جزء يقطع التيار عن الدارة كلها.' }, { id: 'sum', content: 'تيار المصدر يساوي مجموع تياري فرعين منفصلين دائماً.' }, { id: 'amm', content: 'يوصل مقياس الأمبير على التسلسل.' }] }),
+    q('u2l2q07', 'medium', 'matching', [88, 91, 92, 94], { prompt: 'طابق الرمز أو الجهاز بوصفه.', inputHint: 'استخدم كل وصف مرة واحدة.', fields: [{ id: 'symI', content: 'I' }, { id: 'symQ', content: 'q' }, { id: 'ammeter', content: 'مقياس الأمبير' }, { id: 'gen', content: 'المولّد' }], options: [{ id: 'current', content: 'شدة التيار بالأمبير.' }, { id: 'charge', content: 'كمية الكهرباء بالكولوم.' }, { id: 'meter', content: 'يقيس الشدة ويوصل على التسلسل.' }, { id: 'cause', content: 'يسبب حركة الإلكترونات ولا ينتجها.' }] }),
+    q('u2l2q08', 'medium', 'numeric', [91], { numericUnit: 'C', prompt: `تيار ${ltr('2 A')} لمدة ${ltr('3 min')}. احسب كمية الكهرباء.`, inputHint: 'حوّل الدقائق إلى ثوانٍ.' }),
+    q('u2l2q09', 'medium', 'error-analysis', [89, 95], { prompt: 'كتب طالب: «جهة التيار من السالب إلى الموجب لأنها جهة الإلكترونات». ما التحليل؟', options: [{ id: 'ok', content: 'صحيح تماماً وفق اصطلاح أمبير.' }, { id: 'mix', content: 'خلط جهة الإلكترونات بجهة التيار الاصطلاحية؛ الاصطلاح من الموجب إلى السالب خارج المولّد.' }, { id: 'noflow', content: 'لا حركة للإلكترونات في التيار المتواصل.' }, { id: 'amp', content: 'الخطأ الوحيد هو وحدة الأمبير.' }] }),
+    q('u2l2q10', 'medium', 'single-choice', [94], { prompt: 'حتى يمر تيار في دارة يجب:', options: [{ id: 'closed', content: 'أن تحتوي مولّداً وأن تكون مغلقة.' }, { id: 'open', content: 'أن تكون مفتوحة دائماً.' }, { id: 'insul', content: 'أن تكون أسلاكها عازلة فقط.' }, { id: 'no-gen', content: 'ألا تحتوي مولّداً.' }] }),
+    q('u2l2q11', 'medium', 'numeric', [92], { numericUnit: 'A', prompt: `قراءة أمبير ${ltr('200 mA')}. حوّلها إلى أمبير.`, inputHint: '1 mA = 10⁻³ A.' }),
+    q('u2l2q12', 'medium', 'true-false', [94], { prompt: 'على التفرع تكون شدة التيار واحدة في كل الفروع.', options: tf }),
+    q('u2l2q13', 'medium', 'ordering', [88], { prompt: 'رتب خطوات تجربة الأنبوب كما في الكتاب.', items: [{ id: 'place', content: 'وضع الأنبوب الشفاف أفقياً.' }, { id: 'fill', content: 'ملء الأنبوب بالكرات.' }, { id: 'one', content: 'دفع كرة من أحد الطرفين.' }, { id: 'many', content: 'دفع عدد من الكرات من الطرف نفسه.' }] }),
+    q('u2l2q14', 'advanced', 'diagram-interpretation', [90], { diagram: 'qt', prompt: 'نقاط (5,20) و (10,40) و (15,60) على شبكة q–t. ماذا تعني؟', options: [{ id: 'const', content: 'النسبة q/t ثابتة والتيار متواصل ثابت.' }, { id: 'zero', content: 'التيار صفر لأن الخط صاعد.' }, { id: 'ac', content: 'تيار متناوب.' }, { id: 'qdrop', content: 'الكمية تتناقص مع الزمن.' }] }),
+    q('u2l2q15', 'advanced', 'numeric', [96], { numericUnit: 'A', prompt: `تمر ${ltr('12 C')} خلال ${ltr('2 min')}. احسب I.`, inputHint: '2 min = 120 s.' }),
+    q('u2l2q16', 'advanced', 'error-analysis', [91], { prompt: 'في تطبيق 60 C خلال 30 s ثم كمية خلال 3 min، حسب طالب q = 2×3 = 6 C. ما الخطأ؟', options: [{ id: 'time', content: 'لم يحوّل الدقائق إلى ثوانٍ؛ الصحيح 2×180 = 360 C.' }, { id: 'law', content: 'استخدم قانون كولوم بدل I=q/t.' }, { id: 'ok', content: 'الناتج 6 C صحيح.' }, { id: 'unitI', content: 'كان يجب الجواب بالأمبير.' }] }),
+    q('u2l2q17', 'advanced', 'multiple-select', [93, 94], { prompt: 'اختر كل ما يصف الوصل على التفرع بدقة.', options: [{ id: 'diff', content: 'شدات التيار في الفروع قد تختلف.' }, { id: 'sum', content: 'تيار الأصل يساوي مجموع تياري الفرعين.' }, { id: 'keep', content: 'نزع جهاز من فرع يبقي التيار في الفروع الأخرى.' }, { id: 'kill', content: 'نزع مصباح واحد يطفئ كل الفروع حتماً.' }] }),
+    q('u2l2q18', 'thinking', 'single-choice', [88, 94], { prompt: 'لماذا يضيء المصباح فور إغلاق المفتاح رغم أن الإلكترون يزحف ببطء؟', options: [{ id: 'field', content: 'الإلكترونات موجودة سلفاً في الناقل؛ المولّد ينظّم حركتها في الاتجاه كله تقريباً في آن.' }, { id: 'speedc', content: 'كل إلكترون يقطع الدارة بسرعة الضوء من البطارية.' }, { id: 'new', content: 'المولّد يخلق إلكترونات عند المفتاح.' }, { id: 'empty', content: 'السلك كان فارغاً فيمتلئ فوراً.' }] }),
+    q('u2l2q19', 'thinking', 'ordering', [92, 93], { prompt: 'رتب المقارنة: تسلسل ثم تفرع ثم أثر النزع في كل حالة.', items: [{ id: 'ser', content: 'قياس تيارين متساويين على التسلسل.' }, { id: 'ser-off', content: 'نزع مصباح على التسلسل يقطع الكل.' }, { id: 'par', content: 'مقارنة مجموع الفرعين بتيار المصدر.' }, { id: 'par-off', content: 'نزع مصباح على التفرع يبقي الفرع الآخر.' }] }),
+    q('u2l2q20', 'thinking', 'numeric', [94], { numericUnit: 'mA', prompt: `فرعان ${ltr('120 mA')} و ${ltr('80 mA')}. ما تيار المصدر إذا كانت الدارة على التفرع؟`, inputHint: 'I = I1 + I2.' }),
+  ]),
+});
+export const UNIT2L2_QUESTIONS = UNIT2L2_TEST.questions;
