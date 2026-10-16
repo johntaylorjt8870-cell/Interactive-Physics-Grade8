@@ -21,12 +21,12 @@ test('Course Home keeps the single Lesson 1 appendix entry while publishing the 
   assert.doesNotMatch(home, /مساحة الدروس القادمة|href="\.\/lesson-3\.html"/);
 });
 
-test('appendices library lists exactly the three published appendices with working start links and no future placeholders', async () => {
+test('appendices library lists exactly the four published appendices with working start links and no future placeholders', async () => {
   const library = await read('../appendices.html');
   assert.match(library, /<title>ملحقات الدروس/);
   assert.match(library, /<html lang="ar" dir="rtl">/);
   assert.match(library, /aria-current="page">ملحقات الدروس/);
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 3);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 4);
   /* the Lesson 1 appendix entry is preserved unchanged */
   assert.match(library, /Lesson 1/);
   assert.match(library, /القوى المتلاقية/);
@@ -40,15 +40,15 @@ test('appendices library lists exactly the three published appendices with worki
   assert.match(library, /مختبر حامل المحصلة والمسافات/);
   assert.match(library, /href="\.\/lesson-2-appendix\.html"[^]*ابدأ الملحق/);
   assert.match(library, /مختبر تفاعلي للقوى المتوازية/);
-  /* the Unit 2 Lesson 1 appendix is a third real entry; the two Unit 1 cards above are untouched */
+  /* the Unit 2 appendices are real entries; the two Unit 1 cards above are untouched */
   assert.match(library, /Unit 2 · Lesson 1/);
   assert.match(library, /مختبر الشحنات/);
   assert.match(library, /href="\.\/unit2-lesson-1-appendix\.html"[^]*ابدأ الملحق/);
   assert.match(library, /ورشة طرائق التكهرب ومقارنتها/);
-  assert.equal((library.match(/Platform Extension/g) ?? []).length, 3);
-  assert.match(library, /ثلاثة ملحقات تفاعلية/);
-  /* and nothing beyond the three published appendices */
-  assert.doesNotMatch(library, /Lesson\s*[3-9]|الدرس\s*[3-9]|lesson-[3-9]\.html|Unit\s*2\s*·\s*Lesson\s*[2-9]|قريباً|قريبًا|Placeholder|قادم/);
+  assert.equal((library.match(/Platform Extension/g) ?? []).length, 4);
+  assert.match(library, /أربعة ملحقات تفاعلية/);
+  /* and nothing beyond the four published appendices */
+  assert.doesNotMatch(library, /Lesson\s*[3-9]|الدرس\s*[3-9]|lesson-[3-9]\.html|Unit\s*2\s*·\s*Lesson\s*[3-9]|قريباً|قريبًا|Placeholder|قادم/);
 });
 
 test('direct appendix URL includes a standalone RTL page, KaTeX, independent code, and return navigation', async () => {
