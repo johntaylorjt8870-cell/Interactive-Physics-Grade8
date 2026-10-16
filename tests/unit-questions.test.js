@@ -175,7 +175,7 @@ test('new Teacher Area reuses the existing password gate without changing the pa
   assert.equal(await verifyTeacherPassword('somer173'), true);
 });
 
-test('Unit Questions remain distinct from Unit 1 Test, lessons, and the two-entry Appendix Library', async () => {
+test('Unit Questions remain distinct from Unit 1 Test, lessons, and the Appendix Library', async () => {
   const [home, lesson2, testPage, testBoot, library, build] = await Promise.all([
     read('../index.html'), read('../lesson-2.html'), read('../unit-1-test.html'),
     read('../src/unit-1-assessment.js'), read('../appendices.html'), read('../scripts/build.mjs'),
@@ -185,7 +185,7 @@ test('Unit Questions remain distinct from Unit 1 Test, lessons, and the two-entr
   assert.match(testPage, /اختبار الوحدة الأولى/);
   assert.match(testBoot, /loadSolutions: \(\) => import\('\.\/unit-1-test-solutions\.js'\)/);
   assert.match(home, /اختبار الوحدة الأولى/);
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 2);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 3);
   assert.match(home, /href="\.\/unit2-lesson-3-test\.html"/);
   assert.doesNotMatch(home + lesson2 + testPage, /اختبار الوحدة الثانية|Unit 2 Test|unit-2-test|قريباً|قريبًا/);
   assert.match(build, /resolve\(projectDirectory, 'unit-questions\.html'\)/);

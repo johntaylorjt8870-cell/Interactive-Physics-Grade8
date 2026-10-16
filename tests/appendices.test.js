@@ -21,12 +21,12 @@ test('Course Home keeps the single Lesson 1 appendix entry while publishing the 
   assert.doesNotMatch(home, /مساحة الدروس القادمة|href="\.\/lesson-3\.html"/);
 });
 
-test('appendices library lists exactly the two published appendices with working start links and no future placeholders', async () => {
+test('appendices library lists exactly the three published appendices with working start links and no future placeholders', async () => {
   const library = await read('../appendices.html');
   assert.match(library, /<title>ملحقات الدروس/);
   assert.match(library, /<html lang="ar" dir="rtl">/);
   assert.match(library, /aria-current="page">ملحقات الدروس/);
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 2);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 3);
   /* the Lesson 1 appendix entry is preserved unchanged */
   assert.match(library, /Lesson 1/);
   assert.match(library, /القوى المتلاقية/);
@@ -40,9 +40,15 @@ test('appendices library lists exactly the two published appendices with working
   assert.match(library, /مختبر حامل المحصلة والمسافات/);
   assert.match(library, /href="\.\/lesson-2-appendix\.html"[^]*ابدأ الملحق/);
   assert.match(library, /مختبر تفاعلي للقوى المتوازية/);
-  assert.equal((library.match(/Platform Extension/g) ?? []).length, 2);
-  /* and nothing beyond the two published appendices */
-  assert.doesNotMatch(library, /Lesson\s*[3-9]|الدرس\s*[3-9]|lesson-[3-9]\.html|Unit\s*2|الوحدة الثانية|قريباً|قريبًا|Placeholder|قادم/);
+  /* the Unit 2 Lesson 1 appendix is a third real entry; the two Unit 1 cards above are untouched */
+  assert.match(library, /Unit 2 · Lesson 1/);
+  assert.match(library, /مختبر الشحنات/);
+  assert.match(library, /href="\.\/unit2-lesson-1-appendix\.html"[^]*ابدأ الملحق/);
+  assert.match(library, /ورشة طرائق التكهرب ومقارنتها/);
+  assert.equal((library.match(/Platform Extension/g) ?? []).length, 3);
+  assert.match(library, /ثلاثة ملحقات تفاعلية/);
+  /* and nothing beyond the three published appendices */
+  assert.doesNotMatch(library, /Lesson\s*[3-9]|الدرس\s*[3-9]|lesson-[3-9]\.html|Unit\s*2\s*·\s*Lesson\s*[2-9]|قريباً|قريبًا|Placeholder|قادم/);
 });
 
 test('direct appendix URL includes a standalone RTL page, KaTeX, independent code, and return navigation', async () => {
@@ -141,9 +147,9 @@ test('appendix CSS preserves keyboard focus, mobile layout, and reduced-motion i
   assert.doesNotMatch(css, /display:\s*none[^}]*lab|\.lab[^}]*display:\s*none/);
 });
 
-test('static build explicitly copies both appendix URLs and retains all current entry pages', async () => {
+test('static build explicitly copies every appendix URL and retains all current entry pages', async () => {
   const build = await read('../scripts/build.mjs');
-  for (const page of ['index.html', 'lesson-1.html', 'appendices.html', 'lesson-1-appendix.html', 'lesson-2.html', 'lesson-2-appendix.html', 'teacher.html', 'lesson-test.html']) {
+  for (const page of ['index.html', 'lesson-1.html', 'appendices.html', 'lesson-1-appendix.html', 'lesson-2.html', 'lesson-2-appendix.html', 'unit2-lesson-1-appendix.html', 'teacher.html', 'lesson-test.html']) {
     assert.ok(build.includes(`resolve(projectDirectory, '${page}')`), `build must copy ${page}`);
   }
   assert.match(build, /resolve\(projectDirectory, 'src'\)/);

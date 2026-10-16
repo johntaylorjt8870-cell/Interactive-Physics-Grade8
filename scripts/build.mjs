@@ -23,6 +23,7 @@ await cp(resolve(projectDirectory, 'unit-1-test.html'), resolve(outputDirectory,
 await cp(resolve(projectDirectory, 'unit-questions.html'), resolve(outputDirectory, 'unit-questions.html'));
 await cp(resolve(projectDirectory, 'unit-questions-teacher.html'), resolve(outputDirectory, 'unit-questions-teacher.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-1.html'), resolve(outputDirectory, 'unit2-lesson-1.html'));
+await cp(resolve(projectDirectory, 'unit2-lesson-1-appendix.html'), resolve(outputDirectory, 'unit2-lesson-1-appendix.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-1-teacher.html'), resolve(outputDirectory, 'unit2-lesson-1-teacher.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-1-test.html'), resolve(outputDirectory, 'unit2-lesson-1-test.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-2.html'), resolve(outputDirectory, 'unit2-lesson-2.html'));

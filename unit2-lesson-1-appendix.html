@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c1424" />
+    <meta name="description" content="ملحق إثرائي تفاعلي مستقل للدرس الأول من الوحدة الثانية (الكهرباء الساكنة): سبع محطات استكشاف للشحنات والتكهرب والتجاذب والتنافر وقانون كولوم." />
+    <title>مختبر الشحنات — ملحق الدرس الأول من الوحدة الثانية | فيزياء ٨</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/unit2-lesson1-appendix.css" />
+  </head>
+  <body class="u2l1a-page">
+    <a class="u2l1a-skip-link" href="#station-panels">انتقل إلى محطات الملحق</a>
+
+    <div class="u2l1a-shell">
+      <header class="u2l1a-topbar">
+        <a class="u2l1a-brand" href="./" aria-label="العودة إلى الصفحة الرئيسية لمنصة فيزياء ٨">
+          <span class="u2l1a-brand-mark" aria-hidden="true">⚡</span>
+          <span class="u2l1a-brand-copy">
+            <strong dir="ltr">Interactive Physics</strong>
+            <small>ملحقات الدروس · الصف الثامن</small>
+          </span>
+        </a>
+        <nav class="u2l1a-breadcrumb" aria-label="مسار الموقع">
+          <a href="./">الرئيسية</a>
+          <span aria-hidden="true">/</span>
+          <a href="./appendices.html">ملحقات الدروس</a>
+          <span aria-hidden="true">/</span>
+          <a href="./unit2-lesson-1.html">الوحدة الثانية · الدرس 1</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">مختبر الشحنات</span>
+        </nav>
+      </header>
+
+      <main id="appendix-main" data-unit2-lesson1-appendix>
+        <section class="u2l1a-hero" aria-labelledby="appendix-title">
+          <div class="u2l1a-hero-copy">
+            <p class="u2l1a-eyebrow">الوحدة الثانية — الكهرباء · الدرس الأول · الكهرباء الساكنة</p>
+            <h1 id="appendix-title">مختبر الشحنات</h1>
+            <p class="u2l1a-hero-subtitle">اكتشف الكهرباء الساكنة</p>
+            <span class="u2l1a-extension-label"><span aria-hidden="true">✦</span> ملحق تفاعلي — <bdi dir="ltr">Platform Extension</bdi></span>
+            <div id="hero-description" class="u2l1a-hero-description"></div>
+            <ul class="u2l1a-keyword-row" id="keyword-row" aria-label="الكلمات المفتاحية للدرس"></ul>
+            <div class="u2l1a-hero-actions">
+              <button class="u2l1a-primary-action" type="button" id="start-first-station">ابدأ المحطة الأولى <span aria-hidden="true">←</span></button>
+              <a class="u2l1a-secondary-action" href="./unit2-lesson-1.html">مراجعة صفحة الدرس</a>
+              <a class="u2l1a-secondary-action" href="./appendices.html">كل الملحقات</a>
+            </div>
+            <p class="u2l1a-hero-note">ملحق إثرائي مستقل: لا يغيّر محتوى الدرس المنشور، ولا يُحسب ضمن اختبار الدرس أو منطقة المعلم.</p>
+          </div>
+          <div class="u2l1a-hero-art" aria-hidden="true">
+            <span class="u2l1a-art-orbit u2l1a-art-orbit-one"></span>
+            <span class="u2l1a-art-orbit u2l1a-art-orbit-two"></span>
+            <span class="u2l1a-art-charge u2l1a-art-charge-positive">+</span>
+            <span class="u2l1a-art-charge u2l1a-art-charge-negative">−</span>
+            <span class="u2l1a-art-spark u2l1a-art-spark-one"></span>
+            <span class="u2l1a-art-spark u2l1a-art-spark-two"></span>
+            <span class="u2l1a-art-spark u2l1a-art-spark-three"></span>
+          </div>
+        </section>
+
+        <section class="u2l1a-howto" aria-labelledby="howto-heading">
+          <div class="u2l1a-section-heading">
+            <div>
+              <p class="u2l1a-section-kicker">كيف تعمل المحطات</p>
+              <h2 id="howto-heading">أربع خطوات في كل محطة</h2>
+            </div>
+            <p>كل محطة قصيرة ومستقلة، ولكل محطة هدف واحد واضح. لا يوجد نص طويل لتقرأه: أنت تشغّل التجربة بنفسك.</p>
+          </div>
+          <ol class="u2l1a-howto-steps" id="howto-steps"></ol>
+        </section>
+
+        <section class="u2l1a-progress-section" aria-labelledby="station-nav-heading">
+          <div class="u2l1a-progress-head">
+            <div>
+              <p class="u2l1a-section-kicker">محطات الملحق</p>
+              <h2 id="station-nav-heading">اختر محطة</h2>
+            </div>
+            <p class="u2l1a-progress-readout">
+              <span id="station-progress-label">المحطة 1 من 7</span>
+              <span class="u2l1a-progress-value"><bdi dir="ltr" id="station-progress-value">14%</bdi></span>
+            </p>
+          </div>
+          <div class="u2l1a-progress-track" id="station-progress-track" role="progressbar" aria-label="التقدّم في محطات الملحق" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1">
+            <span id="station-progress-fill"></span>
+          </div>
+          <nav class="u2l1a-station-nav" id="station-nav" aria-label="التنقل بين محطات الملحق"></nav>
+          <p class="u2l1a-keyboard-hint">يمكنك التنقل بين المحطات بمفتاحَي <kbd>Page Up</kbd> و<kbd>Page Down</kbd>، وكل ضوابط المحطات أزرار وعناصر أصلية تعمل بلوحة المفاتيح.</p>
+        </section>
+
+        <div class="u2l1a-station-panels" id="station-panels"></div>
+
+        <nav class="u2l1a-station-controls" aria-label="التنقل المتسلسل بين المحطات">
+          <button class="u2l1a-control-button" type="button" id="previous-station" disabled>
+            <span class="u2l1a-control-arrow" aria-hidden="true">→</span>
+            <span><small>المحطة السابقة</small><strong id="previous-station-label">بداية الملحق</strong></span>
+          </button>
+          <span class="u2l1a-control-center" id="control-center">المحطة 1 من 7</span>
+          <button class="u2l1a-control-button" type="button" id="next-station">
+            <span><small>المحطة التالية</small><strong id="next-station-label">مصدر الشحنة</strong></span>
+            <span class="u2l1a-control-arrow" aria-hidden="true">←</span>
+          </button>
+        </nav>
+      </main>
+
+      <footer class="u2l1a-footer">
+        <span dir="ltr">Interactive Physics — Grade 8</span>
+        <span>ملحق إثرائي مستقل · الكهرباء الساكنة · صفحات الكتاب 73–86</span>
+        <a href="./unit2-lesson-1.html">العودة إلى الدرس الأول</a>
+        <a href="./appendices.html">مكتبة الملحقات</a>
+        <a href="./">الرئيسية</a>
+      </footer>
+    </div>
+
+    <noscript><p class="u2l1a-noscript">محطات هذا الملحق تفاعلية وتتطلب تفعيل JavaScript في المتصفح.</p></noscript>
+    <script type="module" src="./src/unit2-lesson1-appendix.js"></script>
+  </body>
+</html>
