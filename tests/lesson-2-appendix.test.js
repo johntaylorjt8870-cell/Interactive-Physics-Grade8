@@ -511,8 +511,9 @@ test('the published Lesson 1 appendix and Lesson 2 remain intact when Unit 2 Les
 
   assert.match(library, /href="\.\/lesson-1-appendix\.html"/);
   assert.match(library, /href="\.\/lesson-2-appendix\.html"/);
-  /* three published appendices now: the two Unit 1 labs plus the Unit 2 Lesson 1 charge lab */
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 3);
+  /* four published appendices: the two Unit 1 labs, the Unit 2 Lesson 1 charge lab
+     and the Unit 2 Lesson 2 current journey */
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 4);
 
   assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
   assert.match(home, /href="\.\/unit2-lesson-3\.html"/);

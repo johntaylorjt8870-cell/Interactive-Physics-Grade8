@@ -185,7 +185,7 @@ test('Unit Questions remain distinct from Unit 1 Test, lessons, and the Appendix
   assert.match(testPage, /اختبار الوحدة الأولى/);
   assert.match(testBoot, /loadSolutions: \(\) => import\('\.\/unit-1-test-solutions\.js'\)/);
   assert.match(home, /اختبار الوحدة الأولى/);
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 3);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 4);
   assert.match(home, /href="\.\/unit2-lesson-3-test\.html"/);
   assert.doesNotMatch(home + lesson2 + testPage, /اختبار الوحدة الثانية|Unit 2 Test|unit-2-test|قريباً|قريبًا/);
   assert.match(build, /resolve\(projectDirectory, 'unit-questions\.html'\)/);

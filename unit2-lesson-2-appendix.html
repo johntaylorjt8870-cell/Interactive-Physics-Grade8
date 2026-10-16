@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4efe4" />
+    <meta name="description" content="ملحق إثرائي تفاعلي مستقل للدرس الثاني من الوحدة الثانية (التيّار الكهربائيّ المُتواصِل): سبع محطات من المولّد إلى المصباح — مصدر الطاقة، والإلكترونات الحرّة، وجهة التيّار، ومقياس الأمبير، والعلاقة I = Q/t، وتحدٍّ ختامي وخريطة فهم." />
+    <title>رحلة الشحنات — ملحق الدرس الثاني من الوحدة الثانية | فيزياء ٨</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/unit2-lesson2-appendix.css" />
+  </head>
+  <body class="u2l2a-page">
+    <a class="u2l2a-skip-link" href="#station-panels">انتقل إلى محطات الملحق</a>
+
+    <div class="u2l2a-shell">
+      <header class="u2l2a-topbar">
+        <a class="u2l2a-brand" href="./" aria-label="العودة إلى الصفحة الرئيسية لمنصة فيزياء ٨">
+          <span class="u2l2a-brand-mark" aria-hidden="true">⚡</span>
+          <span class="u2l2a-brand-copy">
+            <strong dir="ltr">Interactive Physics</strong>
+            <small>ملحقات الدروس · الصف الثامن</small>
+          </span>
+        </a>
+        <nav class="u2l2a-breadcrumb" aria-label="مسار الموقع">
+          <a href="./">الرئيسية</a>
+          <span aria-hidden="true">/</span>
+          <a href="./appendices.html">ملحقات الدروس</a>
+          <span aria-hidden="true">/</span>
+          <a href="./unit2-lesson-2.html">الوحدة الثانية · الدرس 2</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">رحلة الشحنات</span>
+        </nav>
+      </header>
+
+      <main id="appendix-main" data-unit2-lesson2-appendix>
+        <section class="u2l2a-hero" aria-labelledby="appendix-title">
+          <div class="u2l2a-hero-copy">
+            <p class="u2l2a-eyebrow" id="hero-lesson-label">الوحدة الثانية · الدرس 2 — التيّار الكهربائيّ المُتواصِل · صفحات الكتاب 87–96</p>
+            <h1 id="appendix-title">رحلة الشحنات</h1>
+            <p class="u2l2a-hero-subtitle">من المولّد إلى المصباح</p>
+            <p class="u2l2a-extension-label" id="hero-extension"><span aria-hidden="true">⚡</span> ملحق تفاعلي — <bdi dir="ltr">Platform Extension</bdi></p>
+            <div id="hero-description" class="u2l2a-hero-description"></div>
+            <ul class="u2l2a-keyword-row" id="keyword-row" aria-label="الكلمات المفتاحية للدرس"></ul>
+            <h2 class="u2l2a-section-kicker">أهداف الدرس</h2>
+            <ul class="u2l2a-objective-list" id="objective-list" aria-label="أهداف الدرس الثلاثة"></ul>
+            <div class="u2l2a-hero-actions">
+              <button class="u2l2a-primary-action" type="button" id="start-first-station">ابدأ المحطة الأولى <span aria-hidden="true">←</span></button>
+              <a class="u2l2a-secondary-action" href="./unit2-lesson-2.html">مراجعة صفحة الدرس</a>
+              <a class="u2l2a-secondary-action" href="./appendices.html">كل الملحقات</a>
+            </div>
+            <p class="u2l2a-hero-note" id="hero-note">ملحق إثرائي مستقلّ: لا يغيّر صفحات الدرس المنشورة، ولا يُسجَّل ضمن اختبار الدرس ولا منطقة المعلم.</p>
+          </div>
+          <div class="u2l2a-hero-art" aria-hidden="true">
+            <svg viewBox="0 0 320 268" role="presentation" focusable="false">
+              <path d="M62 56 H236 V196 H62 Z" fill="none" stroke="#2f3b52" stroke-width="5" stroke-linejoin="round" />
+              <rect x="128" y="34" width="44" height="30" rx="6" fill="#f6e8cd" stroke="#9c4a16" stroke-width="3" />
+              <text x="140" y="56" text-anchor="middle" font-size="20" font-weight="800" fill="#9c4a16" font-family="Manrope, Arial, sans-serif">+</text>
+              <text x="162" y="56" text-anchor="middle" font-size="20" font-weight="800" fill="#9c4a16" font-family="Manrope, Arial, sans-serif">−</text>
+              <circle cx="62" cy="126" r="22" fill="#fdf7e6" stroke="#a2802c" stroke-width="3" />
+              <circle cx="62" cy="126" r="36" fill="#c08e12" opacity="0.22" />
+              <polygon points="92,104 122,104 122,98 136,108 122,118 122,112 92,112" fill="#c26a26" stroke="#7c3710" stroke-width="1.5" />
+              <polygon points="228,148 198,148 198,154 184,144 198,134 198,140 228,140" fill="#1c8a97" stroke="#08434b" stroke-width="1.5" />
+              <circle cx="118" cy="196" r="9" fill="#1c8a97" stroke="#08434b" stroke-width="2" />
+              <circle cx="176" cy="196" r="9" fill="#1c8a97" stroke="#08434b" stroke-width="2" />
+              <circle cx="236" cy="96" r="9" fill="#1c8a97" stroke="#08434b" stroke-width="2" />
+              <path d="M62 56 V126" fill="none" stroke="#c08e12" stroke-width="3.5" stroke-dasharray="12 10" opacity="0.85" />
+            </svg>
+          </div>
+        </section>
+
+        <section class="u2l2a-howto" aria-labelledby="howto-heading">
+          <div class="u2l2a-section-heading">
+            <div>
+              <p class="u2l2a-section-kicker">كيف تعمل المحطات</p>
+              <h2 id="howto-heading">أربع خطوات في كل محطة</h2>
+            </div>
+            <p>كل محطة قصيرة ومستقلة ولها هدف واحد واضح. لا نصّ طويل لتقرأه: أنت تشغّل التجربة بنفسك، والتفسير يأتي بعد إجابتك.</p>
+          </div>
+          <ol class="u2l2a-howto-steps" id="howto-steps"></ol>
+        </section>
+
+        <section class="u2l2a-progress-section" aria-labelledby="station-nav-heading">
+          <div class="u2l2a-progress-head">
+            <div>
+              <p class="u2l2a-section-kicker">محطات الرحلة</p>
+              <h2 id="station-nav-heading">اختر محطة</h2>
+            </div>
+            <p class="u2l2a-progress-readout">
+              <span id="station-progress-label">المحطة 1 من 7</span>
+              <span class="u2l2a-progress-value"><bdi dir="ltr" id="station-progress-value">14%</bdi></span>
+              <span>الأسئلة المُنجَزة: <bdi dir="ltr" id="answer-progress">0 من 22 سؤالاً</bdi></span>
+            </p>
+          </div>
+          <div class="u2l2a-progress-track" id="station-progress-track" role="progressbar" aria-label="التقدّم في محطات الملحق" aria-valuemin="1" aria-valuemax="7" aria-valuenow="1">
+            <span id="station-progress-fill"></span>
+          </div>
+          <nav class="u2l2a-station-nav" id="station-nav" aria-label="التنقل بين محطات الملحق"></nav>
+          <p class="u2l2a-keyboard-hint">يمكنك التنقل بين المحطات بمفتاحَي <kbd>Page Up</kbd> و<kbd>Page Down</kbd>، والانتقال إلى المحطة الأولى والأخيرة بـ<kbd>Home</kbd> و<kbd>End</kbd>. كل الضوابط أزرار وحقول أصلية تعمل بلوحة المفاتيح.</p>
+        </section>
+
+        <div class="u2l2a-stations" id="station-panels"></div>
+
+        <nav class="u2l2a-station-controls" aria-label="التنقل المتسلسل بين المحطات">
+          <button class="u2l2a-control-button" type="button" id="previous-station" disabled>
+            <span class="u2l2a-control-arrow" aria-hidden="true">→</span>
+            <span><small>المحطة السابقة</small><strong id="previous-station-label">بداية الرحلة</strong></span>
+          </button>
+          <span class="u2l2a-control-center" id="control-center">المحطة 1 من 7</span>
+          <button class="u2l2a-control-button" type="button" id="next-station">
+            <span><small>المحطة التالية</small><strong id="next-station-label">رحلة الإلكترونات الحرّة</strong></span>
+            <span class="u2l2a-control-arrow" aria-hidden="true">←</span>
+          </button>
+        </nav>
+      </main>
+
+      <footer class="u2l2a-footer">
+        <span dir="ltr">Interactive Physics — Grade 8</span>
+        <span>رحلة الشحنات · ملحق إثرائي للدرس الثاني من الوحدة الثانية — التيّار الكهربائي المتواصل · صفحات الكتاب 87–96</span>
+        <a href="./unit2-lesson-2.html">العودة إلى الدرس الثاني</a>
+        <a href="./appendices.html">مكتبة الملحقات</a>
+        <a href="./">الرئيسية</a>
+      </footer>
+    </div>
+
+    <noscript><p class="u2l2a-noscript">محطات هذا الملحق تفاعلية وتتطلب تفعيل JavaScript في المتصفح.</p></noscript>
+    <script type="module" src="./src/unit2-lesson2-appendix.js"></script>
+  </body>
+</html>

@@ -42,6 +42,7 @@ Then open:
 - Unit 2 Lesson 3 Teacher Area: http://127.0.0.1:4173/unit2-lesson-3-teacher.html
 - Unit 2 Lesson 3 Test: http://127.0.0.1:4173/unit2-lesson-3-test.html
 - Unit 2 Lesson 1 Appendix — Static Electricity: http://127.0.0.1:4173/unit2-lesson-1-appendix.html
+- Unit 2 Lesson 2 Appendix — Charge Journey: http://127.0.0.1:4173/unit2-lesson-2-appendix.html
 - Unit 1 Questions: http://127.0.0.1:4173/unit-questions.html
 - Unit 1 Questions Teacher Area: http://127.0.0.1:4173/unit-questions-teacher.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
@@ -59,6 +60,7 @@ lesson-1-appendix.html      Standalone Lesson 1 interactive appendix
 lesson-2.html               Published Lesson 2 student page (preserved)
 lesson-2-appendix.html      Standalone Lesson 2 interactive appendix (parallel forces)
 unit2-lesson-1-appendix.html Standalone Unit 2 Lesson 1 appendix (static electricity)
+unit2-lesson-2-appendix.html Standalone Unit 2 Lesson 2 appendix (current journey, pp87–96)
 unit2-lesson-3.html          Published Unit 2 Lesson 3 student page (pp97–106)
 unit2-lesson-3-teacher.html  Password-gated Lesson 3 Teacher Area
 unit2-lesson-3-test.html     Independent 20-question Lesson 3 test
@@ -101,6 +103,11 @@ src/
   unit2-lesson1-appendix-content.js Authored «من الكتاب» / «شرح المنصة» / labelled enrichment content
   unit2-lesson1-appendix.js Seven-station lab, SVG scenes, controls and interactions
   unit2-lesson1-appendix.css Isolated dark storm-lab design for the charges appendix
+  unit2-lesson2-appendix-physics.js Current, charge, ammeter, drift and calculator model for the journey appendix
+  unit2-lesson2-appendix-flow.js Station flow, hash routing and explicit-submit quiz state for the journey appendix
+  unit2-lesson2-appendix-content.js Authored «من الكتاب» / «شرح المنصة» / labelled enrichment content for the journey appendix
+  unit2-lesson2-appendix.js Seven-station journey, SVG scenes, controls and interactions
+  unit2-lesson2-appendix.css Isolated daylight journey design for the current appendix
   unit-questions-content.js Source text, page audit, and platform-only hints for pp71–72
   unit-questions-teacher-content.js Lazily loaded worked solutions and teacher diagrams
   unit-questions.js         Student Area mount for the standalone review
@@ -119,12 +126,14 @@ src/
   unit2-lesson3.css Distinctive responsive voltage-atlas lesson design
   unit2-lesson3-teacher.css Scoped teacher-area additions
   docs/unit-2-lesson-3-source-audit.md Source audit for textbook pages 97–106
+  docs/unit-2-lesson-2-appendix-audit.md Appendix audit: sources, coverage, tests, a11y and scope for pp87–96
   teacher.css / lesson-test.css
 tests/
   unit2-lesson3.test.js     Lesson 3 source coverage, calculations, diagrams, auth and assessment checks
   appendices.test.js        Navigation, practice flow, direct-page and preservation checks
   appendix-physics.test.js  Resultant, force editing, presets, challenge and motion tests
   unit2-lesson1-appendix.test.js Station flow, charge/electrification/Coulomb physics, source labelling and scope checks
+  unit2-lesson2-appendix.test.js Journey flow, current/charge/ammeter/drift physics, calculator guards and scope checks
 vendor/
   katex/                    KaTeX 0.16 (ES module + trimmed CSS + woff2 math fonts)
   fonts/                    IBM Plex Sans Arabic + Manrope woff2 subsets
@@ -159,7 +168,7 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 - `unit2-lesson-3.html` links to the Lesson 2 predecessor, the course home, its separate teacher gate and its independent lesson test; there is no Unit 2 test entry.
 - `unit-questions.html` is a separate Unit 1 review for textbook pages 71–72, linked from the Unit 1 panel and Lesson 2; it is not part of the lesson list and is not the Unit 1 Test.
 - `unit-questions-teacher.html` is the review's separate, password-gated Teacher Area. It reuses the existing verifier and lazy-loads its solutions only after authorization.
-- The appendices library is `appendices.html`; its three entries link to `lesson-1-appendix.html`, `lesson-2-appendix.html` and `unit2-lesson-1-appendix.html`.
+- The appendices library is `appendices.html`; its four entries link to `lesson-1-appendix.html`, `lesson-2-appendix.html`, `unit2-lesson-1-appendix.html` and `unit2-lesson-2-appendix.html`.
 - Every appendix page is a static direct URL with ordinary relative links, so refresh does not depend on a client-side router.
 - The unit and lesson list keeps only the published lessons; no future appendix cards or placeholders are shown.
 
@@ -174,6 +183,8 @@ All of this material is labelled as a platform extension. It is practice/explora
 The Lesson 2 Appendix («ملحق الدرس الثاني — القوى المتوازية») follows the same architecture for pages 63–70. Its lab puts two parallel forces on a horizontal rod and lets the student change `F_{1}`, `F_{2}` and both carrier positions in the same-sense and opposite-sense cases. `src/lesson-2-appendix-physics.js` owns the model (slider clamping, the resultant's intensity, sense, carrier position and the moment products) and delegates both textbook cases to the published Lesson 2 model in `src/lesson-2-physics.js`; the platform-only derivation of the carrier position is labelled «شرح المنصة», while the quoted relations stay labelled «من الكتاب». Equal-and-opposite forces are shown as a zero resultant with no single carrier, drawn as a rotational effect instead of an arrow. The four exploratory challenges are verified reachable on the real slider grid by the test suite and are checked only when the student asks; the scene keeps a `prefers-reduced-motion` path and carries the «نموذج تعليمي مبسّط — Educational simplified model» label.
 
 The Unit 2 Lesson 1 Appendix («مختبر الشحنات — اكتشف الكهرباء الساكنة») is an independent enrichment appendix for the static-electricity lesson (textbook pages 73–86). It is not a lesson page and does not duplicate the lesson's own `coulomb-lab` or `electroscope-lab` simulations: it is a seven-station discovery path (paper-bits puzzle → charge ledger → electrification workshop → attraction/repulsion arena → Coulomb challenge → detective challenge → concept map) with its own dark storm-lab identity in `src/unit2-lesson1-appendix.css`. `src/unit2-lesson1-appendix-physics.js` owns the pure model — symbolic electron accounting with fixed protons, `q = n·e`, the three electrification methods and their comparison, force direction versus magnitude, and `F = K|q₁q₂|/d²` computed with the published lesson constant imported from `src/unit2-lesson1-physics.js`. `src/unit2-lesson1-appendix-flow.js` owns station navigation, hash routing and the explicit-submit-only quiz state, so no answer is revealed before an attempt and a retry carries no penalty. Book conclusions are quoted as «من الكتاب» with their printed page, the platform's own wording is «شرح المنصة», anything beyond the printed page is «إثراء علمي من المنصة», and every scene carries the «نموذج تعليمي مبسّط — Educational simplified model» label with its limits stated.
+
+The Unit 2 Lesson 2 Appendix («رحلة الشحنات — من المولّد إلى المصباح») is an independent enrichment appendix for the continuous-current lesson (textbook pages 87–96). It is not a lesson page and does not duplicate the lesson's own tube, current and circuit labs: it is a seven-station journey (where the energy comes from → the journey of the free electrons → which way the current goes → the current-intensity lab → the relation `I = Q/t` with a step-by-step calculator → an electric detective challenge → a concept map), with its own daylight identity in `src/unit2-lesson2-appendix.css` (copper for the conventional current, teal for the electron drift, brass for the energy that reaches the lamp). `src/unit2-lesson2-appendix-physics.js` owns the pure model — the closed loop with the two opposite current/electron directions on every metal wire — the inside of the source is modelled neutrally, with the conventional current only, because the lesson states no carrier direction there —, `I = Q/t` with `Q = I·t` and `t = Q/I`, the printed multiples and submultiples of the ampere, a clamped ammeter with a live dial, a seeded free-electron drift model in which the electron count never changes, and a calculator that never throws — while `src/unit2-lesson2-appendix-flow.js` owns station navigation, hash routing and the explicit-submit quiz state, so no answer is revealed before an attempt and a retry carries no penalty. The calculator validates every input (including the division by zero), shows each substitution step through KaTeX and offers the matching submultiples; the ammeter lab starts from the book's own worked application (60 C in 30 s ⇒ 2 A) and can be driven to the printed 200 mA reading of p92. Book statements are quoted as «من الكتاب» with their printed page, the platform's own wording is «شرح المنصة», anything beyond the printed page is «إثراء علمي من المنصة», and every scene carries the «رسم إثرائي توضيحي — ليس نقلاً مؤكداً لشكل الكتاب» note together with the «نموذج تعليمي مبسّط — Educational simplified model» label and its stated limits.
 
 ## Student experience
 
@@ -226,4 +237,4 @@ npm test          # source fidelity, course navigation, physics, simulations, te
 npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and three appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and four appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
