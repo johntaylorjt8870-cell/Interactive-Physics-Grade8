@@ -492,7 +492,7 @@ test('the live panel, legend and diagram are wired to the same ids the module re
 
 /* ------------------------------------------------------- regressions ---- */
 
-test('the published Lesson 1 appendix, Lesson 2, and the tests of both lessons are untouched', async () => {
+test('the published Lesson 1 appendix and Lesson 2 remain intact when Unit 2 Lesson 3 is added', async () => {
   const [lesson1Appendix, lesson2, library, home] = await Promise.all([
     read('../lesson-1-appendix.html'), read('../lesson-2.html'), read('../appendices.html'), read('../index.html'),
   ]);
@@ -513,9 +513,10 @@ test('the published Lesson 1 appendix, Lesson 2, and the tests of both lessons a
   assert.match(library, /href="\.\/lesson-2-appendix\.html"/);
   assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 2);
 
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 4);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
+  assert.match(home, /href="\.\/unit2-lesson-3\.html"/);
   assert.match(home, /<section class="appendices-home-entry"[^]*?href="\.\/appendices\.html"/);
-  assert.equal((home.match(/lesson-2-appendix/g) ?? []).length, 0, 'Course Home is unchanged and reaches both appendices through the library');
+  assert.equal((home.match(/lesson-2-appendix/g) ?? []).length, 0, 'Course Home reaches both appendices through the library');
   assert.equal(LESSON_2_QUESTIONS.length, 20);
   assert.equal(UNIT_1_QUESTIONS.length, 60);
 });

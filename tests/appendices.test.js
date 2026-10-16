@@ -8,16 +8,17 @@ import { checkPracticeAnswer, createPracticeState, selectPracticeChoice } from '
 
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 
-test('Course Home keeps the single Lesson 1 appendix entry while publishing both real lessons', async () => {
+test('Course Home keeps the single Lesson 1 appendix entry while publishing the existing lessons and Unit 2 Lesson 3', async () => {
   const home = await read('../index.html');
   assert.match(home, /href="\.\/src\/appendices\.css"/);
   assert.match(home, /<section class="appendices-home-entry"[^]*aria-labelledby="appendices-home-heading"/);
   assert.match(home, /<h2 id="appendices-home-heading">ملحقات الدروس<\/h2>/);
   assert.match(home, /href="\.\/appendices\.html"/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 4);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
   assert.match(home, /id="available-lessons"/);
   assert.match(home, /href="\.\/lesson-2\.html"/);
-  assert.doesNotMatch(home, /مساحة الدروس القادمة|lesson-3\.html/);
+  assert.match(home, /href="\.\/unit2-lesson-3\.html"/);
+  assert.doesNotMatch(home, /مساحة الدروس القادمة|href="\.\/lesson-3\.html"/);
 });
 
 test('appendices library lists exactly the two published appendices with working start links and no future placeholders', async () => {
