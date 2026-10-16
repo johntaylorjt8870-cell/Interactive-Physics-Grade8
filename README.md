@@ -43,6 +43,7 @@ Then open:
 - Unit 2 Lesson 3 Test: http://127.0.0.1:4173/unit2-lesson-3-test.html
 - Unit 2 Lesson 1 Appendix — Static Electricity: http://127.0.0.1:4173/unit2-lesson-1-appendix.html
 - Unit 2 Lesson 2 Appendix — Charge Journey: http://127.0.0.1:4173/unit2-lesson-2-appendix.html
+- Unit 2 Lesson 3 Appendix — Voltage Bench: http://127.0.0.1:4173/unit2-lesson-3-appendix.html
 - Unit 1 Questions: http://127.0.0.1:4173/unit-questions.html
 - Unit 1 Questions Teacher Area: http://127.0.0.1:4173/unit-questions-teacher.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
@@ -61,6 +62,7 @@ lesson-2.html               Published Lesson 2 student page (preserved)
 lesson-2-appendix.html      Standalone Lesson 2 interactive appendix (parallel forces)
 unit2-lesson-1-appendix.html Standalone Unit 2 Lesson 1 appendix (static electricity)
 unit2-lesson-2-appendix.html Standalone Unit 2 Lesson 2 appendix (current journey, pp87–96)
+unit2-lesson-3-appendix.html Standalone Unit 2 Lesson 3 appendix (potential difference, pp97–106)
 unit2-lesson-3.html          Published Unit 2 Lesson 3 student page (pp97–106)
 unit2-lesson-3-teacher.html  Password-gated Lesson 3 Teacher Area
 unit2-lesson-3-test.html     Independent 20-question Lesson 3 test
@@ -108,6 +110,11 @@ src/
   unit2-lesson2-appendix-content.js Authored «من الكتاب» / «شرح المنصة» / labelled enrichment content for the journey appendix
   unit2-lesson2-appendix.js Seven-station journey, SVG scenes, controls and interactions
   unit2-lesson2-appendix.css Isolated daylight journey design for the current appendix
+  unit2-lesson3-appendix-physics.js Node-potential, voltmeter, dipole and series/parallel model for the voltage appendix
+  unit2-lesson3-appendix-flow.js Station flow, hash routing and explicit-submit quiz state for the voltage appendix
+  unit2-lesson3-appendix-content.js Authored «من الكتاب» / «شرح المنصة» / labelled enrichment content for the voltage appendix
+  unit2-lesson3-appendix.js Seven-station voltage bench, SVG scenes, probes and interactions
+  unit2-lesson3-appendix.css Isolated measurement-lab design for the voltage appendix
   unit-questions-content.js Source text, page audit, and platform-only hints for pp71–72
   unit-questions-teacher-content.js Lazily loaded worked solutions and teacher diagrams
   unit-questions.js         Student Area mount for the standalone review
@@ -237,4 +244,4 @@ npm test          # source fidelity, course navigation, physics, simulations, te
 npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and four appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and five appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.

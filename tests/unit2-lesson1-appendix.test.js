@@ -866,7 +866,7 @@ test('the mount script renders every station, keeps them mounted, and honours re
 
 test('the appendices library publishes exactly one card for this appendix with a working link', async () => {
   const library = await read('../appendices.html');
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 4);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 5);
   assert.match(library, /id="unit2-lesson-one-appendix-title">مختبر الشحنات/);
   assert.match(library, /href="\.\/unit2-lesson-1-appendix\.html"/);
   assert.match(library, /appendix-card-art-charges/);

@@ -1253,13 +1253,13 @@ test('the appendix is registered in the library, the build and the README', asyn
     read('../scripts/build.mjs'),
     read('../README.md'),
   ]);
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 4);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 5);
   assert.match(library, /id="unit2-lesson-two-appendix-title">رحلة الشحنات/);
   assert.match(library, /href="\.\/unit2-lesson-2-appendix\.html"/);
   assert.match(library, /<span dir="ltr">Unit 2 · Lesson 2<\/span>/);
   assert.match(library, /appendix-card-art-current/);
   assert.match(library, /حاسبة/);
-  assert.match(library, /أربعة ملحقات تفاعلية/);
+  assert.match(library, /خمسة ملحقات تفاعلية/);
   /* the three published cards keep their own copy and links */
   for (const href of ['./lesson-1-appendix.html', './lesson-2-appendix.html', './unit2-lesson-1-appendix.html']) {
     assert.ok(library.includes(href), `the library must keep ${href}`);
