@@ -172,7 +172,7 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 - The root URL (`index.html`) is the Course Home, not a lesson.
 - The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
 - Unit 2 Lesson 3 (`unit2-lesson-3.html`) follows the published static-page architecture, uses five numbered learning stations, and covers the audited textbook pages 97–106.
-- `unit2-lesson-3.html` links to the Lesson 2 predecessor, the course home, its separate teacher gate and its independent lesson test; there is no Unit 2 test entry.
+- `unit2-lesson-3.html` links to the Lesson 2 predecessor, the course home, its separate teacher gate and its independent lesson test; the completed Unit 2 test is available from the Course Home.
 - `unit-questions.html` is a separate Unit 1 review for textbook pages 71–72, linked from the Unit 1 panel and Lesson 2; it is not part of the lesson list and is not the Unit 1 Test.
 - `unit-questions-teacher.html` is the review's separate, password-gated Teacher Area. It reuses the existing verifier and lazy-loads its solutions only after authorization.
 - The appendices library is `appendices.html`; its four entries link to `lesson-1-appendix.html`, `lesson-2-appendix.html`, `unit2-lesson-1-appendix.html` and `unit2-lesson-2-appendix.html`.
@@ -228,7 +228,7 @@ Every simulation is explicit that it is a platform interaction, states what it d
 - 20 questions: 6 Basic, 7 Medium, 4 Advanced, 3 Thinking.
 - Flow: question → draft answer (progress only, never graded or persisted) → final submission → results and per-question worked solutions.
 - Answer keys and solutions are dynamically imported only after final submission. The new Unit 2 Lesson 3 test uses `unit2-lesson3-test-solutions.js`; its post-submission section is titled «حلول الاختبارات» and grouped into four sets of five.
-- Restart clears answers and returns to question 1. No Unit 2 test is included.
+- Restart clears answers and returns to question 1. The completed Unit 2 test follows the same flow (56 new questions, four lessons).
 
 ## Accessibility
 
@@ -245,3 +245,20 @@ npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
 `npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and five appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+
+
+## Unit 2 completed — Electrical Resistance (Lesson 4)
+
+- Student lesson: `unit2-lesson-4.html` — **المقاومة الكهربائية**, printed pp107–120. “لماذا تسخن المكواة؟” is the platform opening, not the official book title.
+- Separate teacher gate: `unit2-lesson-4-teacher.html` (unchanged shared authentication). 59 traceable inventory records, including all 19 self-check parts on pp119–120.
+- Independent **اختبار الوحدة الثانية**: `unit-2-test.html`, using `assessment-runtime.js`. 56 original questions: 12 static electricity + 12 current + 12 potential difference + 20 resistance. Keys and worked solutions are lazy-loaded on final submission only; six solution groups live in the existing assessment solutions area, not the teacher area.
+- Six workbook stations, five labelled ideal-model labs, LTR KaTeX equations, local-only student notes, keyboard controls and reduced-motion support. No external runtime dependencies or hosting changes.
+- Source and question-by-question mapping: [source audit](docs/unit-2-lesson-4-source-audit.md). Original user-provided page images are retained under `docs/sources/unit2-lesson4/` for review, not shipped as required application assets.
+- Source limitations: the p116 illustration appears to show five colour bands although its text describes four; no definite four-band value is attributed to that illustration. The platform explicitly corrects the abbreviated LED heating explanation. Earlier lesson source audits were reviewed, not rechecked against absent original photos.
+- Production build includes all three new HTML entries. GitHub Pages remains the deployment target.
+
+### Optional full QA dependencies (not needed to run the app)
+
+`npm test` runs all source/physics/assessment checks. Two existing DOM checks also run when `jsdom` is resolvable; otherwise they explicitly skip. For the recorded full run, jsdom 30.1.3 was installed in a separate QA directory and exposed through a temporary `node_modules` symlink (Node 22.22.3); no app dependencies were changed.
+
+`node scripts/qa-unit2-lesson4.mjs` runs real Chromium tests against a server serving `dist/` on port 4173. Set `QA_MODULE_DIR` to a separate installation's `node_modules` containing `playwright-core` and `@sparticuz/chromium`; set `QA_BASE_URL` if required. On minimal Linux, Chromium also needs NSS/NSPR libraries (the QA environment used the libraries bundled in that Chromium package's `al2023.tar.br` via `LD_LIBRARY_PATH`). No browser binaries or dependencies are committed. Results and laptop screenshots: `docs/qa/unit2-lesson4/`.

@@ -62,7 +62,7 @@ const teacherArticle = (html, n) => {
   return html.slice(start, end);
 };
 
-test('pages 87-96 in order, meta, entries, build, no unit-2 test', async () => {
+test('pages 87-96 in order, meta, entries, build, completed unit-2 test', async () => {
   assert.deepEqual(UNIT2L2_PAGES.map((p) => p.page), [87, 88, 89, 90, 91, 92, 93, 94, 95, 96]);
   assert.equal(UNIT2L2_META.pages, '87–96');
   const [html, build, home] = await Promise.all([read('../unit2-lesson-2.html'), read('../scripts/build.mjs'), read('../index.html')]);
@@ -74,8 +74,8 @@ test('pages 87-96 in order, meta, entries, build, no unit-2 test', async () => {
   assert.match(build, /'unit2-lesson-2\.html'/);
   assert.match(home, /unit2-lesson-2\.html/);
   assert.match(home, /التيار الكهربائي المتواصل/);
-  assert.doesNotMatch(home, /unit-2-test|أسئلة الوحدة الثانية|اختبار الوحدة الثانية/);
-  assert.match(home, /الوحدة غير مكتملة/);
+  assert.match(home, /unit-2-test\.html/);
+  assert.match(home, /أربعة دروس · الوحدة مكتملة/);
 });
 
 test('all textbook elements present', () => {

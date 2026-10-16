@@ -29,6 +29,6 @@ test('Unit 1 scoring stays hidden until submit and restart removes all 60-questi
  assert.deepEqual(restartAssessment(state),{status:'not-started',currentIndex:0,answers:{},results:null});
 });
 
-test('Unit 1 answer key is not loaded before explicit submission and no future unit test is exposed',async()=>{
- const [app,home]=await Promise.all([read('../src/unit-1-assessment.js'),read('../index.html')]); assert.doesNotMatch(app,/ANSWER_KEY|answerKey:/); assert.match(app,/loadSolutions: \(\) => import\('\.\/unit-1-test-solutions\.js'\)/); assert.doesNotMatch(home,/unit-2-test|اختبار الوحدة الثانية|Unit 2 Test/);
+test('Unit 1 answer key is not loaded before explicit submission and completed Unit 2 test is exposed',async()=>{
+ const [app,home]=await Promise.all([read('../src/unit-1-assessment.js'),read('../index.html')]); assert.doesNotMatch(app,/ANSWER_KEY|answerKey:/); assert.match(app,/loadSolutions: \(\) => import\('\.\/unit-1-test-solutions\.js'\)/); assert.match(home,/unit-2-test\.html/);
 });

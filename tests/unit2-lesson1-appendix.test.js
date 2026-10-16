@@ -912,8 +912,8 @@ test('the published lesson, its test, its teacher area and the earlier appendice
   assert.match(appendix2, /<title>ملحق الدرس الثاني — القوى المتوازية/);
   assert.match(appendix2, /src="\.\/src\/lesson-2-appendix\.js"/);
   assert.doesNotMatch(appendix2, /unit2-lesson-1-appendix/);
-  /* and no Unit 2 test entry appeared anywhere */
+  /* The fourth lesson now completes Unit 2 and enables its unit test. */
   const home = await read('../index.html');
-  assert.doesNotMatch(home, /اختبار الوحدة الثانية|unit-2-test|unit2-test/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
+  assert.match(home, /unit-2-test\.html/);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 6);
 });

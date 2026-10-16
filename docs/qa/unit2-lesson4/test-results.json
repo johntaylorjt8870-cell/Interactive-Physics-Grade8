@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-17",
+  "node": "v22.22.3",
+  "command": "npm test",
+  "optionalDOMDependency": "jsdom 30.1.3 supplied through a temporary symlink to an external QA install",
+  "tests": 286,
+  "pass": 286,
+  "fail": 0,
+  "skipped": 0,
+  "durationMs": 6106.568385,
+  "productionBuild": "passed; three new HTML entries verified in dist",
+  "diffCheck": "passed"
+}

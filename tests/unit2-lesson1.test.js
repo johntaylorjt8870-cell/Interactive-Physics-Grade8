@@ -15,7 +15,7 @@ test('pages 73-86 in order, meta, entries, build',async()=>{
  assert.equal(UNIT2_META.pages,'73–86');
  const [html,build,home]=await Promise.all([read('../unit2-lesson-1.html'),read('../scripts/build.mjs'),read('../index.html')]);
  assert.match(html,/<html lang="ar" dir="rtl">/); assert.match(html,/الكهرباء الساكنة/); assert.match(html,/unit2-lesson1-main\.js/); assert.match(html,/unit2-lesson-1-test\.html/); assert.match(html,/unit2-lesson-1-teacher\.html/);
- assert.match(build,/'unit2-lesson-1\.html'/); assert.match(home,/unit2-lesson-1\.html/); assert.doesNotMatch(home,/unit-2-test|أسئلة الوحدة الثانية/);
+ assert.match(build,/'unit2-lesson-1\.html'/); assert.match(home,/unit2-lesson-1\.html/); assert.match(home,/unit-2-test\.html/);
 });
 test('all textbook elements present',()=>{
  for(const phrase of ['يتعرّف الكهرباء الساكنة','الكهرباء الساكنة – التكهرب']) assert.ok(source(73).includes(phrase),phrase);
