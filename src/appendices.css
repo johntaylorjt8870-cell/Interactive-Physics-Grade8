@@ -548,3 +548,60 @@
 .appendix-art-carrier-dot-one { inset-block-start: 68%; inset-inline-start: 30%; background: #c08e12; border-color: #7d5a06; }
 .appendix-art-carrier-dot-two { inset-block-start: 68%; inset-inline-start: 58%; }
 .appendix-art-carrier-dot-three { inset-block-start: 22%; inset-inline-start: 70%; }
+
+/* Unit 2 Lesson 3 appendix card art — «محطة الفولت»: a pale measurement bench
+   with a graphite voltmeter screen, violet measurement points and two probes. */
+.appendix-card-art-voltage {
+  background:
+    radial-gradient(circle at 24% 34%, rgba(124, 77, 255, 0.16), transparent 42%),
+    radial-gradient(circle at 78% 68%, rgba(255, 176, 0, 0.16), transparent 44%),
+    repeating-linear-gradient(0deg, rgba(46, 64, 96, 0.08) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(90deg, rgba(46, 64, 96, 0.08) 0 1px, transparent 1px 20px),
+    linear-gradient(155deg, #ffffff, #eef2f8 60%, #e3e9f2);
+}
+.appendix-card-art-voltage::before,
+.appendix-card-art-voltage::after { content: none; }
+.appendix-art-bench {
+  position: absolute;
+  inset: 20% 16%;
+  border: 3px solid #33475f;
+  border-radius: 14px;
+}
+.appendix-art-dmm {
+  position: absolute;
+  inset-block-start: 12%;
+  inset-inline-start: 8%;
+  inline-size: 34%;
+  block-size: 26%;
+  border-radius: 8px;
+  background: #10151c;
+  box-shadow: inset 0 0 0 2px #2c3540;
+}
+.appendix-art-dmm i {
+  position: absolute;
+  inset-inline-end: 8%;
+  inset-block-end: 14%;
+  color: #ffb000;
+  font-family: 'Manrope', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+.appendix-art-measure-point {
+  position: absolute;
+  inline-size: 13px;
+  block-size: 13px;
+  border-radius: 50%;
+  background: #7c4dff;
+  box-shadow: 0 0 0 5px rgba(91, 47, 214, 0.16);
+}
+.appendix-art-measure-point-one { inset-block-start: 44%; inset-inline-start: 78%; }
+.appendix-art-measure-point-two { inset-block-start: 74%; inset-inline-start: 34%; }
+.appendix-art-probe {
+  position: absolute;
+  inline-size: 26px;
+  block-size: 9px;
+  border-radius: 5px;
+}
+.appendix-art-probe-red { background: #c62828; inset-block-start: 30%; inset-inline-start: 84%; transform: rotate(-24deg); }
+.appendix-art-probe-black { background: #263238; inset-block-start: 84%; inset-inline-start: 22%; transform: rotate(18deg); }

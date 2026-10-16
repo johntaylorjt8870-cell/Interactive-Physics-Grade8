@@ -26,7 +26,7 @@ test('appendices library lists exactly the four published appendices with workin
   assert.match(library, /<title>ملحقات الدروس/);
   assert.match(library, /<html lang="ar" dir="rtl">/);
   assert.match(library, /aria-current="page">ملحقات الدروس/);
-  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 4);
+  assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 5);
   /* the Lesson 1 appendix entry is preserved unchanged */
   assert.match(library, /Lesson 1/);
   assert.match(library, /القوى المتلاقية/);
@@ -45,10 +45,14 @@ test('appendices library lists exactly the four published appendices with workin
   assert.match(library, /مختبر الشحنات/);
   assert.match(library, /href="\.\/unit2-lesson-1-appendix\.html"[^]*ابدأ الملحق/);
   assert.match(library, /ورشة طرائق التكهرب ومقارنتها/);
-  assert.equal((library.match(/Platform Extension/g) ?? []).length, 4);
-  assert.match(library, /أربعة ملحقات تفاعلية/);
-  /* and nothing beyond the four published appendices */
-  assert.doesNotMatch(library, /Lesson\s*[3-9]|الدرس\s*[3-9]|lesson-[3-9]\.html|Unit\s*2\s*·\s*Lesson\s*[3-9]|قريباً|قريبًا|Placeholder|قادم/);
+  assert.equal((library.match(/Platform Extension/g) ?? []).length, 5);
+  assert.match(library, /خمسة ملحقات تفاعلية/);
+  /* the Unit 2 Lesson 3 appendix is the fifth real entry */
+  assert.match(library, /Unit 2 · Lesson 3/);
+  assert.match(library, /محطة الفولت/);
+  assert.match(library, /href="\.\/unit2-lesson-3-appendix\.html"[^]*ابدأ الملحق/);
+  /* and nothing beyond the five published appendices */
+  assert.doesNotMatch(library, /Lesson\s*[4-9]|الدرس\s*[4-9]|lesson-[4-9]\.html|Unit\s*2\s*·\s*Lesson\s*[4-9]|قريباً|قريبًا|Placeholder|قادم/);
 });
 
 test('direct appendix URL includes a standalone RTL page, KaTeX, independent code, and return navigation', async () => {
