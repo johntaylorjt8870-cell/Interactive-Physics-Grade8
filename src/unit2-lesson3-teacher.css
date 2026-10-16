@@ -1,0 +1,23 @@
+/* Lesson 3 Teacher Area: only scoped additions; shared auth and teacher layout stay untouched. */
+.teacher-page .teacher-topbar { border-bottom-color: #d6d9ec; }
+.teacher-page .teacher-scope-badge { color: #433b91; background: #efedff; }
+.teacher-page .teacher-gate-icon { color: #fff; background: #2e315d; }
+.teacher-page .teacher-gate[hidden] { display: none; }
+.teacher-page .teacher-workspace-header { border-inline-start: 4px solid #4555c7; }
+.teacher-page .teacher-section-heading { border-bottom-color: #262b52; }
+.teacher-page .teacher-section-kicker { color: #08766d; }
+.teacher-page .teacher-book-answer { border-inline-start: 4px solid #bd8a25; }
+.teacher-page .teacher-explanation { border-inline-start: 4px solid #08766d; }
+.teacher-page .teacher-source-details { border-inline-start: 4px solid #bd8a25; }
+.teacher-page .teacher-platform-practice { margin-block: 14px; padding: 13px 16px; background: #edf9f6; border: 1px solid #cae9e2; border-radius: 12px; }
+.teacher-page .teacher-platform-practice > h4 { margin: 0 0 8px; color: #08766d; }
+.teacher-page .teacher-nav a:focus-visible, .teacher-page .teacher-nav a:hover { color: #fff; background: #29305e; }
+.teacher-page .teacher-answer-body .math-inline { display: inline-block; direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+.teacher-page .teacher-answer-body .math-display, .teacher-page .teacher-answer-body .equation { max-width: 100%; overflow-x: auto; direction: ltr; unicode-bidi: isolate; text-align: center; }
+.teacher-page .teacher-source-body .p3-book-copy { color: #2c3a55; }
+.teacher-page .teacher-source-body .p3-book-copy h3, .teacher-page .teacher-source-body .p3-book-copy h4 { color: #2c3a55; }
+.teacher-page .teacher-source-body .p3-book-copy .math { direction: ltr; unicode-bidi: isolate; }
+@media (max-width: 560px) {
+  .teacher-page .teacher-answer-body { font-size: 13.5px; }
+  .teacher-page .teacher-answer-body .math-display, .teacher-page .teacher-answer-body .equation { padding: 8px 2px; }
+}

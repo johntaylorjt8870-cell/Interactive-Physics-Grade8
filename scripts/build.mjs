@@ -28,6 +28,9 @@ await cp(resolve(projectDirectory, 'unit2-lesson-1-test.html'), resolve(outputDi
 await cp(resolve(projectDirectory, 'unit2-lesson-2.html'), resolve(outputDirectory, 'unit2-lesson-2.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-2-teacher.html'), resolve(outputDirectory, 'unit2-lesson-2-teacher.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-2-test.html'), resolve(outputDirectory, 'unit2-lesson-2-test.html'));
+await cp(resolve(projectDirectory, 'unit2-lesson-3.html'), resolve(outputDirectory, 'unit2-lesson-3.html'));
+await cp(resolve(projectDirectory, 'unit2-lesson-3-teacher.html'), resolve(outputDirectory, 'unit2-lesson-3-teacher.html'));
+await cp(resolve(projectDirectory, 'unit2-lesson-3-test.html'), resolve(outputDirectory, 'unit2-lesson-3-test.html'));
 await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), { recursive: true });
 await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
 

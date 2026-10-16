@@ -38,6 +38,9 @@ Then open:
 - Lesson 1 Appendix: http://127.0.0.1:4173/lesson-1-appendix.html
 - Lesson 2: http://127.0.0.1:4173/lesson-2.html
 - Lesson 2 Appendix: http://127.0.0.1:4173/lesson-2-appendix.html
+- Unit 2 Lesson 3 — Potential Difference: http://127.0.0.1:4173/unit2-lesson-3.html
+- Unit 2 Lesson 3 Teacher Area: http://127.0.0.1:4173/unit2-lesson-3-teacher.html
+- Unit 2 Lesson 3 Test: http://127.0.0.1:4173/unit2-lesson-3-test.html
 - Unit 1 Questions: http://127.0.0.1:4173/unit-questions.html
 - Unit 1 Questions Teacher Area: http://127.0.0.1:4173/unit-questions-teacher.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
@@ -54,6 +57,9 @@ appendices.html             Published appendices library
 lesson-1-appendix.html      Standalone Lesson 1 interactive appendix
 lesson-2.html               Published Lesson 2 student page (preserved)
 lesson-2-appendix.html      Standalone Lesson 2 interactive appendix (parallel forces)
+unit2-lesson-3.html          Published Unit 2 Lesson 3 student page (pp97–106)
+unit2-lesson-3-teacher.html  Password-gated Lesson 3 Teacher Area
+unit2-lesson-3-test.html     Independent 20-question Lesson 3 test
 unit-questions.html         Unit 1 textbook-question review (pages 71–72)
 unit-questions-teacher.html Password-gated worked-solution Area for the review
 teacher.html                Separate Lesson 1 Teacher Area page
@@ -94,8 +100,21 @@ src/
   unit-questions-teacher.js Password-gated Teacher Area mount
   unit-questions.css        Responsive Unit Questions student-page styles
   unit-questions-teacher.css Isolated teacher-diagram styles
+  unit2-lesson3-content.js Source text, page map and labelled platform explanations for pp97–106
+  unit2-lesson3-diagrams.js Accessible SVG reconstructions for water, charge and circuit figures
+  unit2-lesson3-physics.js Pure potential-difference and unit-conversion functions
+  unit2-lesson3-simulation.js Water analogy, series/parallel calculator, converter and practice
+  unit2-lesson3-main.js Student station navigation and interactions
+  unit2-lesson3-teacher-content.js Lazily loaded worked solutions for pp97–106
+  unit2-lesson3-test-data.js 20 new lesson-test questions (no answers embedded)
+  unit2-lesson3-test-solutions.js Answer key and explanations loaded only after submission
+  unit2-lesson3-test-diagrams.js Accessible assessment circuit diagrams
+  unit2-lesson3.css Distinctive responsive voltage-atlas lesson design
+  unit2-lesson3-teacher.css Scoped teacher-area additions
+  docs/unit-2-lesson-3-source-audit.md Source audit for textbook pages 97–106
   teacher.css / lesson-test.css
 tests/
+  unit2-lesson3.test.js     Lesson 3 source coverage, calculations, diagrams, auth and assessment checks
   appendices.test.js        Navigation, practice flow, direct-page and preservation checks
   appendix-physics.test.js  Resultant, force editing, presets, challenge and motion tests
 vendor/
@@ -128,6 +147,8 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 
 - The root URL (`index.html`) is the Course Home, not a lesson.
 - The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
+- Unit 2 Lesson 3 (`unit2-lesson-3.html`) follows the published static-page architecture, uses five numbered learning stations, and covers the audited textbook pages 97–106.
+- `unit2-lesson-3.html` links to the Lesson 2 predecessor, the course home, its separate teacher gate and its independent lesson test; there is no Unit 2 test entry.
 - `unit-questions.html` is a separate Unit 1 review for textbook pages 71–72, linked from the Unit 1 panel and Lesson 2; it is not part of the lesson list and is not the Unit 1 Test.
 - `unit-questions-teacher.html` is the review's separate, password-gated Teacher Area. It reuses the existing verifier and lazy-loads its solutions only after authorization.
 - The appendices library is `appendices.html`; its two entries link to `lesson-1-appendix.html` and `lesson-2-appendix.html`.
@@ -172,14 +193,14 @@ Every simulation is explicit that it is a platform interaction, states what it d
 
 ## Teacher Area
 
-`teacher.html` is the Lesson 1 password-gated Teacher Area, separate from the student bundle. It provides page-by-page teaching objectives, exact source content in collapsible disclosures, step-by-step worked solutions (answer separated from explanation), limitations of each simulation, common misconceptions, and clearly-labelled extended mathematics (e.g. the cosine law for p58). `lesson-2-teacher.html` covers Lesson 2. `unit-questions-teacher.html` is the separate Teacher Area for the Unit 1 review; it reuses the existing password verifier and includes worked answers for every page 71–72 item, with source excerpts and teacher-only diagrams.
+`teacher.html` is the Lesson 1 password-gated Teacher Area, separate from the student bundle. It provides page-by-page teaching objectives, exact source content in collapsible disclosures, step-by-step worked solutions (answer separated from explanation), limitations of each simulation, common misconceptions, and clearly-labelled extended mathematics (e.g. the cosine law for p58). `lesson-2-teacher.html` covers Lesson 2. `unit2-lesson-3-teacher.html` uses the same shared verifier and lazily loads full solutions for experiments, activities and every printed question on pages 97–106; the existing passphrase and authentication mechanism are unchanged. `unit-questions-teacher.html` is the separate Teacher Area for the Unit 1 review; it reuses the existing password verifier and includes worked answers for every page 71–72 item, with source excerpts and teacher-only diagrams.
 
 ## Lesson Test
 
 - 20 questions: 6 Basic, 7 Medium, 4 Advanced, 3 Thinking.
 - Flow: question → draft answer (progress only, never graded or persisted) → final submission → results and per-question worked solutions.
-- Answer key and solutions live in `lesson-test-solutions.js`, dynamically imported only after final submission.
-- Restart clears answers and returns to question 1. No unit test is included.
+- Answer keys and solutions are dynamically imported only after final submission. The new Unit 2 Lesson 3 test uses `unit2-lesson3-test-solutions.js`; its post-submission section is titled «حلول الاختبارات» and grouped into four sets of five.
+- Restart clears answers and returns to question 1. No Unit 2 test is included.
 
 ## Accessibility
 
@@ -191,9 +212,8 @@ Every simulation is explicit that it is a platform interaction, states what it d
 ## Tests and build
 
 ```bash
-npm test          # 147 Node tests: source fidelity, navigation, simulation and appendix physics,
-                  # Unit Questions coverage, practice feedback, assessment flow, teacher area
+npm test          # source fidelity, course navigation, physics, simulations, teacher areas and assessments
 npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, the standalone Unit 1 Questions student and teacher pages, the appendices library and two appendices, Lesson 2 test and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and two appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.

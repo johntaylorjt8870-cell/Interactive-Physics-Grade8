@@ -11,7 +11,7 @@ import {
 } from './lesson-test-engine.js';
 import { ltrText } from './math.js';
 
-/** Shared accessible assessment UI used by Lesson 2 and Unit 1 tests. */
+/** Shared accessible assessment UI used by lesson and unit-level tests. */
 export function mountAssessment({
   test: LESSON_TEST,
   questions: QUESTIONS,
@@ -64,8 +64,11 @@ function answeredCount() {
 }
 
 function numericUnitLabel(question) {
-  if (question.numericUnit === 'N') return ltrText('N', 'newtons');
-  if (question.numericUnit === 'cm') return ltrText('cm', 'centimeters');
+  const descriptions = Object.freeze({
+    N: 'newtons', cm: 'centimeters', V: 'volts', kV: 'kilovolts', mV: 'millivolts',
+    A: 'amperes', C: 'coulombs', J: 'joules', turns: 'turns',
+  });
+  if (question.numericUnit) return ltrText(question.numericUnit, descriptions[question.numericUnit] ?? question.numericUnit);
   return 'عدد بلا وحدة';
 }
 
@@ -373,8 +376,8 @@ function renderResults(solutionModule, { focusHeading = false } = {}) {
       </div>
     </div>
     <div class="result-review-heading">
-      <h2>الإجابات والحلول التفسيرية</h2>
-      <p>التقسيم حسب أرقام الأسئلة؛ افتح المجموعة لقراءة الحلول.</p>
+      <h2>${escapeHtml(welcome.solutionsHeading ?? 'الإجابات والحلول التفسيرية')}</h2>
+      <p>${escapeHtml(welcome.solutionsDescription ?? 'التقسيم حسب أرقام الأسئلة؛ افتح المجموعة لقراءة الحلول.')}</p>
     </div>
     <div class="solution-groups">${groupsMarkup}</div>
     <div class="results-restart-row"><button class="test-button secondary" type="button" data-action="restart">إعادة الاختبار</button></div>
