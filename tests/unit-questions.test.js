@@ -25,11 +25,12 @@ test('Course Home presents Unit Questions as a separate Unit 1 review, not anoth
   assert.match(home, /class="unit-review-entry"[^]*أسئلة الوحدة الأولى/);
   assert.match(home, /href="\.\/unit-questions\.html"/);
   assert.match(home, /مراجعة شاملة لأسئلة الكتاب الأصلية/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 6);
   assert.equal((unitPanel.match(/class="lesson-entry"/g) ?? []).length, 2);
   assert.match(unitPanel, /class="unit-review-entry"/);
   assert.match(home, /href="\.\/unit2-lesson-3\.html"/);
-  assert.doesNotMatch(home, /href="\.\/lesson-3\.html"|unit-2-test|اختبار الوحدة الثانية/);
+  assert.doesNotMatch(home, /href="\.\/lesson-3\.html"/);
+  assert.match(home, /unit-2-test\.html/);
 });
 
 test('standalone Student Area has the correct Unit 1 identity, page references, KaTeX, and no teacher import', async () => {
@@ -187,11 +188,12 @@ test('Unit Questions remain distinct from Unit 1 Test, lessons, and the Appendix
   assert.match(home, /اختبار الوحدة الأولى/);
   assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 5);
   assert.match(home, /href="\.\/unit2-lesson-3-test\.html"/);
-  assert.doesNotMatch(home + lesson2 + testPage, /اختبار الوحدة الثانية|Unit 2 Test|unit-2-test|قريباً|قريبًا/);
+  assert.doesNotMatch(lesson2 + testPage, /اختبار الوحدة الثانية|Unit 2 Test|unit-2-test|قريباً|قريبًا/);
+  assert.match(home, /unit-2-test\.html/);
   assert.match(build, /resolve\(projectDirectory, 'unit-questions\.html'\)/);
   assert.match(build, /resolve\(projectDirectory, 'unit-questions-teacher\.html'\)/);
   assert.match(build, /resolve\(projectDirectory, 'unit2-lesson-3-test\.html'\)/);
-  assert.doesNotMatch(build, /unit-2-test/);
+  assert.match(build, /unit-2-test/);
 });
 
 test('static build configuration copies both Unit Questions entries and shared source modules', async () => {

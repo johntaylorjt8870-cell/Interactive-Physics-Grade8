@@ -14,7 +14,7 @@ test('Course Home keeps the single Lesson 1 appendix entry while publishing the 
   assert.match(home, /<section class="appendices-home-entry"[^]*aria-labelledby="appendices-home-heading"/);
   assert.match(home, /<h2 id="appendices-home-heading">ملحقات الدروس<\/h2>/);
   assert.match(home, /href="\.\/appendices\.html"/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 6);
   assert.match(home, /id="available-lessons"/);
   assert.match(home, /href="\.\/lesson-2\.html"/);
   assert.match(home, /href="\.\/unit2-lesson-3\.html"/);

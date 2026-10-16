@@ -41,7 +41,7 @@ function expectedLetters() {
   return Array.from({ length: 20 }, (_, index) => `u2l3q${String(index + 1).padStart(2, '0')}`);
 }
 
-test('Unit 2 Lesson 3 has audited pp97–106 entries, correct course order, and no Unit 2 test', async () => {
+test('Unit 2 Lesson 3 has audited pp97–106 entries, correct course order, and completed Unit 2 test', async () => {
   assert.deepEqual(UNIT2L3_META.sourcePages, [97, 98, 99, 100, 101, 102, 103, 104, 105, 106]);
   assert.equal(UNIT2L3_META.title, 'فرق الكمون الكهربائي');
   assert.equal(UNIT2L3_META.pages, '97–106');
@@ -72,8 +72,8 @@ test('Unit 2 Lesson 3 has audited pp97–106 entries, correct course order, and 
   assert.deepEqual([...unitTwoPanel.matchAll(/href="\.\/unit2-lesson-([123])\.html"/g)].map((match) => Number(match[1])), [1, 2, 3]);
   assert.ok(unitTwoPanel.indexOf('unit2-lesson-2.html') < unitTwoPanel.indexOf('unit2-lesson-3.html'));
   assert.match(home, /href="\.\/unit2-lesson-3-test\.html"/);
-  assert.doesNotMatch(home, /اختبار الوحدة الثانية|Unit 2 Test|unit-2-test|unit2-test\.html/);
-  assert.doesNotMatch(build, /unit-2-test|unit2-test\.html/);
+  assert.match(home, /unit-2-test\.html/);
+  assert.match(build, /unit-2-test\.html/);
   for (const entry of ['unit2-lesson-3.html', 'unit2-lesson-3-teacher.html', 'unit2-lesson-3-test.html']) {
     assert.ok(build.includes(`'${entry}'`), `static build must copy ${entry}`);
   }

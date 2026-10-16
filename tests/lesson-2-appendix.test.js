@@ -515,7 +515,7 @@ test('the published Lesson 1 appendix and Lesson 2 remain intact when Unit 2 Les
      the Unit 2 Lesson 2 current journey and the Unit 2 Lesson 3 voltage bench */
   assert.equal((library.match(/class="appendix-library-card"/g) ?? []).length, 5);
 
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 6);
   assert.match(home, /href="\.\/unit2-lesson-3\.html"/);
   assert.match(home, /<section class="appendices-home-entry"[^]*?href="\.\/appendices\.html"/);
   assert.equal((home.match(/lesson-2-appendix/g) ?? []).length, 0, 'Course Home reaches both appendices through the library');

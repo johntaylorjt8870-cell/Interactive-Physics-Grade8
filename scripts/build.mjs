@@ -34,6 +34,9 @@ await cp(resolve(projectDirectory, 'unit2-lesson-3.html'), resolve(outputDirecto
 await cp(resolve(projectDirectory, 'unit2-lesson-3-appendix.html'), resolve(outputDirectory, 'unit2-lesson-3-appendix.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-3-teacher.html'), resolve(outputDirectory, 'unit2-lesson-3-teacher.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-3-test.html'), resolve(outputDirectory, 'unit2-lesson-3-test.html'));
+for (const entry of ['unit2-lesson-4.html', 'unit2-lesson-4-teacher.html', 'unit-2-test.html']) {
+  await cp(resolve(projectDirectory, entry), resolve(outputDirectory, entry));
+}
 await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), { recursive: true });
 await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
 

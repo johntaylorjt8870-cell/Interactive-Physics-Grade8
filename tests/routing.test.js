@@ -15,7 +15,7 @@ test('the platform root is the course home and Lesson 1 has its own stable entry
   assert.match(home, /القوى المتلاقية/);
   assert.match(home, /القوى المتوازية/);
   assert.match(home, /الوحدة الأولى/);
-  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 5);
+  assert.equal((home.match(/class="lesson-entry"/g) ?? []).length, 6);
   assert.match(home, /href="\.\/lesson-2\.html"/);
   assert.match(home, /href="\.\/unit2-lesson-3\.html"/);
   assert.doesNotMatch(home, /href="\.\/lesson-3\.html"|id="page-content"|src="\.\/src\/main\.js"|LESSON_PAGES/);
