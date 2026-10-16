@@ -423,3 +423,65 @@
 @media (prefers-reduced-motion: reduce) {
   .appendices-entry-action, .appendix-start-action { transition-duration: 0.01ms; }
 }
+
+/* The library also lists the Unit 2 Lesson 1 appendix («مختبر الشحنات»).
+   Its card art keeps the library's card rhythm but previews that appendix's own
+   night storm-lab identity: a dark field panel, an amber + orb, a cyan − orb,
+   dashed field lines between them, and the paper bits of the opening puzzle.
+   Purely additive — no rule above is modified, so the two existing appendix
+   cards render exactly as before. */
+
+.appendix-card-art-charges {
+  background:
+    radial-gradient(circle at 28% 38%, rgba(246, 169, 74, 0.26), transparent 42%),
+    radial-gradient(circle at 74% 62%, rgba(88, 205, 242, 0.24), transparent 44%),
+    linear-gradient(150deg, #101c31, #0a1120 58%, #060b16);
+}
+.appendix-card-art-charges::before, .appendix-card-art-charges::after { content: none; }
+.appendix-art-field {
+  position: absolute;
+  top: 50%;
+  inset-inline-start: 24%;
+  width: 52%;
+  height: 0;
+  border-top: 2px dashed rgba(146, 178, 224, 0.4);
+  transform-origin: 0 50%;
+}
+.appendix-art-field-one { transform: translateY(-50%) rotate(-9deg); }
+.appendix-art-field-two { transform: translateY(-50%) rotate(0deg); border-top-color: rgba(88, 205, 242, 0.5); }
+.appendix-art-field-three { transform: translateY(-50%) rotate(9deg); }
+.appendix-art-charge {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  font: 700 26px var(--home-font-latin);
+}
+.appendix-art-charge-positive {
+  top: 28%;
+  inset-inline-start: 15%;
+  color: #2a1a05;
+  background: radial-gradient(circle at 34% 30%, #ffd79a, #f6a94a);
+  box-shadow: 0 0 26px rgba(246, 169, 74, 0.4);
+}
+.appendix-art-charge-negative {
+  top: 52%;
+  inset-inline-end: 15%;
+  color: #04202b;
+  background: radial-gradient(circle at 34% 30%, #cdf1ff, #58cdf2);
+  box-shadow: 0 0 26px rgba(88, 205, 242, 0.4);
+}
+.appendix-art-bit {
+  position: absolute;
+  bottom: 15%;
+  width: 26px;
+  height: 16px;
+  background: #f3ede1;
+  border-radius: 3px;
+  box-shadow: 0 6px 14px rgba(4, 9, 18, 0.5);
+}
+.appendix-art-bit-one { inset-inline-start: 30%; transform: rotate(-8deg); }
+.appendix-art-bit-two { inset-inline-start: 46%; bottom: 21%; transform: rotate(5deg); }
+.appendix-art-bit-three { inset-inline-start: 62%; transform: rotate(-3deg); }

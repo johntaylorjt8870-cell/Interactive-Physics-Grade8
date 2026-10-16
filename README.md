@@ -41,6 +41,7 @@ Then open:
 - Unit 2 Lesson 3 — Potential Difference: http://127.0.0.1:4173/unit2-lesson-3.html
 - Unit 2 Lesson 3 Teacher Area: http://127.0.0.1:4173/unit2-lesson-3-teacher.html
 - Unit 2 Lesson 3 Test: http://127.0.0.1:4173/unit2-lesson-3-test.html
+- Unit 2 Lesson 1 Appendix — Static Electricity: http://127.0.0.1:4173/unit2-lesson-1-appendix.html
 - Unit 1 Questions: http://127.0.0.1:4173/unit-questions.html
 - Unit 1 Questions Teacher Area: http://127.0.0.1:4173/unit-questions-teacher.html
 - Lesson Test: http://127.0.0.1:4173/lesson-test.html
@@ -57,6 +58,7 @@ appendices.html             Published appendices library
 lesson-1-appendix.html      Standalone Lesson 1 interactive appendix
 lesson-2.html               Published Lesson 2 student page (preserved)
 lesson-2-appendix.html      Standalone Lesson 2 interactive appendix (parallel forces)
+unit2-lesson-1-appendix.html Standalone Unit 2 Lesson 1 appendix (static electricity)
 unit2-lesson-3.html          Published Unit 2 Lesson 3 student page (pp97–106)
 unit2-lesson-3-teacher.html  Password-gated Lesson 3 Teacher Area
 unit2-lesson-3-test.html     Independent 20-question Lesson 3 test
@@ -94,6 +96,11 @@ src/
   lesson-2-appendix-content.js Authored «من الكتاب» / «شرح المنصة» content, presets and challenges
   lesson-2-appendix.js      Parallel-forces lab, SVG scene, controls and interactions
   lesson-2-appendix.css     Isolated responsive lab design for the parallel-forces lab
+  unit2-lesson1-appendix-physics.js Charge, electrification, force-direction and Coulomb model for the appendix
+  unit2-lesson1-appendix-flow.js Station flow, hash routing and explicit-submit quiz state
+  unit2-lesson1-appendix-content.js Authored «من الكتاب» / «شرح المنصة» / labelled enrichment content
+  unit2-lesson1-appendix.js Seven-station lab, SVG scenes, controls and interactions
+  unit2-lesson1-appendix.css Isolated dark storm-lab design for the charges appendix
   unit-questions-content.js Source text, page audit, and platform-only hints for pp71–72
   unit-questions-teacher-content.js Lazily loaded worked solutions and teacher diagrams
   unit-questions.js         Student Area mount for the standalone review
@@ -117,6 +124,7 @@ tests/
   unit2-lesson3.test.js     Lesson 3 source coverage, calculations, diagrams, auth and assessment checks
   appendices.test.js        Navigation, practice flow, direct-page and preservation checks
   appendix-physics.test.js  Resultant, force editing, presets, challenge and motion tests
+  unit2-lesson1-appendix.test.js Station flow, charge/electrification/Coulomb physics, source labelling and scope checks
 vendor/
   katex/                    KaTeX 0.16 (ES module + trimmed CSS + woff2 math fonts)
   fonts/                    IBM Plex Sans Arabic + Manrope woff2 subsets
@@ -151,7 +159,7 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 - `unit2-lesson-3.html` links to the Lesson 2 predecessor, the course home, its separate teacher gate and its independent lesson test; there is no Unit 2 test entry.
 - `unit-questions.html` is a separate Unit 1 review for textbook pages 71–72, linked from the Unit 1 panel and Lesson 2; it is not part of the lesson list and is not the Unit 1 Test.
 - `unit-questions-teacher.html` is the review's separate, password-gated Teacher Area. It reuses the existing verifier and lazy-loads its solutions only after authorization.
-- The appendices library is `appendices.html`; its two entries link to `lesson-1-appendix.html` and `lesson-2-appendix.html`.
+- The appendices library is `appendices.html`; its three entries link to `lesson-1-appendix.html`, `lesson-2-appendix.html` and `unit2-lesson-1-appendix.html`.
 - Every appendix page is a static direct URL with ordinary relative links, so refresh does not depend on a client-side router.
 - The unit and lesson list keeps only the published lessons; no future appendix cards or placeholders are shown.
 
@@ -164,6 +172,8 @@ The lab uses a fixed educational mass of 2 kg and `a = F_R / m`. Motion has no d
 All of this material is labelled as a platform extension. It is practice/exploration, not textbook wording or part of the official Lesson Test.
 
 The Lesson 2 Appendix («ملحق الدرس الثاني — القوى المتوازية») follows the same architecture for pages 63–70. Its lab puts two parallel forces on a horizontal rod and lets the student change `F_{1}`, `F_{2}` and both carrier positions in the same-sense and opposite-sense cases. `src/lesson-2-appendix-physics.js` owns the model (slider clamping, the resultant's intensity, sense, carrier position and the moment products) and delegates both textbook cases to the published Lesson 2 model in `src/lesson-2-physics.js`; the platform-only derivation of the carrier position is labelled «شرح المنصة», while the quoted relations stay labelled «من الكتاب». Equal-and-opposite forces are shown as a zero resultant with no single carrier, drawn as a rotational effect instead of an arrow. The four exploratory challenges are verified reachable on the real slider grid by the test suite and are checked only when the student asks; the scene keeps a `prefers-reduced-motion` path and carries the «نموذج تعليمي مبسّط — Educational simplified model» label.
+
+The Unit 2 Lesson 1 Appendix («مختبر الشحنات — اكتشف الكهرباء الساكنة») is an independent enrichment appendix for the static-electricity lesson (textbook pages 73–86). It is not a lesson page and does not duplicate the lesson's own `coulomb-lab` or `electroscope-lab` simulations: it is a seven-station discovery path (paper-bits puzzle → charge ledger → electrification workshop → attraction/repulsion arena → Coulomb challenge → detective challenge → concept map) with its own dark storm-lab identity in `src/unit2-lesson1-appendix.css`. `src/unit2-lesson1-appendix-physics.js` owns the pure model — symbolic electron accounting with fixed protons, `q = n·e`, the three electrification methods and their comparison, force direction versus magnitude, and `F = K|q₁q₂|/d²` computed with the published lesson constant imported from `src/unit2-lesson1-physics.js`. `src/unit2-lesson1-appendix-flow.js` owns station navigation, hash routing and the explicit-submit-only quiz state, so no answer is revealed before an attempt and a retry carries no penalty. Book conclusions are quoted as «من الكتاب» with their printed page, the platform's own wording is «شرح المنصة», anything beyond the printed page is «إثراء علمي من المنصة», and every scene carries the «نموذج تعليمي مبسّط — Educational simplified model» label with its limits stated.
 
 ## Student experience
 
@@ -216,4 +226,4 @@ npm test          # source fidelity, course navigation, physics, simulations, te
 npm run build     # static build into dist/ (all HTML entries + src + vendor)
 ```
 
-`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and two appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
+`npm run build` creates `dist/` with the Course Home, Lessons 1 and 2, Unit 2 Lesson 3 student/teacher/test pages, the standalone Unit 1 Questions student and teacher pages, the appendices library and three appendices, existing lesson tests and teacher pages, the Unit 1 Test, `src/`, and the vendored `vendor/` tree; serve `dist/` the same way as the project root.
