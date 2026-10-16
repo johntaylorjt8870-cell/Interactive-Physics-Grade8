@@ -90,7 +90,8 @@ Every interactive station renders a «حدود هذا النموذج» card, and
 
 - New identity, not a recolour of the Unit 1 appendices: dark "storm lab" palette (`--bg: #0a1120`, charged amber/cyan accents), own typography scale, own card/scene components, all class names prefixed `u2l1a-`, own stylesheet only — the page does **not** load `src/styles.css`, so the light lesson theme cannot leak in.
 - Arabic prose is RTL; every equation, number, unit and symbol is an LTR-isolated island (`<bdi dir="ltr">`, `ltrText`, `qty`, `tex`, `formula`) rendered by the shared KaTeX layer `src/math.js` with real exponents and fractions (`F=K\frac{q_{1}q_{2}}{d^{2}}`, `9\times 10^{9}~\mathrm{N\cdot m^{2}\cdot C^{-2}}`).
-- 8 `aria-live` regions announce state changes in words; all 5 `role="img"` SVG scenes have accessible titles/descriptions; keyboard-operable controls with visible focus and understandable labels; `prefers-reduced-motion` removes motion in both CSS and JS; four responsive breakpoints (1080 / 860 / 680 / 420 px) plus a print block; `overflow-x: clip` on the shell and `max-inline-size: 100%` on scene canvases prevent unintended horizontal scroll.
+- 8 `aria-live` regions announce state changes in words; all 5 `role="img"` SVG scenes have accessible titles/descriptions; keyboard-operable controls with a 3 px visible `:focus-visible` outline and understandable labels; `prefers-reduced-motion` removes motion in both CSS and JS; four responsive breakpoints (1080 / 860 / 680 / 420 px) plus a print block; `overflow-x: clip` on the shell and `max-inline-size: 100%` on scene canvases prevent unintended horizontal scroll.
+- Measured, not assumed: every colour pair passes WCAG AA (lowest 4.94:1) and every pressable control has a 44 px minimum target with a 24 px slider thumb — the numbers and the two CSS fixes they caused are in §11.
 - `<noscript>` explains that the appendix needs JavaScript; the page works over HTTP with ordinary relative links (no client-side router).
 
 ## 8. Files added
@@ -139,23 +140,66 @@ The 30 new tests cover: page structure and RTL/LTR isolation; the CSS identity, 
 jsdom is **not** a dependency of this repository and none was added, so the DOM-level run lives outside the repo (`/home/user/.cache/domcheck/smoke.mjs`, jsdom installed there only):
 
 ```
-126/126 DOM checks passed — 0 JavaScript errors, 0 unhandled KaTeX ParseError
+61/61 DOM checks passed — 0 JavaScript errors, 0 unhandled KaTeX ParseError
 ```
 
-It mounts the real page + real modules and exercises: rail/progress/prev-next disabling, PageUp/PageDown, `#station-coulomb` routing, all seven stations end to end (predict → run → observation/explanation → reset; ledger transfers with protons fixed; example/exercise reveals; method tabs, ordered-step gating, comparison table; arena reveal «تجاذب» / flip «تنافر» with unequal radii and equal arrows; Coulomb `0.9 → 1.8 → 0.45 N`, sign flip keeping the magnitude, book state setting the sliders to 50/80/100, probe gating and applying, beyond-range warning; detective submit-without-selection revealing nothing, retry clearing without penalty, seven review buttons navigating; summary nodes and «ص80»), plus no raw TeX leaking into visible text, ≥6 live regions, every `role="img"` SVG labelled, and both «نموذج تعليمي مبسّط» and «Platform Extension» present.
+The first harness built during development ran 126 checks and passed 126/126. The sandbox discards everything outside the repository when the workspace is restored, so that harness was lost; it was rebuilt — smaller, but covering the same paths — and **re-run against the final code**, including the touch-target CSS change below.
 
-Served over HTTP (`npm start`, port 4173, `--bind 0.0.0.0`), every requested asset returns `200` with the correct MIME type (`text/html`, `text/css`, `text/javascript`): the page, `appendices.html`, the five appendix modules, `src/fonts.css`, `vendor/katex/katex.min.css`, `src/math.js`, `src/unit2-lesson1-physics.js`.
+It mounts the real page and the real modules (no mocks) and exercises: the seven panels with exactly one visible, the rail chips and `aria-current`, the bounded progressbar, prev/next disabling at both ends, PageUp/PageDown, `#station-coulomb` hash routing and visited/discovery marking; station 1 (nothing revealed before an attempt, approach without a prediction reveals nothing, predict → rub → approach lifts the bits, minus marks and «سالبة» status after rubbing, caption counting the lifted bits, observation and explanation kept apart, reset clearing all of it); station 2 (neutral start, transfer making one body negative and the other positive while the system total is unchanged, the proton note, example and exercise step reveals, reset); station 3 (three tabs, tab switching, «بالترتيب» gating, the model-computed comparison table); station 4 (two opposite equal arrows, sign buttons flipping تجاذب ↔ تنافر, the flip button reversing one body only, unequal radii with unchanged arrow lengths, prediction required before the reveal); station 5 (`0.9 N` repulsion at the published initial state, doubling `q₁` → `1.8 N`, doubling `d` → quartered, a sign flip changing the kind but never the magnitude, the book example loading 50/80/100 → `36 N`, probes revealing no verdict before a prediction and then grading a wrong and a right ratio **computed from the model**, apply moving the sliders and refusing to leave the slider grid, reset, and the beyond-range warning at `{80, 80, 20}`); station 6 (seven situations, submit-without-selection showing a prompt with `verdict="pending"` and no correctness wording, an answered submit showing an explained verdict and enabling retry, progress counting solved situations, retry clearing without penalty, a review button jumping back to its station); station 7 (five expandable concept nodes, a node linking back to its station, eight key ideas plus the six objectives, restart returning to station 1). It also asserts no raw TeX in the visible text, ≥6 `aria-live` regions, every `role="img"` SVG labelled, `dir="rtl"`/`lang="ar"`, that the page loads only its own three stylesheets (never `src/styles.css`), and that both «نموذج تعليمي مبسّط» and «Platform Extension» are present.
 
-## 11. Visual check — NOT performed
+Served over HTTP (`npm start`, port 4173, `--bind 0.0.0.0`), every requested asset returns `200` with the correct MIME type (`text/html`, `text/css`, `text/javascript`): the page, `appendices.html`, the five appendix modules, `src/fonts.css`, `vendor/katex/katex.min.css`, `src/math.js`, `src/unit2-lesson1-physics.js` — and every `href`/`src` in the page resolves (no broken link, no missing module).
 
-There is **no browser or GUI in this environment**, so no real visual check was possible. Specifically **not** verified: pixel rendering, font loading/fallback, measured contrast ratios, real touch behaviour on a phone, and the actual appearance at mobile widths.
+## 11. Visual check — no browser available; measured substitutes performed
 
-What was done instead, and its limits: a real-DOM interaction run (jsdom, §10) that verifies structure, attributes, wiring and text output but **not** layout or paint; static CSS analysis for breakpoints, overflow containment and reduced motion; and HTTP/MIME verification of every asset. **A visual check on desktop and on a phone should still be performed before merging** — the live preview served from this workspace (port 4173) can be used for it: `/appendices.html` → «ابدأ الملحق» → `/unit2-lesson-1-appendix.html`.
+There is **no browser or GUI in this environment**, so no real visual check was possible. Not verified: pixel rendering, font loading and fallback, real touch behaviour on a phone, and the actual appearance at mobile widths.
+
+What was done instead is computed from the shipped CSS rather than eyeballed.
+
+### Colour contrast — WCAG 2.1 AA, 21 of 21 pairs pass
+
+The panel, quote and verdict backgrounds are `rgba()` layers over a gradient page, so every pair was composited over both the darkest base (`--bg #0a1120`) and the lighter raised base (`--bg-raise #101c31`), and the **worst** case is reported:
+
+| foreground on background | worst ratio | AA 4.5:1 |
+|---|---|---|
+| body text `--ink #e8f0fc` on page | 14.85 | pass |
+| headings `--ink-strong #ffffff` on page / on panel | 17.04 / 15.15 | pass |
+| secondary `--muted #a9bad6` on page / on panel | 8.67 / 7.71 | pass |
+| caption `--faint #8494b0` on page / on panel | 5.55 / **4.94** | pass |
+| accent `--spark #58cdf2` on page / on panel | 9.27 / 8.25 | pass |
+| `+` charge `--positive #f6a94a` on page | 8.68 | pass |
+| `−` charge `--negative #58cdf2` on page | 9.27 | pass |
+| book quote `--book #f2d9a4` on `--book-soft` panel | 8.57 | pass |
+| platform text `--platform #9fe6d8` on `--platform-soft` panel | 8.34 | pass |
+| verdict `--correct #6fd79c` / `--wrong #ff9d84` on their soft panels | 6.29 / 5.75 | pass |
+| primary button label `#04141d` on `--spark` / on gradient end `#3d9fd6` | 10.18 / 6.35 | pass |
+| visited chip index `#2a1a05` on `--positive` | 8.57 | pass |
+| pressed sign buttons on their soft backgrounds (`+` / `−`) | 5.66 / 5.79 | pass |
+| hero note `--muted` on `rgba(10,17,32,.7)` | 9.35 | pass |
+
+Lowest measured ratio: **4.94:1** (the small `--faint` caption on a raised panel) — above the 4.5:1 AA threshold for normal text. Colour is never the only carrier of meaning: pressed states also set `aria-pressed`, the current station sets `aria-current="step"`, and verdicts add «صحيح/غير صحيح» wording and icons.
+
+### Touch targets — two fixes applied as a result of this audit
+
+A `<button>` does not inherit the page `line-height`, so measuring the declared padding, font size and line box showed several controls at 35–42 px tall. Fixed in the appendix's **own** stylesheet (no shared CSS touched), additively:
+
+- `.u2l1a-page button { line-height: 1.5; }` so a button's label box matches the surrounding Arabic prose;
+- a `min-block-size: 44px` floor on all 14 pressable classes the markup actually uses — `.u2l1a-action`, `.u2l1a-primary-action`, `.u2l1a-secondary-action`, `.u2l1a-control-button`, `.u2l1a-station-chip`, `.u2l1a-step-button`, `.u2l1a-tab`, `.u2l1a-sign-button`, `.u2l1a-concept-node`, `.u2l1a-table-method`, `.u2l1a-choice`, `.u2l1a-toggle`, `.u2l1a-hero-note`, `.u2l1a-brand` (plus `vertical-align: middle` for the in-table header button);
+- the range thumb is now 24 × 24 px in **both** engines (`::-moz-range-thumb` was 22 px, `::-webkit-slider-thumb` already 24 px) inside a 26 px track, meeting the 24 px minimum target size.
+
+`npm test` (209/209), `npm run build` and the DOM run (61/61, 0 JS errors) were all re-executed after these CSS edits.
+
+### Layout guards read from the CSS
+
+`overflow-x: clip` on `.u2l1a-shell`; inner `overflow-x: auto` on the station rail and on `.u2l1a-table-scroll` so wide content scrolls inside its own container instead of the page; seven `min-width: 0` declarations on grid children; `.u2l1a-scene-canvas svg { inline-size: 100%; block-size: auto; max-inline-size: 100% }`; four breakpoints (1080 / 860 / 680 / 420 px); a print block; a global `prefers-reduced-motion: reduce` collapse of every animation and transition; and a 3 px `--spark` `:focus-visible` outline with a 3 px offset for all controls.
+
+### Still required before merging
+
+A real look at the page on a phone and on a desktop — font loading, actual line wrapping, spacing and touch feel. The live preview served from this workspace (port 4173) can be used for it: `/appendices.html` → «ابدأ الملحق» → `/unit2-lesson-1-appendix.html`.
 
 ## 12. Unresolved constraints and issues
 
-1. **No browser check** (see §11) — the only outstanding verification item; layout, fonts and contrast are unconfirmed in a real renderer.
-2. **jsdom harness lives outside the repository** — the DOM checks are not part of `npm test`, because adding a dev dependency would change `package.json` (out of scope: no dependency updates). Re-running them requires a jsdom install outside the repo.
+1. **No browser check** (see §11) — the only outstanding verification item. Contrast and touch targets were computed from the CSS (21/21 pairs pass AA; a 44 px floor and a 24 px slider thumb were added as a result), but layout, fonts and the real feel on a phone are unconfirmed in a renderer.
+2. **jsdom harness lives outside the repository** — the DOM checks are not part of `npm test`, because adding a dev dependency would change `package.json` (out of scope: no dependency updates). Re-running them requires a jsdom install outside the repo, and the harness is lost whenever the sandbox is restored (it has already been rebuilt once).
 3. **Unit numbering discrepancy** — printed p73 says «الوحدة الثالثة»; the platform says «الوحدة الثانية». The appendix follows the user's numbering and attributes nothing about numbering to the book (consistent with the existing source audit).
 4. **Halving the distance leaves the slider grid** — `d = 25 cm` is not representable on a 10 cm grid, so the probe reports `outsideGrid: true` and says the value was rounded, instead of silently snapping. This is intentional and visible to the student.
 5. **Beyond-range forces are flagged, not hidden** — `{80 μC, 80 μC, 20 cm}` yields `1440 N`, above `MODEL_FORCE_LIMIT_N = 500 N`; the lab shows the number *and* a warning that real discharge would occur first, rather than clamping the physics.

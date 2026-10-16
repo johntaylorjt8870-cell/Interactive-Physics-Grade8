@@ -1271,7 +1271,7 @@
 }
 
 .u2l1a-slider::-webkit-slider-thumb { block-size: 24px; inline-size: 24px; }
-.u2l1a-slider::-moz-range-thumb { block-size: 22px; inline-size: 22px; border-radius: 50%; }
+.u2l1a-slider::-moz-range-thumb { block-size: 24px; inline-size: 24px; border-radius: 50%; }
 
 .u2l1a-slider-ends { display: flex; justify-content: space-between; color: var(--faint); font-size: 0.78rem; }
 .u2l1a-slider-note { margin: 6px 0 0; color: var(--muted); font-size: 0.84rem; }
@@ -1559,6 +1559,31 @@
 }
 
 .u2l1a-page :focus:not(:focus-visible) { outline: none; }
+
+/* ---------------------------------------------------------- touch targets */
+
+/* A <button> does not inherit the page's line-height, so its label box is set
+   explicitly; then every pressable control keeps a 44 px tall target. The
+   appendix is meant to be driven with a thumb on a phone, not only a pointer,
+   and the range thumb is 24 px in both engines for the same reason. */
+.u2l1a-page button { line-height: 1.5; }
+
+.u2l1a-action,
+.u2l1a-primary-action,
+.u2l1a-secondary-action,
+.u2l1a-control-button,
+.u2l1a-station-chip,
+.u2l1a-step-button,
+.u2l1a-tab,
+.u2l1a-sign-button,
+.u2l1a-concept-node,
+.u2l1a-table-method,
+.u2l1a-choice,
+.u2l1a-toggle,
+.u2l1a-hero-note,
+.u2l1a-brand { min-block-size: 44px; }
+
+.u2l1a-table-method { vertical-align: middle; }
 
 /* ------------------------------------------------------------- responsive */
 
