@@ -6,6 +6,7 @@ export function mountTeacherArea({
   submitButton,
   verifyPassword,
   loadContent,
+  passPasswordToContent = false,
 }) {
   const required = [form, passwordInput, feedback, workspace, submitButton, verifyPassword, loadContent];
   if (required.some((item) => !item)) {
@@ -13,6 +14,10 @@ export function mountTeacherArea({
   }
 
   workspace.hidden = true;
+  if (passPasswordToContent) {
+    const contentLoader = loadContent;
+    loadContent = () => contentLoader(passwordInput.value);
+  }
   let pending = false;
 
   const logout = () => {
@@ -38,7 +43,8 @@ export function mountTeacherArea({
     feedback.hidden = true;
 
     try {
-      const authorized = await verifyPassword(passwordInput.value);
+      const candidatePassword = passwordInput.value;
+      const authorized = await verifyPassword(candidatePassword);
       if (!authorized) {
         feedback.textContent = 'كلمة المرور غير صحيحة؛ حاول مرة أخرى.';
         feedback.hidden = false;
