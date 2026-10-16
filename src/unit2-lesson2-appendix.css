@@ -627,6 +627,7 @@
 .u2l2a-lab > .u2l2a-card,
 .u2l2a-lab > .u2l2a-result-pair,
 .u2l2a-lab > .u2l2a-legend,
+.u2l2a-lab > .u2l2a-legend-note,
 .u2l2a-lab > .u2l2a-relation-forms,
 .u2l2a-lab > .u2l2a-symbol-table-wrap,
 .u2l2a-lab > .u2l2a-calculator,
@@ -728,9 +729,24 @@
   stroke-width: 2;
   transition: opacity 0.2s ease;
 }
+/* The one-word name painted beside each arrow: same word as the legend uses,
+   with a paper-coloured halo so it stays readable wherever it lands. */
+.u2l2a-scene-svg .u2l2a-arrow-caption {
+  font-size: 13.5px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+.u2l2a-scene-svg .u2l2a-arrow-caption[data-flow='current'] { fill: var(--copper); }
+.u2l2a-scene-svg .u2l2a-arrow-caption[data-flow='electron'] { fill: var(--flux); }
 .u2l2a-scene-svg .u2l2a-arrow-current { fill: var(--copper-bright); stroke: #7c3710; stroke-width: 1.5; }
 .u2l2a-scene-svg .u2l2a-arrow-electron { fill: var(--flux-bright); stroke: #08434b; stroke-width: 1.5; }
 .u2l2a-scene-svg .u2l2a-arrow-outside { opacity: 0.96; }
+/* the one arrow drawn over the battery body carries a paper outline, so it stays
+   clearly separated from the cell fill and from the terminal signs beside it */
+.u2l2a-scene-svg .u2l2a-arrow-inside { stroke: var(--paper); stroke-width: 2.5; paint-order: stroke; }
 .u2l2a-scene-svg .u2l2a-energy-path {
   fill: none;
   stroke: var(--gold-bright);
@@ -871,6 +887,17 @@
 
 /* --- legend, cards and info blocks --------------------------------------- */
 
+/* One sentence above the legend that binds each word to its own arrow, so the
+   three ideas (current, electron drift, energy transfer) never read as one. */
+.u2l2a-legend-note {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--control-line);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.95rem;
+}
 .u2l2a-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .u2l2a-legend-row {
   display: grid;

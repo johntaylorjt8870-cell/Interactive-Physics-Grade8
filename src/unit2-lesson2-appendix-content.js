@@ -46,6 +46,42 @@ export const NOT_BOOK_LABEL = 'تحديات من إعداد المنصة · لي
 export const SCENE_LABEL = 'رسم إثرائي توضيحي — ليس نقلاً مؤكداً لشكل الكتاب';
 export const APPENDIX_HASH_PREFIX = '#station-';
 
+/* The words the shared circuit scene draws inside its SVG. They live here (not
+ * in the view) so the geometry audit can measure the very strings a browser
+ * paints, and so no caption can ever disagree with the legend. */
+export const SCENE_COPY = Object.freeze({
+  generatorTitle: 'المولّد، مصدر الطاقة الكهربائية',
+  terminalPositive: 'القطب الموجب',
+  terminalNegative: 'القطب السالب',
+  lampTitle: 'المصباح',
+  lampSubtitle: 'الجهاز الذي يعمل في الدارة',
+  lampTwoTitle: 'المصباح الثاني',
+  switchTitle: 'المفتاح',
+  switchSubtitle: 'يفتح الدارة ويغلقها',
+  wireLabel: 'أسلاك التوصيل',
+  energyLabel: 'الطاقة تنتقل إلى المصباح',
+  /* readable names for the wire segments, used inside the arrow tooltips */
+  segments: Object.freeze({
+    'top-left': 'القطعة العلوية اليسرى من السلك',
+    left: 'الفرع الأيسر من السلك',
+    bottom: 'الفرع السفلي من السلك',
+    right: 'الفرع الأيمن من السلك',
+    'top-right': 'القطعة العلوية اليمنى من السلك',
+    generator: 'داخل المولّد',
+  }),
+  /* the one arrow inside the generator names the conventional current only */
+  generatorInteriorTitle: 'التيّار الاصطلاحي داخل المولّد: من القطب السالب إلى القطب الموجب',
+  generatorInteriorCaption: 'داخل المولّد من السالب إلى الموجب',
+});
+
+/* The short caption that sits next to every drawn arrow. Each arrow carries
+ * exactly one word, and the legend maps that word to its own concept, so the
+ * two layers can never be read as the same thing. */
+export const ARROW_CAPTION_COPY = Object.freeze({
+  current: 'التيّار',
+  electron: 'الإلكترونات',
+});
+
 /** Inline source reference in the platform's established wording. */
 const ref = (page, note) => `<span class="u2l2a-ref"><bdi dir="ltr">Reference / See textbook — p${page}</bdi>${note ? ` · ${note}` : ''}</span>`;
 
@@ -423,7 +459,11 @@ export const ELECTRONS_DRIFT_NOTE = `
   <p>في هذا المشهد نُسرّع حركة الإلكترونات وانتقالها تسريعاً كبيراً لتراها بعينك؛ فالسرعة على الشاشة ليست قياساً فيزيائياً.</p>`;
 
 /** The readout can never claim that electrons are consumed. */
-export const ELECTRONS_CONSERVATION_NOTE = 'عدد الإلكترونات الحرّة يبقى ثابتاً قبل المصباح وبعده وفي كل أجزاء الدارة: المصباح يحوّل الطاقة لا الإلكترونات.';
+export const ELECTRONS_CONSERVATION_NOTE = 'عدد الإلكترونات الحرّة يبقى ثابتاً قبل المصباح وبعده وفي كل أجزاء الدارة: المصباح يحوّل الطاقة لا الإلكترونات. ولا تُرسم الإلكترونات داخل المولّد نفسه: النموذج يتتبّعها في الأسلاك المعدنية وحدها، ثم تعود إلى الظهور عند الطرف الآخر بالعدد نفسه.';
+
+/* Why the dots stop at the source: one short, honest sentence, printed next to
+ * the conservation note and inside the model's limits. */
+export const ELECTRONS_GENERATOR_NOTE = `لماذا لا نقاط داخل المولّد؟ لأن انتقال الشحنة داخل المصدر لا يجري كالانجراف في سلك معدني، ولم تحدّد صفحات الدرس جهة له. نكتفي بأن الطرف الموجب والطرف السالب يبقيان مختلفين فيمرّ التيّار، ونرسم مسار الإلكترونات في الأسلاك المعدنية خارج المولّد.`;
 
 export const ELECTRON_QUESTIONS = Object.freeze([
   Object.freeze({
@@ -490,12 +530,13 @@ export const ELECTRONS_MODEL_LIMITS = Object.freeze([
   'النموذج يمثّل الإلكترونات بنقاط متحرّكة على مسار الدارة، ولا يمثّل الذرّات ولا التصادمات داخل الشبكة البلورية.',
   'سرعات الحركة على الشاشة مُكبَّرة بشكل كبير لتبدو مرئية.',
   'النموذج لا يمثّل مقاومة ولا علاقة الجهد بالتيّار، بل يقتصر على معنى التيّار المتواصل وجهة حركة الإلكترونات.',
+  'النموذج لا يمثّل انتقال الشحنة داخل المولّد: لا تُرسم إلكترونات داخله ولا تُنسب إليها جهة هناك.',
 ]);
 
 /* ==================================================== station 3 · direction */
 
 export const DIRECTION_INTRO_HTML = `
-  <p>اصطلح العالم أمبير أن جهة التيّار الكهربائي خارج المولّد من القطب الموجب إلى القطب السالب، وذلك عكس جهة حركة الإلكترونات.</p>
+  <p>اصطلح العالم أمبير أن جهة التيّار الكهربائي خارج المولّد من القطب الموجب إلى القطب السالب، وذلك عكس جهة حركة الإلكترونات في السلك المعدني.</p>
   <p>${ref(89, '«اصطلاح» — الشكل المطبوع يحوي دارة وأسهم e مع جهة التيار.')}</p>
   <p>استخدم المفاتيح الثلاثة لإظهار كل جهة على حدة أو معاً، ثم أجب عن السؤالين.</p>`;
 
@@ -510,13 +551,13 @@ export const DIRECTION_LEGEND = Object.freeze([
     id: 'current',
     swatch: 'current',
     title: 'التيّار الاصطلاحي',
-    bodyHtml: `أسهم نحاسية: جهة التيّار ${S_I} خارج المولّد من الموجب (+) إلى السالب (−) — اصطلاح أمبير. ${ref(89)}`,
+    bodyHtml: `أسهم نحاسية مكتوب بجانب كل منها «${ARROW_CAPTION_COPY.current}»: جهة التيّار ${S_I} خارج المولّد من الموجب (+) إلى السالب (−) — اصطلاح أمبير. ${ref(89)}`,
   }),
   Object.freeze({
     id: 'electrons',
     swatch: 'electrons',
     title: 'انجراف الإلكترونات',
-    bodyHtml: `أسهم زرقاء تخضرّ: جهة انجراف الإلكترونات الحرّة ${S_ELECTRON} خارج المولّد من السالب (−) إلى الموجب (+) — عكس جهة التيّار. ${ref(88)}`,
+    bodyHtml: `أسهم زرقاء مكتوب بجانب كل منها «${ARROW_CAPTION_COPY.electron}»: جهة انجراف الإلكترونات الحرّة ${S_ELECTRON} خارج المولّد من السالب (−) إلى الموجب (+) — عكس جهة التيّار. ${ref(88)}`,
   }),
   Object.freeze({
     id: 'energy',
@@ -525,6 +566,10 @@ export const DIRECTION_LEGEND = Object.freeze([
     bodyHtml: `قوس ذهبي: الطاقة تنتقل من المولّد إلى الجهاز الذي يعمل في الدارة. ${ENRICHMENT_LABEL}: هذا سؤال مختلف عن جهة حركة الإلكترونات، فلا تستنتج أحدهما من الآخر.`,
   }),
 ]);
+
+/* Printed under the direction figure: one sentence that says which word belongs
+ * to which arrow, so colour is never the only key. */
+export const DIRECTION_LEGEND_NOTE = `كل سهم يحمل اسمه: «${ARROW_CAPTION_COPY.current}» على الأسهم النحاسية لجهة التيّار الاصطلاحية، و«${ARROW_CAPTION_COPY.electron}» على الأسهم الزرقاء لجهة انجراف الإلكترونات الحرّة، والقوس الذهبي وحده يمثّل انتقال الطاقة إلى الجهاز. والسهمان على القطعة نفسها من السلك متعاكسان دائماً خارج المولّد.`;
 
 export const DIRECTION_MIX_CARD = Object.freeze({
   title: 'ثلاثة أشياء لا تُخلط',
@@ -535,8 +580,17 @@ export const DIRECTION_MIX_CARD = Object.freeze({
   ]),
 });
 
+/*
+ * The one statement the appendix makes about the inside of the generator, and
+ * the one it refuses to make. The current is a closed circulation, so it must
+ * return from − to + inside the source; the *carriers* inside a source are not
+ * the free electrons of a metal wire, the audited lesson never states their
+ * direction, and no lesson objective needs it — so no electron arrow is drawn
+ * there and no direction is claimed for one.
+ */
 export const DIRECTION_INSIDE_NOTE = `
-  <p>${ENRICHMENT_LABEL}: هذا الاختلاف في الجهتين يشمل <em>خارج</em> المولّد. أما <em>داخل</em> المولّد فتسير الإلكترونات من القطب الموجب إلى القطب السالب، والتيّار الاصطلاحي من السالب إلى الموجب، وبهذا يبقى التيّار دورة واحدة مغلقة بلا نقطة انقطاع.</p>`;
+  <p>التيّار الكهربائي دورة واحدة مغلقة: خارج المولّد من القطب الموجب إلى القطب السالب، ويعود <em>داخل</em> المولّد من القطب السالب إلى القطب الموجب، فيُغلق المسار بلا نقطة انقطاع. السهم الوحيد المرسوم داخل المولّد يمثّل هذه العودة.</p>
+  <p>${ENRICHMENT_LABEL}: لا نرسم حركة الإلكترونات داخل المولّد ولا نحدّد لها جهة فيه، لأن انتقال الشحنة داخل المصدر يجري بآلية مختلفة عن الانجراف في السلك المعدني، وليس في أهداف هذا الدرس ولا في صفحاته (87–96) ما يحدّده. أمّا في الأسلاك المعدنية خارج المولّد فحركة الإلكترونات الحرّة موضّحة بأسهمها ومسماة باسمها.</p>`;
 
 export const DIRECTION_QUESTIONS = Object.freeze([
   Object.freeze({

@@ -52,10 +52,12 @@ export const CONVENTIONAL_FLOW = Object.freeze({
   'top-right': 'left',
 });
 
-/* The electron loop, listed in the direction the electrons move: they leave the
+/* The loop the drawn carriers follow, listed outside-first: they leave the
  * − terminal (right end of the generator), travel around the outside of the
- * circuit and return to the + terminal (left end), then pass through the
- * generator from + to − to close the loop. */
+ * circuit and return to the + terminal (left end). The last segment closes the
+ * loop across the generator's two terminals; the carriers are NOT drawn there
+ * (see GENERATOR_INTERIOR below), so the model never claims a charge-transport
+ * path inside the source. */
 export const LOOP_PATH = Object.freeze([
   Object.freeze({ x: CIRCUIT.generator.to, y: CIRCUIT.top }),
   Object.freeze({ x: CIRCUIT.right, y: CIRCUIT.top }),
@@ -93,40 +95,159 @@ export const ARROW_SPOTS = Object.freeze({
 });
 
 /**
- * The two directions of every segment, derived from one another. The electrons
- * always drift opposite to the conventional current outside the generator.
+ * The two directions of every *wire* segment, derived from one another. The
+ * electrons always drift opposite to the conventional current in the metal
+ * wires, and those five wire segments are the ones the appendix draws.
  *
- * Inside the generator the roles swap, and the *pair* flips with them: the +
- * terminal is its left end and the − terminal its right end, so the electrons
- * run from + to − (left → right, the direction the drift model advances) and
- * the conventional current from − to + (right → left). That is the same
- * "opposite to each other" relation, so the current stays one closed
- * circulation with no break at the generator.
+ * The generator interior is deliberately **neutral**: only the conventional
+ * current is stated there (it returns from the − terminal to the + terminal, so
+ * the current stays one closed circulation), while the electron entry is `null`
+ * and `modelled: false`. Charge transport inside a source is not the same
+ * process as drift in a metal wire, the audited lesson never states it, and no
+ * lesson objective needs it — so the appendix neither draws it nor claims a
+ * direction for it.
  */
 export function segmentDirections() {
   const outside = Object.fromEntries(Object.entries(CONVENTIONAL_FLOW).map(([segment, current]) => [
     segment,
-    Object.freeze({ segment, current, electron: OPPOSITE_DIRECTION[current] }),
+    Object.freeze({ segment, current, electron: OPPOSITE_DIRECTION[current], kind: 'wire', modelled: true }),
   ]));
   outside.generator = Object.freeze({
     segment: 'generator',
     current: CONVENTIONAL_FLOW['top-left'],
-    electron: OPPOSITE_DIRECTION[CONVENTIONAL_FLOW['top-left']],
+    electron: null,
+    kind: 'source-interior',
+    modelled: false,
   });
   return Object.freeze(outside);
 }
 
 export const SEGMENT_DIRECTIONS = segmentDirections();
 
-/** Every outside segment must show the two directions opposite to each other. */
+/**
+ * The five drawn wire segments, where the two directions must be opposite.
+ * `kind` separates them from the generator interior, whose electron column is
+ * `null` because the appendix does not model it.
+ */
 export function oppositeFlowReport() {
   return Object.freeze(Object.values(SEGMENT_DIRECTIONS).map((entry) => Object.freeze({
     segment: entry.segment,
+    kind: entry.kind,
     current: entry.current,
     electron: entry.electron,
-    opposite: entry.electron === OPPOSITE_DIRECTION[entry.current],
-    angleBetween: Math.abs(DIRECTION_ANGLE[entry.electron] - DIRECTION_ANGLE[entry.current]),
+    modelled: entry.modelled,
+    opposite: entry.modelled ? entry.electron === OPPOSITE_DIRECTION[entry.current] : null,
+    angleBetween: entry.modelled ? Math.abs(DIRECTION_ANGLE[entry.electron] - DIRECTION_ANGLE[entry.current]) : null,
   })));
+}
+
+/** The segments whose two drawn directions must be opposite (the five wires). */
+export const WIRE_SEGMENTS = Object.freeze(Object.keys(CONVENTIONAL_FLOW));
+
+/**
+ * The one arrow the appendix draws inside the generator: the conventional
+ * current returning from − to +. It sits inside the current layer, and its
+ * caption is plain text (never markup, because it lives inside the SVG).
+ */
+export const GENERATOR_INTERIOR = Object.freeze({
+  segment: 'generator',
+  kind: 'source-interior',
+  /* the conventional current returning − → + : the only arrow drawn in there */
+  arrow: Object.freeze({ x: 360, y: CIRCUIT.top, direction: CONVENTIONAL_FLOW['top-left'] }),
+  caption: Object.freeze({ x: 360, y: 66 }),
+  inside: Object.freeze({ x1: CIRCUIT.generator.from, y1: 82, x2: CIRCUIT.generator.to, y2: 126 }),
+  electronsModelled: false,
+});
+
+/**
+ * Where the short visible caption of every drawn arrow sits, in the same
+ * coordinates as the arrows themselves. Captions stay outside the loop, away
+ * from the part labels and clear of every other box; the geometry audit in
+ * `docs/unit-2-lesson-2-appendix-audit.md` measures them with the real font,
+ * and the test suite re-checks them with a conservative bound.
+ */
+export const ARROW_CAPTIONS = Object.freeze({
+  'top-left': Object.freeze({ current: Object.freeze({ x: 236, y: 56 }), electron: Object.freeze({ x: 196, y: 152 }) }),
+  'top-right': Object.freeze({ current: Object.freeze({ x: 484, y: 56 }), electron: Object.freeze({ x: 524, y: 152 }) }),
+  left: Object.freeze({ current: Object.freeze({ x: 60, y: 282 }), electron: Object.freeze({ x: 206, y: 282 }) }),
+  right: Object.freeze({ current: Object.freeze({ x: 662, y: 282 }), electron: Object.freeze({ x: 524, y: 282 }) }),
+  bottom: Object.freeze({ current: Object.freeze({ x: 434, y: 364 }), electron: Object.freeze({ x: 286, y: 324 }) }),
+});
+
+/**
+ * The anchors of every label the shared circuit scene draws. The view reads
+ * them from here (one source of truth with the geometry audit), and each entry
+ * names the CSS class that sets its font size and weight.
+ */
+export const SCENE_LABEL_ANCHORS = Object.freeze({
+  generatorTitle: Object.freeze({ x: 360, y: 30, className: 'u2l2a-part-label is-title' }),
+  terminalPositive: Object.freeze({ x: 310, y: 148, className: 'u2l2a-part-sub' }),
+  terminalNegative: Object.freeze({ x: 410, y: 148, className: 'u2l2a-part-sub' }),
+  lampTitle: Object.freeze({ x: 232, y: 216, className: 'u2l2a-part-label' }),
+  lampSubtitle: Object.freeze({ x: 232, y: 244, className: 'u2l2a-part-sub' }),
+  switchTitle: Object.freeze({ x: 520, y: 218, className: 'u2l2a-part-label' }),
+  switchSubtitle: Object.freeze({ x: 520, y: 242, className: 'u2l2a-part-sub' }),
+  lampTwoTitle: Object.freeze({ x: 300, y: 296, className: 'u2l2a-part-sub' }),
+  wireLabel: Object.freeze({ x: 560, y: 396, className: 'u2l2a-part-label' }),
+  energyLabel: Object.freeze({ x: 226, y: 186, className: 'u2l2a-energy-label' }),
+});
+
+/**
+ * Which labels each scene draws. The origin scene explains the parts, the
+ * electrons scene needs only the source and the two devices the carriers pass
+ * through, and the direction scene keeps the fewest named parts because its
+ * labels belong to the arrows — that is what makes the arrow captions legible
+ * (see §5.4 of docs/unit-2-lesson-2-appendix-audit.md).
+ */
+export const SCENE_LABEL_SETS = Object.freeze({
+  'origin-scene': Object.freeze(['generatorTitle', 'terminalPositive', 'terminalNegative', 'lampTitle', 'lampSubtitle', 'switchTitle', 'switchSubtitle', 'wireLabel', 'lampTwoTitle']),
+  'electrons-scene': Object.freeze(['generatorTitle', 'lampTitle', 'lampSubtitle', 'switchTitle', 'switchSubtitle', 'wireLabel']),
+  'direction-scene': Object.freeze(['generatorTitle', 'lampTitle', 'lampSubtitle', 'switchTitle', 'switchSubtitle']),
+});
+
+/** Solid parts of the scene, as boxes: captions and labels must clear them. */
+export const SCENE_SOLID_BOXES = Object.freeze({
+  generator: Object.freeze({ x1: CIRCUIT.generator.from, y1: 82, x2: CIRCUIT.generator.to, y2: 126 }),
+  lamp: Object.freeze({ x1: CIRCUIT.lamp.x - CIRCUIT.lamp.r, y1: CIRCUIT.lamp.y - CIRCUIT.lamp.r, x2: CIRCUIT.lamp.x + CIRCUIT.lamp.r, y2: CIRCUIT.lamp.y + CIRCUIT.lamp.r }),
+  lampTwo: Object.freeze({ x1: 274, y1: CIRCUIT.bottom - 26, x2: 326, y2: CIRCUIT.bottom + 26 }),
+  switch: Object.freeze({ x1: CIRCUIT.switch.x - CIRCUIT.switch.r, y1: CIRCUIT.switch.y - CIRCUIT.switch.r, x2: CIRCUIT.switch.x + CIRCUIT.switch.r, y2: CIRCUIT.switch.y + CIRCUIT.switch.r }),
+  positiveSign: Object.freeze({ x1: 317, y1: 94, x2: 333, y2: 109 }),
+  negativeSign: Object.freeze({ x1: 385, y1: 99, x2: 401, y2: 106 }),
+});
+
+/**
+ * The five drawn wire segments as boxes, so a caption can be checked against
+ * the wire it names.
+ */
+export const SCENE_WIRE_BOXES = Object.freeze({
+  top: Object.freeze({ x1: CIRCUIT.left, y1: CIRCUIT.top - 4, x2: CIRCUIT.right, y2: CIRCUIT.top + 4 }),
+  right: Object.freeze({ x1: CIRCUIT.right - 4, y1: CIRCUIT.top, x2: CIRCUIT.right + 4, y2: CIRCUIT.bottom }),
+  bottom: Object.freeze({ x1: CIRCUIT.left, y1: CIRCUIT.bottom - 4, x2: CIRCUIT.right, y2: CIRCUIT.bottom + 4 }),
+  left: Object.freeze({ x1: CIRCUIT.left - 4, y1: CIRCUIT.top, x2: CIRCUIT.left + 4, y2: CIRCUIT.bottom }),
+});
+
+export const boxesOverlap = (a, b) => a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
+
+/** Largest gap between two boxes: negative means they overlap. */
+export const boxGap = (a, b) => Math.max(a.x1 - b.x2, b.x1 - a.x2, a.y1 - b.y2, b.y1 - a.y2);
+
+/** Every arrow the direction station draws, with its segment and flow kind. */
+export function drawnArrows() {
+  const arrows = Object.entries(ARROW_SPOTS).flatMap(([segment, spots]) => ['current', 'electron'].map((kind) => Object.freeze({
+    segment, kind, caption: ARROW_CAPTIONS[segment][kind], ...ARROW_SPOTS[segment][kind],
+    direction: SEGMENT_DIRECTIONS[segment][kind], insideGenerator: false,
+  })));
+  arrows.push(Object.freeze({
+    segment: GENERATOR_INTERIOR.segment,
+    kind: 'current',
+    /* the interior arrow is captioned too — with the sentence from SCENE_COPY */
+    caption: GENERATOR_INTERIOR.caption,
+    x: GENERATOR_INTERIOR.arrow.x,
+    y: GENERATOR_INTERIOR.arrow.y,
+    direction: GENERATOR_INTERIOR.arrow.direction,
+    insideGenerator: true,
+  }));
+  return Object.freeze(arrows);
 }
 
 /** Position on the electron loop for an arc length s (wrapped into the loop). */
@@ -686,6 +807,13 @@ export function driftSummary(state) {
     electronsConserved: count,
   });
 }
+
+/**
+ * Whether a carrier is inside the generator. The appendix never draws a
+ * charge-transport path inside the source, so the view hides the dots there
+ * (the count is unchanged: `driftSummary` still reports every electron).
+ */
+export const insideGenerator = (point) => point.segmentId === 'generator';
 
 /** Screen coordinates of one electron, including its cross-wire offset. */
 export function electronPoint(electron) {

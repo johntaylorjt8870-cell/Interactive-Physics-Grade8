@@ -38,6 +38,7 @@ import {
   AMMETER_INTRO_HTML,
   AMMETER_MODEL_LIMITS,
   AMMETER_QUESTIONS,
+  ARROW_CAPTION_COPY,
   CALCULATOR_COPY,
   CHECKLIST_DONE_HTML,
   CHECKLIST_HEADING,
@@ -58,12 +59,14 @@ import {
   DIRECTION_INSIDE_NOTE,
   DIRECTION_INTRO_HTML,
   DIRECTION_LEGEND,
+  DIRECTION_LEGEND_NOTE,
   DIRECTION_MIX_CARD,
   DIRECTION_QUESTIONS,
   DIRECTION_TOGGLES,
   ELECTRONS_COMPARE,
   ELECTRONS_CONSERVATION_NOTE,
   ELECTRONS_DRIFT_NOTE,
+  ELECTRONS_GENERATOR_NOTE,
   ELECTRONS_INTRO_HTML,
   ELECTRONS_MODEL_LIMITS,
   ELECTRONS_READOUT_COPY,
@@ -90,6 +93,7 @@ import {
   RELATION_FORMS,
   RELATION_INTRO_HTML,
   RELATION_MODEL_LIMITS,
+  SCENE_COPY,
   SCENE_LABEL,
   SCOPE_NOTES,
   SOURCE_LABEL,
@@ -102,12 +106,16 @@ import {
 } from './unit2-lesson2-appendix-content.js';
 import {
   AMMETER,
+  ARROW_CAPTIONS,
   ARROW_SPOTS,
   CALCULATOR_TARGETS,
   CIRCUIT,
   DIRECTION_ANGLE,
   FIELD_META,
+  GENERATOR_INTERIOR,
   LAB_RANGE,
+  SCENE_LABEL_ANCHORS,
+  SCENE_LABEL_SETS,
   SEGMENT_DIRECTIONS,
   advanceDrift,
   ammeterReading,
@@ -117,6 +125,7 @@ import {
   driftSummary,
   electronPoint,
   formatNumber,
+  insideGenerator,
   needleAngle,
   quantityTeX,
   resetCalculatorState,
@@ -176,8 +185,19 @@ const readout = (label, valueHtml, dataAttribute = '') => `
 
 const ltr = (text) => `<bdi dir="ltr">${text}</bdi>`;
 
+/*
+ * The long name of every drawn arrow. It stays in the SVG <title> (the text a
+ * mouse or a screen reader surfaces), while the short word from
+ * `ARROW_CAPTION_COPY` is painted next to the arrow itself, so the two layers
+ * can be told apart without relying on colour.
+ */
+const ARROW_TITLES = Object.freeze({
+  current: 'جهة التيّار الاصطلاحية',
+  electron: 'جهة انجراف الإلكترونات',
+});
+
 /** One block arrow, tagged with the physics it draws so tests can inspect it. */
-function blockArrow(cx, cy, dir, flow, segment, extraClass = '') {
+function blockArrow(cx, cy, dir, flow, segment, extraClass = '', title = '') {
   const half = 20;
   const shaft = 6;
   const head = 13;
@@ -190,11 +210,31 @@ function blockArrow(cx, cy, dir, flow, segment, extraClass = '') {
   const cos = Math.round(Math.cos(radians));
   const sin = Math.round(Math.sin(radians));
   const points = outline.map(([x, y]) => `${cx + x * cos - y * sin},${cy + x * sin + y * cos}`).join(' ');
-  const label = flow === 'current' ? 'جهة التيّار الاصطلاحية' : 'جهة انجراف الإلكترونات';
-  return `<polygon class="u2l2a-arrow u2l2a-arrow-${flow}${extraClass ? ` ${extraClass}` : ''}" data-flow="${flow}" data-segment="${segment}" data-dir="${dir}" points="${points}"><title>${label} — ${segment}</title></polygon>`;
+  const label = title || `${ARROW_TITLES[flow]} — ${segmentLabel(segment)}`;
+  return `<polygon class="u2l2a-arrow u2l2a-arrow-${flow}${extraClass ? ` ${extraClass}` : ''}" data-flow="${flow}" data-segment="${segment}" data-dir="${dir}" points="${points}"><title>${label}</title></polygon>`;
 }
 
+/* The readable name of every wire segment, used inside the arrow tooltips. */
+const segmentLabel = (segment) => SCENE_COPY.segments[segment] || segment;
+
 const arabicText = (x, y, value, className = 'u2l2a-part-label') => `<text class="${className}" x="${x}" y="${y}" text-anchor="middle" direction="rtl">${value}</text>`;
+
+/**
+ * The one-word label painted beside an arrow. Every arrow set therefore has a
+ * visible name of its own («التيّار» for the copper arrows, «الإلكترونات» for
+ * the teal ones), and the same word appears in the legend below the figure.
+ */
+const arrowCaption = (segment, kind) => {
+  const spot = ARROW_CAPTIONS[segment][kind];
+  const word = ARROW_CAPTION_COPY[kind];
+  return `<text class="u2l2a-arrow-caption" data-caption data-flow="${kind}" data-segment="${segment}" x="${spot.x}" y="${spot.y}" text-anchor="middle" direction="rtl"><title>${word} — ${segmentLabel(segment)}</title>${word}</text>`;
+};
+
+/** One plain label of the shared circuit scene, placed from the model's anchors. */
+const sceneLabel = (id) => {
+  const anchor = SCENE_LABEL_ANCHORS[id];
+  return arabicText(anchor.x, anchor.y, SCENE_COPY[id], anchor.className);
+};
 const latinText = (x, y, value, className = 'u2l2a-tick') => `<text class="${className}" x="${x}" y="${y}" text-anchor="middle" direction="ltr">${value}</text>`;
 
 /* ==================================================== the shared circuit SVG */
@@ -217,7 +257,10 @@ function wireMarkup() {
 }
 
 /** The generator: two cells with + on the left and − on the right, as in p89. */
-function generatorMarkup() {
+function generatorMarkup(ids) {
+  const terminals = ids.includes('terminalPositive') ? `
+    ${sceneLabel('terminalPositive')}
+    ${sceneLabel('terminalNegative')}` : '';
   return `
     <g data-part="generator">
       <rect class="u2l2a-cell" x="${GENERATOR.left}" y="82" width="60" height="44" rx="6" />
@@ -226,9 +269,7 @@ function generatorMarkup() {
       <text class="u2l2a-sign" data-terminal="positive" x="${GENERATOR.left + 26}" y="112" text-anchor="middle" direction="ltr">+</text>
       <text class="u2l2a-sign" data-terminal="negative" x="${GENERATOR.right - 26}" y="112" text-anchor="middle" direction="ltr">−</text>
     </g>
-    ${arabicText(GENERATOR.mid, 62, 'المولّد — مصدر الطاقة الكهربائية', 'u2l2a-part-label is-title')}
-    ${arabicText(GENERATOR.left + 26, 148, 'القطب الموجب', 'u2l2a-part-sub')}
-    ${arabicText(GENERATOR.right - 26, 148, 'القطب السالب', 'u2l2a-part-sub')}`;
+    ${ids.includes('generatorTitle') ? sceneLabel('generatorTitle') : ''}${terminals}`;
 }
 
 /** A lamp: the glass bulb plus the glow that only exists while the current flows. */
@@ -240,26 +281,28 @@ const lampMarkup = (id, cx, cy, r) => `
   </g>`;
 
 /** The switch on the right branch: its lever is rotated when the circuit is open. */
-const switchMarkup = () => `
+const switchMarkup = (ids) => `
   <g class="u2l2a-switch" data-part="switch" data-switch>
     <line class="u2l2a-switch-lever" data-switch-lever x1="${CIRCUIT.right}" y1="${CIRCUIT.switch.y + CIRCUIT.switch.r}" x2="${CIRCUIT.right}" y2="${CIRCUIT.switch.y - CIRCUIT.switch.r}" />
     <circle class="u2l2a-switch-contact" cx="${CIRCUIT.right}" cy="${CIRCUIT.switch.y - CIRCUIT.switch.r}" r="6" />
     <circle class="u2l2a-switch-contact" cx="${CIRCUIT.right}" cy="${CIRCUIT.switch.y + CIRCUIT.switch.r}" r="6" />
   </g>
-  ${arabicText(CIRCUIT.right + 74, CIRCUIT.switch.y - 6, 'المفتاح', 'u2l2a-part-label')}
-  ${arabicText(CIRCUIT.right + 74, CIRCUIT.switch.y + 18, 'يفتح الدارة ويغلقها', 'u2l2a-part-sub')}`;
+  ${ids.includes('switchTitle') ? sceneLabel('switchTitle') : ''}
+  ${ids.includes('switchSubtitle') ? sceneLabel('switchSubtitle') : ''}`;
 
 /** The lamp of the p89 loop sits on the left branch, on top of the wire. */
-const lampOnLeftMarkup = () => `
+const lampOnLeftMarkup = (ids) => `
   ${lampMarkup('l1', CIRCUIT.lamp.x, CIRCUIT.lamp.y, CIRCUIT.lamp.r)}
-  ${arabicText(CIRCUIT.lamp.x + 96, CIRCUIT.lamp.y - 6, 'المصباح', 'u2l2a-part-label')}
-  ${arabicText(CIRCUIT.lamp.x + 96, CIRCUIT.lamp.y + 18, 'الجهاز الذي يعمل في الدارة', 'u2l2a-part-sub')}`;
+  ${ids.includes('lampTitle') ? sceneLabel('lampTitle') : ''}
+  ${ids.includes('lampSubtitle') ? sceneLabel('lampSubtitle') : ''}`;
 
 const electronsLayerMarkup = (count) => Array.from({ length: count }, (_, index) => `
   <circle class="u2l2a-electron" data-electron="${index}" cx="0" cy="0" r="8" />`).join('');
 
 const circuitScene = (options) => {
   const { id, title, description, extraLayers = '', height = 420, electrons = 0 } = options;
+  /* every scene draws the same circuit but only the labels it needs */
+  const ids = SCENE_LABEL_SETS[id] ?? [];
   return `
   <div class="u2l2a-scene-canvas">
     <svg class="u2l2a-scene-svg" viewBox="0 0 720 ${height}" role="img" aria-labelledby="${id}-title ${id}-desc" data-scene="${id}">
@@ -271,12 +314,12 @@ const circuitScene = (options) => {
         </marker>
       </defs>
       ${wireMarkup()}
-      ${generatorMarkup()}
-      ${switchMarkup()}
-      ${lampOnLeftMarkup()}
+      ${generatorMarkup(ids)}
+      ${switchMarkup(ids)}
+      ${lampOnLeftMarkup(ids)}
       ${electronsLayerMarkup(electrons)}
       ${extraLayers}
-      ${arabicText(360, 396, 'موصل كهربائي (أسلاك التوصيل)', 'u2l2a-part-label')}
+      ${ids.includes('wireLabel') ? sceneLabel('wireLabel') : ''}
     </svg>
   </div>`;
 };
@@ -286,12 +329,32 @@ const circuitScene = (options) => {
 const directionArrowsMarkup = (kind) => Object.entries(ARROW_SPOTS).map(([segment, spots]) => {
   const entry = SEGMENT_DIRECTIONS[segment];
   const spot = spots[kind];
-  return `<g class="u2l2a-arrow-group" data-arrow-segment="${segment}">${blockArrow(spot.x, spot.y, entry[kind], kind, segment, 'u2l2a-arrow-outside')}</g>`;
+  return `<g class="u2l2a-arrow-group" data-arrow-segment="${segment}">${
+    blockArrow(spot.x, spot.y, entry[kind], kind, segment, 'u2l2a-arrow-outside')
+  }${arrowCaption(segment, kind)}</g>`;
 }).join('');
+
+/*
+ * Inside the generator the appendix draws exactly one arrow — the conventional
+ * current returning from − to + — and no electron arrow at all: charge
+ * transport inside a source is not the drift of free electrons in a metal
+ * wire, and the audited lesson never states a direction for it.
+ */
+const generatorInteriorMarkup = () => `${
+  blockArrow(
+    GENERATOR_INTERIOR.arrow.x,
+    GENERATOR_INTERIOR.arrow.y,
+    GENERATOR_INTERIOR.arrow.direction,
+    'current',
+    GENERATOR_INTERIOR.segment,
+    'u2l2a-arrow-inside',
+    SCENE_COPY.generatorInteriorTitle,
+  )
+}<text class="u2l2a-arrow-caption" data-caption data-flow="current" data-segment="${GENERATOR_INTERIOR.segment}" x="${GENERATOR_INTERIOR.caption.x}" y="${GENERATOR_INTERIOR.caption.y}" text-anchor="middle" direction="rtl"><title>${SCENE_COPY.generatorInteriorTitle}</title>${SCENE_COPY.generatorInteriorCaption}</text>`;
 
 const energyArcMarkup = () => `
   <path class="u2l2a-energy-path" data-energy-path d="M${GENERATOR.left} ${CIRCUIT.top} H${CIRCUIT.left} V${CIRCUIT.lamp.y - 34}" marker-end="url(#direction-scene-energy-head)" />
-  ${arabicText(CIRCUIT.left + 128, CIRCUIT.lamp.y - 44, 'الطاقة تنتقل إلى المصباح', 'u2l2a-energy-label')}`;
+  ${sceneLabel('energyLabel')}`;
 
 /* ============================================================ station 1 · origin */
 
@@ -303,8 +366,8 @@ function originSceneMarkup() {
       title: 'دارة كهربائية بمولّد ومصباحين ومفتاح',
       description: `${ORIGIN_SCENE_STATES.open} الدارة مفتوحة الآن.`,
       extraLayers: `
-        ${lampMarkup('l2', 300, CIRCUIT.bottom, 26)}
-        ${arabicText(300, CIRCUIT.bottom + 52, 'المصباح الثاني', 'u2l2a-part-sub')}
+        ${lampMarkup('l2', SCENE_LABEL_ANCHORS.lampTwoTitle.x, CIRCUIT.bottom, 26)}
+        ${sceneLabel('lampTwoTitle')}
         <g class="u2l2a-energy-layer" data-origin-energy>
           <path class="u2l2a-energy-path" data-origin-energy-path d="M${GENERATOR.left} ${CIRCUIT.top} H${CIRCUIT.left} V${CIRCUIT.bottom} H360" marker-end="url(#origin-scene-energy-head)" />
         </g>`,
@@ -455,6 +518,7 @@ function electronsMarkup() {
       <figcaption>
         <p><strong>ما نراه:</strong> نقاط تمثّل الإلكترونات الحرّة داخل الموصل. المفتاح يفتح المسار ويغلقه، والمصباح يضيء في الدارة المغلقة.</p>
         <p class="u2l2a-scene-note">${SCENE_LABEL}. مواضع الأجهزة في هذا الرسم من إعداد المنصة ولا تنقل شكلاً مطبوعاً حرفيّاً.</p>
+        <p class="u2l2a-inline-note">${ELECTRONS_GENERATOR_NOTE}</p>
       </figcaption>
       ${modelBadge()}
     </figure>
@@ -497,7 +561,9 @@ function mountElectrons(panel, context) {
       node.dataset.segment = point.segmentId;
       /* an open switch is a real gap: no electron is drawn inside it */
       const inGap = !state.closed && point.segmentId === 'right' && Math.abs(point.y - CIRCUIT.switch.y) < CIRCUIT.switch.r + 8;
-      node.setAttribute('opacity', inGap ? '0' : '1');
+      /* and the source itself is never crossed by a drawn carrier */
+      const inSource = insideGenerator(point);
+      node.setAttribute('opacity', inGap || inSource ? '0' : '1');
     });
     const summary = driftSummary(state);
     scene.dataset.closed = state.closed ? 'true' : 'false';
@@ -615,18 +681,19 @@ function directionMarkup() {
       ${circuitScene({
         id: 'direction-scene',
         title: 'دارة مغلقة مع أسهم جهة التيّار وجهة انجراف الإلكترونات',
-        description: 'دارة مغلقة: المولّد في الأعلى وقطبه الموجب يساراً والسالب يميناً، والمصباح على الفرع الأيسر والمفتاح على الفرع الأيمن؛ أسهم نحاسية لجهة التيّار الاصطلاحية وأسهم زرقاء لجهة انجراف الإلكترونات.',
+        description: 'دارة مغلقة: المولّد في الأعلى وقطبه الموجب يساراً والسالب يميناً، والمصباح على الفرع الأيسر والمفتاح على الفرع الأيمن؛ أسهم نحاسية مكتوب بجانب كل منها «التيّار» لجهة التيّار الاصطلاحية وأسهم زرقاء مكتوب بجانب كل منها «الإلكترونات» لجهة انجراف الإلكترونات، وسهم واحد داخل المولّد يمثّل عودة التيّار من السالب إلى الموجب. لا تُرسم إلكترونات داخل المولّد.',
         extraLayers: `
-          <g class="u2l2a-layer" data-layer="current">${directionArrowsMarkup('current')}</g>
+          <g class="u2l2a-layer" data-layer="current">${directionArrowsMarkup('current')}${generatorInteriorMarkup()}</g>
           <g class="u2l2a-layer" data-layer="electrons" hidden>${directionArrowsMarkup('electron')}</g>
           <g class="u2l2a-layer" data-layer="energy" hidden>${energyArcMarkup()}</g>`,
       })}
       <figcaption>
         <p><strong>المشهد مغلق:</strong> المولّد في الأعلى، والمصباح على الفرع الأيسر، والمفتاح على الفرع الأيمن — وهو ترتيب الشكل المطبوع في صفحة 89 كما يصفه تدقيق المصدر.</p>
-        <p class="u2l2a-scene-note">${SCENE_LABEL}. الصورة الأصلية غير متوفرة في المستودع، والسهمان المرسومان على كل قطعة سلك هما من إعداد المنصة.</p>
+        <p class="u2l2a-scene-note">${SCENE_LABEL}. الصورة الأصلية غير متوفرة في المستودع، والسهمان المرسومان على كل قطعة سلك هما من إعداد المنصة، والسهم الوحيد داخل المولّد من إعداد المنصة أيضاً.</p>
       </figcaption>
       ${modelBadge()}
     </figure>
+    <p class="u2l2a-legend-note">${DIRECTION_LEGEND_NOTE}</p>
     <ul class="u2l2a-legend">${legend}</ul>
     <div class="u2l2a-result-pair">
       <section class="u2l2a-info-card u2l2a-mix-card">

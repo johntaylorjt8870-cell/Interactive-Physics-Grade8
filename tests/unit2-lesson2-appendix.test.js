@@ -39,13 +39,18 @@ import {
   AMMETER_BOOK_VALUE,
   AMMETER_QUESTIONS,
   CALCULATOR_COPY,
+  ARROW_CAPTION_COPY,
   CHECKLIST_ITEMS,
   CONCEPT_LINKS,
   CONCEPT_NODES,
   DETECTIVE_QUESTIONS,
+  DIRECTION_LEGEND,
+  DIRECTION_LEGEND_NOTE,
   DIRECTION_QUESTIONS,
   DIRECTION_TOGGLES,
   ELECTRON_QUESTIONS,
+  ELECTRONS_GENERATOR_NOTE,
+  ELECTRONS_MODEL_LIMITS,
   EXTENSION_LABEL,
   FOOTER_NOTE,
   KEY_IDEAS,
@@ -57,6 +62,7 @@ import {
   PLATFORM_LABEL,
   RELATION_CHALLENGES,
   RELATION_FORMS,
+  SCENE_COPY,
   SCENE_LABEL,
   SCOPE_NOTES,
   SOURCE_LABEL,
@@ -71,10 +77,12 @@ import {
   ARROW_SPOTS,
   CALCULATOR_START,
   CALCULATOR_TARGETS,
+  ARROW_CAPTIONS,
   CIRCUIT,
   DIRECTION_ANGLE,
   DRIFT_DEFAULTS,
   FIELD_META,
+  GENERATOR_INTERIOR,
   LAB_RANGE,
   RELATION_TEX,
   advanceDrift,
@@ -88,8 +96,12 @@ import {
   createDriftState,
   currentFromChargeTime,
   driftSummary,
+  drawnArrows,
   electronPoint,
+  boxGap,
+  boxesOverlap,
   formatNumber,
+  insideGenerator,
   kiloampereToAmpere,
   loopLength,
   microampereToAmpere,
@@ -102,6 +114,10 @@ import {
   resetCalculatorState,
   resetDriftState,
   scaleLabInput,
+  SCENE_LABEL_ANCHORS,
+  SCENE_LABEL_SETS,
+  SCENE_SOLID_BOXES,
+  SCENE_WIRE_BOXES,
   segmentDirections,
   setCalculatorInput,
   setCalculatorTarget,
@@ -586,22 +602,221 @@ test('the ammeter lab reads I = Q/t on a dial and clamps its controls', () => {
   assert.equal(LAB_RANGE.charge.start / LAB_RANGE.time.start, 2, 'the lab opens on the printed 2 A value');
 });
 
-test('the circuit geometry keeps the two directions opposite on every segment', () => {
+/*
+ * Ink metrics of every string the shared scene paints, measured with HarfBuzz on
+ * the subsets this page ships (see §5.4 of
+ * docs/unit-2-lesson-2-appendix-audit.md). `[size, width, inkTop, inkBottom]`
+ * are pixels relative to the baseline; the strings are looked up in the modules
+ * below, so re-writing a label fails the lookup instead of silently invalidating
+ * the geometry.
+ */
+const MEASURED_INK = new Map([
+  [ARROW_CAPTION_COPY.current, [13.5, 23.97, -9.99, 3.24]],
+  [ARROW_CAPTION_COPY.electron, [13.5, 56.22, -10.15, 3.59]],
+  [SCENE_COPY.generatorInteriorCaption, [13.5, 193.09, -9.99, 3.59]],
+  [SCENE_COPY.generatorTitle, [18, 217.98, -14.80, 4.86]],
+  [SCENE_COPY.terminalPositive, [13.5, 78.30, -9.99, 3.24]],
+  [SCENE_COPY.terminalNegative, [13.5, 75.02, -9.99, 2.70]],
+  [SCENE_COPY.lampTitle, [16.5, 54.69, -12.21, 5.02]],
+  [SCENE_COPY.lampSubtitle, [13.5, 128.23, -10.91, 5.94]],
+  [SCENE_COPY.lampTwoTitle, [13.5, 68.66, -9.99, 5.94]],
+  [SCENE_COPY.switchTitle, [16.5, 47.39, -12.36, 5.02]],
+  [SCENE_COPY.switchSubtitle, [13.5, 91.42, -9.99, 4.10]],
+  [SCENE_COPY.wireLabel, [16.5, 98.73, -15.41, 3.96]],
+  [SCENE_COPY.energyLabel, [14.5, 141.48, -11.92, 4.41]],
+]);
+
+const measuredBox = (x, y, text, anchor = 'middle') => {
+  const [size, width, top, bottom] = MEASURED_INK.get(text) ?? [];
+  assert.ok(width !== undefined, `no measurement for ${text}: re-measure the ink before trusting the layout`);
+  const x1 = anchor === 'middle' ? x - width / 2 : anchor === 'end' ? x - width : x;
+  return { x1, x2: x1 + width, y1: y + top, y2: y + bottom };
+};
+
+/** The shaft and the head of one arrow as the two rectangles it really is. */
+const arrowParts = (arrow) => {
+  const half = 20;
+  const shaft = 6;
+  const head = 13;
+  const headLength = 16;
+  const forward = arrow.direction === 'right' || arrow.direction === 'down';
+  const sign = forward ? 1 : -1;
+  if (arrow.direction === 'left' || arrow.direction === 'right') {
+    const back = arrow.x - sign * half;
+    const mid = arrow.x + sign * (half - headLength);
+    const tip = arrow.x + sign * half;
+    return [
+      { x1: Math.min(back, mid), x2: Math.max(back, mid), y1: arrow.y - shaft, y2: arrow.y + shaft },
+      { x1: Math.min(mid, tip), x2: Math.max(mid, tip), y1: arrow.y - head, y2: arrow.y + head },
+    ];
+  }
+  const back = arrow.y - sign * half;
+  const mid = arrow.y + sign * (half - headLength);
+  const tip = arrow.y + sign * half;
+  return [
+    { x1: arrow.x - shaft, x2: arrow.x + shaft, y1: Math.min(back, mid), y2: Math.max(back, mid) },
+    { x1: arrow.x - head, x2: arrow.x + head, y1: Math.min(mid, tip), y2: Math.max(mid, tip) },
+  ];
+};
+
+test('every drawn arrow carries one visible caption, and the measured layout stays clear', () => {
+  const arrows = drawnArrows();
+  const wordOf = (arrow) => (arrow.insideGenerator ? SCENE_COPY.generatorInteriorCaption : ARROW_CAPTION_COPY[arrow.kind]);
+  const captions = arrows.map((arrow) => ({ arrow, word: wordOf(arrow), box: measuredBox(arrow.caption.x, arrow.caption.y, wordOf(arrow)) }));
+
+  /* one caption per arrow, each of them one of the audited words */
+  assert.equal(captions.length, arrows.length);
+  for (const caption of captions) {
+    assert.ok(caption.word && caption.word.length > 0, `${caption.arrow.segment} needs a caption`);
+  }
+  assert.equal(new Set(captions.map((caption) => `${caption.arrow.segment}/${caption.arrow.kind}`)).size, arrows.length);
+
+  /* the caption sits beside its own arrow: close enough to name it, far enough not to touch it */
+  for (const caption of captions) {
+    const distance = Math.hypot(caption.arrow.caption.x - caption.arrow.x, caption.arrow.caption.y - caption.arrow.y);
+    assert.ok(distance >= 12, `${caption.arrow.segment}/${caption.arrow.kind}: the caption must not sit on its arrow (${distance.toFixed(1)}px)`);
+    assert.ok(distance <= 80, `${caption.arrow.segment}/${caption.arrow.kind}: the caption must stay beside its arrow (${distance.toFixed(1)}px)`);
+  }
+
+  /* nothing is crowded: captions, labels, the drawn arrows, the parts and the wires */
+  const labelBoxes = Object.entries(SCENE_LABEL_ANCHORS).map(([id, anchor]) => ({ id, box: measuredBox(anchor.x, anchor.y, SCENE_COPY[id]) }));
+  const captionPairs = [];
+  for (let i = 0; i < captions.length; i += 1) {
+    for (let j = i + 1; j < captions.length; j += 1) captionPairs.push([captions[i].box, captions[j].box]);
+  }
+  for (const [a, b] of captionPairs) {
+    assert.ok(boxGap(a, b) >= 4, `two captions are crowded (${boxGap(a, b).toFixed(1)}px)`);
+  }
+  for (const caption of captions) {
+    for (const arrow of arrows) {
+      for (const part of arrowParts(arrow)) {
+        assert.ok(boxGap(caption.box, part) >= 4, `${caption.arrow.segment}/${caption.arrow.kind} crowds arrow ${arrow.segment}/${arrow.kind} (${boxGap(caption.box, part).toFixed(1)}px)`);
+      }
+    }
+    for (const label of labelBoxes) {
+      assert.ok(boxGap(caption.box, label.box) >= 4, `${caption.arrow.segment}/${caption.arrow.kind} crowds ${label.id} (${boxGap(caption.box, label.box).toFixed(1)}px)`);
+    }
+    /* the second lamp is drawn in the origin scene only, where no arrow is drawn */
+    for (const [id, box] of Object.entries(SCENE_SOLID_BOXES)) {
+      if (id === 'lampTwo') continue;
+      assert.ok(boxGap(caption.box, box) >= 4, `${caption.arrow.segment}/${caption.arrow.kind} crowds the ${id} (${boxGap(caption.box, box).toFixed(1)}px)`);
+    }
+    for (const [id, box] of Object.entries(SCENE_WIRE_BOXES)) {
+      assert.ok(boxGap(caption.box, box) >= 2, `${caption.arrow.segment}/${caption.arrow.kind} sits on the ${id} wire (${boxGap(caption.box, box).toFixed(1)}px)`);
+    }
+    assert.ok(caption.box.x1 > 8 && caption.box.y1 > 6 && caption.box.x2 < 712 && caption.box.y2 < 414, `${caption.arrow.segment}/${caption.arrow.kind}: the caption leaves the viewBox`);
+  }
+
+  /* the labels of the scene hold the same guarantees among themselves */
+  for (let i = 0; i < labelBoxes.length; i += 1) {
+    for (let j = i + 1; j < labelBoxes.length; j += 1) {
+      const gap = boxGap(labelBoxes[i].box, labelBoxes[j].box);
+      assert.ok(gap >= 4 || boxesOverlap(labelBoxes[i].box, labelBoxes[j].box) === false, `${labelBoxes[i].id} and ${labelBoxes[j].id} overlap (${gap.toFixed(1)}px)`);
+      assert.ok(gap > 0, `${labelBoxes[i].id} and ${labelBoxes[j].id} touch (${gap.toFixed(1)}px)`);
+    }
+    for (const [id, box] of Object.entries(SCENE_WIRE_BOXES)) {
+      assert.ok(boxGap(labelBoxes[i].box, box) >= 2, `${labelBoxes[i].id} sits on the ${id} wire`);
+    }
+    for (const [id, box] of Object.entries(SCENE_SOLID_BOXES)) {
+      if (['lampTwo', 'positiveSign', 'negativeSign'].includes(id)) continue; // by design: parts sit on the wires, the signs inside the generator
+      assert.ok(boxesOverlap(labelBoxes[i].box, box) === false, `${labelBoxes[i].id} overlaps the ${id}`);
+    }
+    assert.ok(labelBoxes[i].box.x1 > 8 && labelBoxes[i].box.y1 > 6 && labelBoxes[i].box.x2 < 712 && labelBoxes[i].box.y2 < 414, `${labelBoxes[i].id} leaves the viewBox`);
+  }
+});
+
+test('the scene words, the anchors and the captions come from one place', async () => {
+  /* the words the SVG paints are authored copy, not view literals */
+  const view = await read('../src/unit2-lesson2-appendix.js');
+  assert.match(view, /SCENE_LABEL_ANCHORS/);
+  assert.match(view, /ARROW_CAPTIONS/);
+  assert.match(view, /ARROW_CAPTION_COPY/);
+  assert.match(view, /SCENE_COPY/);
+  for (const literal of [SCENE_COPY.generatorTitle, SCENE_COPY.wireLabel, SCENE_COPY.energyLabel, SCENE_COPY.lampSubtitle]) {
+    assert.equal(view.includes(literal), false, `the view must not hard-code ${literal}`);
+  }
+  assert.equal(Object.keys(SCENE_COPY.segments).length, 6, 'every drawn segment has a readable name');
+  /* each scene draws exactly the labels its set names, and nothing else */
+  assert.deepEqual(Object.keys(SCENE_LABEL_SETS), ['origin-scene', 'electrons-scene', 'direction-scene']);
+  for (const [scene, ids] of Object.entries(SCENE_LABEL_SETS)) {
+    assert.ok(ids.length >= 5, `${scene} must name its parts`);
+    for (const id of ids) {
+      assert.ok(SCENE_COPY[id], `${scene} asks for the label ${id} and the copy module must own it`);
+      assert.ok(SCENE_LABEL_ANCHORS[id], `${scene} asks for the label ${id} and the model must place it`);
+    }
+    assert.equal(new Set(ids).size, ids.length, `${scene} must not repeat a label`);
+  }
+  assert.equal(SCENE_LABEL_SETS['origin-scene'].includes('terminalPositive'), true, 'the parts scene names the terminals');
+  assert.equal(SCENE_LABEL_SETS['electrons-scene'].includes('terminalPositive'), false, 'the drift scene does not need the terminals');
+  assert.equal(SCENE_LABEL_SETS['direction-scene'].includes('wireLabel'), false, 'the arrow scene leaves the room to the arrow captions');
+  const view2 = await read('../src/unit2-lesson2-appendix.js');
+  assert.match(view2, /SCENE_LABEL_SETS\[id\]/);
+
+  /* the two words of the two arrow layers, and the one sentence inside the source */
+  assert.equal(ARROW_CAPTION_COPY.current, 'التيّار');
+  assert.equal(ARROW_CAPTION_COPY.electron, 'الإلكترونات');
+  assert.notEqual(ARROW_CAPTION_COPY.current, ARROW_CAPTION_COPY.electron);
+  assert.match(SCENE_COPY.generatorInteriorCaption, /داخل المولّد/);
+  assert.match(SCENE_COPY.generatorInteriorCaption, /السالب/);
+  assert.match(SCENE_COPY.generatorInteriorCaption, /الموجب/);
+  assert.equal(SCENE_COPY.generatorInteriorCaption.includes('+'), false, 'the caption is spelled in words, not signs');
+  assert.equal(SCENE_COPY.generatorInteriorCaption.includes('−'), false);
+  assert.match(SCENE_COPY.generatorInteriorTitle, /داخل المولّد/);
+  assert.match(SCENE_COPY.generatorInteriorTitle, /القطب السالب/);
+
+  /* the legend binds each word to its own arrow, and the legend note says it outright */
+  assert.match(DIRECTION_LEGEND.find((row) => row.id === 'current').bodyHtml, new RegExp(ARROW_CAPTION_COPY.current));
+  assert.match(DIRECTION_LEGEND.find((row) => row.id === 'electrons').bodyHtml, new RegExp(ARROW_CAPTION_COPY.electron));
+  assert.match(DIRECTION_LEGEND_NOTE, new RegExp(ARROW_CAPTION_COPY.current));
+  assert.match(DIRECTION_LEGEND_NOTE, new RegExp(ARROW_CAPTION_COPY.electron));
+  assert.match(DIRECTION_LEGEND_NOTE, /الطاقة/, 'the note keeps the third idea separate');
+  assert.match(DIRECTION_LEGEND_NOTE, /متعاكسان/, 'the note states that the two arrows on one wire oppose');
+
+  /* the electrons station says where the points stop, and its limits list agrees */
+  assert.match(ELECTRONS_GENERATOR_NOTE, /داخل المولّد/);
+  assert.match(ELECTRONS_GENERATOR_NOTE, /الأسلاك/);
+  assert.equal(ELECTRONS_MODEL_LIMITS.length, 4);
+  assert.ok(ELECTRONS_MODEL_LIMITS.some((item) => /داخل المولّد/.test(item)), 'the limits list names the source explicitly');
+});
+
+test('the wire arrows stay opposite everywhere, and the source interior stays neutral', () => {
   const report = oppositeFlowReport();
   assert.equal(report.length, 6, 'five outside wires plus the inside of the generator');
-  for (const row of report) {
+  const wires = report.filter((row) => row.segment !== 'generator');
+  assert.equal(wires.length, 5, 'the five wire segments of the loop');
+  assert.deepEqual(wires.map((row) => row.segment), ['top-left', 'left', 'bottom', 'right', 'top-right']);
+  for (const row of wires) {
     assert.equal(row.opposite, true, `${row.segment} must show the two directions opposite`);
     assert.equal(row.angleBetween, 180, `${row.segment} is a straight reversal`);
+    assert.equal(row.modelled, true, `${row.segment} is a metal wire, so both carriers are modelled`);
   }
+  /* the source interior is deliberately neutral: the lesson states no carrier
+     direction there, so the appendix claims none */
+  const inside = report.find((row) => row.segment === 'generator');
+  assert.equal(inside.modelled, false);
+  assert.equal(inside.electron, null, 'no electron direction is asserted inside the source');
+  assert.equal(inside.current, 'left', 'the conventional current still returns − → + inside the source');
+  assert.equal(inside.opposite, null, 'with one arrow drawn there is nothing to be opposite to');
+  assert.equal(inside.angleBetween, null);
   const directions = segmentDirections();
-  /* outside the generator the current leaves + and returns to − */
-  assert.deepEqual({ ...directions['top-left'] }, { segment: 'top-left', current: 'left', electron: 'right' });
-  assert.deepEqual({ ...directions.left }, { segment: 'left', current: 'down', electron: 'up' });
-  assert.deepEqual({ ...directions.bottom }, { segment: 'bottom', current: 'right', electron: 'left' });
-  assert.deepEqual({ ...directions.right }, { segment: 'right', current: 'up', electron: 'down' });
-  assert.deepEqual({ ...directions['top-right'] }, { segment: 'top-right', current: 'left', electron: 'right' });
-  /* inside the generator the pair swaps: current − → +, electrons + → − */
-  assert.deepEqual({ ...directions.generator }, { segment: 'generator', current: 'left', electron: 'right' });
+  /* outside the generator the current leaves + and returns to −, and the free
+     electrons of the metal wire always drift the other way */
+  const wire = (segment, current, electron) => assert.deepEqual(
+    { ...directions[segment] },
+    { segment, current, electron, kind: 'wire', modelled: true },
+  );
+  wire('top-left', 'left', 'right');
+  wire('left', 'down', 'up');
+  wire('bottom', 'right', 'left');
+  wire('right', 'up', 'down');
+  wire('top-right', 'left', 'right');
+  /* inside the generator only the conventional current is stated at all */
+  assert.deepEqual({ ...directions.generator }, { segment: 'generator', current: 'left', electron: null, kind: 'source-interior', modelled: false });
+  for (const [segment, pair] of Object.entries(directions)) {
+    if (segment === 'generator') continue;
+    assert.equal(pair.kind, 'wire');
+    assert.equal(pair.modelled, true);
+  }
   assert.equal(CIRCUIT.generator.from < CIRCUIT.generator.to, true, '+ is the left end of the generator and − the right one');
   /* the current is one closed circulation: every outside arrow agrees with the next */
   assert.equal(directions['top-left'].current, 'left', 'leaves + leftwards');
@@ -609,6 +824,7 @@ test('the circuit geometry keeps the two directions opposite on every segment', 
   assert.equal(directions.bottom.current, 'right', 'then right along the bottom');
   assert.equal(directions.right.current, 'up', 'then up the right branch');
   assert.equal(directions['top-right'].current, 'left', 'then back into −');
+  assert.equal(directions.generator.current, 'left', 'and closes − → + inside the source');
   /* the arrows are placed on the wires they explain, without overlapping */
   const spots = Object.entries(ARROW_SPOTS);
   assert.equal(spots.length, 5, 'one arrow pair per outside wire');
@@ -617,6 +833,21 @@ test('the circuit geometry keeps the two directions opposite on every segment', 
     assert.notEqual(`${pair.current.x},${pair.current.y}`, `${pair.electron.x},${pair.electron.y}`);
     assert.ok(DIRECTION_ANGLE[directions[segment].current] !== undefined);
   }
+  /* the interior arrow is the only arrow inside the source, and the model says
+     out loud that no carrier is drawn there */
+  assert.equal(GENERATOR_INTERIOR.electronsModelled, false);
+  assert.equal(GENERATOR_INTERIOR.segment, 'generator');
+  assert.equal(GENERATOR_INTERIOR.arrow.direction, 'left');
+  assert.ok(GENERATOR_INTERIOR.arrow.x > GENERATOR_INTERIOR.inside.x1 && GENERATOR_INTERIOR.arrow.x < GENERATOR_INTERIOR.inside.x2);
+  assert.ok(GENERATOR_INTERIOR.arrow.y > GENERATOR_INTERIOR.inside.y1 && GENERATOR_INTERIOR.arrow.y < GENERATOR_INTERIOR.inside.y2);
+  const arrows = drawnArrows();
+  assert.equal(arrows.length, 11, 'five pairs of wire arrows plus the single interior arrow');
+  assert.equal(arrows.filter((arrow) => arrow.insideGenerator).length, 1);
+  assert.equal(arrows.filter((arrow) => arrow.insideGenerator)[0].kind, 'current');
+  assert.equal(arrows.filter((arrow) => arrow.insideGenerator)[0].segment, 'generator');
+  assert.equal(arrows.filter((arrow) => arrow.kind === 'electron').length, 5, 'no electron arrow inside the source');
+  assert.equal(insideGenerator({ segmentId: 'generator' }), true);
+  assert.equal(insideGenerator({ segmentId: 'left' }), false);
 });
 
 test('the loop path is continuous, wraps cleanly and covers the whole circuit', () => {
@@ -1152,6 +1383,13 @@ test('the published page really works when it is mounted in a DOM', async (t) =>
     click($('[data-drift-play]'));
     assert.match($('[data-drift-count]').textContent, /16/);
     assert.ok(Number($('[data-drift-net]').textContent.trim()) > 1, 'the cloud really drifts while the circuit is closed');
+    /* the carriers are drawn in the metal wire only: the source itself is skipped */
+    const dotsInSource = [...$('[data-scene="electrons-scene"]').querySelectorAll('[data-electron]')]
+      .filter((node) => node.dataset.segment === 'generator');
+    assert.equal(dotsInSource.length === 0 || dotsInSource.every((node) => node.getAttribute('opacity') === '0'), true,
+      'no carrier may be drawn inside the generator');
+    assert.match($('[data-drift-count]').textContent, /16/, 'and the count is unchanged all the same');
+    assert.match($('[data-station="electrons"] .u2l2a-inline-note').textContent, /داخل المولّد/);
     click($('[data-drift-reset]'));
     assert.equal($('[data-drift-net]').textContent.trim(), '0');
     assert.equal($('[data-drift-play]').getAttribute('aria-pressed'), 'false');
@@ -1159,8 +1397,28 @@ test('the published page really works when it is mounted in a DOM', async (t) =>
     /* --- station 3: the two arrow layers, opposite on every wire ---------- */
     app.goToStation('direction');
     const scene = $('[data-scene="direction-scene"]');
-    assert.equal(scene.querySelectorAll('[data-layer="current"] [data-flow="current"]').length, 5);
-    assert.equal(scene.querySelectorAll('[data-layer="electrons"] [data-flow="electron"]').length, 5);
+    assert.equal(scene.querySelectorAll('[data-layer="current"] polygon[data-flow="current"]').length, 6, 'five wire arrows plus the one inside the source');
+    assert.equal(scene.querySelectorAll('[data-layer="electrons"] polygon[data-flow="electron"]').length, 5, 'no electron arrow is drawn inside the source');
+    assert.equal(scene.querySelectorAll('[data-layer="electrons"] [data-segment="generator"]').length, 0);
+    /* every arrow has a visible caption of its own, and the long name in <title> */
+    assert.equal(scene.querySelectorAll('[data-caption]').length, drawnArrows().length);
+    for (const arrow of drawnArrows()) {
+      const polygon = scene.querySelector(`polygon[data-flow="${arrow.kind}"][data-segment="${arrow.segment}"]`);
+      assert.ok(polygon, `${arrow.segment}/${arrow.kind} must be drawn`);
+      assert.equal(polygon.querySelector('title').textContent.length > 0, true, 'the long name stays in the SVG title');
+      const caption = polygon.closest('g').querySelector(`[data-caption][data-segment="${arrow.segment}"]`);
+      assert.ok(caption, `${arrow.segment}/${arrow.kind} must carry a visible caption`);
+      assert.equal(caption.getAttribute('x'), String(arrow.caption.x));
+      assert.equal(caption.getAttribute('y'), String(arrow.caption.y));
+      const word = arrow.insideGenerator ? SCENE_COPY.generatorInteriorCaption : ARROW_CAPTION_COPY[arrow.kind];
+      /* the painted text only: the SVG <title> child is a tooltip, not a glyph */
+      const painted = [...caption.childNodes].filter((node) => node.nodeType === 3).map((node) => node.textContent).join('').trim();
+      assert.equal(painted, word);
+      const tooltip = caption.querySelector('title').textContent;
+      assert.equal(tooltip.includes(arrow.insideGenerator ? 'داخل المولّد' : word), true, 'the tooltip names what the caption names');
+    }
+    assert.match($('.u2l2a-legend-note').textContent, new RegExp(ARROW_CAPTION_COPY.current));
+    assert.match($('.u2l2a-legend-note').textContent, new RegExp(ARROW_CAPTION_COPY.electron));
     const opposites = { left: 'right', right: 'left', up: 'down', down: 'up' };
     for (const segment of Object.keys(ARROW_SPOTS)) {
       const current = scene.querySelector(`[data-flow="current"][data-segment="${segment}"]`).dataset.dir;
