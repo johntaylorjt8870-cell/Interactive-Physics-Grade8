@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#faf9f5" />
-    <meta name="description" content="مراجعة شاملة لأسئلة الكتاب الأصلية للوحدة الأولى: الحركة والقوى، الصفحتان 71 و72." />
+    <meta name="description" content="مراجعة شاملة وتفاعلية لأسئلة الكتاب الأصلية للوحدة الأولى: الحركة والقوى، الصفحتان 71 و72." />
     <title>أسئلة الوحدة الأولى — الحركة والقوى | فيزياء ٨</title>
     <link rel="stylesheet" href="./src/fonts.css" />
     <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
@@ -32,10 +32,11 @@
           <div class="unit-questions-hero-copy">
             <p class="unit-questions-eyebrow">الوحدة الأولى · الحركة والقوى</p>
             <h1 id="unit-questions-title">أسئلة الوحدة الأولى</h1>
-            <p>مراجعة شاملة لأسئلة الوحدة الأولى من الكتاب، مرتبة كما تظهر في المصدر.</p>
+            <p>مراجعة شاملة لأسئلة الوحدة الأولى من الكتاب، مرتبة بفروعها الأصلية كما وردت في الصفحتين 71 و72 مع تحقق تفاعلي وتغذية راجعة علمية.</p>
             <div class="unit-questions-hero-meta">
               <span class="unit-source-pill"><span aria-hidden="true">▤</span> من الكتاب · صفحتا <bdi dir="ltr">71–72</bdi></span>
-              <span class="unit-review-pill">مراجعة الوحدة · ليست درساً جديداً</span>
+              <span class="unit-review-pill">3 أسئلة رئيسية · 11 فرعاً تفاعلياً</span>
+              <span class="unit-save-pill">تُحفظ محاولاتك تلقائياً على جهازك</span>
             </div>
           </div>
           <div class="unit-questions-hero-art" aria-hidden="true">
@@ -48,21 +49,74 @@
           </div>
         </section>
 
+        <section class="uq-progress-panel" id="uq-progress-panel" aria-labelledby="uq-progress-heading">
+          <div class="uq-progress-top">
+            <div class="uq-progress-copy">
+              <p class="uq-progress-kicker">متابعة الحل والتقييم</p>
+              <h2 id="uq-progress-heading">تم التحقق من <span id="uq-checked-count" dir="ltr">0</span> من <span id="uq-total-count" dir="ltr">11</span> فرعاً</h2>
+              <p id="uq-progress-status" aria-live="polite">حالة التقييم: قيد الحل — أجب عن الفروع وتحقّق منها واحداً تلو الآخر لإظهار النتيجة النهائية.</p>
+            </div>
+            <div class="uq-progress-stats" aria-label="إحصاءات الإجابة">
+              <div class="uq-stat-chip">
+                <span>أُجيب عنه</span>
+                <strong id="uq-answered-stat" dir="ltr">0 / 11</strong>
+              </div>
+              <div class="uq-stat-chip">
+                <span>تم التحقق</span>
+                <strong id="uq-checked-stat" dir="ltr">0 / 11</strong>
+              </div>
+              <div class="uq-stat-chip uq-stat-final" id="uq-final-chip" data-final-state="pending">
+                <span id="uq-final-label">الدرجة النهائية</span>
+                <strong id="uq-final-value">بعد إتمام الفروع</strong>
+              </div>
+            </div>
+          </div>
+          <div class="uq-progress-meter" role="progressbar" aria-label="نسبة الفروع التي تم التحقق منها" aria-valuemin="0" aria-valuemax="11" aria-valuenow="0">
+            <span id="uq-progress-fill"></span>
+          </div>
+          <div class="uq-progress-actions">
+            <button type="button" class="uq-btn uq-btn-primary" id="uq-check-answered" disabled>تحقّق من الفروع المجاب عنها</button>
+            <button type="button" class="uq-btn uq-btn-ghost" id="uq-reset-all">إعادة ضبط جميع الأسئلة</button>
+          </div>
+          <div class="uq-reset-confirm" id="uq-reset-confirm" role="region" aria-label="تأكيد إعادة ضبط جميع الأسئلة" hidden>
+            <p>سيؤدي هذا إلى مسح جميع إجاباتك وحالات التحقق والتلميحات في الفروع الأحد عشر. هل تريد المتابعة؟</p>
+            <div class="uq-reset-confirm-actions">
+              <button type="button" class="uq-btn uq-btn-danger" id="uq-confirm-reset">نعم، أعد الضبط الكامل</button>
+              <button type="button" class="uq-btn uq-btn-ghost" id="uq-cancel-reset">إلغاء</button>
+            </div>
+          </div>
+          <div class="uq-final-summary" id="uq-final-summary" aria-live="polite" hidden></div>
+        </section>
+
         <div class="unit-questions-layout">
           <aside class="unit-questions-rail" aria-label="فهرس أسئلة الوحدة الأولى">
-            <p class="unit-questions-rail-title">في هذه المراجعة</p>
+            <p class="unit-questions-rail-title">فهرس أسئلة الكتاب</p>
             <nav>
-              <a href="#question-one"><span dir="ltr">01</span> السؤال الأول</a>
-              <a href="#question-two"><span dir="ltr">02</span> السؤال الثاني</a>
-              <a href="#question-three"><span dir="ltr">03</span> السؤال الثالث</a>
+              <a href="#question-one">
+                <span class="uq-rail-index" dir="ltr">01</span>
+                <span class="uq-rail-label">السؤال الأول<small>4 فقرات · ص 71</small></span>
+                <bdi class="uq-rail-badge" data-rail-badge="q1" dir="ltr">0/4</bdi>
+              </a>
+              <a href="#question-two">
+                <span class="uq-rail-index" dir="ltr">02</span>
+                <span class="uq-rail-label">السؤال الثاني<small>كتابة ورسم · ص 71</small></span>
+                <bdi class="uq-rail-badge" data-rail-badge="q2" dir="ltr">0/1</bdi>
+              </a>
+              <a href="#question-three">
+                <span class="uq-rail-index" dir="ltr">03</span>
+                <span class="uq-rail-label">السؤال الثالث<small>مسألتان (6 فروع) · ص 71–72</small></span>
+                <bdi class="uq-rail-badge" data-rail-badge="q3" dir="ltr">0/6</bdi>
+              </a>
+              <a class="uq-rail-sublink" href="#problem-one">↳ المسألة الأولى <bdi dir="ltr" data-rail-badge="p1">0/3</bdi></a>
+              <a class="uq-rail-sublink" href="#problem-two">↳ المسألة الثانية <bdi dir="ltr" data-rail-badge="p2">0/3</bdi></a>
             </nav>
-            <p class="unit-questions-rail-note">الأسئلة الأصلية أولاً، ثم تلميحات المنصة المفصولة عنها.</p>
+            <p class="unit-questions-rail-note">نص الكتاب الأصلي مفصول بصرياً عن مساحة الإجابة وتلميحات المنصة.</p>
           </aside>
 
           <div class="unit-questions-main-column">
             <div class="unit-review-note" role="note">
               <span class="unit-review-note-mark" aria-hidden="true">i</span>
-              <p>هذا القسم يجمع أسئلة الكتاب الأصلية للوحدة الأولى. <strong>اختبار الوحدة الأولى</strong> تجربة منفصلة بأسئلتها التفاعلية؛ لم تُدمج هنا.</p>
+              <p>هذا القسم يعرض <strong>أسئلة الوحدة الأولى الأصلية من الكتاب</strong> (ص 71–72). أمّا <strong>اختبار الوحدة الأولى</strong> فهو تقييم مستقل في منطقة الاختبارات.</p>
               <a href="./unit-1-test.html">انتقل إلى الاختبار <span aria-hidden="true">←</span></a>
             </div>
 
@@ -81,7 +135,7 @@
         <span>أسئلة الكتاب · ص 71–72</span>
       </footer>
     </div>
-    <noscript><p class="unit-questions-noscript">يتطلب عرض أسئلة الوحدة تفعيل JavaScript.</p></noscript>
+    <noscript><p class="unit-questions-noscript">يتطلب عرض أسئلة الوحدة التفاعلية تفعيل JavaScript.</p></noscript>
     <script type="module" src="./src/unit-questions.js"></script>
   </body>
 </html>
