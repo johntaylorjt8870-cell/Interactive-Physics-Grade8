@@ -139,6 +139,7 @@ function renderProblemWorkbench(problem) {
   return `<article class="l2-workbench" data-problem-bench="${problem.id}">
     <h3>${problem.title}</h3>
     <p>${problem.lead}</p>
+    ${problem.sourceNote ? `<div class="callout-box callout-tip">${problem.sourceNote}</div>` : ''}
     <div class="problem-box">
       <strong>المعطيات</strong>
       <ul>${problem.givens.map((item) => `<li>${item}</li>`).join('')}</ul>
