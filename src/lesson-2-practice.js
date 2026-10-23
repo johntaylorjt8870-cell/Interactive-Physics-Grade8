@@ -113,6 +113,14 @@ export function mountInquiryCards(container) {
     const checkBtn = card.querySelector('[data-inquiry-check]');
     const feedback = card.querySelector('[data-inquiry-feedback]');
     const correct = card.dataset.correct;
+    const radios = [...card.querySelectorAll('input[type="radio"]')];
+    radios.forEach((radio) => {
+      radio.addEventListener('change', () => {
+        feedback.hidden = true;
+        feedback.innerHTML = '';
+        feedback.className = 'l2-item-feedback';
+      });
+    });
     checkBtn?.addEventListener('click', () => {
       const chosen = card.querySelector('input[type="radio"]:checked');
       if (!chosen) {
@@ -220,6 +228,11 @@ export function mountProblemWorkbenches(container) {
     };
 
     checkBtn.addEventListener('click', checkValue);
+    input.addEventListener('input', () => {
+      feedback.hidden = true;
+      feedback.innerHTML = '';
+      feedback.className = 'l2-item-feedback';
+    });
     input.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -320,6 +333,13 @@ export function mountPracticeDeck(container) {
     const feedback = card.querySelector('[data-pr-feedback]');
     let hintStage = 0;
 
+    card.querySelectorAll('input[type="radio"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        feedback.hidden = true;
+        feedback.innerHTML = '';
+        feedback.className = 'l2-item-feedback';
+      });
+    });
     checkBtn.addEventListener('click', () => {
       const chosen = card.querySelector('input[type="radio"]:checked');
       if (!chosen) {
