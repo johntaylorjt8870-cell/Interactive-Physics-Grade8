@@ -1,227 +1,141 @@
 import { LESSON_PAGES } from './lesson-content.js';
-import { DIAGRAMS } from './diagrams.js';
-import { mountSimulationExperiences, simulationMarkup } from './simulations.js';
-import { V_F1, V_F2, V_F, V_W } from './math.js';
 import {
-  collectSelfCheckSelections,
-  enhanceSelfCheckSections,
-  gradeSelfCheck,
-  markSelfCheckOptions,
-  renderSelfCheckResults,
-} from './self-check.js';
+  enhanceLesson1SelfCheck,
+  mountInquiryCards,
+  mountPracticeDeck,
+  mountProblemWorkbenches,
+} from './lesson-1-practice.js';
+import { mountSimulationExperiences } from './simulations.js';
 
-const nav = document.querySelector('#page-nav');
+let currentIndex = 0;
+
 const pageContent = document.querySelector('#page-content');
-const pageHeading = document.querySelector('#page-heading');
-const pageNumber = document.querySelector('#page-number');
+const pageNav = document.querySelector('#page-nav');
 const progressText = document.querySelector('#progress-text');
 const progressTrack = document.querySelector('#progress-track');
 const progressFill = document.querySelector('#progress-fill');
 const mobileProgressFill = document.querySelector('#mobile-progress-fill');
-const previousButton = document.querySelector('#previous-button');
+const sectionKicker = document.querySelector('#section-kicker');
+const pageHeading = document.querySelector('#page-heading');
+const pageNumber = document.querySelector('#page-number');
+const prevButton = document.querySelector('#previous-button');
 const nextButton = document.querySelector('#next-button');
-const previousLabel = document.querySelector('#previous-label');
+const prevLabel = document.querySelector('#previous-label');
 const nextLabel = document.querySelector('#next-label');
 const controlCenter = document.querySelector('#control-center');
-const sectionKicker = document.querySelector('#section-kicker');
 
-let activeIndex = 0;
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+function renderNav() {
+  if (!pageNav) return;
+  pageNav.innerHTML = '';
+  LESSON_PAGES.forEach((item, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `page-nav-button${index === currentIndex ? ' is-active' : ''}`;
+    button.dataset.page = String(item.page);
+    if (index === currentIndex) button.setAttribute('aria-current', 'step');
+    button.innerHTML = `
+      <span class="page-nav-index" dir="ltr">${index + 1}</span>
+      <span class="page-nav-copy">
+        <strong>${item.stageTitle ?? item.title}</strong>
+        <small>ص <bdi dir="ltr">${item.page}</bdi></small>
+      </span>
+    `;
+    button.addEventListener('click', () => goToPage(index, { focusHeading: true }));
+    pageNav.append(button);
+  });
 }
 
-function renderLegend(legend = []) {
-  if (!legend.length) return '';
-  return `<ul class="diagram-legend" aria-label="رموز الرسم">${legend.map((item) => `
-    <li><span class="legend-swatch ${escapeHtml(item.color)}" aria-hidden="true"></span>${item.symbol}</li>
-  `).join('')}</ul>`;
-}
+function renderCurrentPage() {
+  const page = LESSON_PAGES[currentIndex];
+  const stageNum = currentIndex + 1;
+  const total = LESSON_PAGES.length;
+  const pct = `${((stageNum / total) * 100).toFixed(1)}%`;
 
-function renderPlatformBlock(block) {
-  if (block.type === 'simulation') return simulationMarkup(block.id);
-  if (block.type === 'diagram') {
-    const diagram = DIAGRAMS[block.id];
-    if (!diagram) return '';
-    return `<aside class="platform-explanation diagram-explanation" aria-label="شرح المنصة: رسم تخطيطي">
-      <div class="platform-heading">
-        <span class="platform-label">رسم توضيحي من المنصة</span>
-      </div>
-      <h3>${diagram.title}</h3>
-      <p class="platform-copy platform-body">${diagram.platformNote}</p>
-      <figure class="diagram-figure">
-        <div class="diagram-canvas">${diagram.svg}</div>
-        ${renderLegend(diagram.legend)}
-        <figcaption>${diagram.description}</figcaption>
-      </figure>
-    </aside>`;
+  if (sectionKicker) {
+    sectionKicker.textContent = `${page.unitTitle} · المرحلة ${stageNum} من ${total}`;
+  }
+  if (pageHeading) {
+    pageHeading.textContent = page.title;
+  }
+  if (pageNumber) {
+    pageNumber.textContent = String(page.page);
+  }
+  if (progressText) {
+    progressText.textContent = `${stageNum} / ${total}`;
+  }
+  if (progressTrack) {
+    progressTrack.setAttribute('aria-valuenow', String(stageNum));
+  }
+  if (progressFill) {
+    progressFill.style.width = pct;
+  }
+  if (mobileProgressFill) {
+    mobileProgressFill.style.width = pct;
   }
 
-  const kindClass = block.kind === 'source-slot' ? ' source-slot-explanation' : '';
-  const kindChip = block.kind === 'source-slot' ? '<span class="platform-kind">موضع مرجعي</span>' : '';
-  return `<aside class="platform-explanation${kindClass}" aria-label="شرح المنصة: ${escapeHtml(block.title)}">
-    <div class="platform-heading">
-      <span class="platform-label">شرح المنصة</span>
-      ${kindChip}
-    </div>
-    <h3>${escapeHtml(block.title)}</h3>
-    <div class="platform-copy platform-body">${block.html}</div>
-  </aside>`;
-}
+  const objectivesHtml = page.objectives?.length
+    ? `<div class="stage-objectives" aria-label="أهداف هذه المرحلة">
+        <strong>ماذا ستتقن في هذه المرحلة؟</strong>
+        <ul>${page.objectives.map((obj) => `<li>${obj}</li>`).join('')}</ul>
+      </div>`
+    : '';
 
-function renderPage(page, index) {
-  pageHeading.textContent = page.heading;
-  pageNumber.textContent = String(page.page);
-  sectionKicker.textContent = `الدرس 1 · القوى المتلاقية · ${index + 1} / ${LESSON_PAGES.length}`;
-
-  const sourceAndFigureBlocks = page.blocks.filter((block) => block.type !== 'simulation');
-  const simulationBlocks = page.blocks.filter((block) => block.type === 'simulation');
-  const blocks = sourceAndFigureBlocks.map((block, blockIndex) => {
-    if (block.type === 'book') {
-      const startsSourceRun = blockIndex === 0 || sourceAndFigureBlocks[blockIndex - 1].type !== 'book';
-      const marker = startsSourceRun
-        ? `<p class="source-marker" role="note"><span>من الكتاب · الصفحة ${page.page}</span></p>`
-        : '';
-      return `${marker}<div class="book-copy">${block.html}</div>`;
-    }
-    return renderPlatformBlock(block);
-  }).join('');
-  const simulations = simulationBlocks.map(renderPlatformBlock).join('');
-
-  pageContent.innerHTML = `${blocks}${simulations}`;
-  mountSimulationExperiences(pageContent);
-  enhanceSelfCheckSections(pageContent, page.page);
-
-  updateProgress(index);
-  updateControls(index);
-  updateNavigation(index);
-}
-
-function updateProgress(index) {
-  const current = index + 1;
-  const percentage = (current / LESSON_PAGES.length) * 100;
-  progressText.textContent = `${current} / ${LESSON_PAGES.length}`;
-  progressTrack.setAttribute('aria-valuenow', String(current));
-  progressFill.style.width = `${percentage}%`;
-  mobileProgressFill.style.width = `${percentage}%`;
-  controlCenter.textContent = `صفحة ${current} من ${LESSON_PAGES.length}`;
-}
-
-function updateControls(index) {
-  const previous = LESSON_PAGES[index - 1];
-  const next = LESSON_PAGES[index + 1];
-  previousButton.disabled = !previous;
-  nextButton.disabled = !next;
-  previousLabel.textContent = previous?.navLabel ?? 'بداية الدرس';
-  nextLabel.textContent = next?.navLabel ?? 'نهاية الدرس';
-}
-
-function updateNavigation(index) {
-  for (const [buttonIndex, button] of [...nav.children].entries()) {
-    if (buttonIndex === index) {
-      button.setAttribute('aria-current', 'step');
-    } else {
-      button.removeAttribute('aria-current');
-    }
-  }
-}
-
-function goToPage(index, moveFocus = false) {
-  const boundedIndex = Math.max(0, Math.min(LESSON_PAGES.length - 1, index));
-  if (boundedIndex === activeIndex && pageContent.childElementCount > 0) return;
-  activeIndex = boundedIndex;
   pageContent.setAttribute('aria-busy', 'true');
-  renderPage(LESSON_PAGES[activeIndex], activeIndex);
+  pageContent.innerHTML = `
+    <section class="stage-hero-card" aria-label="ملخص المرحلة وأهدافها">
+      ${page.summary ? `<p class="stage-summary">${page.summary}</p>` : ''}
+      ${objectivesHtml}
+    </section>
+    <div class="page-blocks">
+      ${page.blocks.join('\n')}
+    </div>
+  `;
   pageContent.setAttribute('aria-busy', 'false');
-  if (moveFocus) {
-    pageHeading.focus({ preventScroll: true });
-    pageHeading.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+  enhanceLesson1SelfCheck(pageContent);
+  mountSimulationExperiences(pageContent);
+  mountProblemWorkbenches(pageContent);
+  mountPracticeDeck(pageContent);
+  mountInquiryCards(pageContent);
+
+  const prevItem = LESSON_PAGES[currentIndex - 1];
+  const nextItem = LESSON_PAGES[currentIndex + 1];
+  if (prevButton) prevButton.disabled = !prevItem;
+  if (nextButton) nextButton.disabled = !nextItem;
+  if (prevLabel) prevLabel.textContent = prevItem ? (prevItem.stageTitle ?? prevItem.title) : 'بداية الدرس';
+  if (nextLabel) nextLabel.textContent = nextItem ? (nextItem.stageTitle ?? nextItem.title) : 'نهاية مراحل الدرس';
+  if (controlCenter) controlCenter.textContent = `المرحلة ${stageNum} من ${total} · ص ${page.page}`;
+
+  renderNav();
+}
+
+function goToPage(index, options = {}) {
+  if (index < 0 || index >= LESSON_PAGES.length) return;
+  currentIndex = index;
+  renderCurrentPage();
+  if (options.focusHeading) {
+    pageHeading?.focus();
+    window.scrollTo?.({ top: 0, behavior: 'smooth' });
   }
 }
 
-LESSON_PAGES.forEach((page, index) => {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'page-nav-button';
-  button.setAttribute('aria-label', `الصفحة ${page.page}: ${page.navLabel}`);
-  button.innerHTML = `<span class="nav-page-number" dir="ltr">${page.page}</span>
-    <span class="nav-page-copy"><strong>${escapeHtml(page.navLabel)}</strong><small>صفحة من الكتاب</small></span>
-    <span class="nav-current-mark" aria-hidden="true">↙</span>`;
-  button.addEventListener('click', () => goToPage(index, true));
-  nav.append(button);
-});
+prevButton?.addEventListener('click', () => goToPage(currentIndex - 1, { focusHeading: true }));
+nextButton?.addEventListener('click', () => goToPage(currentIndex + 1, { focusHeading: true }));
 
-previousButton.addEventListener('click', () => goToPage(activeIndex - 1, true));
-nextButton.addEventListener('click', () => goToPage(activeIndex + 1, true));
-
-/* Textbook self-check interaction: selecting or changing an answer never reveals
-   correctness. Results appear only when the student deliberately submits. */
-pageContent.addEventListener('change', (event) => {
-  const input = event.target.closest('input[data-selfcheck-option]');
-  if (!input) return;
-  const item = input.closest('[data-selfcheck-item]');
-  if (!item) return;
-  for (const choice of item.querySelectorAll('.option-choice')) {
-    const choiceInput = choice.querySelector('input[data-selfcheck-option]');
-    choice.classList.toggle('is-selected', choiceInput?.checked === true);
-    choice.classList.remove('is-revealed-correct', 'is-revealed-wrong');
-  }
-  const section = item.closest('.self-check-section');
-  const results = section?.querySelector('[data-selfcheck-results]');
-  if (results && !results.hidden) {
-    results.hidden = true;
-    results.innerHTML = '';
-    for (const revealed of section.querySelectorAll('.is-revealed-correct, .is-revealed-wrong')) {
-      revealed.classList.remove('is-revealed-correct', 'is-revealed-wrong');
+document.addEventListener('keydown', (event) => {
+  const tag = event.target?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  if (event.key === 'PageDown' || event.key === 'ArrowLeft') {
+    if (currentIndex < LESSON_PAGES.length - 1) {
+      event.preventDefault();
+      goToPage(currentIndex + 1, { focusHeading: true });
+    }
+  } else if (event.key === 'PageUp' || event.key === 'ArrowRight') {
+    if (currentIndex > 0) {
+      event.preventDefault();
+      goToPage(currentIndex - 1, { focusHeading: true });
     }
   }
 });
-
-pageContent.addEventListener('click', (event) => {
-  const submitButton = event.target.closest('[data-selfcheck-submit]');
-  if (!submitButton) return;
-  const pageNumber = Number(submitButton.dataset.selfcheckSubmit);
-  const section = pageContent.querySelector(`.self-check-section[data-selfcheck-page="${pageNumber}"]`);
-  if (!section) return;
-  const itemKeys = [...section.querySelectorAll('[data-selfcheck-item]')].map((item) => item.dataset.selfcheckItem);
-  if (!itemKeys.length) return;
-  submitButton.disabled = true;
-  import('./self-check-answers.js')
-    .then((answersModule) => {
-      const answers = {};
-      for (const key of itemKeys) {
-        const entry = answersModule.selfCheckAnswer(key);
-        if (entry) answers[key] = entry;
-      }
-      const selections = collectSelfCheckSelections(section);
-      const graded = gradeSelfCheck(selections, answers);
-      const resultList = section.querySelector('.question-list');
-      const startNumber = Number(resultList?.getAttribute('start') ?? 1);
-      markSelfCheckOptions(section, graded);
-      renderSelfCheckResults(section.querySelector(`[data-selfcheck-results="${pageNumber}"]`), graded, startNumber);
-    })
-    .finally(() => { submitButton.disabled = false; });
-});
-
-window.addEventListener('keydown', (event) => {
-  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-  if (event.target?.closest?.('input, button, select, textarea, a, [contenteditable="true"]')) return;
-  if (event.key === 'PageDown' && activeIndex < LESSON_PAGES.length - 1) {
-    event.preventDefault();
-    goToPage(activeIndex + 1, true);
-  } else if (event.key === 'PageUp' && activeIndex > 0) {
-    event.preventDefault();
-    goToPage(activeIndex - 1, true);
-  }
-});
-
-// Keep the notation helpers referenced here as an intentional smoke check: the app's
-// displayed MathML vectors are generated from the same isolated notation primitives.
-void [V_F1, V_F2, V_F, V_W];
 
 goToPage(0);

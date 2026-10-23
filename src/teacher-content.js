@@ -1,379 +1,397 @@
-import { LESSON_PAGES, pageTextBlocks } from './lesson-content.js';
+import { DIAGRAMS } from './diagrams.js';
 import {
-  LATIN_A,
-  P_O,
-  P_M,
-  V_F,
+  formula,
   V_F1,
   V_F2,
-  V_F3,
+  V_F,
+  V_F_PRIME,
+  V_W,
+  V_R,
   V_OM,
   V_OX,
   V_OY,
-  V_R,
-  V_W,
-  calculation,
-  formula,
-  ltrText,
-  qty,
-  tex,
+  S_F1,
+  S_F2,
+  S_F,
+  S_F_PRIME,
+  LATIN_A,
 } from './math.js';
+import { SELF_CHECK_ANSWERS } from './self-check-answers.js';
+import { PRACTICE_DECK } from './lesson-1-practice-data.js';
 
-const sourcePage = (pageNumber) => LESSON_PAGES.find((page) => page.page === pageNumber);
-const sourceDisclosure = (pageNumber) => {
-  const page = sourcePage(pageNumber);
-  if (!page) throw new RangeError(`No source text registered for p${pageNumber}.`);
-  return `<details class="teacher-source-details" data-source-page="p${pageNumber}">
-    <summary>محتوى الكتاب الأصلي · p${pageNumber}</summary>
-    <div class="teacher-source-body"><div class="book-copy">${pageTextBlocks(page)}</div></div>
-  </details>`;
-};
-
-const teacherExplanation = (pageNumber, content) => `<details class="teacher-explanation" data-teacher-explanation="p${pageNumber}">
-  <summary>شرح المعلم خطوة بخطوة</summary>
-  <div class="teacher-explanation-body">${content}</div>
-</details>`;
-
-const teacherAnswer = (content) => `<div class="teacher-book-answer"><span class="teacher-answer-chip">جواب الكتاب</span><div class="teacher-answer-body">${content}</div></div>`;
-
-const subheading = (title, pageNumber, headingId = '') => `<div class="teacher-section-heading">
-  <div><p class="teacher-section-kicker">شرح المعلم · الصفحات ${pageNumber}</p><h3${headingId ? ` id="${headingId}"` : ''}>${title}</h3></div>
-  <span class="teacher-page-ref" dir="ltr">p${pageNumber}</span>
-</div>`;
-
-const formulaBox = (source, label, caption = '') => `<div class="teacher-formula">${formula(source, label)}</div>${caption ? `<p class="teacher-formula-caption">${caption}</p>` : ''}`;
-const square = (value) => `${value}^{2}`;
-const ltr = (text, label = text) => ltrText(text, label);
-const pointO = P_O;
-const pointM = P_M;
-
-const p58AnalyticCheck = formulaBox(
-  `F=\\sqrt{${square(4)}+${square(3)}+2\\times 4\\times 3\\times\\cos(60^{\\circ})}=\\sqrt{37}\\approx 6.08~\\mathrm{N}`,
-  'Teacher-only check: F = square root of 4 squared plus 3 squared plus 2 times 4 times 3 times cosine 60 degrees, approximately 6.08 newtons',
-  'تحقق رياضي إضافي للمعلم؛ لا يحل محل القياس والنتيجة المطبوعة في p58.',
+const eqLawCosines = formula(
+  'F=\\sqrt{4^{2}+3^{2}+2(4)(3)\\cos 60^{\\circ}}=\\sqrt{16+9+12}=\\sqrt{37}\\approx 6.08\\,\\mathrm{N}',
+  'F equals square root of 37 approximately 6.08 newtons',
 );
-
-const p59Arithmetic = formulaBox(
-  `F=\\sqrt{${square(60)}+${square(80)}}=\\sqrt{10000}=100~\\mathrm{N}`,
-  'Teacher arithmetic: F = square root of 60 squared plus 80 squared = square root of 10000 = 100 newtons',
-  'حساب المعلم الموسّع، منفصل عن كتلة فيثاغورث المطبوعة ذات الأسطر الثلاثة أدناه في محتوى الكتاب · p59.',
+const eqPyth59 = formula(
+  'F=\\sqrt{60^{2}+80^{2}}=\\sqrt{3600+6400}=\\sqrt{10000}=100\\,\\mathrm{N}',
+  'F equals 100 newtons',
 );
-
-const p62F1Calculation = formulaBox(
-  `F_{1}=\\sqrt{${square(15)}-${square(12)}}=\\sqrt{81}=9~\\mathrm{N}`,
-  'F one equals square root of 15 squared minus 12 squared equals 9 newtons',
+const eqProb1 = formula(
+  'F_{1}=\\sqrt{F^{2}-F_{2}^{2}}=\\sqrt{15^{2}-12^{2}}=\\sqrt{225-144}=\\sqrt{81}=9\\,\\mathrm{N}',
+  'F1 equals 9 newtons',
 );
-
-const p62ResultDirection = formulaBox(
-  `\\arctan\\left(\\dfrac{12}{9}\\right)\\approx 53.1^{\\circ}`,
-  'arctangent of 12 divided by 9 is approximately 53.1 degrees',
-  'زاوية مشتقة من جهة القوة 9 N نحو جهة القوة 12 N؛ لا تحدد اتجاهاً مطلقاً على الصفحة.',
+const eqProb2 = formula(
+  'F=\\sqrt{30^{2}+40^{2}}=\\sqrt{900+1600}=\\sqrt{2500}=50\\,\\mathrm{N}',
+  'F equals 50 newtons',
 );
-
-const p62TwelveSixteen = formulaBox(
-  `F=\\sqrt{${square(12)}+${square(16)}}=\\sqrt{400}=20~\\mathrm{N}`,
-  'F equals square root of 12 squared plus 16 squared equals 20 newtons',
-);
-
-const p62SecondMc = formulaBox(
-  `F_{2}=\\sqrt{${square(50)}-${square(40)}}=\\sqrt{900}=30~\\mathrm{N}`,
-  'F two equals square root of 50 squared minus 40 squared equals 30 newtons',
-);
-
-const p62BagResult = calculation(
-  `F=\\sqrt{${square(30)}+${square(40)}}=\\sqrt{2500}=50~\\mathrm{N}`,
-  'F equals square root of 30 squared plus 40 squared equals 50 newtons',
-);
-
-const p62BagAngle = calculation(
-  `\\arctan\\left(\\dfrac{40}{30}\\right)\\approx 53.1^{\\circ}`,
-  'arctangent of 40 divided by 30 is approximately 53.1 degrees',
-);
-
-const p60Components = formulaBox(
-  `W_{\\parallel}=W\\sin a \\qquad W_{\\perp}=W\\cos a`,
-  'If Latin lowercase a is the incline angle from the horizontal, W parallel equals W sine a and W perpendicular equals W cosine a',
-  'علاقة تعليمية عامة لمقداري مركبتي الثقل، بشرط أن تكون a هي زاوية ميل المستوى عن الأفق كما يذكر النص؛ ليست قراءةً لاتجاه سهم أو تسمية غير واضحة في الشكل.',
-);
-
-const p60FigureReference = sourcePage(60).blocks.find((block) => block.type === 'platform' && block.title.includes('الصفحة 60'));
-
-function renderOverview() {
-  return `<section class="teacher-section" id="teacher-overview" aria-labelledby="teacher-overview-heading">
-    ${subheading('نظرة عامة وأهداف الدرس', '55')}
-    <div class="teacher-subsection" data-page-reference="p55">
-      <h4 id="teacher-overview-heading">الأهداف التعليمية · المصدر p55</h4>
-      <ul class="teacher-objectives">
-        <li>يتعرّف القوى المتلاقية.</li>
-        <li>يوضّح بالرسم القوى المتلاقية.</li>
-        <li>يحدّد عناصر محصلة قوتين متلاقيتين.</li>
-        <li>يحلّل القوة إلى مركبتين متعامدتين.</li>
-      </ul>
-      <h4>الكلمات المفتاحية · المصدر p55</h4>
-      <p class="teacher-keyword-line">القوى المتلاقية – تحليل القوة.</p>
-      <p class="teacher-section-endnote">الأهداف والكلمات المفتاحية أعلاه منقولة كما وردت في المصدر؛ الشروح والحلول الإضافية معنونة بوضوح بـ «شرح المعلم».</p>
-    </div>
-  </section>`;
-}
-
-function renderActivities() {
-  return `<section class="teacher-section" id="teacher-activities" aria-labelledby="teacher-activities-heading">
-    ${subheading('مدخل الدرس والأنشطة والاستنتاجات', '55–60', 'teacher-activities-heading')}
-    <article class="teacher-subsection" id="teacher-p55" data-page-reference="p55">
-      <h4>مدخل المظلي · p55</h4>
-      ${teacherExplanation(55, `
-        <p>استخدم أسئلة الكتاب لربط الدرس بقوى تؤثر في جسم واحد، مع إظهار ما يثبته النص وما يتطلب الرجوع إلى الصورة الأصلية.</p>
-        <ul>
-          <li><strong>الارتباط:</strong> يذكر النص حبال المظلة ويسأل عن اتصالها بالمظلي؛ يمكن توضيح فكرة حبال التعليق والاتصال بالمظلي، لكن صورة الصفحة غير متاحة في المشروع، لذلك لا نحدد عدد الحبال أو عقدة اجتماعها أو موضعها الدقيق من النص وحده.</li>
-          <li><strong>القوى:</strong> ثقل المظلي يتجه رأسياً إلى أسفل، وتؤثر قوى شد الحبال على امتداد الحبال وفي اتجاه السحب. لا تتوفر في النص قياسات أو اتجاهات مرسومة تسمح بتعيين محصلة عددية أو مقدار كل شد.</li>
-          <li><strong>إدارة الإجابة:</strong> اعرض شكل الكتاب الأصلي عند توافره لقبول وصف موضع اتصال الحبال؛ لا تستبدل غياب الصورة بتخمين هندسي أو صورة غير مصدرية.</li>
-        </ul>
-        <div class="teacher-limit"><strong>حدّ المصدر:</strong> موضع التقاء الحبال تفصيلاً غير محسوم هنا من دون صورة p55؛ تُترك الإجابة المكانية للصورة الأصلية.</div>
-      `)}
-      ${sourceDisclosure(55)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p56" data-page-reference="p56">
-      <h4>تجربة الربيعتين وحوامل القوى · p56</h4>
-      ${teacherExplanation(56, `
-        <p>وجّه الطلاب إلى التمييز بين <strong>شعاع القوة</strong> (مقداره وجهته) و<strong>حاملها</strong> (الخط الممتد في اتجاهها). يصف النص تعليق جسم بربيعة، ثم استعمال ربيعتين وخيط لرسم الحوامل.</p>
-        <ol>
-          <li><strong>الثقل:</strong> ارسم ${V_W} عمودياً إلى أسفل من نقطة تأثيره على الجسم؛ حامله رأسي وجهته نحو الأرض.</li>
-          <li><strong>ربيعة واحدة:</strong> قوة توتر الربيعة على امتدادها. إذا كان الجسم ساكناً والربيعة رأسية، تتطابق حاملة التوتر مع حاملة الثقل وتتعاكس الجهتان؛ اربط هذا الحكم بشرط السكون/القراءة الثابتة.</li>
-          <li><strong>ربيعتان:</strong> عند نقطة تعليق الجسم، يلتقي حامل الشد الأول والثاني بحامل الثقل في نقطة الجسم. لا يلزم أن يكون حاملا الشدين على استقامة واحدة معاً؛ المقصود أن امتداد الخطوط يمر بنقطة مشتركة.</li>
-          <li><strong>مقارنة الثقل:</strong> يبقى اتجاه الثقل رأسياً إلى أسفل. وحامله في كل وضع هو الخط الرأسي المار بنقطة الجسم في ذلك الوضع؛ قد يتغير موضع الخط في المكان إذا تحرك الجسم.</li>
-          <li><strong>الأثر على اللوح:</strong> مدّ الخطين على امتداد الربيعتين وباتجاه نقطة التعليق، وارسم حامل الثقل، ثم ارفع الجهاز. تبقى الخطوط المرسومة أثراً هندسياً للحوامل لا قوى فعلية بعد إزالة الجسم.</li>
-          <li><strong>الاستنتاج:</strong> الخطوط الثلاثة تلتقي عند نقطة تعليق الجسم في الرسم المقصود. تعرّف القوى المتلاقية بأن حواملها تلتقي في نقطة واحدة؛ التلاقي وحده لا يثبت الاتزان.</li>
-        </ol>
-        <div class="teacher-source-note"><strong>تنبيه مصدر p56:</strong> عبارة خطوة ربط الربيعتين بالخيط غير محسومة في صورة المصدر؛ أبقها كما هي في النص ولا تخمّن كلماتها أو شكل اللوح. كما أن رسم الحوامل لا يعطي مقادير الشد.</div>
-      `)}
-      ${sourceDisclosure(56)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p57" data-page-reference="p57">
-      <h4>محصلة قوتين متلاقيتين · p57</h4>
-      ${teacherExplanation(57, `
-        <p>ابنِ متوازي الأضلاع على شعاعي ${V_F1} و${V_F2} من نقطة التأثير المشتركة. القطر المرسوم من تلك النقطة هو شعاع المحصلة، لا مجموعاً حسابياً لمقداري القوتين:</p>
-        ${formulaBox('\\vec{F}=\\vec{F}_{1}+\\vec{F}_{2}', 'Vector F equals vector F one plus vector F two')}
-        <ul>
-          <li><strong>نقطة التأثير:</strong> نقطة التقاء القوتين (O في الرسم النموذجي).</li>
-          <li><strong>الحامل:</strong> خط القطر المار من O، المنشأ على القوتين.</li>
-          <li><strong>الجهة:</strong> من O إلى الرأس المقابل للمتوازي.</li>
-          <li><strong>الشدة:</strong> تستنتج من طول القطر وفق مقياس رسم معلوم؛ p57 لا يقدّم مقادير أو زاوية عددية كافية لحساب قيمة عددية.</li>
-        </ul>
-        <p>في تجربة الجسم الساكن، تكون قوة الموازنة معاكسة لمحصلة الشدين؛ إذا كان الجسم متزناً بالفعل، تقابل محصلة الشدين قوة الثقل مقداراً وتعاكسها اتجاهاً. هذه نتيجة شرط الاتزان، وليست كمية تحسبها محاكاة تلاقي الحوامل.</p>
-        ${formulaBox('\\vec{F}_{\\text{balance}}=-\\vec{F}_{\\text{resultant}}', 'The balancing force vector is opposite to the resultant force vector', 'الرمزان السفليان للتوضيح من المعلم فقط؛ يستخدم النص الأصلي F للمحصلة ولا يحدد الرمز R هنا.')}
-        <div class="teacher-limit"><strong>حدّ المصدر:</strong> لا تُعطَ قيمة عددية للمحصلة من p57 وحدها؛ لا تُختلق قيمة للقوتين أو زاوية بينهما.</div>
-      `)}
-      ${sourceDisclosure(57)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p60-resolution" data-page-reference="p60">
-      <h4>نشاط تحليل القوة إلى مركبتين متعامدتين · p60</h4>
-      ${teacherExplanation(60, `
-        <p>ابدأ بقوة واحدة ${V_OM} عند O، وارسم من النقطة نفسها محورين متعامدين ${V_OX} و${V_OY}. أسقط من رأس القوة عموداً على كل محور؛ المسقطان هما مركبتا القوة. جمع المركبتين متجهياً يعيد القوة الأصلية:</p>
-        ${formulaBox('\\vec{\\mathrm{OM}}=\\vec{\\mathrm{OX}}+\\vec{\\mathrm{OY}}', 'vector OM equals vector OX plus vector OY')}
-        <ul>
-          <li>المركبتان متعامدتان لأن حامليهما ${V_OX} و${V_OY} متعامدان، وتبدآن من نقطة التأثير نفسها في تمثيل متوازي الأضلاع/المستطيل.</li>
-          <li>تُحدَّد شدة كل مركبة من طول مسقطها مع مقياس رسم معلوم، أو بالحساب إذا عُرف مقدار القوة وزاويتها. لا يورد نص النشاط قيمة عددية أو زاوية محددة.</li>
-          <li>يمكن وصف المحصلة هندسياً بقطر المستطيل؛ وعند وضع المتجهات رأساً لذيل تظهر علاقة مثلث قائم بين المتجهين المتعامدين والمحصلة.</li>
-        </ul>
-        <div class="teacher-misconception"><strong>مفهوم شائع يحتاج تصحيحاً:</strong> التحليل ليس حذف القوة الأصلية أو جعل المركبتين قوتين مستقلتين بلا علاقة؛ إنهما تمثيل متعامد مكافئ للقوة نفسها، ومجموعهما المتجهي يساويها.</div>
-      `)}
-      ${sourceDisclosure(60)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p60-incline" data-page-reference="p60">
-      <h4>نشاط المستوى المائل الأملس · p60</h4>
-      ${teacherExplanation(60, `
-        <p>يعطي النص مستوى أملساً يميل عن الأفق بزاوية، ويطلب رسم القوى وتحليل قوة الثقل. ابدأ بمخطط جسم حر مستقل، وارسم الثقل رأسياً إلى أسفل. في النموذج المثالي الأملس لا تُضاف قوة احتكاك؛ ويؤثر السطح بقوة تماس عمودية عليه.</p>
-        <p>إذا كانت ${tex('W')} شدة الثقل، وكانت ${LATIN_A} الزاوية المبيّنة في النص هي زاوية ميل المستوى عن الأفق، فمقدارا مركبتي الثقل المعتادتان بالنسبة إلى المستوى هما:</p>
-        ${p60Components}
-        <p>المركبتان متعامدتان؛ وبجمع متجهيهما نحصل على الثقل. إذا مثلناهما رأساً لذيل مع الثقل تتكون علاقة مثلث قائم، وإذا بنينا متوازي الأضلاع من نقطة واحدة نحصل على مستطيل.</p>
-        <div class="teacher-limit"><strong>حدّ الشكل الممسوح:</strong> الرمز الظاهر ${LATIN_A} هو حرف لاتيني صغير، ويعرض مرجع المنصة الرمز ${V_R} كما هو مقروء؛ لكن اتجاه السهم ومطابقة الرمز لقوة بعينها غير محسومين بصرياً. راجع الشكل الأصلي ولا تنسب ${V_R} إلى قوة محددة من التخمين. كذلك فإن مساواة رد الفعل العمودي للمركبة العمودية من الثقل تتطلب عدم وجود تسارع عمودي على السطح.</div>
-      `)}
-      ${p60FigureReference ? `<details class="teacher-source-details" data-source-page="p60-figure"><summary>مرجع شكل من المنصة، لا نص من الكتاب · p60</summary><div class="teacher-source-body"><div class="teacher-platform-reference"><p><strong>معالجة مرجعية للشكل:</strong> النص التالي ملاحظة توضيحية من المنصة، وليس نصاً أصلياً من الكتاب.</p>${p60FigureReference.html}</div></div></details>` : ''}
-    </article>
-  </section>`;
-}
-
-function renderWorkedExamples() {
-  return `<section class="teacher-section" id="teacher-examples" aria-labelledby="teacher-examples-heading">
-    ${subheading('أمثلة محلولة وتحليل القوى', '58–59', 'teacher-examples-heading')}
-    <article class="teacher-subsection" id="teacher-p58-example" data-page-reference="p58">
-      <h4>مثال القوتين بزاوية ${ltr('60°')} · ${ltr('p58')}</h4>
-      ${teacherAnswer(`<p>النتيجة المطبوعة في الكتاب: طول القطر نحو ${ltr('6 cm')}، ومنها ${ltr('F = 6 × 1 = 6 N')}؛ وعناصر المحصلة: نقطة التأثير ${pointO}، والحامل قطر متوازي الأضلاع ${V_OM}، والجهة من ${pointO} إلى ${pointM}، والشدة ${qty(6, 'N')}.</p>`)}
-      ${teacherExplanation(58, `
-        <p><strong>المعطيات كما وردت:</strong> ${ltr('F₁ = 4 N')}، ${ltr('F₂ = 3 N')}، والزاوية المحصورة ${ltr('60°')}، ومقياس الرسم ${ltr('1 cm = 1 N')}.</p>
-        <ol>
-          <li>ارسم القوتين من O بطولي ${ltr('4 cm')} و${ltr('3 cm')} مع الزاوية المحددة، ثم أكمل متوازي الأضلاع.</li>
-          <li>ارسم القطر من O، وقِس طوله في الرسم. النتيجة المطبوعة: نحو ${ltr('6 cm')}، ثم ${ltr('F = 6 × 1 = 6 N')}.</li>
-          <li>عناصر المحصلة: نقطة التأثير O، والحامل هو قطر متوازي الأضلاع، والجهة من O إلى الرأس المقابل، والشدة ${ltr('6 N')} بحسب القياس ومقياس الرسم.</li>
-        </ol>
-        <div class="teacher-answer"><strong>تحقق تحليلي للمعلم — منفصل عن جواب الكتاب:</strong> باستعمال قانون جيب التمام لمقدار محصلة قوتين بينهما ${ltr('60°')}:</div>
-        ${p58AnalyticCheck}
-        <p>القيمة التحليلية نحو ${ltr('6.08 N')}؛ لذلك فقراءة القطر الرسومية «نحو ${ltr('6 cm')}» تعطي الجواب التقريبي المنشور ${ltr('6 N')}. لا تستبدل قيمة المصدر المقيسة بالتحقق التحليلي ولا تعرضهما كأنهما نص واحد.</p>
-      `)}
-      ${sourceDisclosure(58)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p59-example" data-page-reference="p59">
-      <h4>مثال القوتين المتعامدتين ${ltr('60 N')} و${ltr('80 N')} · ${ltr('p58–p59')}</h4>
-      ${teacherAnswer(`<p>النتيجة المطبوعة: شدة المحصلة ${qty(100, 'N')}؛ عناصرها: نقطة التأثير ${pointO} المشتركة، والحامل قطر المستطيل ${V_OM}، والجهة من ${pointO} إلى ${pointM}.</p>`)}
-      ${teacherExplanation(59, `
-        <p><strong>المعطيات:</strong> ${ltr('F₁ = 60 N')} و${ltr('F₂ = 80 N')} متعامدتان. في الرسم استخدم المقياس المطبوع في الحل: ${ltr('1 cm = 20 N')}.</p>
-        <ul>
-          <li>طول شعاع ${ltr('60 N')} هو ${ltr('3 cm')}، وطول شعاع ${ltr('80 N')} هو ${ltr('4 cm')}.</li>
-          <li>القطر في المثلث القائم ${ltr('5 cm')}؛ وبمقياس الرسم تكون المحصلة ${ltr('F = 5 × 20 = 100 N')}.</li>
-          <li>نقطة التأثير هي نقطة التقاء القوتين، والحامل قطر المستطيل، والجهة من نقطة التأثير إلى الرأس المقابل. لا يحدد النص محوراً مطلقاً أو رسماً بعينه لاتجاه القطر.</li>
-        </ul>
-        ${p59Arithmetic}
-        <p><strong>كتلة فيثاغورث الأصلية ذات الأسطر الثلاثة محفوظة حرفياً في مرجع الكتاب ${ltr('p59')} أدناه.</strong> الحساب الموسع أعلاه شرح معلم منفصل. إن أمكن، اطلب من الطلاب التحقق من تطابق الطريقة البيانية والحسابية.</p>
-        <div class="teacher-misconception"><strong>تذكير:</strong> لمقدارين متعامدين نستخدم مجموع المربعين تحت الجذر؛ لا نجمع ${ltr('60')} و${ltr('80')} مباشرة ولا نربع الناتج مرة أخرى.</div>
-      `)}
-      ${sourceDisclosure(59)}
-    </article>
-  </section>`;
-}
-
-function renderSelfCheck() {
-  return `<section class="teacher-section" id="teacher-self-check" aria-labelledby="teacher-self-check-heading">
-    ${subheading('حل أسئلة الكتاب والمسائل الكتابية', '61–62', 'teacher-self-check-heading')}
-    <article class="teacher-subsection" id="teacher-p61" data-page-reference="p61">
-      <h4>أختبر نفسي · السؤال الأول، الفقرتان 1–2 · p61</h4>
-      ${teacherAnswer(`<ol>
-        <li>الفقرة الأولى: <strong>متوازي أضلاع.</strong></li>
-        <li>الفقرة الثانية: <strong>مستطيل.</strong></li>
-      </ol>`)}
-      ${teacherExplanation(61, `
-        <ol>
-          <li><strong>الإجابة: متوازي أضلاع.</strong> زاوية القوتين حادة ومقداراهما مختلفان؛ لا شرط تعامد أو تساوٍ يبرر مستطيلاً أو مربعاً أو معيناً. قطر متوازي الأضلاع من نقطة التلاقي يمثل المحصلة.</li>
-          <li><strong>الإجابة: مستطيل.</strong> حاملَا القوتين متعامدان ومقدارهما مختلف؛ لذلك يكون الشكل متوازي الأضلاع ذو زاوية قائمة، وليس مربعاً.</li>
-        </ol>
-        <div class="teacher-misconception"><strong>وجّه الانتباه:</strong> «متعامدتان» تحدد زاوية قائمة، و«مختلفتان شدة» تمنع استنتاج تساوي الضلعين.</div>
-      `)}
-      ${sourceDisclosure(61)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p62-check" data-page-reference="p62">
-      <h4>أختبر نفسي · السؤال الأول، الفقرات 3–6 · p62</h4>
-      ${teacherAnswer(`<ol start="3">
-        <li>الفقرة الثالثة: <strong>مربع.</strong></li>
-        <li>الفقرة الرابعة: ${qty(20, 'N')}.</li>
-        <li>الفقرة الخامسة: ${qty(30, 'N')}.</li>
-        <li>الفقرة السادسة: علاقة فيثاغورث ${tex('\\sqrt{F_{1}^{2}+F_{2}^{2}}', 'square root of F1 squared plus F2 squared')}.</li>
-      </ol>`)}
-      ${teacherExplanation(62, `
-        <ol start="3">
-          <li><strong>الإجابة: مربع.</strong> قوتان متعامدتان ومتساويتان تبنيان ضلعين متساويين وزاوية قائمة؛ الشكل مربع.</li>
-          <li><strong>الإجابة: ${ltr('20 N')}.</strong> ${p62TwelveSixteen}</li>
-          <li><strong>الإجابة: ${ltr('30 N')}.</strong> من العلاقة القائمة نحصل على القوة الثانية بطرح مربع ${ltr('40')} من مربع ${ltr('50')} ثم أخذ الجذر: ${p62SecondMc}</li>
-          <li><strong>الإجابة: علاقة فيثاغورث.</strong> لمحصلة قوتين متعامدتين مختلفتي الشدة: ${formulaBox('F=\\sqrt{F_{1}^{2}+F_{2}^{2}}', 'F = square root of F one squared plus F two squared')}</li>
-        </ol>
-      `)}
-      ${sourceDisclosure(62)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p62-problem-one" data-page-reference="p62">
-      <h4>السؤال الثاني · المسألة الأولى · p62</h4>
-      ${teacherAnswer(`<ol>
-        <li>شدة القوة الأولى ${tex('F_{1}=9~\\mathrm{N}', 'F1 = 9 N')}.</li>
-        <li>عناصر المحصلة: نقطة التأثير ${pointO}، والحامل قطر المستطيل المنشأ على القوتين، والجهة من ${pointO} إلى الرأس المقابل، والشدة ${qty(15, 'N')}.</li>
-        <li>قوة الاتزان: شدتها ${qty(15, 'N')}، وحاملها حامل المحصلة نفسه، وجهتها معاكسة لجهة المحصلة.</li>
-        <li>التمثيل بالرسم يُنجز بمقياس يعلنه المعلم للقوى المحددة المقدار.</li>
-      </ol>`)}
-      ${teacherExplanation(62, `
-        <p><strong>المعطيات:</strong> قوتان متعامدتان عند O، ${ltr('F₂ = 12 N')}، ومقدار المحصلة ${ltr('15 N')}.</p>
-        <ol>
-          <li><strong>شدة القوة الأولى:</strong> ${p62F1Calculation} إذن ${ltr('F₁ = 9 N')}.</li>
-          <li><strong>عناصر المحصلة:</strong> نقطة التأثير O، وحاملها القطر من O في متوازي الأضلاع (أو وتر مثلث جمع المتجهات)، وجهتها من O إلى الرأس المقابل، وشدتها ${ltr('15 N')}. اتجاهها النسبي بين القوتين المتعامدتين، ويمكن تحديد زاويتها من جهة ${V_F1} إلى جهة ${V_F2} هكذا: ${p62ResultDirection} لا يعطي المصدر رسماً يحدد اتجاههما المطلق على الصفحة.</li>
-          <li><strong>القوة التي توازن الجسم:</strong> مقدارها ${ltr('15 N')}، وحاملها حامل المحصلة نفسه، لكن جهتها معاكسة؛ عندها يكون مجموعها المتجهي مع المحصلة صفراً.</li>
-          <li><strong>تمثيل القوى:</strong> ترتيب المجموعة في نص الكتاب محفوظ: ${tex('\\{\\vec{F}_{1},\\ \\vec{F}_{2},\\ \\vec{F},\\ \\vec{F}_{3}\\}', 'the set F one, F two, F, F three')}. وفق الفقرة السابقة تمثل ${V_F} قوة الموازنة، لكن المصدر لا يعرّف ${V_F3} ولا يعطي له مقداراً أو اتجاهاً؛ لذلك لا يمكن إكمال تمثيل ${V_F3} أو الجزم به. كما لا يفرض الكتاب مقياس رسم أو اتجاهاً مطلقاً. للقوى المحددة فقط يمكن للمعلم اختيار مقياس معلن ومناسب، مثلاً ${ltr('1 cm = 3 N')}؛ وهذا اقتراح رسم لا مقياس مطبوع.</li>
-        </ol>
-        <div class="teacher-limit"><strong>حدّ المصدر:</strong> لا تخترع قيمة أو دوراً لـ ${V_F3}، ولا تضف سهماً رابعاً مستنتجاً. لا تُحوّل الاقتراح الاختياري للمقياس إلى نص من الكتاب.</div>
-      `)}
-    </article>
-
-    <article class="teacher-subsection" id="teacher-p62-problem-two" data-page-reference="p62">
-      <h4>السؤال الثاني · المسألة الثانية، حمل الحقيبة · p62</h4>
-      ${teacherAnswer(`<ol>
-        <li>شدة المحصلة ${qty(50, 'N')}.</li>
-        <li>عناصرها: نقطة التأثير مشتركة (نقطة تأثير القوتين)، والحامل قطر المستطيل المنشأ عليهما، والجهة من نقطة التأثير نحو الرأس المقابل (بين الحبلين)، والشدة ${qty(50, 'N')}.</li>
-        <li>التمثيل بمقياس رسم يعلنه الطالب أو المعلم، مثلاً ${ltr('1 cm = 10 N')}.</li>
-      </ol>`)}
-      ${teacherExplanation(62, `
-        <p><strong>المعطيات:</strong> قوتا الحبلين متعامدتان؛ المقداران ${ltr('30 N')} و${ltr('40 N')}.</p>
-        <p><strong>شدة المحصلة:</strong></p>
-        ${p62BagResult}
-        <p>وهي وتر مثلث قائم ${ltr('3–4–5')} بعد ضرب الأطوال في ${ltr('10')}.</p>
-        <p><strong>الجهة النسبية:</strong> تقع المحصلة بين اتجاهي الحبلين وتميل أكثر نحو قوة ${ltr('40 N')}. من جهة الحبل ذي القوة ${ltr('30 N')} يكون القياس المشتق:</p>
-        ${p62BagAngle}
-        <p>ومن جهة ${ltr('40 N')} تكون قرابة ${ltr('36.9°')}. لا يحدد النص اتجاه المحصلة بالنسبة إلى أفق أو محور خارجي.</p>
-        <p><strong>تمثيل بمقياس مناسب:</strong> اختر واكتب أي مقياس مناسب بوضوح؛ على سبيل المثال ${ltr('1 cm = 10 N')} يجعل الشعاعين ${ltr('3 cm')} و${ltr('4 cm')} متعامدين والقطر ${ltr('5 cm')}. هذا مثال لمقياس يختاره المعلم، لا قيمة مفروضة في المصدر. في نموذج القوى المتلاقية ارسمهما من نقطة مشتركة؛ أما مواضع ربط الحبلين الدقيقة على الحقيبة وخط العمل الفعلي فلا يحددهما النص، فتُراجعان من شكل أو وصف إضافي عند الحاجة.</p>
-      `)}
-    </article>
-  </section>`;
-}
-
-function renderSimulationGuide() {
-  return `<section class="teacher-section" id="teacher-simulations" aria-labelledby="teacher-simulations-heading">
-    ${subheading('شرح المعلم للمحاكاة الموجودة', '56، 57، 59، 60', 'teacher-simulations-heading')}
-    <p class="teacher-section-endnote">هذه ملاحظات لاستخدام التفاعلات الموجودة في صفحات الطالب؛ لم تُضف أو تُعدّل محاكاة في مرحلة منطقة المعلم.</p>
-
-    <article class="teacher-simulation-note" data-simulation-reference="spring-concurrency" data-page-reference="p56">
-      <h4>تفاعل الحوامل الهندسي · <span>p56</span></h4>
-      <p><strong>ما يفعله:</strong> يحرّك موضع O أفقياً ورأسياً ضمن المجال المعروض، ويعيد رسم حاملَي الشد وحامل الوزن الرأسي، مع بقاء الخطوط الثلاثة ملتقية عند O. الأسهم توضيحية لاتجاهات الرسم، وليست مقياساً للمقادير.</p>
-      <p><strong>ما لا يفعله:</strong> لا يحسب قراءات الربيعتين أو شدّ النابضين، ولا يختبر اتزان الجسم. التلاقي مضمَّن هندسياً في إنشاء الخطوط؛ فلا تقدمه كبرهان على الاتزان أو كبديل للتجربة العملية.</p>
-      <p><strong>سؤال توجيهي:</strong> ميّز بين اتجاه السهم وحامله الممتد، ثم اشرح لماذا لا تكفي معرفة نقطة الالتقاء وحدها لإثبات أن محصلة القوى تساوي صفراً.</p>
-    </article>
-
-    <article class="teacher-simulation-note" data-simulation-reference="concurrent" data-page-reference="p57">
-      <h4>تفاعل محصلة قوتين بمتوازي الأضلاع · <span>p57</span></h4>
-      <p><strong>ما يفعله:</strong> يغيّر مقدارَي القوتين والزاوية بينهما، ويحدّث متوازي الأضلاع، ومقدار المحصلة واتجاهها بالنسبة إلى ${V_F1}. مجال كل قوة ${ltr('0–10 N')} بخطوة ${ltr('0.5 N')}، والزاوية ${ltr('0–180°')}. قيمة البداية ${ltr('6 N')} و${ltr('4 N')} و${ltr('45°')} للاستكشاف وليست معطيات مثال ${ltr('p58')}. زر «شاهد المحصلة تتغير» يمسح الزاوية ذهاباً وإياباً لعرض العلاقة حركياً.</p>
-      ${formulaBox('F=\\sqrt{F_{1}^{2}+F_{2}^{2}+2F_{1}F_{2}\\cos\\theta}', 'F equals square root of F one squared plus F two squared plus 2 F one F two cosine theta')}
-      <p><strong>استخدام صفي:</strong> غيّر زاوية واحدة مع تثبيت المقدارين، واطلب وصف تغير القطر. قارِن المدخلات بقيم ${ltr('p58')} فقط بعد إدخالها عمداً، ولا تنسب قيم البدء إلى الكتاب.</p>
-    </article>
-
-    <article class="teacher-simulation-note" data-simulation-reference="perpendicular" data-page-reference="p59">
-      <h4>تفاعل المحصلة للقوتين المتعامدتين · <span>p59</span></h4>
-      <p><strong>ما يفعله:</strong> يعرض قوتين متعامدتين، ومثلث جمع متجهات، ومقدار المحصلة واتجاهها. مجال كل مقدار ${ltr('0–100 N')} بخطوة ${ltr('1 N')}؛ قيم البداية ${ltr('50 N')} و${ltr('70 N')}، وليست مثال ${ltr('p58–p59')}. يمكن إدخال ${ltr('60 N')} و${ltr('80 N')} لمراجعة نتيجة ${ltr('100 N')}.</p>
-      ${formulaBox('F=\\sqrt{F_{1}^{2}+F_{2}^{2}}', 'F equals the square root of F one squared plus F two squared')}
-      <p><strong>سؤال توجيهي:</strong> أدخل ${ltr('60 N')} و${ltr('80 N')}، ثم قارِن طول القطر مع نتيجة كتلة فيثاغورث المطبوعة في ${ltr('p59')}.</p>
-    </article>
-
-    <article class="teacher-simulation-note" data-simulation-reference="force-resolution" data-page-reference="p60">
-      <h4>تفاعل تحليل القوة على ${V_OX} و${V_OY} · <span>p60</span></h4>
-      <p><strong>ما يفعله:</strong> يغيّر مقدار القوة الأصلية من ${ltr('0')} إلى ${ltr('10 N')} بخطوة ${ltr('0.5 N')} وزاويتها من ${ltr('0°')} إلى ${ltr('90°')} بخطوة ${ltr('1°')}، ثم يعرض مسقطيها المتعامدين على ${V_OX} و${V_OY} والمستطيل الناتج. البداية ${ltr('8 N')} و${ltr('35°')} للاستكشاف فقط. زر «شاهد المركبتين تتغيران» يدير القوة بين المحورين لعرض تبادل الشدة بينهما.</p>
-      <p><strong>حدود المطابقة:</strong> هذا تفاعل عام للتحليل على محورين؛ لا يعيد رسم المستوى المائل في p60 ولا يحسم رموز الأسهم الصغيرة فيه. لا تستخدمه لتخمين معنى ${V_R} أو اتجاهه في الشكل الأصلي. مجاله في الربع الأول فقط، فلا يمثل مركبات سالبة.</p>
-      <p><strong>سؤال توجيهي:</strong> جرّب الزاويتين الطرفيتين ${ltr('0°')} و${ltr('90°')}، واطلب تحديد أي مسقط يساوي صفراً في كل حالة، ثم اربط ذلك بإسقاط القوة على حاملين متعامدين.</p>
-    </article>
-  </section>`;
-}
 
 export function renderTeacherContent() {
-  return `<header class="teacher-workspace-header">
-    <div>
-      <p class="teacher-workspace-eyebrow">دليل المعلم · المصدر p55–p62</p>
-      <h2 id="teacher-workspace-heading" tabindex="-1">القوى المتلاقية</h2>
-      <p>الصف الثامن · الوحدة الأولى — الحركة والقوى · شرح، حلول، وحدود موثقة للمصدر</p>
+  return `
+    <header class="teacher-workspace-header">
+      <div>
+        <p class="teacher-workspace-eyebrow">دليل المعلم الشامل · الوحدة الأولى · الدرس الأول (ص 55–62)</p>
+        <h2 id="teacher-workspace-heading" tabindex="-1">القوى المتلاقية وتحليل القوة — التوجيه التربوي والحلول الكاملة</h2>
+        <p>مرجع علمي وتربوي متكامل للمعلم يغطي الأهداف، التأسيس المفهومي، حلول جميع الأنشطة والأسئلة والمسائل بفقراتها الفرعية، معالجة الأخطاء الشائعة، وتوظيف المحاكيات الأربع.</p>
+      </div>
+      <button type="button" class="teacher-logout-button" data-teacher-logout>إغلاق منطقة المعلم</button>
+    </header>
+
+    <div class="teacher-limit" role="note">
+      <strong>إفصاح معماري صريح حول بوابة كلمة المرور:</strong> تعمل هذه المنصة كموقع ويب ثابت (Static Client-Side Web App) بلا خادم خلفي؛ وتؤدي كلمة المرور (<bdi dir="ltr">PBKDF2-SHA256</bdi> مع التحميل الكسول لوحدة المعلم) وظيفة <strong>الفصل التربوي والتنظيمي</strong> عن واجهة الطالب، ولا يجوز اعتبارها حماية خادم خلفية (Server-Side Security) ضد الفحص التقني لملفات الواجهة.
     </div>
-    <button class="teacher-logout-button" type="button" data-teacher-logout>إنهاء الجلسة</button>
-  </header>
-  <div class="teacher-workspace-layout">
-    <nav class="teacher-nav" aria-label="التنقل في دليل المعلم">
-      <p class="teacher-nav-title">أقسام الدليل</p>
-      <a href="#teacher-overview">نظرة عامة والأهداف</a>
-      <a href="#teacher-activities">الأنشطة والاستنتاجات</a>
-      <a href="#teacher-examples">الأمثلة المحلولة</a>
-      <a href="#teacher-self-check">أسئلة الكتاب</a>
-      <a href="#teacher-simulations">المحاكاة الموجودة</a>
-    </nav>
-    <div class="teacher-content">
-      ${renderOverview()}
-      ${renderActivities()}
-      ${renderWorkedExamples()}
-      ${renderSelfCheck()}
-      ${renderSimulationGuide()}
+
+    <div class="teacher-workspace-layout">
+      <nav class="teacher-nav" aria-label="أقسام دليل المعلم">
+        <p class="teacher-nav-title">أقسام الدليل</p>
+        <a href="#t-overview">١. الأهداف وخطة التدريس</a>
+        <a href="#t-scientific-notes">٢. الشرح المعمّق وتدقيق المصدر</a>
+        <a href="#t-activities-solutions">٣. حلول الأنشطة والأمثلة (ص 55–60)</a>
+        <a href="#t-selfcheck-solutions">٤. حلول أختبر نفسي والمسألتين (ص 61–62)</a>
+        <a href="#t-practice-key">٥. مفتاح بنك التدريب المتدرج</a>
+        <a href="#t-misconceptions">٦. معالجة الأخطاء الشائعة</a>
+        <a href="#t-simulations-guide">٧. دليل توظيف المحاكيات</a>
+        <a href="#t-source-matrix">٨. مصفوفة التحقق من شمول المصدر</a>
+      </nav>
+
+      <div class="teacher-content">
+        <!-- Section 1 -->
+        <section class="teacher-section" id="t-overview">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم الأول</p>
+              <h3>الأهداف التعليمية، الكلمات المفتاحية، وخطة توزيع الحصص</h3>
+            </div>
+            <span class="teacher-page-ref">p55–p62</span>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>أهداف التعلّم الرسمية (المصدر ص 55) ومؤشرات الأداء</h4>
+            <ul class="teacher-objectives">
+              <li><strong>يتعرّف القوى المتلاقية:</strong> يتحقق هندسياً وتجريبياً من التقاء حوامل القوى في نقطة واحدة <bdi dir="ltr">O</bdi> ويميّزها عن القوى المتوازية.</li>
+              <li><strong>يوضّح بالرسم القوى المتلاقية:</strong> يختار مقياس رسم صريحاً (<bdi dir="ltr">1 cm : k N</bdi>) ويمثّل العناصر الأربعة لشعاع القوة بدقة.</li>
+              <li><strong>يحدّد عناصر محصلة قوتين متلاقيتين:</strong> ينشئ متوازي الأضلاع في الحالة العامة والمستطيل/المربع عند التعامد ويطبق نظرية فيثاغورث.</li>
+              <li><strong>يحلّل القوة إلى مركبتين متعامدتين:</strong> يسقط شعاع القوة عمودياً على محورين متعامدين ويفسر أثر الثقل على مستوى مائل أملس.</li>
+            </ul>
+            <p><strong>الكلمات المفتاحية (ص 55):</strong> <span class="teacher-keyword-line">القوى المتلاقية – تحليل القوّة.</span></p>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>خطة التدريس المقترحة (حصتان دراسيتان × ٤٥ دقيقة)</h4>
+            <ul>
+              <li><strong>الحصة الأولى (المراحل ١–٤ · ص 55–58):</strong> تمهيد القوة ككمية شعاعية + استكشاف المظلّي (٧ د) ← تجربة لوح الربائع المغناطيسي والمحاكاة الأولى (١٣ د) ← استنتاج قاعدة متوازي الأضلاع من التوازن والمحاكاة الثانية (١٥ د) ← حل مثال ص 58 بالمسطرة والمقياس (١٠ د).</li>
+              <li><strong>الحصة الثانية (المراحل ٥–٨ · ص 58–62):</strong> حالة التعامد ومثال ص 59 بالرسم وفيثاغورث مع المحاكاة الثالثة (١٢ د) ← تحليل القوة ونشاط المستوى المائل الأملس مع المحاكاة الرابعة (١٥ د) ← خريطة المفاهيم وحلّ «أختبر نفسي» ومسألتَي ص 62 (١٨ د).</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="teacher-section" id="t-scientific-notes">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم الثاني</p>
+              <h3>ملاحظات علمية معمّقة وتوثيق التدقيق المصدري</h3>
+            </div>
+            <span class="teacher-page-ref">Audit Notes</span>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>١. الإطار الفيزيائي الدقيق للمعلم</h4>
+            <ul>
+              <li><strong>القوة شعاع مقيد بالحامل على الجسم الصلب:</strong> على الرغم من أن القوى قد تؤثر في نقاط مادية متباعدة على جسم صلب (كربط الخيوط بحافات الجسم)، فإن خاصية انزلاق الشعاع على حامله في الميكانيك الصلب تسمح بنقل نقاط التأثير على امتداد الحوامل إلى نقطة تلاقيها <bdi dir="ltr">O</bdi> متى كانت الحوامل متلاقية.</li>
+              <li><strong>المثال الأول (ص 58 — الزاوية <bdi dir="ltr">60°</bdi>):</strong> في منهج الصف الثامن يعتمد القياس البياني بالمسطرة (<bdi dir="ltr">OM ≈ 6 cm , F = 6 N</bdi>) لأن علاقة جيب التمام غير مقررة في هذا الصف. وللمعلم: القيمة التحليلية الدقيقة هي:
+                <div class="teacher-formula">${eqLawCosines}</div>
+                وتميل المحصلة عن ${V_F1} بزاوية <bdi dir="ltr">arctan((3 sin 60°)/(4 + 3 cos 60°)) ≈ 25.3°</bdi>. كما ننبّه المعلم إلى أن الرسم المطبوع في الكتاب المدرسي ص 58 تخطيطي غير محجّم بالسنتيمتر الحقيقي، بينما أعيد رسمه في المنصة بنسبة <bdi dir="ltr">4 : 3</bdi> وزاوية <bdi dir="ltr">60°</bdi> دقيقة.</li>
+              <li><strong>نشاط المستوى المائل الأملس (ص 60):</strong> أملس تعني إهمال الاحتكاك، لذا يكون ردّ الفعل ${V_R} عمودياً تماماً على سطح المستوي، فيوازن المركبة الناظمية للثقل (<bdi dir="ltr">R = F₂ = w cos a</bdi>)، وتبقى المركبة الموازية (<bdi dir="ltr">F₁ = w sin a</bdi>) محصلةً وحيدةً تسبب تسارع الجسم نحو أسفل المستوي. وقد التزمنا بالرمز اللاتيني الصغير المطبوع في الكتاب (${LATIN_A}) لزاوية الميل.</li>
+            </ul>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>٢. توثيق التدقيق المصدري من الصور المدرسية عالية الدقة (ص 55–62)</h4>
+            <ul>
+              <li><strong>ترقيم الوحدة:</strong> يظهر في رأس ص 55 «الوحدة الثانية: الحركة والقوى» لأن الكتاب الوزاري يجمع الفيزياء والكيمياء معاً؛ وتُعتمَد «الوحدة الأولى: الحركة والقوى» في فهرس الفيزياء المستقل في المنصة.</li>
+              <li><strong>أدوات ص 56:</strong> نص الكتاب الواضح هو: «لوح الربائع المغناطيسي - ربائع - جسم مزود بخطاف - خيوط ربط».</li>
+              <li><strong>الفقرة 5 من أولاً (ص 62):</strong> ورد في بدائل الطبعة المدرسية الرمز <bdi dir="ltr">F = 90 N, F = 30 N, ...</bdi> سهواً مطبعياً مع أن نص السؤال يطلب صراحةً «شدة القوة الثانية <bdi dir="ltr">F₂</bdi>»، وقد نُبِّه الطالب والمعلم إلى ذلك بشفافية دون تحريف الأصل.</li>
+              <li><strong>المسألة الأولى — الطلبان 3 و4 (ص 62):</strong> الرمز المطبوع في الكتاب للقوة الثالثة الموازِنة هو ${V_F_PRIME} (فتحة فوق <bdi dir="ltr">F</bdi>) ومجموعة التمثيل في الطلب الرابع هي <bdi dir="ltr">(${V_F_PRIME}, ${V_F}, ${V_F1}, ${V_F2})</bdi>، فعناصر ${V_F_PRIME} متعيّنة بالكامل من شرط التوازن (<bdi dir="ltr">${S_F_PRIME} = 15 N</bdi> وبجهة معاكسة لـ ${V_F} على الحامل <bdi dir="ltr">OM</bdi>).</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="teacher-section" id="t-activities-solutions">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم الثالث</p>
+              <h3>حلول جميع أنشطة الاستكشاف والتجارب والأمثلة (ص 55–60)</h3>
+            </div>
+            <span class="teacher-page-ref">p55–p60</span>
+          </div>
+
+          <div class="teacher-subsection" id="teacher-p55">
+            <h4>١. حلول أسئلة استكشاف مشهد المظلّي (ص 55)</h4>
+            <div class="teacher-book-answer">
+              <span class="teacher-answer-chip">الإجابات النموذجية لأسئلة ص 55</span>
+              <div class="teacher-answer-body">
+                <ol>
+                  <li><strong>القوى المؤثرة في المظلّي:</strong> قوة ثقله الشاقولية نحو الأسفل ${V_W}، وقوى شدّ حبال المظلة المائلة نحو الأعلى (الناقلة لقوة مقاومة الهواء في قبة المظلة).</li>
+                  <li><strong>تحديد حامل كل قوة:</strong> حامل كل قوة شدّ ينطبق على استقامة الخيط المشدود الموافق لها، وحامل قوة ثقل المظلّي هو المستقيم الشاقولي المار بمركز ثقله.</li>
+                  <li><strong>هل تتلاقى الحوامل في نقطة واحدة؟</strong> نعم؛ تلتقي حبال التعليق وامتداد الحامل الشاقولي للثقل في نقطة تجمع مشتركة واحدة <bdi dir="ltr">O</bdi>، ولذلك تُعدّ قوى متلاقية.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div class="teacher-subsection" id="teacher-p56">
+            <h4>٢. إجابات وتفسيرات تجربة لوح الربائع المغناطيسي (ص 56)</h4>
+            <div class="teacher-book-answer">
+              <span class="teacher-answer-chip">إجابات خطوات التجربة ص 56</span>
+              <div class="teacher-answer-body">
+                <ul>
+                  <li><strong>الخطوة 2 (ربيعة واحدة):</strong> حامل قوة الثقل وحامل قوة توتر نابض الربيعة منطبقان على المستقيم الشاقولي الواحد، وجهتاهما متعاكستان، وشدتاهما متساويتان.</li>
+                  <li><strong>الخطوة 4 (ربيعتان مائلتان):</strong> حاملا قوتي توتر نابضي الربيعتين ليس لهما الاستقامة ذاتها (كل منهما مائل بزاوية نحو ربيعته)، وحامل الثقل شاقولي.</li>
+                  <li><strong>الخطوة 6 (بعد رفع الربيعتين والجسم):</strong> نلاحظ على اللوح ثلاثة مستقيمات مرسومة تتقاطع جميعاً في النقطة الواحدة المشتركة <bdi dir="ltr">O</bdi>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="teacher-subsection" id="teacher-p57">
+            <h4>٣. إجابة «أتساءل» واستنتاج متوازي الأضلاع (ص 57)</h4>
+            <p><strong>الجواب العلمي:</strong> نعم، يمكن استبدال قوتين متلاقيتين ${V_F1} و${V_F2} بقوة وحيدة هي محصلتهما ${V_F}. ولأن الجسم متوازن تحت تأثير ${V_F1} و${V_F2} والثقل ${V_W}، فإن المحصلة المكافئة للربيعتين يجب أن توازن ${V_W} (تساويها شدةً وتعاكسها جهةً شاقولياً للأعلى)، وعند الرسم بالمقياس نجدها تنطبق على القطر <bdi dir="ltr">OM</bdi> في متوازي الأضلاع.</p>
+          </div>
+
+          <div class="teacher-subsection" id="teacher-p60-resolution">
+            <h4>٤. إجابة «أتساءل» في تحليل القوة (ص 60)</h4>
+            <p><strong>الجواب العلمي:</strong> نعم، كل قوة مائلة ${V_OM} يمكن استبدالها بمركبتين متعامدتين ${V_OX} و${V_OY} نحصل عليهما بإسقاط نهاية الشعاع <bdi dir="ltr">M</bdi> عمودياً على المحورين المتعامدين، فيتشكل مستطيل قطره القوة الأصلية.</p>
+          </div>
+
+          <div class="teacher-subsection" id="teacher-p60-incline">
+            <h4>٥. الحل الكامل لنشاط المستوى المائل الأملس (ص 60)</h4>
+            <div class="teacher-book-answer">
+              <span class="teacher-answer-chip">حل نشاط ص 60 بشقّيه</span>
+              <div class="teacher-answer-body">
+                <ol>
+                  <li><strong>تحليل قوة الثقل ${V_W}:</strong> نرسم من مركز ثقل الجسم <bdi dir="ltr">O</bdi> محورين متعامدين: أحدهما موازٍ لسطح المستوي المائل والآخر عمودي عليه. نسقط نهاية شعاع الثقل الشاقولي ${V_W} عمودياً على المحور الموازي فنحصل على المركبة الأولى ${V_F1} المتجهة نحو أسفل المستوي، ونسقطها عمودياً على المحور الناظم فنحصل على المركبة الثانية ${V_F2} الضاغطة عمودياً على المستوي.</li>
+                  <li><strong>نوع الشكل الهندسي ودور المركبتين:</strong> الشكل الهندسي الناتج هو <strong>مستطيل</strong> لأن المركبتين متعامدتان (<bdi dir="ltr">90°</bdi>) وقطره هو شعاع الثقل ${V_W} (ويصبح المستطيل <strong>مربعاً</strong> في الحالة الخاصة <bdi dir="ltr">a = 45°</bdi> حيث تتساوى <bdi dir="ltr">F₁ = F₂</bdi>). فيزيائياً: توازن ردّ الفعل العمودية ${V_R} المركبةَ العمودية ${V_F2}، وتبقى المركبة الموازية ${V_F1} غير متوازنة فتسبّب انزلاق الجسم على المستوي الأملس.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="teacher-section" id="t-selfcheck-solutions">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم الرابع</p>
+              <h3>الحلول الكاملة لـ «أختبر نفسي» والمسألتين (ص 61–62)</h3>
+            </div>
+            <span class="teacher-page-ref">p61–p62</span>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>أولاً: حلول الاختيار من متعدد (الفقرات ١–٦) مع تعليل البدائل</h4>
+            <ol>
+              ${['61-1', '61-2', '62-1', '62-2', '62-3', '62-4'].map((key) => {
+                const item = SELF_CHECK_ANSWERS[key];
+                return `<li>
+                  <div class="teacher-book-answer">
+                    <span class="teacher-answer-chip">مفتاح الفقرة (${key}): ${item.answerLabel}</span>
+                    <div class="teacher-answer-body"><p>${item.explanation}</p></div>
+                  </div>
+                </li>`;
+              }).join('')}
+            </ol>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>ثانياً — حل المسألة الأولى كاملاً (ص 62) بفقراتها الأربع</h4>
+            <p class="teacher-page-question"><strong>المعطيات:</strong> قوتان متلاقيتان في <bdi dir="ltr">O</bdi> حاملاهما متعامدان (<bdi dir="ltr">90°</bdi>)، <bdi dir="ltr">${S_F2} = 12 N</bdi>، وشدة المحصلة <bdi dir="ltr">${S_F} = 15 N</bdi>.</p>
+
+            <div class="teacher-book-answer">
+              <span class="teacher-answer-chip">الحل النموذجي المفصّل للمسألة الأولى</span>
+              <div class="teacher-answer-body">
+                <ol>
+                  <li><strong>حساب شدة القوة الأولى ${V_F1}:</strong> لأن حاملي القوتين متعامدان فالشكل مستطيل وقطره المحصلة ${V_F} وتر لمثلث قائم الزاوية. من نظرية فيثاغورث <bdi dir="ltr">F² = F₁² + F₂²</bdi> نعزل <bdi dir="ltr">F₁</bdi>:
+                    <div class="teacher-formula">${eqProb1}</div>
+                  </li>
+                  <li><strong>عناصر محصلة القوتين ${V_F}:</strong>
+                    <ul>
+                      <li><strong>نقطة التأثير:</strong> نقطة التلاقي المشتركة <bdi dir="ltr">O</bdi>.</li>
+                      <li><strong>الحامل:</strong> المستقيم الحامل لقطر المستطيل <bdi dir="ltr">OM</bdi> المنشأ على الشعاعين ${V_F1} و${V_F2} (وللمعلم: يصنع زاوية <bdi dir="ltr">arctan(12/9) ≈ 53.1°</bdi> مع حامل ${V_F1} و<bdi dir="ltr">36.9°</bdi> مع حامل ${V_F2}).</li>
+                      <li><strong>الجهة:</strong> من النقطة <bdi dir="ltr">O</bdi> نحو الرأس المقابل <bdi dir="ltr">M</bdi> بين حاملي القوتين.</li>
+                      <li><strong>الشدة:</strong> <bdi dir="ltr">${S_F} = 15 N</bdi>.</li>
+                    </ul>
+                  </li>
+                  <li><strong>عناصر القوة الثالثة الموازِنة ${V_F_PRIME}:</strong> لكي تتوازن ${V_F_PRIME} مع القوتين ${V_F1} و${V_F2} في النقطة <bdi dir="ltr">O</bdi> يجب أن توازن محصلتهما ${V_F}، فتكون عناصرها:
+                    <ul>
+                      <li><strong>نقطة التأثير:</strong> النقطة <bdi dir="ltr">O</bdi> نفسها.</li>
+                      <li><strong>الحامل:</strong> المستقيم القطري <bdi dir="ltr">OM</bdi> نفسه (منطبق على حامل المحصلة ${V_F}).</li>
+                      <li><strong>الجهة:</strong> معاكسة تماماً لجهة المحصلة ${V_F} ابتداءً من <bdi dir="ltr">O</bdi> نحو الخارج.</li>
+                      <li><strong>الشدة:</strong> <bdi dir="ltr">${S_F_PRIME} = ${S_F} = 15 N</bdi>.</li>
+                    </ul>
+                  </li>
+                  <li><strong>تمثيل القوى الأربع <bdi dir="ltr">(${V_F_PRIME}, ${V_F}, ${V_F1}, ${V_F2})</bdi> بمقياس رسم مناسب:</strong>
+                    بما أن الشدات <bdi dir="ltr">(9 N, 12 N, 15 N, 15 N)</bdi> قواسمها المشتركة تقبل القسمة على <bdi dir="ltr">3</bdi>، نختار المقياس: <strong>كل <bdi dir="ltr">1 cm</bdi> يقابل <bdi dir="ltr">3 N</bdi></strong> (ويقبل من الطالب أي مقياس سليم آخر مثل <bdi dir="ltr">1 cm : 5 N</bdi> يعطي <bdi dir="ltr">1.8 cm, 2.4 cm, 3 cm</bdi>):
+                    <ul>
+                      <li>طول شعاع ${V_F1}: <bdi dir="ltr">9 ÷ 3 = 3 cm</bdi>.</li>
+                      <li>طول شعاع ${V_F2} العمودي عليه: <bdi dir="ltr">12 ÷ 3 = 4 cm</bdi>.</li>
+                      <li>طول قطر المحصلة ${V_F}: <bdi dir="ltr">15 ÷ 3 = 5 cm</bdi> من <bdi dir="ltr">O</bdi> إلى <bdi dir="ltr">M</bdi>.</li>
+                      <li>طول شعاع الموازنة ${V_F_PRIME}: <bdi dir="ltr">15 ÷ 3 = 5 cm</bdi> من <bdi dir="ltr">O</bdi> على امتداد <bdi dir="ltr">MO</bdi> بالجهة المعاكسة.</li>
+                    </ul>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="diagram-svg-wrap">${DIAGRAMS['problem1-scale'].svg}</div>
+          </div>
+
+          <div class="teacher-subsection">
+            <h4>ثالثاً — حل المسألة الثانية كاملاً: حمل الحقيبة بحبلين متعامدين (ص 62)</h4>
+            <p class="teacher-page-question"><strong>المعطيات:</strong> حبلان متعامدان (<bdi dir="ltr">90°</bdi>) مربوطان بالحقيبة عند <bdi dir="ltr">O</bdi>؛ <bdi dir="ltr">${S_F1} = 30 N</bdi> و<bdi dir="ltr">${S_F2} = 40 N</bdi>.</p>
+
+            <div class="teacher-book-answer">
+              <span class="teacher-answer-chip">الحل النموذجي المفصّل للمسألة الثانية</span>
+              <div class="teacher-answer-body">
+                <ol>
+                  <li><strong>حساب شدة المحصلة ${V_F}:</strong> لتعامد حاملي قوتي الشد نطبق نظرية فيثاغورث:
+                    <div class="teacher-formula">${eqProb2}</div>
+                  </li>
+                  <li><strong>تحديد عناصر المحصلة ${V_F}:</strong>
+                    <ul>
+                      <li><strong>نقطة التأثير:</strong> عقدة التقاء الحبلين في الحقيبة <bdi dir="ltr">O</bdi>.</li>
+                      <li><strong>الحامل:</strong> المستقيم الحامل لقطر المستطيل <bdi dir="ltr">OM</bdi> المنشأ على شعاعي القوتين (وللمعلم: يميل بزاوية <bdi dir="ltr">53.1°</bdi> عن حامل القوة <bdi dir="ltr">30 N</bdi> و<bdi dir="ltr">36.9°</bdi> عن حامل القوة <bdi dir="ltr">40 N</bdi>).</li>
+                      <li><strong>الجهة:</strong> من <bdi dir="ltr">O</bdi> نحو الرأس المقابل <bdi dir="ltr">M</bdi> بين الحبلين في جهة سحب الشخصين.</li>
+                      <li><strong>الشدة:</strong> <bdi dir="ltr">${S_F} = 50 N</bdi>.</li>
+                    </ul>
+                  </li>
+                  <li><strong>التمثيل بمقياس رسم مناسب:</strong> نختار <strong>كل <bdi dir="ltr">1 cm</bdi> يقابل <bdi dir="ltr">10 N</bdi></strong>، فنرسم ${V_F1} بطول <bdi dir="ltr">3 cm</bdi>، و${V_F2} عمودياً عليه بطول <bdi dir="ltr">4 cm</bdi>، ونكمل المستطيل فيكون القطر <bdi dir="ltr">OM</bdi> بطول <bdi dir="ltr">5 cm</bdi> ممثلاً لـ <bdi dir="ltr">50 N</bdi>. (ملاحظة تربوية: لا يفرض نص المسألة اتجاهاً مطلقاً للحبلين في الفراغ، فيُقبل رسم الضلعين المتعامدين أفقياً/شاقولياً أو مائلين بزاوية قائمة بينهما).</li>
+                </ol>
+              </div>
+            </div>
+            <div class="diagram-svg-wrap">${DIAGRAMS['problem2-scale'].svg}</div>
+          </div>
+        </section>
+
+        <!-- Section 5 -->
+        <section class="teacher-section" id="t-practice-key">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم الخامس</p>
+              <h3>مفتاح إجابات بنك التدريب التفاعلي المتدرج (١٠ تمارين إثرائية)</h3>
+            </div>
+            <span class="teacher-page-ref">Formative Bank</span>
+          </div>
+          <div class="teacher-subsection">
+            <ol>
+              ${PRACTICE_DECK.map((item) => {
+                const rightOpt = item.options.find((o) => o.id === item.correct);
+                return `<li><strong>(${item.kindLabel})</strong> ${item.prompt}<br />
+                  <span class="teacher-keyword-line">الجواب الصحيح: ${item.correct}) ${rightOpt?.label ?? ''}</span></li>`;
+              }).join('')}
+            </ol>
+          </div>
+        </section>
+
+        <!-- Section 6 -->
+        <section class="teacher-section" id="t-misconceptions">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم السادس</p>
+              <h3>تشخيص الأخطاء الشائعة لدى الطلاب واستراتيجيات المعالجة</h3>
+            </div>
+            <span class="teacher-page-ref">Pedagogy</span>
+          </div>
+
+          <div class="teacher-subsection">
+            <div class="teacher-misconception">
+              <strong>١. جمع الشدات عددياً (<bdi dir="ltr">F = F₁ + F₂</bdi>) أياً كانت الزاوية:</strong> يظهر في كتابة <bdi dir="ltr">28 N</bdi> بدلاً من <bdi dir="ltr">20 N</bdi> أو <bdi dir="ltr">70 N</bdi> في مسألة الحقيبة. <em>المعالجة:</em> اطلب من الطالب ضبط <bdi dir="ltr">6 N</bdi> و<bdi dir="ltr">4 N</bdi> في المحاكاة الثانية ثم تحريك الزاوية من <bdi dir="ltr">0°</bdi> إلى <bdi dir="ltr">180°</bdi> ليلاحظ أن <bdi dir="ltr">10 N</bdi> لا تتحقق إلا عند <bdi dir="ltr">0°</bdi>.
+            </div>
+            <div class="teacher-misconception">
+              <strong>٢. جمع المربعين بدل طرحهما عند إيجاد مركبة مجهولة:</strong> يظهر في المسألة الأولى (<bdi dir="ltr">√(15² + 12²)</bdi> بدلاً من <bdi dir="ltr">√(15² − 12²)</bdi>). <em>المعالجة:</em> ذكّر الطالب بأن الوتر (المحصلة) هو أطول أضلاع المثلث القائم دائماً، فإذا كان المعلوم هو الوتر وجب أن تكون القوة المجهولة أصغر منه.
+            </div>
+            <div class="teacher-misconception">
+              <strong>٣. الطرح العددي المباشر من دون تربيع وجذر (<bdi dir="ltr">15 − 12 = 3 N</bdi>):</strong> شائع جداً في الفقرة 5 والمسألة 1. <em>المعالجة:</em> وضّح أن الطرح المباشر يخص الزاوية <bdi dir="ltr">180°</bdi> فقط، أما التعامد فيخضع لعلاقة المساحات المربعة في فيثاغورث.
+            </div>
+            <div class="teacher-misconception">
+              <strong>٤. الخلط بين المربّع والمستطيل والمعيّن:</strong> يظن بعض الطلاب أن كل قوتين متعامدتين تشكلان مربعاً أو أن كل قوتين متساويتين تشكلان مربعاً. <em>المعالجة:</em> استعمل مخطط الحالات الأربع في ص 58 وجدول المقارنة في ص 61 لإثبات أن المربع يشترط اجتماع التعامد وتساوي الشدتين معاً.
+            </div>
+            <div class="teacher-misconception">
+              <strong>٥. الخلط بين المحصلة ${V_F} وقوة الموازنة ${V_F_PRIME}:</strong> يرسم الطالب ${V_F_PRIME} منطبقةً على ${V_F} بالجهة نفسها. <em>المعالجة:</em> فعّل خانة «أضف قوة الموازنة ${V_F_PRIME}» في المحاكاة الثانية ليرى السهمين متعاكسين من <bdi dir="ltr">O</bdi>.
+            </div>
+            <div class="teacher-misconception">
+              <strong>٦. رسم قوة الثقل عموديةً على المستوى المائل بدلاً من شاقولية:</strong> خطأ كلاسيكي في نشاط ص 60. <em>المعالجة:</em> استخدم تبويب المستوى المائل في المحاكاة الرابعة وأمل السطح أمام الطلاب مع مراقبة بقاء السهم الأحمر ${V_W} شاقولياً دائماً نحو مركز الأرض.
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7 -->
+        <section class="teacher-section" id="t-simulations-guide">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم السابع</p>
+              <h3>دليل توظيف المحاكيات التفاعلية الأربع وحدود كل نموذج</h3>
+            </div>
+            <span class="teacher-page-ref">4 Interactive Labs</span>
+          </div>
+
+          <div class="teacher-subsection">
+            <div class="teacher-simulation-note" data-simulation-reference="spring-concurrency" data-page-reference="p56">
+              <h4>١. مختبر لوح الربائع المغناطيسي <span>spring-concurrency · p56</span></h4>
+              <p><strong>توظيفه الصفي:</strong> ابدأ بوضع «ربيعة واحدة شاقولية» لتأكيد انطباق الحاملين، ثم انتقل إلى «ربيعتان مائلتان» وحرّك النقطة <bdi dir="ltr">O</bdi> أفقياً ليسأل الطلاب: أي ربيعة تتحمل شداً أكبر ولماذا؟ أخيراً اضغط «الخطوة 6: ارفع الربيعتين والجسم» لتجسيد تقاطع الحوامل الثلاثة.</p>
+            </div>
+
+            <div class="teacher-simulation-note" data-simulation-reference="concurrent" data-page-reference="p57">
+              <h4>٢. مختبر متوازي الأضلاع والتوازن <span>concurrent · p57–p58</span></h4>
+              <p><strong>توظيفه الصفي:</strong> اعرض البناء على ثلاث خطوات متدرجة (١. الشعاعان ← ٢. إكمال المتوازي ← ٣. القطر والمحصلة)، ثم اضغط الحالة الجاهزة لمثال ص 58 (<bdi dir="ltr">4 N, 3 N, 60°</bdi>) وقارن القيمة الدقيقة <bdi dir="ltr">6.08 N</bdi> بقراءة المسطرة المقررة <bdi dir="ltr">6 N</bdi>، ثم فعّل ${V_F_PRIME} لشرح التوازن.</p>
+            </div>
+
+            <div class="teacher-simulation-note" data-simulation-reference="perpendicular" data-page-reference="p59">
+              <h4>٣. مختبر القوتين المتعامدتين ومقياس الرسم <span>perpendicular · p58–p59</span></h4>
+              <p><strong>توظيفه الصفي:</strong> بدّل بين الحالات الجاهزة لأمثلة ومسائل الكتاب (<bdi dir="ltr">60 N, 80 N</bdi> بمقياس <bdi dir="ltr">20 N/cm</bdi>، وحقيبة <bdi dir="ltr">30 N, 40 N</bdi> بمقياس <bdi dir="ltr">10 N/cm</bdi>، والمسألة الأولى <bdi dir="ltr">9 N, 12 N</bdi> بمقياس <bdi dir="ltr">3 N/cm</bdi>) لمطابقة الرسم مع فيثاغورث.</p>
+            </div>
+
+            <div class="teacher-simulation-note" data-simulation-reference="force-resolution" data-page-reference="p60">
+              <h4>٤. مختبر تحليل القوة والمستوى المائل الأملس <span>force-resolution · p60</span></h4>
+              <p><strong>توظيفه الصفي:</strong> في التبويب الأول اختبر الزوايا الحدية <bdi dir="ltr">0°</bdi> و<bdi dir="ltr">90°</bdi> ليرى الطلاب متى تنعدم إحدى المركبتين، ثم افتح التبويب الثاني «نشاط المستوى المائل الأملس» وأمل السطح تدريجياً من <bdi dir="ltr">0°</bdi> إلى <bdi dir="ltr">60°</bdi> لتفسير زيادة مركبة الانزلاق ${V_F1} ونقصان المركبة الضاغطة ${V_F2}.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 8 -->
+        <section class="teacher-section" id="t-source-matrix">
+          <div class="teacher-section-heading">
+            <div>
+              <p class="teacher-section-kicker">القسم الثامن</p>
+              <h3>مصفوفة التحقق من شمول صفحات الكتاب المدرسي (ص 55–62)</h3>
+            </div>
+            <span class="teacher-page-ref">100% Coverage</span>
+          </div>
+
+          <div class="teacher-subsection">
+            <ul class="teacher-checklist">
+              <li><strong>ص 55:</strong> العنوان، الأهداف الأربعة، الكلمات المفتاحية، تمثيل مشهد المظلّي وأسئلة الاستقصاء الثلاثة + تأسيس القوة ككمية شعاعية ومقياس الرسم (المرحلة ١).</li>
+              <li><strong>ص 56:</strong> الأدوات الكاملة (لوح الربائع المغناطيسي...)، الخطوات السبع بمرحلتي ربيعة واحدة وربيعتين، التعريف الرسمي، مقارنة المتلاقية بغير المتلاقية، والمحاكاة الأولى (المرحلة ٢).</li>
+              <li><strong>ص 57:</strong> سؤال «أتساءل»، ربط المحصلة بموازنة الثقل، إنشاء متوازي الأضلاع والقطر <bdi dir="ltr">OM</bdi>، العناصر الأربعة للمحصلة، والمحاكاة الثانية (المرحلة ٣).</li>
+              <li><strong>ص 58:</strong> المثال المحلول الأول (<bdi dir="ltr">4 N, 3 N, 60° : 6 N</bdi> تقريباً) في ٨ خطوات، وتمهيد حالة التعامد ومقارنة الأشكال الرباعية الأربعة (المرحلة ٤).</li>
+              <li><strong>ص 59:</strong> المثال المحلول الثاني (<bdi dir="ltr">60 N, 80 N : 100 N</bdi>) بالرسم وبفيثاغورث، بطاقة تذكير فيثاغورث، العلاقة العكسية، المحاكاة الثالثة، وتمهيد التحليل (المرحلة ٥).</li>
+              <li><strong>ص 60:</strong> سؤال «أتساءل»، خطوات الإسقاط العمودي على <bdi dir="ltr">OX, OY</bdi> ومرتسم النقطة، استنتاجا التحليل، نشاط المستوى المائل الأملس بشقيه ومخططه بزاوية ${LATIN_A}، والمحاكاة الرابعة المزدوجة (المرحلة ٦).</li>
+              <li><strong>ص 61:</strong> خلاصة «تعلّمتُ» ببنودها الأربعة، خريطة المفاهيم الشاملة، جدول المقارنة، والفقرتان ١–٢ من «أختبر نفسي» (المرحلة ٧).</li>
+              <li><strong>ص 62:</strong> الفقرات ٣–٦ من «أختبر نفسي»، ورشة الحل والتمثيل المقياسي للمسألتين الأولى (شاملة ${V_F_PRIME}) والثانية، وبنك التدريب التفاعلي المتدرج (المرحلة ٨).</li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
-  </div>`;
+  `;
 }
