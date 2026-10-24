@@ -10,6 +10,12 @@ import { ANSWER_KEY, SOLUTIONS, SOLUTION_GROUPS } from '../src/unit2-lesson2-tes
 import { validateAnswerKey, startAssessment, createAssessmentState, recordAnswer, submitAssessment, restartAssessment } from '../src/lesson-test-engine.js';
 import { renderTeacherContent } from '../src/unit2-lesson2-teacher-content.js';
 import { unit2l2SimulationMarkup, createTubeState, pushBalls, markedSlot, TUBE_CAPACITY } from '../src/unit2-lesson2-simulation.js';
+import { unit2l2PracticeMarkup } from '../src/unit2-lesson2-practice.js';
+import { UNIT2L2_ANSWERS, unit2l2Answer } from '../src/unit2-lesson2-answers.js';
+import {
+  checkQuantity, gradeGraphPoints, gradePlaceholderTable, matchesTerm, parseNumericInput,
+  batteryBankVoltage, solveP96Question5, normalizeTermText, P90_BLANK_CELLS,
+} from '../src/unit2-lesson2-physics.js';
 
 const read = (p) => readFile(new URL(p, import.meta.url), 'utf8');
 const source = (n) => UNIT2L2_PAGES.find((p) => p.page === n)?.blocks.filter((b) => b.type === 'book').map((b) => b.html).join('') ?? '';
@@ -107,7 +113,9 @@ test('physics: I=q/t, series, parallel, conversions', () => {
 });
 
 test('diagrams and simulations labelled, accessible, reduced motion', async () => {
-  assert.deepEqual(Object.keys(UNIT2L2_DIAGRAMS), ['current-direction', 'qt-graph', 'series-circuit', 'parallel-circuit']);
+  assert.deepEqual(Object.keys(UNIT2L2_DIAGRAMS), ['intro-scenes', 'current-direction', 'qt-graph', 'series-circuit', 'parallel-circuit', 'batteries-series', 'batteries-parallel']);
+  assert.deepEqual(UNIT2L2_PAGES.flatMap((p) => p.blocks.filter((b) => b.type === 'diagram').map((b) => `${p.page}:${b.id}`)),
+    ['87:intro-scenes', '89:current-direction', '90:qt-graph', '92:series-circuit', '93:batteries-series', '93:parallel-circuit', '94:batteries-parallel']);
   for (const d of Object.values(UNIT2L2_DIAGRAMS)) {
     assert.match(d.svg, /role="img"/);
     assert.match(d.svg, /<title/);
@@ -523,7 +531,10 @@ test('p93 parallel circuit (geometric check of the SVG): closed, A in the main l
   ]);
   // Upper branch A1–L1 above the lower branch A2–lamp; the lower lamp keeps the source's printed label L1.
   assert.ok(byName.A1.cy === byName.L1.cy && byName.A2.cy === byName['L1-lower'].cy && byName.A1.cy < byName.A2.cy);
-  for (const p of round) assert.match(p.inner, new RegExp(`>${p.name === 'L1-lower' ? 'L1' : p.name}</text>`));
+  /* The printed symbols keep their subscripts (A₁, L₁, A₂); data-name stays A1/L1
+     for the geometry above, and the lower lamp keeps the source's printed L₁. */
+  const printed = { A: 'A', A1: 'A₁', L1: 'L₁', A2: 'A₂', 'L1-lower': 'L₁' };
+  for (const p of round) assert.match(p.inner, new RegExp(`>${printed[p.name]}</text>`));
   assert.ok(svg.includes('I = I1 + I2'));
 });
 
@@ -535,4 +546,193 @@ test('teacher gate unchanged and no plain password in new pages', async () => {
   assert.doesNotMatch(auth, /somer173/);
   const boot = await read('../src/unit2-lesson2-teacher.js');
   assert.match(boot, /verifyTeacherPassword/);
+});
+
+
+/* ---------------------------------------------------------------------------
+   Rebuild: the textbook tasks are real activities, the answers stay behind an
+   explicit request, and each activity resets on its own.
+   --------------------------------------------------------------------------- */
+
+const PRACTICE_IDS = Object.freeze(['p90-table', 'p90-graph', 'p95-q1', 'p95-q2', 'p95-q3', 'p96-q3b', 'p96-q4', 'p96-q5']);
+
+test('every textbook task on pages 90, 95 and 96 has its own activity slot, in printed order', () => {
+  const slotsOf = (n) => [...source(n).matchAll(/data-u2l2-practice="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(slotsOf(90), ['p90-table', 'p90-graph']);
+  assert.deepEqual(slotsOf(95), ['p95-q1', 'p95-q2', 'p95-q3']);
+  assert.deepEqual(slotsOf(96), ['p96-q3b', 'p96-q4', 'p96-q5']);
+  for (const id of PRACTICE_IDS) assert.ok(unit2l2PracticeMarkup(id).includes(`data-practice-body="${id}"`), id);
+  assert.equal(unit2l2PracticeMarkup('not-a-task'), '');
+});
+
+test('activity markup carries controls but never the answer', async () => {
+  const [practice, main, physics] = await Promise.all([
+    read('../src/unit2-lesson2-practice.js'),
+    read('../src/unit2-lesson2-main.js'),
+    read('../src/unit2-lesson2-physics.js'),
+  ]);
+  // The answer module is only ever reached through a dynamic import.
+  assert.match(practice, /import\('\.\/unit2-lesson2-answers\.js'\)/);
+  assert.doesNotMatch(practice, /^import[^;]*unit2-lesson2-answers\.js/m);
+  for (const source of [practice, main, physics, await read('../src/unit2-lesson2-simulation.js')]) {
+    assert.doesNotMatch(source, /^import[^;]*unit2-lesson2-answers\.js/m, 'the answer module is never imported statically');
+  }
+  // No answer value is baked into the markup of any activity.
+  for (const id of PRACTICE_IDS) {
+    const html = unit2l2PracticeMarkup(id);
+    for (const phrase of ['الإجابة الصحيحة هي', 'correct:', 'answers[']) assert.ok(!html.includes(phrase), `${id} ${phrase}`);
+  }
+  const table = unit2l2PracticeMarkup('p90-table');
+  assert.equal((table.match(/data-practice-cell="/g) ?? []).length, 5, 'one input per blank cell');
+  for (const hook of ['data-practice-action="check"', 'data-practice-action="hint"', 'data-practice-action="solution"', 'data-practice-action="reset"', 'data-practice-feedback', 'data-practice-hint', 'data-practice-solution']) {
+    assert.ok(table.includes(hook), hook);
+  }
+  const graph = unit2l2PracticeMarkup('p90-graph');
+  assert.equal((graph.match(/data-graph-point="/g) ?? []).length, 36, 'six times by six quantity grid');
+  assert.match(graph, /class="u2l2-graph-hit" cx=/);
+  assert.match(graph, /role="button"/);
+  const terms = unit2l2PracticeMarkup('p95-q1');
+  assert.equal((terms.match(/data-term-input="/g) ?? []).length, 4);
+  assert.equal((unit2l2PracticeMarkup('p95-q2').match(/data-truth-input="/g) ?? []).length, 4, 'two statements, two judgements');
+  assert.ok(unit2l2PracticeMarkup('p96-q5').includes('data-step-value="current"'));
+  assert.ok(unit2l2PracticeMarkup('p96-q4').includes('data-explain-compare'));
+});
+
+test('activity answer key: values are computed from the printed data, hints never state the result', () => {
+  assert.deepEqual([...Object.keys(UNIT2L2_ANSWERS)].sort(), [...PRACTICE_IDS, 'sim-tube', 'sim-current', 'sim-circuit'].sort());
+  assert.deepEqual(gradePlaceholderTable([15, 25, 4, 4, 4], UNIT2L2_ANSWERS['p90-table'].values).map((c) => c.correct), [true, true, true, true, true]);
+  assert.deepEqual(gradePlaceholderTable(['15', '٢٠', '4', '4', '4'], UNIT2L2_ANSWERS['p90-table'].values).map((c) => c.correct), [true, false, true, true, true]);
+  assert.equal(P90_BLANK_CELLS.length, 5);
+  assert.equal(gradeGraphPoints([[5, 20], [10, 40], [15, 60], [20, 80], [25, 100]], UNIT2L2_ANSWERS['p90-graph'].points).correct, true);
+  assert.equal(gradeGraphPoints([[5, 20], [10, 40]], UNIT2L2_ANSWERS['p90-graph'].points).correct, false);
+  assert.deepEqual(solveP96Question5().current, 0.1);
+  assert.deepEqual(solveP96Question5().charge, 30);
+  assert.equal(UNIT2L2_ANSWERS['p96-q5'].parts[0].expected, 0.1);
+  assert.equal(UNIT2L2_ANSWERS['p96-q5'].parts[1].expected, 30);
+  // Hints guide without giving the final number.
+  for (const id of PRACTICE_IDS) {
+    const hint = UNIT2L2_ANSWERS[id].hint ?? '';
+    assert.ok(hint.length > 20, `${id} hint`);
+    assert.doesNotMatch(hint, /\b(0\.1\s*A|30\s*C|15\s*s|25\s*s)\b/, `${id} hint leaks the result`);
+  }
+  // Every activity has a model solution reachable only after an attempt.
+  for (const id of PRACTICE_IDS) {
+    const spec = UNIT2L2_ANSWERS[id];
+    if (id === 'p96-q4') {
+      assert.ok(spec.criteria['1'].length > 1 && spec.criteria['2'].length > 1, 'explanation criteria');
+      assert.ok(spec.model['1'].length > 40 && spec.model['2'].length > 40, 'model explanations');
+    } else {
+      assert.ok((spec.solution?.steps?.length ?? 0) > 0, `${id} solution`);
+    }
+  }
+  assert.equal(unit2l2Answer('p95-q3').correct, 'd');
+  assert.equal(unit2l2Answer('p96-q3b').correct, 'b');
+  assert.equal(unit2l2Answer('unknown'), null);
+});
+
+test('physics of the rebuilt activities: table, graph, terms, units, batteries, p96', () => {
+  assert.equal(parseNumericInput('١٢'), 12);
+  assert.equal(parseNumericInput('1٫5'), 1.5);
+  assert.equal(parseNumericInput('1.2×10^-3'), 0.0012);
+  assert.equal(parseNumericInput('abc'), null);
+  assert.equal(checkQuantity('100', 'mA', 0.1, 'A').correct, true);
+  assert.equal(checkQuantity('0.1', 'A', 0.1, 'A').correct, true);
+  assert.equal(checkQuantity('0.1', 'C', 0.1, 'A').correct, false, 'a charge is not a current');
+  assert.equal(checkQuantity('6', 'A', 0.1, 'A').correct, false);
+  assert.equal(normalizeTermText('شِدّة التيّار'), normalizeTermText('شدة التيار'));
+  const terms = UNIT2L2_ANSWERS['p95-q1'].terms;
+  assert.equal(matchesTerm('شدة التيار الكهربائي', terms[0].accepted), true);
+  assert.equal(matchesTerm('الأمبير', terms[1].accepted), true);
+  assert.equal(matchesTerm('مقياس الأمبير', terms[2].accepted), true);
+  assert.equal(matchesTerm('التيار المتواصل', terms[3].accepted), true);
+  assert.equal(matchesTerm('جهد كهربائي', terms[2].accepted), false);
+  assert.equal(batteryBankVoltage({ cells: 4, cellVoltage: 1.5, mode: 'series' }).voltage, 6);
+  assert.equal(batteryBankVoltage({ cells: 4, cellVoltage: 1.5, mode: 'parallel' }).voltage, 1.5);
+  assert.throws(() => batteryBankVoltage({ cells: 0, cellVoltage: 1.5, mode: 'series' }), RangeError);
+});
+
+test('battery diagrams: series chain closes cell i to cell i+1, parallel joins two rails', () => {
+  const series = UNIT2L2_DIAGRAMS['batteries-series'].svg;
+  const parallel = UNIT2L2_DIAGRAMS['batteries-parallel'].svg;
+  const cells = (svg) => [...svg.matchAll(/data-cell="(\d)" data-bank="(\w+)" data-x="([\d.]+)" data-top="([\d.]+)" data-bottom="([\d.]+)" data-flipped="(true|false)"/g)]
+    .map(([, index, bank, x, top, bottom, flipped]) => ({ index: Number(index), bank, x: Number(x), top: Number(top), bottom: Number(bottom), flipped: flipped === 'true' }));
+  const seriesCells = cells(series);
+  assert.deepEqual(seriesCells.map((c) => c.index), [1, 2, 3, 4]);
+  assert.ok(seriesCells.every((c) => c.bank === 'series'));
+  // The cells alternate so that every link runs − of one cell into + of the next.
+  assert.deepEqual(seriesCells.map((c) => c.flipped), [false, true, false, true]);
+  // One chain wire per gap, from the − cap of a cell to the + cap of the next.
+  const chains = [...series.matchAll(/data-bank-wire="chain-(\d)" data-wire data-from="cell(\d)-negative" data-to="cell(\d)-positive" data-level="([\d.]+)" d="M([\d.]+) ([\d.]+) H([\d.]+)"/g)]
+    .map(([, n, from, to, level, x1, y1, x2]) => ({ n: Number(n), from: Number(from), to: Number(to), level: Number(level), x1: Number(x1), y1: Number(y1), x2: Number(x2), y2: Number(y1) }));
+  assert.equal(chains.length, 3);
+  chains.forEach((wire, index) => {
+    const cell = seriesCells[index];
+    const next = seriesCells[index + 1];
+    assert.equal(wire.from, cell.index);
+    assert.equal(wire.to, next.index);
+    // The link leaves the − cap of this cell and enters the + cap of the next,
+    // whichever way each cell is turned, and stays on one level (no crossing).
+    const negativeY = cell.flipped ? cell.top : cell.bottom;
+    const positiveY = next.flipped ? next.bottom : next.top;
+    assert.deepEqual([wire.x1, wire.y1], [cell.x, negativeY], 'starts on the − cap');
+    assert.deepEqual([wire.x2, wire.y2], [next.x, positiveY], 'ends on the + cap of the next cell');
+    assert.equal(wire.y1, wire.level, 'the link runs at the level it declares');
+  });
+  // The printed total of the book, once per diagram.
+  assert.ok(series.includes('6 Volts'));
+  assert.ok(parallel.includes('1.5 Volts'));
+  const parallelCells = cells(parallel);
+  assert.equal(parallelCells.length, 4);
+  const rails = [...parallel.matchAll(/data-wire d="M([\d.]+) ([\d.]+) H([\d.]+)"/g)].map(([, x1, y, x2]) => ({ x1: Number(x1), y: Number(y), x2: Number(x2) }));
+  const top = Math.min(...parallelCells.map((c) => c.top));
+  const bottom = Math.max(...parallelCells.map((c) => c.bottom));
+  assert.ok(rails.some((r) => r.y === top && r.x1 === parallelCells[0].x && r.x2 > parallelCells[3].x), 'the upper rail joins every + cap');
+  assert.ok(rails.some((r) => r.y === bottom && r.x1 === parallelCells[0].x && r.x2 > parallelCells[3].x), 'the lower rail joins every − cap');
+  // Each cell is tied to both rails by its own vertical stub, so no cell floats.
+  for (const cell of parallelCells) {
+    assert.ok(parallel.includes(`class="u2l2-cell-stub" x1="${cell.x}" y1="${top}"`), `cell ${cell.index} meets the upper rail`);
+    assert.ok(parallel.includes(`class="u2l2-cell-stub" x1="${cell.x}" y1="${bottom - 14}"`), `cell ${cell.index} meets the lower rail`);
+  }
+  for (const d of [UNIT2L2_DIAGRAMS['batteries-series'], UNIT2L2_DIAGRAMS['batteries-parallel']]) {
+    assert.match(d.svg, /role="img"/);
+    assert.ok(d.platformNote.includes('من المنصة'));
+    assert.ok(d.description.length > 40);
+  }
+});
+
+test('the three labs now carry a prediction before acting, a conclusion and their own reset', () => {
+  for (const id of ['tube-lab', 'current-lab', 'circuit-lab']) {
+    const html = unit2l2SimulationMarkup(id);
+    assert.ok(html.includes('data-prediction="sim-'), `${id} prediction`);
+    assert.ok(html.includes('data-prediction-submit'), `${id} submit`);
+    assert.ok(html.includes('data-prediction-feedback'), `${id} feedback`);
+    assert.ok(html.includes('data-sim-conclusion="sim-'), `${id} conclusion`);
+    assert.ok(html.includes('إعادة الضبط'), `${id} reset`);
+  }
+  assert.ok(unit2l2SimulationMarkup('tube-lab').includes('ادفع 3 كرات معاً'));
+  assert.ok(unit2l2SimulationMarkup('current-lab').includes('id="cq"'));
+  const circuit = unit2l2SimulationMarkup('circuit-lab');
+  assert.ok(circuit.includes('data-circuit-canvas="series"'));
+  assert.ok(circuit.includes('data-circuit-canvas="parallel"'));
+  /* `hidden` alone does nothing on an SVG <g>, so the inactive canvas also carries
+     the class the stylesheet turns off. */
+  assert.ok(circuit.includes('data-circuit-canvas-group="parallel" class="is-hidden" hidden'));
+  assert.ok(circuit.includes('data-junction="320,170"'));
+  // Prediction answers exist for each lab and are not shipped in the page markup.
+  for (const id of ['sim-tube', 'sim-current', 'sim-circuit']) {
+    assert.equal(UNIT2L2_ANSWERS[id].kind, 'prediction');
+    assert.ok(UNIT2L2_ANSWERS[id].correctFeedback.length > 20);
+    const markup = unit2l2SimulationMarkup(id === 'sim-tube' ? 'tube-lab' : id === 'sim-current' ? 'current-lab' : 'circuit-lab');
+    assert.ok(!markup.includes(UNIT2L2_ANSWERS[id].correctFeedback), `${id} feedback is not in the markup`);
+  }
+});
+
+test('teacher area documents the student activities without changing the gate', async () => {
+  const m = renderTeacherContent();
+  for (const phrase of ['أنشطة الطالب التفاعلية', 't-interactive', 'مقياس الأمبير', 'الخيار d', 'الخيار b', '0.1', '30', 'مختبر الأنبوب']) {
+    assert.ok(m.includes(phrase), phrase);
+  }
+  assert.ok(m.includes('لا يُصحّح آلياً'));
+  const boot = await read('../src/unit2-lesson2-teacher.js');
+  assert.match(boot, /loadContent: \(\) => import\('\.\/unit2-lesson2-teacher-content\.js'\)/);
 });
