@@ -1,6 +1,7 @@
 import { UNIT2L2_PAGES } from './unit2-lesson2-content.js';
 import { UNIT2L2_DIAGRAMS } from './unit2-lesson2-diagrams.js';
 import { unit2l2SimulationMarkup, mountUnit2l2Simulations } from './unit2-lesson2-simulation.js';
+import { mountUnit2l2Practice } from './unit2-lesson2-practice.js';
 import {
   collectSelfCheckSelections,
   enhanceSelfCheckSections,
@@ -66,6 +67,7 @@ function renderPage(page, index) {
   }).join('');
   pageContent.innerHTML = `${markup}${simulations.map(renderPlatformBlock).join('')}`;
   mountUnit2l2Simulations(pageContent);
+  mountUnit2l2Practice(pageContent);
   enhanceSelfCheckSections(pageContent, page.page);
   updateProgress(index);
   updateControls(index);
