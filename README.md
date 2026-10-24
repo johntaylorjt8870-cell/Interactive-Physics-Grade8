@@ -121,9 +121,11 @@ src/
   unit-questions-teacher.js Password-gated Teacher Area mount
   unit-questions.css        Responsive Unit Questions student-page styles
   unit-questions-teacher.css Isolated teacher-diagram styles
-  unit2-lesson3-content.js Source text, page map and labelled platform explanations for pp97–106
+  unit2-lesson3-content.js Source text, page map, practice wiring and labelled platform explanations for pp97–106
   unit2-lesson3-diagrams.js Accessible SVG reconstructions for water, charge and circuit figures
-  unit2-lesson3-physics.js Pure potential-difference and unit-conversion functions
+  unit2-lesson3-physics.js Pure potential-difference, ideal lab-reading and answer-normalization functions
+  unit2-lesson3-practice.js Interactive pp98–106 activities: quizzes, blank sentences and three live meter labs
+  unit2-lesson3-answers.js Lazily loaded activity keys and locked model solutions (loaded on demand only)
   unit2-lesson3-simulation.js Water analogy, series/parallel calculator, converter and practice
   unit2-lesson3-main.js Student station navigation and interactions
   unit2-lesson3-teacher-content.js Lazily loaded worked solutions for pp97–106

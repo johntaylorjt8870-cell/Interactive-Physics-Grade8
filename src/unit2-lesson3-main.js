@@ -1,5 +1,6 @@
 import { UNIT2L3_PAGES, UNIT2L3_STATIONS } from './unit2-lesson3-content.js';
 import { unit2l3DiagramMarkup } from './unit2-lesson3-diagrams.js';
+import { mountUnit2Lesson3Practice, unit2l3PracticeMarkup } from './unit2-lesson3-practice.js';
 import { mountUnit2Lesson3Simulations, unit2l3SimulationMarkup } from './unit2-lesson3-simulation.js';
 
 const root = document.querySelector('#lesson-stations');
@@ -24,6 +25,9 @@ function renderBlock(block, page, index) {
   if (block.type === 'simulation') {
     return unit2l3SimulationMarkup(block.id);
   }
+  if (block.type === 'practice') {
+    return unit2l3PracticeMarkup(block.id);
+  }
   throw new TypeError(`Unknown Lesson 3 block type: ${block.type}`);
 }
 
@@ -43,6 +47,7 @@ function renderStation(station) {
 }
 
 root.innerHTML = UNIT2L3_STATIONS.map(renderStation).join('');
+mountUnit2Lesson3Practice(document);
 mountUnit2Lesson3Simulations(document);
 
 const navLinks = [...document.querySelectorAll('[data-station-link]')];

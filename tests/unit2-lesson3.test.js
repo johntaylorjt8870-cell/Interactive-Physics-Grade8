@@ -16,6 +16,11 @@ import {
 } from '../src/unit2-lesson3-physics.js';
 import { UNIT2L3_DIAGRAMS, unit2l3DiagramMarkup } from '../src/unit2-lesson3-diagrams.js';
 import { unit2l3SimulationMarkup } from '../src/unit2-lesson3-simulation.js';
+import {
+  UNIT2L3_PRACTICE_IDS,
+  unit2l3PracticeMarkup,
+} from '../src/unit2-lesson3-practice.js';
+import { UNIT2L3_ANSWERS } from '../src/unit2-lesson3-answers.js';
 import { UNIT2L3_TEST, UNIT2L3_QUESTIONS } from '../src/unit2-lesson3-test-data.js';
 import { unit2l3AssessmentDiagram } from '../src/unit2-lesson3-test-diagrams.js';
 import { ANSWER_KEY, SOLUTIONS, SOLUTION_GROUPS } from '../src/unit2-lesson3-test-solutions.js';
@@ -117,8 +122,98 @@ test('source content covers each printed page, section, activity, and requested 
   assert.ok(UNIT2L3_PAGES.every((page) => page.blocks.some((block) => block.type === 'book')));
 });
 
+test('practice layer: one interactive activity per book task, wired in reading order, without shipped answers', async () => {
+  const EXPECTED = [
+    [98, ['p98-observe']],
+    [99, ['p99-think']],
+    [100, ['p100-lab']],
+    [101, ['p101-series-lab']],
+    [102, ['p102-series-activity', 'p102-parallel-lab']],
+    [103, ['p103-parallel-activity']],
+    [105, ['p105-mcq', 'p105-true-false']],
+    [106, ['p106-blanks']],
+  ];
+  const practiceBlocks = UNIT2L3_PAGES.flatMap((page) => page.blocks
+    .filter((block) => block.type === 'practice').map((block) => [page.page, block.id]));
+  assert.deepEqual(practiceBlocks, EXPECTED.flatMap(([page, ids]) => ids.map((id) => [page, id])));
+  for (const [page, ids] of EXPECTED) {
+    const pageEntry = UNIT2L3_PAGES.find((candidate) => candidate.page === page);
+    for (const id of ids) {
+      const blockIndex = pageEntry.blocks.findIndex((block) => block.type === 'practice' && block.id === id);
+      assert.ok(blockIndex > 0, `${id} sits after its book copy`);
+      assert.ok(pageEntry.blocks.slice(0, blockIndex).some((block) => block.type === 'book'), `${id} has book text before it`);
+    }
+  }
+  assert.deepEqual([...UNIT2L3_PRACTICE_IDS].sort(), EXPECTED.flatMap(([, ids]) => ids).sort());
+  for (const id of UNIT2L3_PRACTICE_IDS) {
+    const markup = unit2l3PracticeMarkup(id);
+    assert.ok(markup.includes(`data-u2l3-practice="${id}"`), id);
+    for (const control of ['data-p3p-action="check"', 'data-p3p-action="hint"', 'data-p3p-action="solution"', 'data-p3p-action="reset"', 'role="status"', 'aria-live="polite"']) {
+      assert.ok(markup.includes(control), `${id} exposes ${control}`);
+    }
+    assert.doesNotMatch(markup, /data-correct|data-answer|إجابتك صحيحة|الإجابة الصحيحة هي/, `${id} ships no answer key`);
+    assert.throws(() => unit2l3PracticeMarkup(`${id}-x`), RangeError);
+  }
+  const answersIds = new Set(Object.keys(UNIT2L3_ANSWERS));
+  assert.deepEqual(answersIds, new Set(UNIT2L3_PRACTICE_IDS), 'every activity has a lazy answer spec and vice versa');
+  for (const [id, spec] of Object.entries(UNIT2L3_ANSWERS)) {
+    assert.ok(spec.items.length > 0, id);
+    assert.ok(spec.hint.length > 12, id);
+    assert.ok(spec.solution.title.length > 4, id);
+    assert.ok(spec.solution.steps.length > 0, id);
+    /* graded items carry either an exact key (correct) or an accepted-variants list (blanks) */
+    assert.ok(spec.items.every((item) => item.id && (item.correct !== undefined || (Array.isArray(item.accepted) && item.accepted.length > 0))), id);
+  }
+  assert.deepEqual(UNIT2L3_ANSWERS['p105-mcq'].items.map((item) => item.correct), ['c', 'd', 'b', 'b']);
+  assert.ok(UNIT2L3_ANSWERS['p105-true-false'].items.every((item) => item.correct === 'false'));
+  assert.equal(UNIT2L3_ANSWERS['p106-blanks'].items.length, 7, 'seven blanks across the four sentences of p106');
+  assert.ok(UNIT2L3_ANSWERS['p106-blanks'].items.every((item) => Array.isArray(item.accepted) && item.accepted.length > 0), 'p106 blanks accept variants');
+
+  const p100 = unit2l3PracticeMarkup('p100-lab');
+  assert.match(p100, /data-lab-toggle="close"/);
+  assert.match(p100, /data-lab-toggle="open"/);
+  assert.match(p100, /data-lab-reading="current"/);
+  assert.match(p100, /data-lab-reading="lamp"/);
+  assert.match(p100, /data-lab-reading="source"/);
+  for (const id of ['p101-series-lab', 'p102-parallel-lab']) {
+    const lab = unit2l3PracticeMarkup(id);
+    for (const key of ['u', 'u1', 'u2']) {
+      assert.ok(lab.includes(`data-lab-record="${key}"`), `${id} records ${key}`);
+      assert.ok(lab.includes(`data-lab-reading="${key}"`), `${id} reads ${key}`);
+    }
+    assert.match(lab, /name="p3p-relation"/);
+    assert.match(lab, /نموذج مبسّط/, `${id} labels the idealised model`);
+    assert.match(lab, /aria-pressed="true"/, `${id} starts with the switch open`);
+    /* labs start open-switch with no readings shown */
+    assert.ok((lab.match(/>—</g) ?? []).length >= 3, `${id} shows placeholder dashes, not precomputed values`);
+  }
+
+  /* Parallel lab wiring must mirror the book (p102): switch and battery interrupt
+     the return line (− left, + right), the source voltmeter lands on the two
+     sides of the battery, and no bare wire ever joins the two branch chords. */
+  const parallelLab = unit2l3PracticeMarkup('p102-parallel-lab');
+  for (const wire of ['M200 412 H240', 'M284 412 H362', 'M380 412 H560']) {
+    assert.ok(parallelLab.includes(`d="${wire}"`), `return line segment ${wire}`);
+  }
+  assert.ok(parallelLab.includes('M340 412 V470 H349'), 'source voltmeter taps the battery- minus side');
+  assert.ok(parallelLab.includes('M393 470 H402 V412'), 'source voltmeter taps the battery- plus side');
+  assert.ok(parallelLab.includes('data-lab-closed="h44"'), 'switch closes along the return line');
+  for (const chord of ['M150 268 H358', 'M402 268 H610', 'M260 116 H358', 'M402 116 H500']) {
+    assert.ok(parallelLab.includes(`d="${chord}"`), `parallel branch chord ${chord}`);
+  }
+  assert.ok(!parallelLab.includes('M620 110 V390'), 'no wire may short the two rails together');
+  assert.ok(!parallelLab.includes('M140 110 H620'), 'rails must not span a bare frame');
+
+  const [main, css] = await Promise.all([read('../src/unit2-lesson3-main.js'), read('../src/unit2-lesson3.css')]);
+  assert.match(main, /mountUnit2Lesson3Practice/);
+  assert.match(main, /unit2l3PracticeMarkup/);
+  for (const rule of ['.p3p-item.is-correct', '.p3p-choice:has(input:focus-visible)', '.p3p-lab-stage', '.p3p-record-row', '.p3p-meter-reading']) {
+    assert.ok(css.includes(rule), `css ${rule}`);
+  }
+});
+
 test('all textbook diagrams are separately labelled platform artwork with accessible titles and descriptions', async () => {
-  assert.deepEqual(Object.values(UNIT2L3_DIAGRAMS).map((diagram) => diagram.page), [97, 98, 98, 99, 100, 101, 102, 103]);
+  assert.deepEqual(Object.values(UNIT2L3_DIAGRAMS).map((diagram) => diagram.page), [97, 98, 98, 99, 99, 100, 101, 102, 103]);
   for (const [id, diagram] of Object.entries(UNIT2L3_DIAGRAMS)) {
     assert.ok(diagram.title.length > 4, id);
     assert.ok(diagram.description.length > 20, id);
