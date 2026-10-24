@@ -72,6 +72,30 @@ const DIAGRAMS = Object.freeze({
       ${label(564, 370, 'الفولتميتر على التفرع عبر المولد · شرح المنصة', { className: 'p3-small-label' })}${label(588, 90, 'مقاومة / مصباح', { className: 'p3-small-label' })}
     </svg>`,
   },
+  'voltmeter-instrument': {
+    page: 99,
+    title: 'مقياس فولت: قراءة التدريج',
+    description: 'وجه مقياس فولت تمثيلي: قوس تدريج من 0 إلى 30 ومؤشر وحرف V وطرفا توصيل؛ يُقرأ فرق الكمون من موضع المؤشر على التدريج.',
+    caption: 'إعادة بناء توضيحية لصورة المقياس في خلاصة ص99؛ جهاز رمزي تعليمي بلا قراءة محددة من الكتاب.',
+    svg: (id) => `<svg class="p3-svg p3-device-svg" viewBox="0 0 760 300" role="img" aria-labelledby="${id}-title ${id}-desc">
+      <title id="${id}-title">${DIAGRAMS['voltmeter-instrument'].title}</title><desc id="${id}-desc">${DIAGRAMS['voltmeter-instrument'].description}</desc>
+      <rect class="p3-panel" x="18" y="18" width="724" height="264" rx="24"/>
+      <g transform="translate(215 26)">
+        <rect class="p3-meter-body" x="0" y="0" width="330" height="238" rx="16"/>
+        <rect class="p3-meter-face" x="18" y="14" width="294" height="164" rx="10"/>
+        <path class="p3-meter-arc" d="M63 138a102 102 0 0 1 204 0"/>
+        ${[0, 10, 20, 30].map((value, index) => {
+          const x = 63 + index * 68;
+          return `<text class="p3p-meter-label" x="${x}" y="126" direction="ltr" text-anchor="middle">${value}</text>`;
+        }).join('')}
+        <path class="p3-meter-needle" d="M165 138 L112 84"/>
+        <circle class="p3-meter-pivot" cx="165" cy="138" r="6"/>
+        <text class="p3-meter-letter" x="165" y="52" direction="ltr">V</text>
+        <circle class="p3-meter-terminal" cx="92" cy="212" r="13"/><circle class="p3-meter-terminal" cx="238" cy="212" r="13"/>
+        <text class="p3p-meter-label" x="150" y="216" direction="rtl">طرفا التوصيل</text>
+      </g>
+    </svg>`,
+  },
   'source-circuit': {
     page: 100,
     title: 'قياس فرق الكمون في دارة بمولد ومصباح',

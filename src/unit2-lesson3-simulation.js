@@ -59,7 +59,7 @@ function voltageSplitMarkup() {
       <label for="p3-known-voltage" data-known-label>فرق كمون المصباح الثاني U₂ (V)</label><input id="p3-known-voltage" type="number" min="0" step="any" value="5" inputmode="decimal" data-known-voltage />
       <button class="p3-action-button" type="button" data-voltage-calculate>احسب فرق الكمون</button>
       <button class="p3-quiet-button" type="button" data-voltage-reset>إعادة القيم الأصلية</button>
-      <output class="p3-live-output p3-split-output" data-voltage-result role="status" aria-live="polite">المتبقي على المصباح الأول هو 7 V.</output>
+      <output class="p3-live-output p3-split-output" data-voltage-result role="status" aria-live="polite">أدخل القيم ثم اضغط «احسب فرق الكمون»؛ لا تُحسب نتيجة قبل طلبك.</output>
     </div>
     <div class="p3-rule-reference"><div><span class="p3-rule-chip">التسلسل</span><bdi dir="ltr">U = U₁ + U₂</bdi><small>مجموع الفروق الجزئية يساوي فرق المولد.</small></div><div><span class="p3-rule-chip">التفرع</span><bdi dir="ltr">U = U₁ = U₂</bdi><small>فرق الكمون متساوٍ في فروع الدارة.</small></div></div>
   </section>`;
@@ -223,7 +223,6 @@ function mountVoltageSplitLab(root) {
     } else run();
   });
   updateMode();
-  run();
 }
 
 function mountConverter(root) {
@@ -279,10 +278,17 @@ function mountQuickPractice(root) {
     }
     const checks = [Math.abs(seriesValue - 11) <= 0.01, topology.value === 'parallel', meter.value === 'false'];
     const correct = checks.filter(Boolean).length;
+    /* On a wrong attempt we give a scientific pointer, never the correct value. */
     const feedback = [
-      `التسلسل: U₁ = 15 − 4 = 11 V${checks[0] ? '؛ إجابتك صحيحة.' : '؛ الإجابة الصحيحة 11 V.'}`,
-      `التساوي بين فرق كل مصباح وفرق المولد يدل على التفرع${checks[1] ? '؛ إجابتك صحيحة.' : '؛ الاختيار الصحيح هو التفرع.'}`,
-      `العبارة خطأ؛ يوصل الفولتميتر على التفرع لا على التسلسل${checks[2] ? '؛ إجابتك صحيحة.' : '.'}`,
+      checks[0]
+        ? 'التدريب الأول: إجابتك صحيحة.'
+        : 'التدريب الأول: تحتاج مراجعة. طبّق علاقة التسلسل (فرق المولد يساوي مجموع الفرقين الجزئيين) ثم أعد الحساب؛ لن تُعرض القيمة الصحيحة.',
+      checks[1]
+        ? 'التدريب الثاني: إجابتك صحيحة.'
+        : 'التدريب الثاني: تحتاج مراجعة. قارن قراءة كل مصباح بفرق كمون المولد؛ تذكّر أي نوع توصيل تتساوى فيه قراءات الفروع كلها مع فرق المولد.',
+      checks[2]
+        ? 'التدريب الثالث: إجابتك صحيحة.'
+        : 'التدريب الثالث: تحتاج مراجعة. استرجع كيف وصلتَ الفولتميتر في تجربتي ص101 وص102: هل كان جزءاً من مسار التيار أم فرعاً موازياً؟',
     ];
     result.textContent = `${correct} من 3 صحيحة. ${feedback.join(' ')}`;
     setDisabled(true);
