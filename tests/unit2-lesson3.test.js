@@ -188,6 +188,22 @@ test('practice layer: one interactive activity per book task, wired in reading o
     assert.ok((lab.match(/>—</g) ?? []).length >= 3, `${id} shows placeholder dashes, not precomputed values`);
   }
 
+  /* Parallel lab wiring must mirror the book (p102): switch and battery interrupt
+     the return line (− left, + right), the source voltmeter lands on the two
+     sides of the battery, and no bare wire ever joins the two branch chords. */
+  const parallelLab = unit2l3PracticeMarkup('p102-parallel-lab');
+  for (const wire of ['M200 412 H240', 'M284 412 H362', 'M380 412 H560']) {
+    assert.ok(parallelLab.includes(`d="${wire}"`), `return line segment ${wire}`);
+  }
+  assert.ok(parallelLab.includes('M340 412 V470 H349'), 'source voltmeter taps the battery- minus side');
+  assert.ok(parallelLab.includes('M393 470 H402 V412'), 'source voltmeter taps the battery- plus side');
+  assert.ok(parallelLab.includes('data-lab-closed="h44"'), 'switch closes along the return line');
+  for (const chord of ['M150 268 H358', 'M402 268 H610', 'M260 116 H358', 'M402 116 H500']) {
+    assert.ok(parallelLab.includes(`d="${chord}"`), `parallel branch chord ${chord}`);
+  }
+  assert.ok(!parallelLab.includes('M620 110 V390'), 'no wire may short the two rails together');
+  assert.ok(!parallelLab.includes('M140 110 H620'), 'rails must not span a bare frame');
+
   const [main, css] = await Promise.all([read('../src/unit2-lesson3-main.js'), read('../src/unit2-lesson3.css')]);
   assert.match(main, /mountUnit2Lesson3Practice/);
   assert.match(main, /unit2l3PracticeMarkup/);

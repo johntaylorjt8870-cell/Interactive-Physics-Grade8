@@ -296,36 +296,44 @@ function p101Svg() {
 /* --- p102: parallel experiment -------------------------------------------- */
 
 function p102Svg() {
-  return `<svg class="p3-svg p3p-lab-svg" viewBox="0 0 760 512" role="img" aria-labelledby="p3p-lab102-title p3p-lab102-desc">
+  /* Mirrors the book's p102 figure: the two lamp branches bridge the same two
+     side nodes; the switch and the battery (− left, + right) interrupt the
+     bottom return line, and the source voltmeter lands exactly on the two
+     sides of the battery. Nothing joins the two rails except the branches and
+     the return path. */
+  return `<svg class="p3-svg p3p-lab-svg" viewBox="0 0 760 524" role="img" aria-labelledby="p3p-lab102-title p3p-lab102-desc">
   <title id="p3p-lab102-title">دارة متفرعة: مولد ومصباحان على فرعين متوازيين وثلاثة مقاييس فولت</title>
   <desc id="p3p-lab102-desc" data-lab-desc>القاطعة مفتوحة؛ لم تُؤخذ قراءة بعد.</desc>
-  <rect class="p3-circuit-back" x="16" y="12" width="728" height="488" rx="24"/>
-  <path class="p3-wire" d="M140 110 H620"/><path class="p3-wire" d="M620 110 V390"/>
-  <path class="p3-wire" d="M140 110 V258"/><path class="p3-wire" d="M140 302 V390"/>
-  <path class="p3-wire" d="M620 390 H370"/><path class="p3-wire" d="M352 390 H140"/>
-  <path class="p3-wire" d="M470 110 V178"/><path class="p3-wire" d="M470 222 V390"/>
-  <path class="p3-wire" d="M280 110 V178"/><path class="p3-wire" d="M280 222 V390"/>
-  ${lamp(470, 200, 'lamp-1')}
-  ${lamp(280, 200, 'lamp-2')}
-  <path class="p3-wire" d="M470 178 H538 V200"/><path class="p3-wire" d="M582 200 V222 H470"/>
-  ${meterFace(560, 200, 'V₁', 'u1')}
-  <path class="p3-wire" d="M280 178 H212 V200"/><path class="p3-wire" d="M168 200 V222 H280"/>
-  ${meterFace(190, 200, 'V₂', 'u2')}
-  ${horizontalBattery(352, 370, 390)}
-  ${horizontalSwitch(140, 258)}
-  <path class="p3-wire" d="M330 390 V446 H339"/><path class="p3-wire" d="M383 446 H392 V390"/>
-  ${meterFace(361, 446, 'V', 'u', 36)}
-  <text class="p3-voltage-label" x="560" y="156" direction="ltr">U₁</text>
-  <text class="p3-voltage-label" x="190" y="156" direction="ltr">U₂</text>
-  <text class="p3-voltage-label" x="413" y="450" direction="ltr">U</text>
-  <text class="p3-schematic-label" x="470" y="262" direction="rtl" text-anchor="middle">المصباح الأول · الفرع الأول</text>
-  <text class="p3-schematic-label" x="280" y="262" direction="rtl" text-anchor="middle">المصباح الثاني · الفرع الثاني</text>
-  <text class="p3-schematic-label" x="424" y="416" direction="rtl" text-anchor="start">المولد</text>
-  <text class="p3-schematic-label" x="126" y="284" direction="rtl" text-anchor="end">قاطعة</text>
+  <rect class="p3-circuit-back" x="16" y="12" width="728" height="500" rx="24"/>
+  <path class="p3-wire" d="M260 116 L150 268 L200 412"/><path class="p3-wire" d="M500 116 L610 268 L560 412"/>
+  <path class="p3-wire" d="M260 116 H358"/><path class="p3-wire" d="M402 116 H500"/>
+  <path class="p3-wire" d="M150 268 H358"/><path class="p3-wire" d="M402 268 H610"/>
+  <path class="p3-wire" d="M200 412 H240"/><path class="p3-wire" d="M284 412 H362"/><path class="p3-wire" d="M380 412 H560"/>
+  ${lamp(380, 116, 'lamp-2')}
+  ${lamp(380, 268, 'lamp-1')}
+  <path class="p3-wire" d="M358 116 V72"/><path class="p3-wire" d="M402 116 V72"/>
+  ${meterFace(380, 72, 'V₂', 'u2', 100)}
+  <path class="p3-wire" d="M358 268 V214"/><path class="p3-wire" d="M402 268 V214"/>
+  ${meterFace(380, 214, 'V₁', 'u1', 100)}
+  <path class="p3-battery-long" d="M380 388v48"/><path class="p3-battery-short" d="M362 398v28"/>
+  <text class="p3-sign" x="359" y="382" direction="ltr" text-anchor="end">−</text><text class="p3-sign" x="384" y="382" direction="ltr" text-anchor="start">+</text>
+  <g class="p3p-switch" data-lab-switch-visual>
+    <circle class="p3-contact" cx="240" cy="412" r="5"/><circle class="p3-contact" cx="284" cy="412" r="5"/>
+    <path class="p3-switch-lever" data-lab-lever data-lab-open="l30 -22" data-lab-closed="h44" d="M240 412l30 -22"/>
+  </g>
+  <path class="p3-wire" d="M340 412 V470 H349"/><path class="p3-wire" d="M393 470 H402 V412"/>
+  ${meterFace(371, 470, 'V', 'u', 36)}
+  <text class="p3-voltage-label" x="380" y="26" direction="ltr">U₂</text>
+  <text class="p3-voltage-label" x="423" y="218" direction="ltr">U₁</text>
+  <text class="p3-voltage-label" x="413" y="474" direction="ltr">U</text>
+  <text class="p3-schematic-label" x="500" y="148" direction="rtl" text-anchor="middle">المصباح الثاني · الفرع العلوي</text>
+  <text class="p3-schematic-label" x="585" y="322" direction="rtl" text-anchor="end">المصباح الأول · الفرع السفلي</text>
+  <text class="p3-schematic-label" x="346" y="404" direction="rtl" text-anchor="start">المولد</text>
+  <text class="p3-schematic-label" x="262" y="458" direction="rtl" text-anchor="middle">قاطعة</text>
   <g class="p3p-flow" data-lab-flow hidden>
-    ${flowArrow('M300 98 H352', ARROW_HEAD.right(352, 98))}
-    ${flowArrow('M632 250 V294', ARROW_HEAD.down(632, 294))}
-    ${flowArrow('M300 402 H256', ARROW_HEAD.left(256, 402))}
+    ${flowArrow('M430 104 H386', ARROW_HEAD.left(386, 104))}
+    ${flowArrow('M300 280 H256', ARROW_HEAD.left(256, 280))}
+    ${flowArrow('M422 424 H468', ARROW_HEAD.right(468, 424))}
   </g>
 </svg>`;
 }
@@ -690,7 +698,11 @@ function renderLab(root, kind) {
   const lever = out(root, '[data-lab-lever]');
   if (lever) {
     const match = /^M([\d.]+) ([\d.]+)/.exec(lever.getAttribute('d') ?? '');
-    if (match) lever.setAttribute('d', closed ? `M${match[1]} ${match[2]}v44` : `M${match[1]} ${match[2]}l-22 30`);
+    if (match) {
+      const openStroke = lever.dataset.labOpen ?? 'l-22 30';
+      const closedStroke = lever.dataset.labClosed ?? 'v44';
+      lever.setAttribute('d', `M${match[1]} ${match[2]}${closed ? closedStroke : openStroke}`);
+    }
   }
   if (desc && status) desc.textContent = status.textContent;
 }
