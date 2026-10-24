@@ -109,6 +109,7 @@ function graphSvg() {
 function graphBody() {
   return `<p class="u2l2-practice-lead">ارسم بنفسك: اضغط تقاطعاً على الشبكة لوضع نقطة، واضغطها مرة أخرى لإزالتها. ضع نقاط الجدول التي حسبتها، ثم تحقّق.</p>
   <figure class="u2l2-graph-figure"><div class="u2l2-graph-scroll">${graphSvg()}</div><figcaption>لوحة الرسم من المنصة: كل تقاطع يمثّل زوجاً (زمن بالثواني، كمية بالكولوم).</figcaption></figure>
+  <p class="u2l2-graph-hint">على الشاشة الصغيرة: اسحب اللوحة أفقياً لرؤية بقية المحور الأفقي.</p>
   <p class="u2l2-graph-status" role="status" aria-live="polite" data-graph-status>لم تُوضع أي نقطة بعد.</p>`;
 }
 
@@ -189,8 +190,8 @@ const CAUSE_OPTIONS = Object.freeze([
   ['d', 'مقياس أمبير.'],
 ]);
 
-function choiceBody(id, legend, options) {
-  return `<fieldset class="u2l2-choice-list"><legend class="u2l2-choice-legend">${legend}</legend>
+function choiceBody(id, legend, options, variant = '') {
+  return `<fieldset class="u2l2-choice-list${variant ? ` ${variant}` : ''}"><legend class="u2l2-choice-legend">${legend}</legend>
     ${options.map(([value, label]) => `<label class="u2l2-choice"><input type="radio" name="${id}-choice" value="${value}" data-choice-input /> <span class="u2l2-choice-copy">${label}</span></label>`).join('')}
   </fieldset>`;
 }
@@ -237,7 +238,7 @@ export function unit2l2PracticeMarkup(id) {
   if (id === 'p90-graph') return shell(id, graphBody());
   if (id === 'p95-q1') return shell(id, termsBody());
   if (id === 'p95-q2') return shell(id, trueFalseBody());
-  if (id === 'p95-q3') return shell(id, choiceBody(id, 'اختر المنحنى المُعبّر عن تغيّرات شدة التيار مع الزمن في التيار المتواصل:', CURVE_OPTIONS));
+  if (id === 'p95-q3') return shell(id, choiceBody(id, 'اختر المنحنى المُعبّر عن تغيّرات شدة التيار مع الزمن في التيار المتواصل:', CURVE_OPTIONS, 'is-curve'));
   if (id === 'p96-q3b') return shell(id, choiceBody(id, 'المُسبّب لحركة الإلكترونات في الدارة هو:', CAUSE_OPTIONS));
   if (id === 'p96-q4') return shell(id, explainBody(), '<button class="u2l2-button u2l2-button-primary" type="button" data-explain-compare>قارن بإجابة نموذجية</button>');
   if (id === 'p96-q5') return shell(id, numericStepsBody());

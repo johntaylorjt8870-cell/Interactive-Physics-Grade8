@@ -91,10 +91,10 @@ const SERIES_CIRCUIT_SVG = `
         <text class="u2l2-terminal-sign" data-terminal="negative" x="${SERIES.left}" y="204" text-anchor="middle">−</text>
       </g>
       ${arTxt(140, 186, 'المولّد', 'u2l2-series-gen')}
-      ${circuitPart('A1', 200, SERIES.top, 22, 'u2-ammeter')}
-      ${circuitPart('L1', 360, SERIES.top, 28, 'u2-bulb')}
-      ${circuitPart('L2', 520, SERIES.top, 28, 'u2-bulb')}
-      ${circuitPart('A2', SERIES.right, 180, 22, 'u2-ammeter', true)}
+      ${circuitPart('A1', 200, SERIES.top, 22, 'u2-ammeter', false, 'A₁')}
+      ${circuitPart('L1', 360, SERIES.top, 28, 'u2-bulb', false, 'L₁')}
+      ${circuitPart('L2', 520, SERIES.top, 28, 'u2-bulb', false, 'L₂')}
+      ${circuitPart('A2', SERIES.right, 180, 22, 'u2-ammeter', true, 'A₂')}
       ${txt(360, 330, 'I = 200 mA = Const', 'u2l2-circuit-label')}
     `;
 
@@ -122,10 +122,10 @@ const PARALLEL_CIRCUIT_SVG = `
         <text class="u2l2-circuit-label" data-terminal="negative" x="88" y="180" text-anchor="middle" dominant-baseline="central" direction="ltr">−</text>
       </g>
       ${circuitPart('A', 160, 180, 20, 'u2-ammeter')}
-      ${circuitPart('A1', 280, 80, 20, 'u2-ammeter')}
-      ${circuitPart('L1', 440, 80, 28, 'u2-bulb')}
-      ${circuitPart('A2', 280, 280, 20, 'u2-ammeter')}
-      ${circuitPart('L1-lower', 440, 280, 28, 'u2-bulb', false, 'L1')}
+      ${circuitPart('A1', 280, 80, 20, 'u2-ammeter', false, 'A₁')}
+      ${circuitPart('L1', 440, 80, 28, 'u2-bulb', false, 'L₁')}
+      ${circuitPart('A2', 280, 280, 20, 'u2-ammeter', false, 'A₂')}
+      ${circuitPart('L1-lower', 440, 280, 28, 'u2-bulb', false, 'L₁')}
       ${txt(580, 180, 'I = I1 + I2', 'u2l2-circuit-label')}
     `;
 

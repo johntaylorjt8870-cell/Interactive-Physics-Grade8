@@ -71,10 +71,14 @@
 .u2l2-key-dot.is-out{background:#f3c1b6;border-color:#b2553f}
 .u2l2-sim-wide .simulation-workbench{grid-template-columns:minmax(0,1fr)}
 .u2l2-sim-wide .u2l2-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+.u2l2-sim-wide .u2l2-steps.u2l2-steps-four{grid-template-columns:repeat(4,minmax(0,1fr))}
+/* The active wiring of the circuit lab must be visible, not only announced. */
+.u2l2-steps button[aria-pressed="true"]{color:#fff;background:var(--accent);border-color:var(--accent)}
+.u2l2-steps button[aria-pressed="false"]{color:var(--ink);background:#eef5f3;border-color:var(--rule)}
 .u2l2-sim-wide .u2l2-steps button{text-align:center}
 .u2l2-sim-wide .simulation-result-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 .u2l2-sim-wide .u2l2-result-wide{grid-column:auto}
-@media(max-width:560px){.u2l2-sim-wide .u2l2-steps{grid-template-columns:minmax(0,1fr)}.u2l2-sim-wide .simulation-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.u2l2-sim-wide .u2l2-result-wide{grid-column:1/-1}.u2l2-tube-label{font-size:22px}.u2l2-tube-sub{font-size:19px}}
+@media(max-width:560px){.u2l2-sim-wide .u2l2-steps,.u2l2-sim-wide .u2l2-steps.u2l2-steps-four{grid-template-columns:minmax(0,1fr)}.u2l2-sim-wide .simulation-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.u2l2-sim-wide .u2l2-result-wide{grid-column:1/-1}.u2l2-tube-label{font-size:22px}.u2l2-tube-sub{font-size:19px}}
 /* p90 q-t graph: tick marks and numbers */
 .u2l2-tick-mark{stroke:#24304a;stroke-width:1.5}
 .u2l2-tick{fill:#24304a;font:600 14px var(--font-latin)}
@@ -83,7 +87,14 @@
 .u2l2-circuit-label{fill:#24304a;font:600 15px var(--font-latin)}
 .u2l2-series-gen{fill:#24304a;font:700 15px var(--font-ar)}
 .u2l2-junction{fill:#4a5a72}
-@media(max-width:560px){.u2l2-tick{font-size:30px}.u2l2-axis-label{font-size:30px}.u2l2-circuit-label{font-size:24px}.u2l2-series-gen{font-size:24px}}
+/* On a phone the drawings shrink with their viewBox, so the text inside them is
+   enlarged in SVG units to stay legible after the scaling. */
+@media(max-width:560px){.u2l2-tick{font-size:30px}.u2l2-axis-label{font-size:30px}.u2l2-circuit-label{font-size:24px}.u2l2-series-gen{font-size:24px}
+  /* Only the lab canvases are enlarged: their labels sit in free space around a
+     large drawing, while the book-figure labels are placed tightly and would
+     collide with each other. */
+  .u2l2-sim-wide .u2l2-part-label{font-size:26px}.u2l2-sim-wide .u2l2-part-sub{font-size:20px}
+  .u2l2-sim-wide .u2l2-terminal-sign{font-size:30px}.u2l2-sim-wide .u2l2-circuit-label{font-size:26px}}
 /* Keep an inline expression with its adjacent Arabic punctuation on one line (KaTeX allows breaks after
    each part of an expression, which can leave "(" or ")." alone at a line edge on small screens). */
 .u2l2-keep,.u2l2-keep .math-inline{white-space:nowrap}
@@ -165,6 +176,14 @@
 .u2l2-choice-legend { padding: 0; margin-bottom: 6px; font-size: 15px; font-weight: 700; line-height: 1.9; }
 .u2l2-choice { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: #fff; border: 1px solid var(--rule); border-radius: 11px; cursor: pointer; }
 .u2l2-choice input { margin-top: 5px; flex: 0 0 auto; }
+/* The copy takes the free width, so the whole row is the radio's label instead
+   of a narrow text box on one side of a very wide empty card. */
+.u2l2-choice-copy { flex: 1 1 auto; min-width: 0; }
+/* Curve answers of p95 q3 are drawn cards: four side-by-side cards instead of
+   four near-empty full-width rows. */
+.u2l2-choice-list.is-curve { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.u2l2-choice-list.is-curve .u2l2-choice { height: 100%; }
+.u2l2-choice-list.is-curve .u2l2-choice-copy { display: flex; align-items: center; }
 .u2l2-choice.is-selected { border-color: var(--accent); background: var(--accent-soft); }
 .u2l2-choice.is-correct { border-color: #8ec3a5; background: var(--correct-soft); }
 .u2l2-choice.is-incorrect { border-color: #dcae9f; background: var(--wrong-soft); }
@@ -178,7 +197,10 @@
 .u2l2-graph-figure { margin: 0 0 6px; }
 /* The grid keeps its geometry on a phone and scrolls inside this box, so a
    point stays a comfortable tap target instead of shrinking to a dot. */
-.u2l2-graph-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.u2l2-graph-scroll { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+  /* The board starts at the origin and the left axis, which is the side a graph
+     is read from; an RTL scroll box would have opened on the far right. */
+  direction: ltr; }
 .u2l2-graph-scroll:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 .u2l2-graph-svg { width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 12px; }
 .u2l2-graph-grid { stroke: #dfe7f1; stroke-width: 1; }
@@ -190,6 +212,9 @@
 .u2l2-graph-point.is-placed { outline: none; }
 .u2l2-graph-hit:focus-visible + .u2l2-graph-marker { fill: var(--gold); }
 .u2l2-graph-status { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; }
+.u2l2-graph-hint { display: none; margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+/* A caption that fills the figure edge to edge reads as clipped; keep it inside. */
+.u2l2-sim .simulation-visual figcaption { padding-inline: 8px; text-wrap: pretty; }
 
 /* explanation */
 .u2l2-explain-item { margin: 0 0 14px; }
@@ -238,6 +263,12 @@
 [data-lamp].is-off .u2l2-lamp-glow { opacity: 0; }
 [data-lamp].is-off .u2l2-lamp { fill: #e7e3da; stroke: #a9a294; }
 [data-lamp-x].is-hidden { display: none; }
+[data-circuit-canvas-group].is-hidden { display: none; }
+/* In the single-column (wide) layout the drawing comes first, then the tools,
+   then the conclusion: the conclusion must never be read before the trial. */
+.u2l2-sim-wide .simulation-workbench > .simulation-visual { order: 1; }
+.u2l2-sim-wide .simulation-workbench > .simulation-controls { order: 2; }
+.u2l2-sim-wide .simulation-workbench > .u2l2-sim-conclusion { order: 3; }
 
 /* battery-bank diagrams (p93 / p94) */
 .u2l2-bank-box { fill: #fdf8e6; stroke: #e2d3a6; stroke-width: 2; }
@@ -254,12 +285,15 @@
   .u2l2-practice { padding: 14px 12px; }
   .u2l2-practice-actions .u2l2-button { flex: 1 1 calc(50% - 8px); }
   .u2l2-quantity-row { grid-template-columns: minmax(0, 1fr); }
-  .u2l2-graph-svg { min-width: 560px; }
+  .u2l2-graph-svg { min-width: 520px; }
+  /* A scrollable board must say so, otherwise a hidden axis reads as a bug. */
+  .u2l2-graph-hint { display: block; }
   .u2l2-graph-svg .u2l2-tick { font-size: 24px; }
   .u2l2-graph-svg .u2l2-axis-label { font-size: 24px; }
   .u2l2-curve-svg { width: 76px; }
   .u2l2-curve-svg .u2l2-tick { font-size: 18px; }
   .u2l2-practice-table { font-size: 12.5px; }
+  .u2l2-sim-wide .u2l2-steps.u2l2-steps-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .u2l2-practice-table input[type="text"] { max-width: 64px; padding: 6px 4px; font-size: 13px; }
   .u2l2-choice-copy, .u2l2-truth-statement, .u2l2-term-label { font-size: 14px; }
 }

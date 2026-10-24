@@ -531,7 +531,10 @@ test('p93 parallel circuit (geometric check of the SVG): closed, A in the main l
   ]);
   // Upper branch A1–L1 above the lower branch A2–lamp; the lower lamp keeps the source's printed label L1.
   assert.ok(byName.A1.cy === byName.L1.cy && byName.A2.cy === byName['L1-lower'].cy && byName.A1.cy < byName.A2.cy);
-  for (const p of round) assert.match(p.inner, new RegExp(`>${p.name === 'L1-lower' ? 'L1' : p.name}</text>`));
+  /* The printed symbols keep their subscripts (A₁, L₁, A₂); data-name stays A1/L1
+     for the geometry above, and the lower lamp keeps the source's printed L₁. */
+  const printed = { A: 'A', A1: 'A₁', L1: 'L₁', A2: 'A₂', 'L1-lower': 'L₁' };
+  for (const p of round) assert.match(p.inner, new RegExp(`>${printed[p.name]}</text>`));
   assert.ok(svg.includes('I = I1 + I2'));
 });
 
@@ -711,7 +714,9 @@ test('the three labs now carry a prediction before acting, a conclusion and thei
   const circuit = unit2l2SimulationMarkup('circuit-lab');
   assert.ok(circuit.includes('data-circuit-canvas="series"'));
   assert.ok(circuit.includes('data-circuit-canvas="parallel"'));
-  assert.ok(circuit.includes('data-circuit-canvas-group="parallel" hidden'));
+  /* `hidden` alone does nothing on an SVG <g>, so the inactive canvas also carries
+     the class the stylesheet turns off. */
+  assert.ok(circuit.includes('data-circuit-canvas-group="parallel" class="is-hidden" hidden'));
   assert.ok(circuit.includes('data-junction="320,170"'));
   // Prediction answers exist for each lab and are not shipped in the page markup.
   for (const id of ['sim-tube', 'sim-current', 'sim-circuit']) {

@@ -153,25 +153,39 @@ function rng(id, label, min, max, step, val, unit) {
    number of drawn electrons never changes with the sliders (the wire is always
    full), only the label and the readout do. */
 function currentCanvasSvg() {
-  return `<svg viewBox="0 0 720 300" role="img" aria-labelledby="cl-title cl-desc"><title id="cl-title">دارة مغلقة لقياس شدة التيار</title><desc id="cl-desc" data-current-desc>دارة مغلقة: مولّد، مصباح، مقياس أمبير، وأسلاك موصولة.</desc>
-    <path class="u2-wire" d="M200 80 H520 V220 H200 V80"/>
-    <g data-part="generator"><rect class="u2l2-battery-pos" x="150" y="60" width="50" height="40" rx="6"/><rect class="u2l2-battery-cap" x="140" y="72" width="10" height="16" rx="3"/>
-      <text class="u2l2-terminal-sign" data-terminal="positive" x="175" y="88" text-anchor="middle">+</text></g>
-    <g data-part="lamp"><circle class="u2l2-lamp-glow" cx="600" cy="150" r="34"/><circle class="u2l2-lamp" cx="600" cy="150" r="22"/><path class="u2l2-lamp-x" d="M584 134 L616 166 M616 134 L584 166"/></g>
-    <g data-part="ammeter"><circle class="u2-ammeter" cx="360" cy="220" r="26"/><text class="u2l2-circuit-label" x="360" y="220" text-anchor="middle" dominant-baseline="central" direction="ltr">A</text></g>
-    <text class="u2l2-part-label" x="600" y="208" text-anchor="middle" direction="rtl">مصباح</text>
-    <text class="u2l2-part-label" x="360" y="264" text-anchor="middle" direction="rtl">مقياس الأمبير</text>
-    <text class="u2l2-part-label" x="126" y="140" text-anchor="middle" direction="rtl">المولّد</text>
-    <text class="u2l2-circuit-label" data-current-label x="360" y="60" text-anchor="middle" direction="ltr">I = 2 A</text>
-    <g data-electron-row>${[220, 270, 320, 410, 460, 510].map((x) => `<circle class="u2-electron" cx="${x}" cy="80" r="9"/>`).join('')}</g>
-    <path class="u2-arrow-e" d="M470 120 H560" marker-end="url(#current-lab-arrow)"/>
+  /* Every element sits ON the closed loop and the wire stops at each element,
+     as in the book figure of p89: the battery on the top side, the lamp on the
+     right side and the ammeter on the bottom side. The plus terminal is on the
+     left, so the conventional current leaves it leftwards, runs down the left
+     side, rightwards along the bottom and up through the lamp. The red arrows
+     show that direction; the blue dots are free electrons. */
+  return `<svg viewBox="0 0 720 330" role="img" aria-labelledby="cl-title cl-desc"><title id="cl-title">دارة مغلقة لقياس شدة التيار</title><desc id="cl-desc" data-current-desc>دارة مغلقة: مولّد ومصباح ومقياس أمبير وأسلاك موصولة على مسار واحد مغلق.</desc>
     <defs><marker id="current-lab-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c95348"/></marker></defs>
-    <text class="u2l2-part-sub" x="515" y="112" text-anchor="middle" direction="rtl">جهة التيار الاصطلاحية</text>
+    <path class="u2-wire" d="M170 100 H320"/>
+    <path class="u2-wire" d="M440 100 H570 V146"/>
+    <path class="u2-wire" d="M570 194 V250 H386"/>
+    <path class="u2-wire" d="M334 250 H170 V100"/>
+    <g data-part="generator"><rect class="u2l2-battery-pos" x="320" y="76" width="66" height="44" rx="6"/><rect class="u2l2-battery-neg" x="386" y="76" width="54" height="44" rx="6"/>
+      <text class="u2l2-terminal-sign" data-terminal="positive" x="353" y="106" text-anchor="middle" direction="ltr">+</text>
+      <text class="u2l2-terminal-sign" data-terminal="negative" x="413" y="106" text-anchor="middle" direction="ltr">−</text></g>
+    <text class="u2l2-part-label" x="380" y="60" text-anchor="middle" direction="rtl">المولّد</text>
+    <g data-part="lamp"><circle class="u2l2-lamp-glow" cx="570" cy="170" r="36"/><circle class="u2l2-lamp" cx="570" cy="170" r="24"/><path class="u2l2-lamp-x" d="M556 156 L584 184 M584 156 L556 184"/></g>
+    <text class="u2l2-part-label" x="646" y="176" text-anchor="middle" direction="rtl">مصباح</text>
+    <g data-part="ammeter"><circle class="u2-ammeter" cx="360" cy="250" r="26"/><text class="u2l2-circuit-label" x="360" y="250" text-anchor="middle" dominant-baseline="central" direction="ltr">A</text></g>
+    <text class="u2l2-part-label" x="396" y="306" text-anchor="middle" direction="rtl">مقياس الأمبير</text>
+    <g data-electron-row>${[200, 240, 280].map((x) => `<circle class="u2-electron" cx="${x}" cy="100" r="8"/>`).join('')}</g>
+    <g data-current-flow>
+      <path class="u2-arrow-e" d="M210 250 H300" marker-end="url(#current-lab-arrow)"/>
+      <path class="u2-arrow-e" d="M570 240 V214" marker-end="url(#current-lab-arrow)"/>
+      <path class="u2-arrow-e" d="M540 100 H470" marker-end="url(#current-lab-arrow)"/>
+    </g>
+    <text class="u2l2-part-sub" x="150" y="294" text-anchor="middle" direction="rtl">جهة التيار الاصطلاحية</text>
+    <text class="u2l2-circuit-label" data-current-label x="478" y="58" text-anchor="middle" direction="ltr">I = 2 A</text>
   </svg>`;
 }
 
 function currentLabMarkup() {
-  return `<aside class="simulation-experience u2l2-sim" data-u2l2-sim="current" aria-labelledby="current-lab-title">
+  return `<aside class="simulation-experience u2l2-sim u2l2-sim-wide" data-u2l2-sim="current" aria-labelledby="current-lab-title">
   <header class="simulation-header"><div><span class="simulation-badge">تجربة تفاعلية</span><span class="simulation-model-label">Educational simplified model · نموذج تعليمي مبسّط</span></div>
   <h3 id="current-lab-title">مختبر شدة التيار ${tex('I=\\dfrac{q}{t}', 'I equals q over t')}</h3>
   <p>غيّر كمية الكهرباء وزمن مرورها. تنبّأ أولاً، ثم راقب شدة التيار. الحدود: النموذج يفترض تياراً متواصلاً ثابتاً في دارة مغلقة، ولا يمثل مقاومة أو حرارة الأسلاك، ولا يحسب زمن وصول الإلكترونات.</p></header>
@@ -212,7 +226,7 @@ function seriesCanvas() {
     <text class="u2l2-part-label" x="360" y="40" text-anchor="middle" direction="rtl">L₁</text>
     <text class="u2l2-part-label" x="470" y="40" text-anchor="middle" direction="rtl">L₂</text>
     <text class="u2l2-circuit-label" data-series-a1 x="266" y="132" text-anchor="middle" direction="ltr">200 mA</text>
-    <text class="u2l2-circuit-label" data-series-a2 x="600" y="232" text-anchor="middle" direction="ltr">200 mA</text>
+    <text class="u2l2-circuit-label" data-series-a2 x="546" y="196" text-anchor="end" direction="ltr">200 mA</text>
     <text class="u2l2-part-label" x="70" y="240" text-anchor="middle" direction="rtl">المولّد</text>
     <text class="u2l2-part-sub" x="360" y="284" text-anchor="middle" direction="rtl">مسار واحد مغلق: التيار نفسه في كل أجزائه</text>
   </g>`;
@@ -222,7 +236,7 @@ function parallelCanvas() {
   return `<g data-circuit-canvas="parallel">
     <path class="${SIM_WIRE}" d="M120 170 H210"/><path class="${SIM_WIRE}" d="M262 170 H320"/><path class="${SIM_WIRE}" d="M320 170 V100 H356"/>
     <path class="${SIM_WIRE}" d="M444 100 H520 V170"/><path class="${SIM_WIRE}" d="M320 170 V240 H356"/><path class="${SIM_WIRE}" d="M444 240 H520 V170"/>
-    <path class="${SIM_WIRE}" d="M520 170 H600 V250 H120 V210"/>
+    <path class="${SIM_WIRE}" d="M520 170 H620 V304 H120 V210"/>
     <circle class="u2l2-junction" data-junction="320,170" cx="320" cy="170" r="5"/>
     <circle class="u2l2-junction" data-junction="520,170" cx="520" cy="170" r="5"/>
     <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="30" rx="5"/>
@@ -238,21 +252,21 @@ function parallelCanvas() {
     <text class="u2l2-circuit-label" data-parallel-a1 x="400" y="140" text-anchor="middle" direction="ltr">200 mA</text>
     <text class="u2l2-circuit-label" data-parallel-a2 x="400" y="282" text-anchor="middle" direction="ltr">100 mA</text>
     <text class="u2l2-part-label" x="66" y="240" text-anchor="middle" direction="rtl">المولّد</text>
-    <text class="u2l2-part-sub" x="360" y="316" text-anchor="middle" direction="rtl">فرعان بين النقطتين نفسيهما: تيار الأصل = مجموع تياري الفرعين</text>
+    <text class="u2l2-part-sub" x="360" y="326" text-anchor="middle" direction="rtl">فرعان بين النقطتين نفسيهما: تيار الأصل = مجموع تياري الفرعين</text>
   </g>`;
 }
 
 function circuitLabMarkup() {
-  return `<aside class="simulation-experience u2l2-sim" data-u2l2-sim="circuit" aria-labelledby="circuit-lab-title">
+  return `<aside class="simulation-experience u2l2-sim u2l2-sim-wide" data-u2l2-sim="circuit" aria-labelledby="circuit-lab-title">
   <header class="simulation-header"><div><span class="simulation-badge">تجربة تفاعلية</span><span class="simulation-model-label">Educational simplified model · نموذج تعليمي مبسّط</span></div>
   <h3 id="circuit-lab-title">مختبر التسلسل والتفرع</h3>
   <p>قارن: على التسلسل التيار نفسه في كل جزء؛ على التفرع المجموع يساوي تيار المصدر. نزع مصباح على التسلسل يقطع الكل، وعلى التفرع يبقى الفرع الآخر. حدود النموذج: التيارات تُدخل بالميلي أمبير ولا يحسب النموذج المقاومات ولا هبوط الجهد.</p></header>
   <div class="simulation-workbench"><section class="simulation-controls" aria-label="ضوابط الدارة">
    ${predictionMarkup('sim-circuit', 'في الوصل على التسلسل، ماذا تقرأ A₂ بالمقارنة مع A₁ ما دام المسار مغلقاً؟', [['equal', 'القراءة نفسها'], ['half', 'نصف قراءة A₁'], ['sum', 'مجموع القراءتين']])}
-   <div class="u2l2-steps" role="group">
-    <button type="button" data-circuit-mode="series">وصل على التسلسل</button>
-    <button type="button" data-circuit-mode="parallel">وصل على التفرع</button>
-    <button type="button" data-circuit-remove>انزع مصباحاً</button>
+   <div class="u2l2-steps u2l2-steps-four" role="group" aria-label="أدوات الدارة">
+    <button type="button" data-circuit-mode="series" aria-pressed="true">وصل على التسلسل</button>
+    <button type="button" data-circuit-mode="parallel" aria-pressed="false">وصل على التفرع</button>
+    <button type="button" data-circuit-remove aria-pressed="false">انزع مصباحاً</button>
     <button type="button" data-circuit-reset>إعادة الضبط</button>
    </div>
    ${rng('ci1', 'تيار الفرع 1', 50, 400, 10, 200, 'mA')}
@@ -265,7 +279,7 @@ function circuitLabMarkup() {
   </section>
   <figure class="simulation-visual"><div class="simulation-svg-wrap"><svg viewBox="0 0 720 330" role="img" aria-labelledby="cc-title cc-desc"><title id="cc-title">دارة تسلسل أو تفرع</title><desc id="cc-desc" data-circuit-desc>دارة تسلسل.</desc>
    <g data-circuit-canvas-group="series">${seriesCanvas()}</g>
-   <g data-circuit-canvas-group="parallel" hidden>${parallelCanvas()}</g>
+   <g data-circuit-canvas-group="parallel" class="is-hidden" hidden>${parallelCanvas()}</g>
   </svg></div>
   <figcaption>على التسلسل I ثابت؛ على التفرع I = I₁ + I₂ ما دامت الفروع مغلقة. الرسم تخطيطي من المنصة وليس صورة الكتاب.</figcaption></figure>
   ${conclusionMarkup('sim-circuit', 'مطابق لاستنتاج الكتاب ص92 وص94: شدة التيار ثابتة في جميع أجزاء الدارة الموصولة على التسلسل، ومجموع تياري الفرعين يساوي التيار الأصلي على التفرع.')}
@@ -452,9 +466,14 @@ export function mountUnit2l2Simulations(scope) {
     const q = (s) => root.querySelector(s);
     let mode = 'series';
     let removed = false;
+    /* `hidden` is an HTML attribute and does nothing on an SVG <g>, so the two
+       canvases are switched with a class as well; otherwise both drawings were
+       painted on top of each other. */
     const setCanvas = () => {
       root.querySelectorAll('[data-circuit-canvas-group]').forEach((group) => {
-        group.hidden = group.dataset.circuitCanvasGroup !== mode;
+        const active = group.dataset.circuitCanvasGroup === mode;
+        group.hidden = !active;
+        group.classList.toggle('is-hidden', !active);
       });
     };
     const setLamps = (on) => {
@@ -473,6 +492,10 @@ export function mountUnit2l2Simulations(scope) {
         if (out) out.innerHTML = `<bdi dir="ltr">${inp.value} mA</bdi>`;
       });
       setCanvas();
+      root.querySelectorAll('[data-circuit-mode]').forEach((btn) => {
+        btn.setAttribute('aria-pressed', btn.dataset.circuitMode === mode && !removed ? 'true' : 'false');
+      });
+      q('[data-circuit-remove]').setAttribute('aria-pressed', removed ? 'true' : 'false');
       const source = q('[data-circuit-src]');
       const state = q('[data-circuit-state]');
       const status = q('[data-circuit-status]');
