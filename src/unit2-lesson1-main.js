@@ -1,13 +1,7 @@
 import { UNIT2_PAGES } from './unit2-lesson1-content.js';
 import { UNIT2_DIAGRAMS } from './unit2-lesson1-diagrams.js';
 import { unit2SimulationMarkup, mountUnit2Simulations } from './unit2-lesson1-simulation.js';
-import {
-  collectSelfCheckSelections,
-  enhanceSelfCheckSections,
-  gradeSelfCheck,
-  markSelfCheckOptions,
-  renderSelfCheckResults,
-} from './self-check.js';
+import { mountUnit2Practice } from './unit2-lesson1-practice.js';
 
 const nav = document.querySelector('#page-nav');
 const pageContent = document.querySelector('#page-content');
@@ -24,62 +18,65 @@ const nextLabel = document.querySelector('#next-label');
 const controlCenter = document.querySelector('#control-center');
 const sectionKicker = document.querySelector('#section-kicker');
 let activeIndex = 0;
+const visited = new Set();
+const pageCache = new Map();
 
 const escapeHtml = (value) => String(value)
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
   .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
-
-function renderLegend(legend = []) {
-  if (!legend.length) return '';
-  return `<ul class="diagram-legend" aria-label="رموز الرسم">${legend.map((item) => `<li><span class="legend-swatch ${escapeHtml(item.color)}" aria-hidden="true"></span>${item.symbol}</li>`).join('')}</ul>`;
-}
 
 function renderPlatformBlock(block) {
   if (block.type === 'simulation') return unit2SimulationMarkup(block.id);
   if (block.type === 'diagram') {
     const diagram = UNIT2_DIAGRAMS[block.id];
     if (!diagram) return '';
-    return `<aside class="platform-explanation diagram-explanation" aria-label="شرح المنصة: رسم تخطيطي">
-      <div class="platform-heading"><span class="platform-label">رسم توضيحي من المنصة</span></div>
-      <h3>${diagram.title}</h3><p class="platform-copy platform-body">${diagram.platformNote}</p>
-      <figure class="diagram-figure"><div class="diagram-canvas">${diagram.svg}</div>${renderLegend(diagram.legend)}<figcaption>${diagram.description}</figcaption></figure>
-    </aside>`;
+    const key = Array.isArray(diagram.legend) ? `<ol class="u2-diagram-key" aria-label="مفتاح تسميات الشكل">${diagram.legend.map((label) => `<li>${escapeHtml(label)}</li>`).join('')}</ol>` : '';
+    return `<aside class="platform-explanation diagram-explanation" data-diagram-id="${escapeHtml(block.id)}" aria-label="رسم توضيحي من المنصة"><div class="platform-heading"><span class="platform-label">رسم توضيحي من المنصة · مطابق للشكل والبيانات</span></div><h3>${escapeHtml(diagram.title)}</h3><figure class="diagram-figure"><div class="diagram-canvas">${diagram.svg}</div><figcaption>${escapeHtml(diagram.description)}</figcaption>${key}</figure></aside>`;
   }
-  const kindClass = block.kind === 'source-slot' ? ' source-slot-explanation' : '';
-  return `<aside class="platform-explanation${kindClass}" aria-label="شرح المنصة: ${escapeHtml(block.title)}">
-    <div class="platform-heading"><span class="platform-label">Platform Explanation · شرح المنصة</span></div>
-    <h3>${escapeHtml(block.title)}</h3><div class="platform-copy platform-body">${block.html}</div>
-  </aside>`;
+  return `<aside class="platform-explanation" aria-label="شرح المنصة: ${escapeHtml(block.title)}"><div class="platform-heading"><span class="platform-label">شرح من المنصة · ليس نصاً من الكتاب</span></div><h3>${escapeHtml(block.title)}</h3><div class="platform-copy platform-body">${block.html}</div></aside>`;
+}
+
+function buildPage(page, index) {
+  const view = document.createElement('article');
+  view.className = 'page-view';
+  view.dataset.pageView = String(page.page);
+  view.setAttribute('aria-label', `صفحة الكتاب ${page.page}`);
+  let previousType = null;
+  view.innerHTML = page.blocks.map((block) => {
+    if (block.type !== 'book') {
+      previousType = block.type;
+      return renderPlatformBlock(block);
+    }
+    const marker = previousType !== 'book' ? `<p class="source-marker" role="note"><span>من الكتاب · الصفحة ${page.page}</span></p>` : '';
+    previousType = 'book';
+    return `${marker}<div class="book-copy" data-source-page="p${page.page}">${block.html}</div>`;
+  }).join('');
+  // Mount each page once. Detaching a cached view on navigation preserves all inputs.
+  mountUnit2Simulations(view);
+  mountUnit2Practice(view);
+  return view;
 }
 
 function renderPage(page, index) {
   pageHeading.textContent = page.heading;
   pageNumber.textContent = String(page.page);
   sectionKicker.textContent = `الدرس 1 · الكهرباء الساكنة · ${index + 1} / ${UNIT2_PAGES.length}`;
-  const ordinaryBlocks = page.blocks.filter((block) => block.type !== 'simulation');
-  const simulations = page.blocks.filter((block) => block.type === 'simulation');
-  const markup = ordinaryBlocks.map((block, blockIndex) => {
-    if (block.type !== 'book') return renderPlatformBlock(block);
-    const startsSourceRun = blockIndex === 0 || ordinaryBlocks[blockIndex - 1].type !== 'book';
-    const marker = startsSourceRun ? `<p class="source-marker" role="note"><span>من الكتاب · الصفحة ${page.page}</span></p>` : '';
-    return `${marker}<div class="book-copy" data-source-page="p${page.page}">${block.html}</div>`;
-  }).join('');
-  pageContent.innerHTML = `${markup}${simulations.map(renderPlatformBlock).join('')}`;
-  mountUnit2Simulations(pageContent);
-  enhanceSelfCheckSections(pageContent, page.page);
+  if (!pageCache.has(index)) pageCache.set(index, buildPage(page, index));
+  pageContent.replaceChildren(pageCache.get(index));
+  visited.add(index);
   updateProgress(index);
   updateControls(index);
   updateNavigation(index);
 }
 
 function updateProgress(index) {
-  const current = index + 1;
-  const percentage = (current / UNIT2_PAGES.length) * 100;
-  progressText.textContent = `${current} / ${UNIT2_PAGES.length}`;
-  progressTrack.setAttribute('aria-valuenow', String(current));
+  const percentage = (visited.size / UNIT2_PAGES.length) * 100;
+  progressText.textContent = `${visited.size} / ${UNIT2_PAGES.length}`;
+  progressTrack.setAttribute('aria-valuenow', String(visited.size));
+  progressTrack.setAttribute('aria-valuetext', `${visited.size} مراحل من ${UNIT2_PAGES.length}`);
   progressFill.style.width = `${percentage}%`;
   mobileProgressFill.style.width = `${percentage}%`;
-  controlCenter.textContent = `صفحة ${current} من ${UNIT2_PAGES.length}`;
+  controlCenter.textContent = `المرحلة ${index + 1} من ${UNIT2_PAGES.length} · صفحة ${UNIT2_PAGES[index].page}`;
 }
 
 function updateControls(index) {
@@ -107,7 +104,8 @@ function goToPage(index, moveFocus = false) {
   pageContent.setAttribute('aria-busy', 'false');
   if (moveFocus) {
     pageHeading.focus({ preventScroll: true });
-    pageHeading.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    pageHeading.scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
   }
 }
 
@@ -122,36 +120,6 @@ UNIT2_PAGES.forEach((page, index) => {
 
 previousButton.addEventListener('click', () => goToPage(activeIndex - 1, true));
 nextButton.addEventListener('click', () => goToPage(activeIndex + 1, true));
-
-pageContent.addEventListener('change', (event) => {
-  const input = event.target.closest('input[data-selfcheck-option]');
-  if (!input) return;
-  const item = input.closest('[data-selfcheck-item]');
-  if (!item) return;
-  for (const choice of item.querySelectorAll('.option-choice')) {
-    const choiceInput = choice.querySelector('input[data-selfcheck-option]');
-    choice.classList.toggle('is-selected', choiceInput?.checked === true);
-    choice.classList.remove('is-revealed-correct', 'is-revealed-wrong');
-  }
-  const results = item.closest('.self-check-section')?.querySelector('[data-selfcheck-results]');
-  if (results) { results.hidden = true; results.innerHTML = ''; }
-});
-
-pageContent.addEventListener('click', (event) => {
-  const submitButton = event.target.closest('[data-selfcheck-submit]');
-  if (!submitButton) return;
-  const sourcePage = Number(submitButton.dataset.selfcheckSubmit);
-  const section = pageContent.querySelector(`.self-check-section[data-selfcheck-page="${sourcePage}"]`);
-  if (!section) return;
-  const keys = [...section.querySelectorAll('[data-selfcheck-item]')].map((item) => item.dataset.selfcheckItem);
-  submitButton.disabled = true;
-  import('./unit2-lesson1-self-check-answers.js').then(({ unit2SelfCheckAnswer }) => {
-    const answers = Object.fromEntries(keys.map((key) => [key, unit2SelfCheckAnswer(key)]).filter(([, answer]) => answer));
-    const graded = gradeSelfCheck(collectSelfCheckSelections(section), answers);
-    markSelfCheckOptions(section, graded);
-    renderSelfCheckResults(section.querySelector(`[data-selfcheck-results="${sourcePage}"]`), graded, 1);
-  }).finally(() => { submitButton.disabled = false; });
-});
 
 window.addEventListener('keydown', (event) => {
   if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
