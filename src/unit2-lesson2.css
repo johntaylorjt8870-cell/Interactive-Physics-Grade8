@@ -88,3 +88,187 @@
    each part of an expression, which can leave "(" or ")." alone at a line edge on small screens). */
 .u2l2-keep,.u2l2-keep .math-inline{white-space:nowrap}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ==========================================================================
+   Interactive layer — student activities, labs' predictions and conclusions
+   ========================================================================== */
+.u2l2-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+.u2l2-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; line-height: 1.7; }
+.u2l2-tag-book { color: var(--gold); background: var(--gold-soft); border: 1px solid var(--gold-line); }
+.u2l2-tag-platform { color: var(--teal-deep); background: var(--teal-soft); border: 1px solid var(--teal-line); }
+
+.u2l2-practice-slot { min-width: 0; margin: 20px 0 4px; }
+.u2l2-practice { min-width: 0; padding: 18px; background: #f6fbf9; border: 1px solid var(--teal-line); border-radius: 14px; }
+.u2l2-practice > .u2l2-tag { margin-bottom: 12px; }
+.u2l2-practice form { min-width: 0; }
+.u2l2-practice-lead { margin: 0 0 14px; color: var(--ink); font-size: 15px; line-height: 1.95; }
+.u2l2-practice-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.u2l2-button { min-height: 42px; padding: 9px 15px; color: var(--ink); font: 600 14px var(--font-ar); background: #fff; border: 1px solid var(--rule); border-radius: 10px; cursor: pointer; }
+.u2l2-button-primary { color: #fff; background: var(--teal); border-color: var(--teal-deep); }
+.u2l2-button-ghost { color: var(--muted); background: transparent; }
+.u2l2-button:hover { filter: brightness(.97); }
+.u2l2-button:disabled { opacity: .6; cursor: progress; }
+.u2l2-button:focus-visible, .u2l2-practice input:focus-visible, .u2l2-practice select:focus-visible, .u2l2-practice textarea:focus-visible, .u2l2-graph-hit:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.u2l2-practice-score { display: block; min-height: 1.5em; margin-top: 12px; color: var(--accent-deep); font-size: 13px; font-weight: 700; }
+.u2l2-practice-feedback { display: block; min-height: 1.8em; margin-top: 4px; color: var(--muted); font-size: 13.5px; line-height: 1.85; }
+.u2l2-practice-feedback[data-kind="correct"] { color: var(--correct); }
+.u2l2-practice-feedback[data-kind="incorrect"], .u2l2-practice-feedback[data-kind="error"] { color: var(--wrong); }
+.u2l2-hint-panel, .u2l2-solution-panel { margin-top: 14px; padding: 14px 16px; background: #fff; border: 1px solid var(--rule); border-radius: 12px; }
+.u2l2-hint-panel > .u2l2-tag, .u2l2-solution-panel .u2l2-tag { margin-bottom: 8px; }
+.u2l2-hint-copy p { margin: 6px 0; font-size: 14px; line-height: 1.95; }
+.u2l2-solution-heading h4 { margin: 6px 0 10px; color: var(--ink-strong); font-size: 16px; }
+.u2l2-solution-steps { display: grid; gap: 10px; }
+.u2l2-solution-step { display: grid; gap: 4px; padding: 10px 12px; background: var(--accent-soft); border-radius: 10px; }
+.u2l2-solution-label { color: var(--accent-deep); font-size: 13px; font-weight: 700; }
+.u2l2-solution-plain { margin: 8px 0; padding-inline-start: 22px; font-size: 14px; line-height: 1.95; }
+.u2l2-solution-plain li { margin: 6px 0; }
+.u2l2-platform-note { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.9; }
+.u2l2-input-help { margin: 10px 0 0; color: var(--faint); font-size: 12.5px; line-height: 1.8; }
+
+/* inputs */
+.u2l2-practice input[type="text"], .u2l2-practice select, .u2l2-practice textarea { width: 100%; min-height: 42px; padding: 8px 10px; color: var(--ink); font: 500 15px var(--font-ar); background: #fff; border: 1px solid var(--rule); border-radius: 9px; }
+.u2l2-practice textarea { min-height: 84px; resize: vertical; line-height: 1.9; }
+.u2l2-practice-table td.u2l2-table-input-cell { padding: 6px; }
+.u2l2-practice-table input[type="text"] { min-height: 38px; max-width: 96px; text-align: center; font-family: var(--font-latin); }
+.u2l2-practice-table td.is-correct { background: var(--correct-soft); }
+.u2l2-practice-table td.is-incorrect { background: var(--wrong-soft); }
+.u2l2-cell-feedback { display: block; margin-top: 3px; font-size: 11.5px; color: var(--muted); }
+.u2l2-cell-feedback[data-kind="correct"] { color: var(--correct); }
+.u2l2-cell-feedback[data-kind="incorrect"] { color: var(--wrong); }
+
+/* terms */
+.u2l2-term-list { margin: 0; padding-inline-start: 22px; }
+.u2l2-term-item { margin: 0 0 14px; padding: 12px; background: #fff; border: 1px solid var(--rule); border-radius: 11px; }
+.u2l2-term-item.is-correct { border-color: #b9dcc6; background: var(--correct-soft); }
+.u2l2-term-item.is-incorrect { border-color: #e6c3b8; background: var(--wrong-soft); }
+.u2l2-term-label { display: block; margin-bottom: 8px; font-size: 14.5px; line-height: 1.9; }
+.u2l2-term-feedback { display: block; margin-top: 6px; font-size: 12.5px; color: var(--muted); }
+.u2l2-term-feedback[data-kind="correct"] { color: var(--correct); }
+.u2l2-term-feedback[data-kind="incorrect"] { color: var(--wrong); }
+
+/* true / false */
+.u2l2-truth-list { display: grid; gap: 12px; }
+.u2l2-truth-row { margin: 0; padding: 12px 14px; background: #fff; border: 1px solid var(--rule); border-radius: 11px; }
+.u2l2-truth-row legend { padding: 0 6px; color: var(--accent-deep); font-size: 13px; font-weight: 700; }
+.u2l2-truth-row.is-correct { border-color: #b9dcc6; background: var(--correct-soft); }
+.u2l2-truth-row.is-incorrect { border-color: #e6c3b8; background: var(--wrong-soft); }
+.u2l2-truth-statement { margin: 6px 0 10px; font-size: 14.5px; line-height: 1.9; }
+.u2l2-truth-options { display: flex; flex-wrap: wrap; gap: 16px; }
+.u2l2-truth-options label { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; }
+.u2l2-truth-feedback { display: block; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+.u2l2-truth-feedback[data-kind="correct"] { color: var(--correct); }
+.u2l2-truth-feedback[data-kind="incorrect"] { color: var(--wrong); }
+
+/* choices */
+.u2l2-choice-list { display: grid; gap: 10px; margin: 0; padding: 0; border: 0; }
+.u2l2-choice-legend { padding: 0; margin-bottom: 6px; font-size: 15px; font-weight: 700; line-height: 1.9; }
+.u2l2-choice { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: #fff; border: 1px solid var(--rule); border-radius: 11px; cursor: pointer; }
+.u2l2-choice input { margin-top: 5px; flex: 0 0 auto; }
+.u2l2-choice.is-selected { border-color: var(--accent); background: var(--accent-soft); }
+.u2l2-choice.is-correct { border-color: #8ec3a5; background: var(--correct-soft); }
+.u2l2-choice.is-incorrect { border-color: #dcae9f; background: var(--wrong-soft); }
+.u2l2-choice-copy { font-size: 14.5px; line-height: 1.9; }
+.u2l2-curve-option { display: flex; align-items: center; gap: 10px; }
+.u2l2-curve-svg { width: 92px; height: auto; flex: 0 0 auto; background: #fbfdff; border: 1px solid var(--rule-soft); border-radius: 8px; }
+.u2l2-curve-path { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.u2l2-curve-letter { font-size: 13px; color: var(--muted); }
+
+/* graph */
+.u2l2-graph-figure { margin: 0 0 6px; }
+/* The grid keeps its geometry on a phone and scrolls inside this box, so a
+   point stays a comfortable tap target instead of shrinking to a dot. */
+.u2l2-graph-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.u2l2-graph-scroll:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.u2l2-graph-svg { width: 100%; height: auto; background: #fff; border: 1px solid var(--rule); border-radius: 12px; }
+.u2l2-graph-grid { stroke: #dfe7f1; stroke-width: 1; }
+.u2l2-graph-hit { fill: transparent; cursor: pointer; }
+.u2l2-graph-marker { fill: transparent; stroke: transparent; stroke-width: 2; pointer-events: none; }
+.u2l2-graph-point.is-placed .u2l2-graph-marker { fill: var(--accent); stroke: #fff; }
+.u2l2-graph-point.is-correct .u2l2-graph-marker { fill: var(--correct); stroke: #fff; }
+.u2l2-graph-point.is-incorrect .u2l2-graph-marker { fill: var(--wrong); stroke: #fff; }
+.u2l2-graph-point.is-placed { outline: none; }
+.u2l2-graph-hit:focus-visible + .u2l2-graph-marker { fill: var(--gold); }
+.u2l2-graph-status { margin: 6px 0 0; color: var(--muted); font-size: 13.5px; }
+
+/* explanation */
+.u2l2-explain-item { margin: 0 0 14px; }
+.u2l2-explain-label { display: block; margin-bottom: 8px; font-size: 14.5px; line-height: 1.9; }
+.u2l2-explain-compare { margin-top: 10px; }
+.u2l2-explain-model { padding: 12px 14px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 11px; }
+.u2l2-explain-model h5 { margin: 0 0 8px; color: var(--gold); font-size: 14px; }
+.u2l2-explain-model ul { margin: 0 0 10px; padding-inline-start: 20px; font-size: 14px; line-height: 1.95; }
+.u2l2-explain-model p { margin: 0; font-size: 14px; line-height: 1.95; }
+
+/* multi-step numeric */
+.u2l2-steps-inputs { display: grid; gap: 12px; }
+.u2l2-step-input { margin: 0; padding: 12px 14px; background: #fff; border: 1px solid var(--rule); border-radius: 11px; }
+.u2l2-step-input legend { padding: 0 6px; color: var(--accent-deep); font-size: 13.5px; font-weight: 700; }
+.u2l2-step-input.is-correct { border-color: #b9dcc6; background: var(--correct-soft); }
+.u2l2-step-input.is-incorrect { border-color: #e6c3b8; background: var(--wrong-soft); }
+.u2l2-quantity-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(96px, .6fr); gap: 10px; align-items: center; }
+.u2l2-step-feedback { display: block; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+.u2l2-step-feedback[data-kind="correct"] { color: var(--correct); }
+.u2l2-step-feedback[data-kind="incorrect"] { color: var(--wrong); }
+
+/* predictions */
+.u2l2-prediction { margin: 0 0 16px; padding: 13px 15px; background: #fff; border: 1px dashed var(--accent); border-radius: 12px; }
+.u2l2-prediction-title { margin: 0 0 10px; font-size: 14.5px; font-weight: 600; line-height: 1.95; }
+.u2l2-prediction-title .u2l2-tag { margin-inline-end: 6px; }
+.u2l2-prediction-options { display: grid; gap: 8px; margin-bottom: 10px; }
+.u2l2-prediction-option { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; line-height: 1.85; cursor: pointer; }
+.u2l2-prediction-option input { margin-top: 5px; }
+.u2l2-prediction-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.u2l2-prediction-feedback { display: block; margin-top: 8px; color: var(--muted); font-size: 13px; line-height: 1.85; }
+.u2l2-prediction-feedback[data-kind="correct"] { color: var(--correct); }
+.u2l2-prediction-feedback[data-kind="incorrect"] { color: var(--wrong); }
+
+/* conclusions and the source-side scientist card */
+.u2l2-sim-conclusion { margin-top: 18px; padding: 13px 16px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-inline-start: 4px solid var(--gold); border-radius: 10px; }
+.u2l2-sim-conclusion h4 { margin: 0 0 6px; color: var(--gold); font-size: 15px; }
+.u2l2-sim-conclusion p { margin: 0; font-size: 14.5px; line-height: 1.95; }
+.u2l2-sim-conclusion .u2l2-sim-conclusion-ref { margin-top: 6px; color: var(--muted); font-size: 12.5px; }
+.u2l2-scientist-card { margin: 14px 0 0; padding: 14px 16px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 12px; }
+.u2l2-scientist-card h4 { margin: 8px 0 6px; color: var(--ink-strong); font-size: 17px; }
+.u2l2-scientist-card p { margin: 0 0 6px; font-size: 14.5px; line-height: 1.95; }
+.u2l2-scientist-card .u2l2-scientist-note { color: var(--muted); font-size: 12.5px; }
+
+/* labs: lamp states */
+.u2-bulb.is-lit { fill: #ffe873; }
+[data-lamp].is-off .u2l2-lamp-glow { opacity: 0; }
+[data-lamp].is-off .u2l2-lamp { fill: #e7e3da; stroke: #a9a294; }
+[data-lamp-x].is-hidden { display: none; }
+
+/* battery-bank diagrams (p93 / p94) */
+.u2l2-bank-box { fill: #fdf8e6; stroke: #e2d3a6; stroke-width: 2; }
+.u2l2-cell-body { fill: #f6c973; stroke: #8a6a20; stroke-width: 2; }
+.u2l2-cell-band { fill: #f9e3a8; }
+.u2l2-cell-stub { stroke: #8a6a20; stroke-width: 3; }
+.u2l2-cell-sign { font-size: 19px; }
+/* The voltage bracket uses the source-note gold, never the red of the electron
+   arrows on p89, so the two meanings cannot be confused. */
+.u2l2-voltage-bracket { stroke: #8a6420; stroke-width: 2.5; }
+.u2l2-voltage-label { fill: #6b4e00; font: 700 17px var(--font-latin); }
+
+@media (max-width: 700px) {
+  .u2l2-practice { padding: 14px 12px; }
+  .u2l2-practice-actions .u2l2-button { flex: 1 1 calc(50% - 8px); }
+  .u2l2-quantity-row { grid-template-columns: minmax(0, 1fr); }
+  .u2l2-graph-svg { min-width: 560px; }
+  .u2l2-graph-svg .u2l2-tick { font-size: 24px; }
+  .u2l2-graph-svg .u2l2-axis-label { font-size: 24px; }
+  .u2l2-curve-svg { width: 76px; }
+  .u2l2-curve-svg .u2l2-tick { font-size: 18px; }
+  .u2l2-practice-table { font-size: 12.5px; }
+  .u2l2-practice-table input[type="text"] { max-width: 64px; padding: 6px 4px; font-size: 13px; }
+  .u2l2-choice-copy, .u2l2-truth-statement, .u2l2-term-label { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .u2l2-ball, .u2l2-push-arrow { transition: none; }
+}
+
+/* p87 opening scene: domino row and closed circuit */
+.u2l2-domino rect { fill: #dbe7f3; stroke: #33568f; stroke-width: 2; }
+.u2l2-domino line { stroke: #33568f; stroke-width: 1.6; }
+.u2l2-domino.is-falling rect { fill: #b9cee6; stroke: #1d335a; }
+.u2l2-domino-arrow { stroke: #8a6420; stroke-width: 2.5; fill: #8a6420; }

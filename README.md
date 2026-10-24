@@ -262,3 +262,59 @@ npm run build     # static build into dist/ (all HTML entries + src + vendor)
 `npm test` runs all source/physics/assessment checks. Two existing DOM checks also run when `jsdom` is resolvable; otherwise they explicitly skip. For the recorded full run, jsdom 30.1.3 was installed in a separate QA directory and exposed through a temporary `node_modules` symlink (Node 22.22.3); no app dependencies were changed.
 
 `node scripts/qa-unit2-lesson4.mjs` runs real Chromium tests against a server serving `dist/` on port 4173. Set `QA_MODULE_DIR` to a separate installation's `node_modules` containing `playwright-core` and `@sparticuz/chromium`; set `QA_BASE_URL` if required. On minimal Linux, Chromium also needs NSS/NSPR libraries (the QA environment used the libraries bundled in that Chromium package's `al2023.tar.br` via `LD_LIBRARY_PATH`). No browser binaries or dependencies are committed. Results and laptop screenshots: `docs/qa/unit2-lesson4/`.
+
+## Unit 2 Lesson 2 rebuild (pages 87–96)
+
+`unit2-lesson-2.html` is the student page of «التيار الكهربائي المتواصل». The lesson path,
+the page order 87→96 and the links from the home page are unchanged; the rebuild keeps every
+printed line of the textbook (definitions, the p90 table, the worked application, both
+circuit experiments, the battery examples, «تعلّمت», and all five «أختبر نفسي» questions) and
+adds the platform layer underneath it.
+
+### Textbook tasks are now real activities
+
+Each task the book asks a student to perform has its own activity under the verbatim text,
+with «تحقق من الإجابة», «تلميح», «الحل النموذجي بعد المحاولة» and an independent «إعادة
+المحاولة»:
+
+| Page | Book task | Activity |
+| --- | --- | --- |
+| 90 | «أُتمِّمُ الجدول» | five blank cells graded one by one; Arabic digits accepted |
+| 90 | «أرسمُ الخط البيانيّ» | an SVG grid where the student places the points by pointer or keyboard |
+| 95 | Q1 terms | typed Arabic terms, folded for diacritics, hamza forms, ta-marbuta and equivalent wording |
+| 95 | Q2 true/false | one judgement per statement |
+| 95 | Q3 curve | the four printed curve shapes, redrawn as choices |
+| 96 | Q3 cause | multiple choice |
+| 96 | Q4 explanation | self-assessment against published criteria and a model answer — never auto-marked |
+| 96 | Q5 problem | two graded parts with equivalent units (0.1 A = 100 mA, 30 C) |
+
+No answer is present in the page or in `src/unit2-lesson2-practice.js`: they live in
+`src/unit2-lesson2-answers.js`, fetched with a dynamic `import()` only after the student asks
+for a check, a hint or the model solution. Changing any input or pressing reset clears the
+previous result, and the model solution stays locked until «تحقق» has been pressed.
+
+### Simulations
+
+The three labs (`tube-lab` p88, `current-lab` p91, `circuit-lab` p92–93) each gained a
+prediction the student must commit to before acting (checked against the answer module), an
+observation readout, a conclusion that quotes the book's own page, a stated model limit and
+its own reset. The circuit lab now redraws the real topologies of p92 and p93: one closed loop
+through G→A₁→L₁→L₂→A₂, and a parallel net with A in the main line and two branches between the
+same two junctions; lamps go dark when a branch is removed.
+
+### Diagrams
+
+Seven labelled, responsive SVGs, each with a `<title>`, a `<desc>`, a legend and a
+platform note: the p87 domino/circuit opening scene (the photographs themselves are not
+reproduced), the p89 current-vs-electrons circuit, the p90 q–t plot, the p92 series circuit,
+the p93 parallel circuit, and the p93/p94 battery banks (6 V on series, 1.5 V on parallel).
+The battery banks are geometry-checked by tests: every link runs from the − cap of one cell to
+the + cap of the next, and both parallel rails meet every cell.
+
+### Files
+
+`src/unit2-lesson2-practice.js` (activities), `src/unit2-lesson2-answers.js` (key, loaded on
+demand), `src/unit2-lesson2-physics.js` (pure parsing/grading helpers), the extended
+`src/unit2-lesson2-content.js`, `-diagrams.js`, `-simulation.js`, `-teacher-content.js`,
+`src/unit2-lesson2.css`, and `tests/unit2-lesson2.test.js`. QA evidence and the browser script
+live in `docs/qa/unit2-lesson2/`.
