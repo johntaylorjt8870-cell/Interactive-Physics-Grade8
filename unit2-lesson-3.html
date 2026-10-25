@@ -4,14 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#171a3d" />
-  <meta name="description" content="الدرس الثالث من الوحدة الثانية في الفيزياء للصف الثامن: فرق الكمون الكهربائي، صفحات الكتاب 97–106." />
+  <meta name="description" content="الدرس الثالث من الوحدة الثانية في الفيزياء للصف الثامن: فرق الكمون الكهربائي، صفحات الكتاب 97–106، بخطوات تعلّم متسلسلة." />
   <title>فرق الكمون الكهربائي — الدرس الثالث | الفيزياء للصف الثامن</title>
   <link rel="stylesheet" href="./src/fonts.css" />
   <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+  <link rel="stylesheet" href="./src/styles.css" />
   <link rel="stylesheet" href="./src/unit2-lesson3.css" />
 </head>
 <body class="potential-lesson-page">
-  <a class="p3-skip-link" href="#lesson-content">انتقل إلى محتوى الدرس</a>
+  <a class="skip-link" href="#lesson-content">انتقل إلى محتوى الدرس</a>
   <div class="p3-app-shell">
     <header class="p3-topbar">
       <a class="p3-brand" href="./" aria-label="العودة إلى الصفحة الرئيسية للمنصة"><span class="p3-brand-mark" aria-hidden="true">U</span><span><strong>فيزياء ٨</strong><small>استوديو الكمون · الوحدة الثانية</small></span></a>
@@ -19,55 +20,56 @@
       <nav class="p3-top-actions" aria-label="روابط الدرس"><a href="./unit2-lesson-2.html">الدرس السابق</a><a class="p3-top-test" href="./unit2-lesson-3-test.html">اختبار الدرس</a><a href="./unit2-lesson-3-teacher.html">منطقة المعلم</a></nav>
     </header>
 
-    <main id="lesson-content">
-      <section class="p3-hero" aria-labelledby="lesson-title">
-        <div class="p3-hero-copy">
-          <div class="p3-hero-eyebrow"><span class="p3-orbit-dot" aria-hidden="true"></span><span>الوحدة الثانية · الدرس الثالث</span><bdi dir="ltr">TEXTBOOK · 97—106</bdi></div>
-          <h1 id="lesson-title">فرق الكمون<br /><em>الكهربائي</em></h1>
-          <p>ما الذي يدفع الشحنات؟ اكتشف فرق الكمون، تعلّم قياسه، ثم قارِن بين دارات التسلسل والتفرع.</p>
-          <div class="p3-hero-facts"><span><b>05</b> محطات تعلّم</span><span><bdi dir="ltr">U</bdi> رمز فرق الكمون</span><span><bdi dir="ltr">V</bdi> وحدة الفولت</span></div>
-          <a class="p3-hero-cta" href="#station-discover">ابدأ الرحلة <span aria-hidden="true">↓</span></a>
+    <section class="p3-hero p3-hero-banner" aria-labelledby="lesson-title">
+      <div class="p3-hero-copy">
+        <div class="p3-hero-eyebrow"><span class="p3-orbit-dot" aria-hidden="true"></span><span>الوحدة الثانية · الدرس الثالث</span><bdi dir="ltr">TEXTBOOK · 97—106</bdi></div>
+        <h1 id="lesson-title">فرق الكمون<br /><em>الكهربائي</em></h1>
+        <p>ما الذي يدفع الشحنات؟ اكتشف فرق الكمون، تعلّم قياسه، ثم قارِن بين دارات التسلسل والتفرع — خطوة واحدة في كل صفحة.</p>
+        <div class="p3-hero-facts"><span><b>10</b> خطوات تعلّم</span><span><bdi dir="ltr">U</bdi> رمز فرق الكمون</span><span><bdi dir="ltr">V</bdi> وحدة الفولت</span></div>
+      </div>
+      <figure class="p3-hero-visual" aria-label="تصور فرق الكمون بين نقطتين">
+        <svg viewBox="0 0 520 390" role="img" aria-labelledby="p3-hero-svg-title p3-hero-svg-desc">
+          <title id="p3-hero-svg-title">فرق كمون بين طرفين في دارة</title>
+          <desc id="p3-hero-svg-desc">نقطة ذات كمون مرتفع ونقطة ذات كمون منخفض وبينهما ناقل وأسهم للشحنات، مع رمز فرق الكمون U.</desc>
+          <defs><linearGradient id="p3-hero-field" x1="0" x2="1"><stop offset="0" stop-color="#35d7c0" stop-opacity=".12"/><stop offset="1" stop-color="#ff795b" stop-opacity=".22"/></linearGradient><filter id="p3-hero-glow"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <circle class="p3-hero-ring" cx="255" cy="191" r="140"/><circle class="p3-hero-ring p3-hero-ring-inner" cx="255" cy="191" r="102"/>
+          <path class="p3-hero-circuit" d="M124 106H390V274H124V106"/><path class="p3-hero-resistor" d="M124 168l-12 10 24 12-24 12 24 12-12 10"/>
+          <path class="p3-hero-cell-long" d="M384 179v43"/><path class="p3-hero-cell-short" d="M400 187v27"/><text class="p3-hero-cell-sign" x="365" y="175" direction="ltr">+</text><text class="p3-hero-cell-sign" x="405" y="175" direction="ltr">−</text>
+          <circle class="p3-hero-node p3-hero-node-high" cx="285" cy="106" r="18" filter="url(#p3-hero-glow)"/><circle class="p3-hero-node p3-hero-node-low" cx="205" cy="106" r="18"/>
+          <path class="p3-hero-arrow" d="M284 74H207"/><path class="p3-hero-arrowhead" d="m207 74 12-7v14z"/>
+          <text class="p3-hero-label" x="255" y="45" direction="ltr">ΔV</text><text class="p3-hero-label p3-hero-u" x="260" y="311" direction="ltr">U</text>
+          <text class="p3-hero-caption" x="177" y="337" direction="rtl">كمون منخفض</text><text class="p3-hero-caption" x="349" y="337" direction="rtl">كمون مرتفع</text>
+          <g class="p3-hero-particles"><circle cx="311" cy="106" r="4"/><circle cx="337" cy="106" r="4"/><circle cx="363" cy="106" r="4"/></g>
+        </svg>
+        <figcaption><span class="p3-art-chip"><i></i> خريطة الكمون</span><span>نموذج بصري من المنصة</span></figcaption>
+      </figure>
+      <div class="p3-hero-side-note"><b>الفكرة المحورية</b><span>فرق بين نقطتين<br />← طاقة للشحنات<br />← تيار في دارة مغلقة</span></div>
+    </section>
+
+    <main class="lesson-layout" id="lesson-content">
+      <aside class="lesson-sidebar" aria-label="التنقل بين خطوات الدرس">
+        <div class="sidebar-intro"><span class="eyebrow">خطوات الدرس العشر</span><p>كل خطوة تعرض صفحة واحدة من الكتاب (97–106) مع شرحها ونشاطها؛ انتقل بزرّي «السابق» و«التالي» أو من القائمة.</p></div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span>تقدم الدرس</span><span id="progress-text" class="ltr" dir="ltr">1 / 10</span></div>
+          <div class="progress-track" id="progress-track" role="progressbar" aria-label="تقدم خطوات الدرس" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1"><span id="progress-fill"></span></div>
         </div>
-        <figure class="p3-hero-visual" aria-label="تصور فرق الكمون بين نقطتين">
-          <svg viewBox="0 0 520 390" role="img" aria-labelledby="p3-hero-svg-title p3-hero-svg-desc">
-            <title id="p3-hero-svg-title">فرق كمون بين طرفين في دارة</title>
-            <desc id="p3-hero-svg-desc">نقطة ذات كمون مرتفع ونقطة ذات كمون منخفض وبينهما ناقل وأسهم للشحنات، مع رمز فرق الكمون U.</desc>
-            <defs><linearGradient id="p3-hero-field" x1="0" x2="1"><stop offset="0" stop-color="#35d7c0" stop-opacity=".12"/><stop offset="1" stop-color="#ff795b" stop-opacity=".22"/></linearGradient><filter id="p3-hero-glow"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-            <circle class="p3-hero-ring" cx="255" cy="191" r="140"/><circle class="p3-hero-ring p3-hero-ring-inner" cx="255" cy="191" r="102"/>
-            <path class="p3-hero-circuit" d="M124 106H390V274H124V106"/><path class="p3-hero-resistor" d="M124 168l-12 10 24 12-24 12 24 12-12 10"/>
-            <path class="p3-hero-cell-long" d="M384 179v43"/><path class="p3-hero-cell-short" d="M400 187v27"/><text class="p3-hero-cell-sign" x="365" y="175" direction="ltr">+</text><text class="p3-hero-cell-sign" x="405" y="175" direction="ltr">−</text>
-            <circle class="p3-hero-node p3-hero-node-high" cx="285" cy="106" r="18" filter="url(#p3-hero-glow)"/><circle class="p3-hero-node p3-hero-node-low" cx="205" cy="106" r="18"/>
-            <path class="p3-hero-arrow" d="M284 74H207"/><path class="p3-hero-arrowhead" d="m207 74 12-7v14z"/>
-            <text class="p3-hero-label" x="255" y="45" direction="ltr">ΔV</text><text class="p3-hero-label p3-hero-u" x="260" y="311" direction="ltr">U</text>
-            <text class="p3-hero-caption" x="177" y="337" direction="rtl">كمون منخفض</text><text class="p3-hero-caption" x="349" y="337" direction="rtl">كمون مرتفع</text>
-            <g class="p3-hero-particles"><circle cx="311" cy="106" r="4"/><circle cx="337" cy="106" r="4"/><circle cx="363" cy="106" r="4"/></g>
-          </svg>
-          <figcaption><span class="p3-art-chip"><i></i> خريطة الكمون</span><span>نموذج بصري من المنصة</span></figcaption>
-        </figure>
-        <div class="p3-hero-side-note"><b>الفكرة المحورية</b><span>فرق بين نقطتين<br />← طاقة للشحنات<br />← تيار في دارة مغلقة</span></div>
-      </section>
-
-      <section class="p3-progress-wrap" aria-label="تقدم الدرس">
-        <div class="p3-progress-head"><span>رحلتك في الدرس</span><strong id="station-progress-label">المحطة 1 من 5 · اكتشف فرق الكمون</strong><bdi dir="ltr" id="station-progress-value">20%</bdi></div>
-        <div class="p3-progress-track" id="station-progress-track" role="progressbar" aria-label="تقدم محطات الدرس" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1"><span id="station-progress-fill"></span></div>
-      </section>
-
-      <nav class="p3-station-nav" aria-label="محطات الدرس">
-        <a href="#station-discover" data-station-link="discover" aria-current="step"><span>01</span><b>اكتشف</b></a>
-        <a href="#station-measure" data-station-link="measure"><span>02</span><b>قِس</b></a>
-        <a href="#station-circuits" data-station-link="circuits"><span>03</span><b>قارن</b></a>
-        <a href="#station-apply" data-station-link="apply"><span>04</span><b>طبّق</b></a>
-        <a href="#station-review" data-station-link="review"><span>05</span><b>راجع</b></a>
-      </nav>
-
-      <div id="lesson-stations" class="p3-stations"></div>
-
-      <section class="p3-end-card" aria-labelledby="lesson-end-title">
-        <div class="p3-end-mark" aria-hidden="true"><span>U</span><i></i></div>
-        <div><p>أكملت مسار صفحات الكتاب 97–106</p><h2 id="lesson-end-title">هل أنت مستعد للتطبيق؟</h2><span>اختبار مستقل من 20 سؤالاً؛ لا تظهر النتيجة حتى تسليم المحاولة.</span></div>
-        <a href="./unit2-lesson-3-test.html">ابدأ اختبار الدرس <span aria-hidden="true">←</span></a>
+        <nav class="page-nav" id="page-nav" aria-label="خطوات الدرس"></nav>
+        <div class="sidebar-footer"><span class="source-dot" aria-hidden="true"></span><span>كل خطوة مرتبطة بصفحة من الكتاب</span></div>
+      </aside>
+      <section class="lesson-main" aria-label="محتوى الدرس">
+        <div class="lesson-heading-row"><div><p class="section-kicker" id="section-kicker">الدرس 3 · فرق الكمون الكهربائي · 1 / 10</p><h2 id="page-heading" tabindex="-1">تمهيد: فرق الكمون الكهربائي</h2></div><div class="page-badge" aria-label="رقم صفحة الكتاب"><span>صفحة الكتاب</span><strong id="page-number" class="ltr" dir="ltr">97</strong></div></div>
+        <div class="page-progress-mobile" aria-hidden="true"><span id="mobile-progress-fill"></span></div>
+        <div id="page-content" class="page-content" aria-live="polite" aria-busy="false"></div>
+        <nav class="lesson-controls" aria-label="التنقل المتسلسل"><button class="control-button previous-button" id="previous-button" type="button" disabled><span class="control-arrow" aria-hidden="true">←</span><span><small>السابق</small><strong id="previous-label">بداية الدرس</strong></span></button><span class="control-center" id="control-center">الخطوة 1 من 10 · صفحة 97</span><button class="control-button next-button" id="next-button" type="button"><span><small>التالي</small><strong id="next-label">منسوب الماء والشحنات</strong></span><span class="control-arrow" aria-hidden="true">←</span></button></nav>
+        <p class="keyboard-hint">يمكنك التنقل باستخدام <kbd>Page Up</kbd> و<kbd>Page Down</kbd>.</p>
       </section>
     </main>
+
+    <section class="p3-end-card" aria-labelledby="lesson-end-title">
+      <div class="p3-end-mark" aria-hidden="true"><span>U</span><i></i></div>
+      <div><p>أكملت مسار صفحات الكتاب 97–106</p><h2 id="lesson-end-title">هل أنت مستعد للتطبيق؟</h2><span>اختبار مستقل من 20 سؤالاً؛ لا تظهر النتيجة حتى تسليم المحاولة.</span></div>
+      <a href="./unit2-lesson-3-test.html">ابدأ اختبار الدرس <span aria-hidden="true">←</span></a>
+    </section>
 
     <footer class="p3-footer"><a href="./unit2-lesson-2.html">← الدرس السابق: التيار الكهربائي المتواصل</a><span>الوحدة الثانية · الكهرباء · الدرس 3</span><a href="./">العودة إلى مسار الدروس</a></footer>
   </div>

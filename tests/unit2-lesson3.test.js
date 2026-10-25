@@ -204,9 +204,14 @@ test('practice layer: one interactive activity per book task, wired in reading o
   assert.ok(!parallelLab.includes('M620 110 V390'), 'no wire may short the two rails together');
   assert.ok(!parallelLab.includes('M140 110 H620'), 'rails must not span a bare frame');
 
-  const [main, css] = await Promise.all([read('../src/unit2-lesson3-main.js'), read('../src/unit2-lesson3.css')]);
-  assert.match(main, /mountUnit2Lesson3Practice/);
-  assert.match(main, /unit2l3PracticeMarkup/);
+  const [main, view, css] = await Promise.all([
+    read('../src/unit2-lesson3-main.js'), read('../src/unit2-lesson3-step-view.js'), read('../src/unit2-lesson3.css'),
+  ]);
+  /* activities are wired per study step, by the step view the bootstrap renders */
+  assert.match(main, /mountUnit2l3Step\b/);
+  assert.match(main, /unit2l3StepMarkup/);
+  assert.match(view, /mountUnit2Lesson3Practice/);
+  assert.match(view, /unit2l3PracticeMarkup/);
   for (const rule of ['.p3p-item.is-correct', '.p3p-choice:has(input:focus-visible)', '.p3p-lab-stage', '.p3p-record-row', '.p3p-meter-reading']) {
     assert.ok(css.includes(rule), `css ${rule}`);
   }
@@ -296,9 +301,11 @@ test('interactive lesson models are labelled, bounded, keyboard-friendly, and ex
   assert.match(practice, /data-practice-reset/);
   assert.throws(() => unit2l3SimulationMarkup('unknown'), RangeError);
 
-  const [boot, css] = await Promise.all([read('../src/unit2-lesson3-main.js'), read('../src/unit2-lesson3.css')]);
-  assert.match(boot, /mountUnit2Lesson3Simulations/);
-  assert.match(boot, /IntersectionObserver/);
+  const [boot, view, css] = await Promise.all([
+    read('../src/unit2-lesson3-main.js'), read('../src/unit2-lesson3-step-view.js'), read('../src/unit2-lesson3.css'),
+  ]);
+  assert.match(view, /mountUnit2Lesson3Simulations/);
+  assert.match(view, /unit2l3SimulationMarkup/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /@media \(max-width: 980px\)/);
   assert.match(css, /@media \(max-width: 700px\)/);
