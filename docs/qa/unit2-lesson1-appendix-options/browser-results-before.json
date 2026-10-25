@@ -1,0 +1,185 @@
+{
+  "page": "http://127.0.0.1:4174/unit2-lesson-1-appendix.html",
+  "phase": "before",
+  "base": "http://127.0.0.1:4174",
+  "checks": 74,
+  "failures": 20,
+  "results": [
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "checks": 37,
+      "failures": 10,
+      "errors": [],
+      "measurements": {
+        "restingEdge": 1.27,
+        "restingText": 9.37,
+        "restingRadio": 1.14,
+        "hoverEdge": 10.03,
+        "selectedFillVsResting": 1.45,
+        "selectedEdge": 6.93,
+        "selectedText": 12.73,
+        "restingBorder": [
+          31,
+          41,
+          62
+        ],
+        "restingFill": [
+          12,
+          20,
+          35
+        ],
+        "selectedBorder": [
+          88,
+          205,
+          242
+        ],
+        "selectedFill": [
+          26,
+          53,
+          73
+        ]
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "checks": 74,
+      "failures": 20,
+      "errors": [],
+      "measurements": {
+        "restingEdge": 1.27,
+        "restingText": 9.37,
+        "restingRadio": 1.14,
+        "hoverEdge": 10.03,
+        "selectedFillVsResting": 1.45,
+        "selectedEdge": 6.93,
+        "selectedText": 12.73,
+        "restingBorder": [
+          31,
+          41,
+          62
+        ],
+        "restingFill": [
+          12,
+          20,
+          35
+        ],
+        "selectedBorder": [
+          88,
+          205,
+          242
+        ],
+        "selectedFill": [
+          26,
+          53,
+          73
+        ]
+      }
+    }
+  ],
+  "failed": [
+    {
+      "ok": false,
+      "message": "1366x768 resting option edge ≥ 3:1 against its own fill",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1366x768 resting radio ring ≥ 3:1",
+      "detail": 1.14
+    },
+    {
+      "ok": false,
+      "message": "1366x768 option 1 edge ≥ 3:1",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1366x768 option 2 edge ≥ 3:1",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1366x768 option 3 edge ≥ 3:1",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1366x768 the selected radio shows its dot",
+      "detail": "none"
+    },
+    {
+      "ok": false,
+      "message": "1366x768 selected option adds an inset ring, so its weight changes too",
+      "detail": "none"
+    },
+    {
+      "ok": false,
+      "message": "1366x768 keyboard focus draws a 3px ring on the whole option",
+      "detail": "3px none"
+    },
+    {
+      "ok": false,
+      "message": "1366x768 the focus ring uses the page accent",
+      "detail": "rgb(255, 255, 255)"
+    },
+    {
+      "ok": false,
+      "message": "1366x768 the input does not draw a second ring inside the option"
+    },
+    {
+      "ok": false,
+      "message": "1440x900 resting option edge ≥ 3:1 against its own fill",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1440x900 resting radio ring ≥ 3:1",
+      "detail": 1.14
+    },
+    {
+      "ok": false,
+      "message": "1440x900 option 1 edge ≥ 3:1",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1440x900 option 2 edge ≥ 3:1",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1440x900 option 3 edge ≥ 3:1",
+      "detail": 1.27
+    },
+    {
+      "ok": false,
+      "message": "1440x900 the selected radio shows its dot",
+      "detail": "none"
+    },
+    {
+      "ok": false,
+      "message": "1440x900 selected option adds an inset ring, so its weight changes too",
+      "detail": "none"
+    },
+    {
+      "ok": false,
+      "message": "1440x900 keyboard focus draws a 3px ring on the whole option",
+      "detail": "3px none"
+    },
+    {
+      "ok": false,
+      "message": "1440x900 the focus ring uses the page accent",
+      "detail": "rgb(255, 255, 255)"
+    },
+    {
+      "ok": false,
+      "message": "1440x900 the input does not draw a second ring inside the option"
+    }
+  ]
+}

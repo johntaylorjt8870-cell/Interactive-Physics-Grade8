@@ -1,0 +1,86 @@
+{
+  "page": "http://127.0.0.1:4173/unit2-lesson-1-appendix.html",
+  "phase": "after",
+  "base": "http://127.0.0.1:4173",
+  "checks": 74,
+  "failures": 0,
+  "results": [
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "checks": 37,
+      "failures": 0,
+      "errors": [],
+      "measurements": {
+        "restingEdge": 3.37,
+        "restingText": 9.45,
+        "restingRadio": 8.55,
+        "hoverEdge": 6,
+        "selectedFillVsResting": 1.7,
+        "selectedEdge": 5.95,
+        "selectedText": 10.94,
+        "restingBorder": [
+          84,
+          106,
+          138
+        ],
+        "restingFill": [
+          11,
+          19,
+          34
+        ],
+        "selectedBorder": [
+          88,
+          205,
+          242
+        ],
+        "selectedFill": [
+          30,
+          64,
+          85
+        ]
+      }
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "checks": 74,
+      "failures": 0,
+      "errors": [],
+      "measurements": {
+        "restingEdge": 3.37,
+        "restingText": 9.45,
+        "restingRadio": 8.55,
+        "hoverEdge": 6,
+        "selectedFillVsResting": 1.7,
+        "selectedEdge": 5.95,
+        "selectedText": 10.94,
+        "restingBorder": [
+          84,
+          106,
+          138
+        ],
+        "restingFill": [
+          11,
+          19,
+          34
+        ],
+        "selectedBorder": [
+          88,
+          205,
+          242
+        ],
+        "selectedFill": [
+          30,
+          64,
+          85
+        ]
+      }
+    }
+  ],
+  "failed": []
+}

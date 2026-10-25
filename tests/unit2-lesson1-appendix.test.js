@@ -182,6 +182,86 @@ test('the appendix stylesheet carries its own dark storm-lab identity and access
   assert.match(css, /\.u2l1a-probe-result\[hidden\] \{ display: none; \}/);
 });
 
+/* The answer options of this lab are the one place where a student has to tell
+   three states apart on a dark field. The rules are pinned here so a restyle
+   cannot quietly fall back on the 1.27:1 `--line-soft` edge, on the browser's
+   white light-mode radio, or on colour as the only difference. */
+test('the answer options keep a visible edge, a distinct selected state and a keyboard focus ring', async () => {
+  const css = await read('../src/unit2-lesson1-appendix.css');
+  const block = (selector) => {
+    const index = css.indexOf(selector);
+    assert.notEqual(index, -1, `${selector} must exist in the appendix stylesheet`);
+    const start = css.indexOf('{', index);
+    const end = css.indexOf('}', start);
+    return css.slice(start + 1, end);
+  };
+
+  const option = block('.u2l1a-choice {');
+  assert.match(option, /--choice-line: rgba\(146, 178, 224, 0\.55\)/);
+  assert.match(option, /border: 1px solid var\(--choice-line\)/);
+  assert.doesNotMatch(option, /border: 1px solid var\(--line-soft\)/);
+  assert.match(option, /--choice-radio-line: rgba\(146, 178, 224, 0\.62\)/);
+
+  /* hover and selected are different steps, and selected adds a second edge
+     (an inset ring) so its weight changes with its hue */
+  const hover = block('.u2l1a-choice:hover {');
+  assert.match(hover, /border-color: rgba\(88, 205, 242, 0\.8\)/);
+  const selected = block('.u2l1a-choice:has(input:checked) {');
+  assert.match(selected, /border-color: var\(--spark\)/);
+  assert.match(selected, /background: var\(--choice-fill-selected\)/);
+  assert.match(selected, /box-shadow: inset 0 0 0 1px/);
+
+  /* keyboard focus is drawn on the whole label, not on the 18px circle */
+  assert.match(css, /\.u2l1a-page \.u2l1a-choice:has\(input:focus-visible\) \{\s*outline: 3px solid var\(--spark\);/);
+  assert.match(css, /\.u2l1a-page \.u2l1a-choice input:focus-visible \{ outline: none; \}/);
+
+  /* radios are drawn in the page palette instead of the light-mode default */
+  const radio = block('.u2l1a-choice input[type="radio"] {');
+  assert.match(radio, /appearance: none/);
+  assert.match(radio, /border: 2px solid var\(--choice-radio-line\)/);
+  assert.match(css, /\.u2l1a-choice input\[type="radio"\]:checked::before \{ transform: scale\(1\); \}/);
+  /* and are handed back to the engine when the palette is forced */
+  assert.match(css, /@media \(forced-colors: active\) \{[\s\S]*?\.u2l1a-choice input\[type="radio"\] \{ appearance: auto; -webkit-appearance: auto; \}/);
+});
+
+/* Contrast is measured from the tokens above, composited over both dark bases
+   the option can sit on, so the numbers here are the numbers of the shipped CSS. */
+test('the answer option edge and text clear WCAG contrast on the dark field', async () => {
+  const css = await read('../src/unit2-lesson1-appendix.css');
+  assert.match(css, /--bg: #0a1120/);
+  assert.match(css, /--bg-raise: #101c31/);
+  assert.match(css, /--muted: #a9bad6/);
+
+  const channel = (value) => { const c = value / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+  const luminance = ([r, g, b]) => 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+  const contrast = (a, b) => {
+    const [high, low] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+    return (high + 0.05) / (low + 0.05);
+  };
+  const over = (fg, alpha, bg) => fg.map((value, index) => value * alpha + bg[index] * (1 - alpha));
+  const hex = (value) => [1, 3, 5].map((index) => parseInt(value.slice(index, index + 2), 16));
+
+  /* the worst realistic backdrop: the option fill over the lab panel over the
+     darkest and the raised station base */
+  const backdrops = ['#0a1120', '#101c31'].map((base) => {
+    const station = over(hex(base), 1, hex('#101c31'));
+    const panel = over(hex('#080e1a'), 0.66, station);
+    return over(hex('#0a1120'), 0.72, panel);
+  });
+
+  for (const backdrop of backdrops) {
+    const edge = over(hex('#92b2e0'), 0.55, backdrop);
+    assert.ok(contrast(edge, backdrop) >= 3, `option edge must reach 3:1 (got ${contrast(edge, backdrop).toFixed(2)})`);
+    const radioLine = over(hex('#92b2e0'), 0.62, backdrop);
+    assert.ok(contrast(radioLine, backdrop) >= 3, `radio ring must reach 3:1 (got ${contrast(radioLine, backdrop).toFixed(2)})`);
+    const selectedFill = over(hex('#58cdf2'), 0.22, backdrop);
+    assert.ok(contrast(hex('#ffffff'), selectedFill) >= 4.5, 'selected label stays readable');
+    assert.ok(contrast(hex('#a9bad6'), backdrop) >= 4.5, 'resting label clears AA');
+    assert.ok(contrast(selectedFill, backdrop) >= 1.3, 'the selected fill is visibly different from the resting one');
+    assert.ok(contrast(hex('#58cdf2'), selectedFill) >= 3, 'the selected edge stays visible on its own fill');
+  }
+});
+
 /* ------------------------------------------------------------- the stations */
 
 test('the appendix is seven short stations, each with its own goal and lesson objective', () => {
