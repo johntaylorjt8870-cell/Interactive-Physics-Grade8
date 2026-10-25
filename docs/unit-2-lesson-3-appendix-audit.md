@@ -220,3 +220,42 @@ Protected artefacts confirmed untouched (asserted in the new test file):
 No new unit test was created and no Vercel or platform-wide change was
 introduced; GitHub Pages delivery and `scripts/build.mjs` remain the only
 build path.
+
+## 11. Follow-up fix — probe callout labels on the bench scene (2026-10-25)
+
+**Symptom.** In the bench scenes, «المجس الأحمر» ran wider than its own pill:
+the text started 7–8 scene units left of the rounded rectangle and ended 6–9
+units right of it, so the glyphs painted outside the red fill (over the white
+outline and the grid). In station 1 the lamp label «المصباح» then sat directly
+under the overflowing pill, and the two labels read as one crowded block.
+
+**Cause, read from the code (not assumed).** `src/unit2-lesson3-appendix.js`
+drew every probe handle as a fixed `52 × 22` rectangle
+(`<rect x="${hx - 26}" width="52">`) with the label centred in it at
+`font-size: 11.5px`. The longer Arabic label is ≈ 76 scene units wide at that
+size (`12 × 11.5 × 0.55`), so it could never fit — an intrinsic geometry bug,
+visible at every window width because the SVG viewBox scales uniformly.
+The geometry test did not catch it: it only checked the *handle box*, and its
+`LABEL_TEXT` map used «المصباح الأول» for the one-lamp bench, whose real label
+is «المصباح» — so the closest pair was never the one that collided.
+
+**Fix (label geometry only — the electrical drawing is untouched).**
+
+- `PROBE_CALLOUT` and `probeCalloutBox()` now own the callout geometry in
+  `unit2-lesson3-appendix-physics.js`: pill `84 × 22`, radius 7, and a leader
+  distance per side (`up 58`, `down 40`, `left 64`, `right 64`). The view draws
+  from it, so the drawing and the guard share one source of truth.
+- Station 1's lamp label moved from `(660, 172)` — squeezed between the red
+  callout and the lamp — to `(596, 210)` inside the loop, beside the lamp.
+- Parallel bench: the lead of point **C** changed `left` → `right`, so its
+  callout no longer lands on the «قاطعة مفتوحة/مغلقة» label (the only genuine
+  handle/label overlap the test was already detecting at -7.2 units).
+- `tests/unit2-lesson3-appendix.test.js` now builds the callout box for both
+  probes of **every** measurement point, asserts the pill is wide enough for
+  its own label text, and checks the box against every part label, every drawn
+  symbol, every node halo, the view edges, and every other callout. The label
+  text map uses each layout's real lamp label.
+
+Unchanged: circuit topology, wire paths, source/lamp/switch symbols, node
+positions and letters, voltmeter readings, the parallel (branch) connection of
+the meter, all lesson copy, answers, interactions and the teacher gate.

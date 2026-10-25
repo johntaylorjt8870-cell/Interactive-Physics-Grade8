@@ -38,6 +38,8 @@ import {
   BOOK_PARALLEL_PRESET,
   BOOK_SERIES_PRESET,
   EMF_RANGE,
+  PROBE_CALLOUT,
+  PROBE_LABEL_TEXT,
   SCENE_LABEL_ANCHORS,
   SHARE_RANGE,
   convertVoltage,
@@ -45,6 +47,7 @@ import {
   dipoleTrials,
   formatVoltage,
   parallelRelation,
+  probeCalloutBox,
   probePairsEqual,
   receiverInsideDrivenLoop,
   seriesConnectionFault,
@@ -395,11 +398,13 @@ test('scene geometry keeps labels, handles and solids apart on every layout', ()
         return { x1: element.x - half, x2: element.x + half, y1: element.y - half, y2: element.y + half };
       }),
     ];
+    /* the lamp label of the one-lamp bench is «المصباح», not «المصباح الأول» */
+    const firstLamp = circuit.elements.find((element) => element.kind === 'lamp')?.label ?? 'المصباح';
     const LABEL_TEXT = Object.freeze({
       terminalPositive: 'القطب الموجب',
       terminalNegative: 'القطب السالب',
       sourceTitle: 'المولّد',
-      lampOne: 'المصباح الأول',
+      lampOne: firstLamp,
       lampTwo: 'المصباح الثاني',
       lampThree: 'المصباح الثالث',
       switchLabel: 'قاطعة مغلقة',
@@ -421,20 +426,37 @@ test('scene geometry keeps labels, handles and solids apart on every layout', ()
         assert.ok(gap(box, halo) >= 0, `${layout}.${label.key} must not sit on node ${node.id}`);
       }
     }
-    /* the probe handle of every node stays clear of the printed labels */
+    /* both probe callouts of every point stay clear of the printed labels,
+       of every drawn solid and of every measurement halo — and the pill is
+       wide enough to hold its own label instead of spilling over it */
     for (const node of circuit.nodes) {
-      const distance = node.lead === 'up' ? 58 : 40;
-      const handle = node.lead === 'up'
-        ? { x1: node.x - 26, x2: node.x + 26, y1: node.y - distance - 11, y2: node.y - distance + 11 }
-        : node.lead === 'down'
-          ? { x1: node.x - 26, x2: node.x + 26, y1: node.y + distance - 11, y2: node.y + distance + 11 }
-          : node.lead === 'left'
-            ? { x1: node.x - distance - 26, x2: node.x - distance + 26, y1: node.y - 11, y2: node.y + 11 }
-            : { x1: node.x + distance - 26, x2: node.x + distance + 26, y1: node.y - 11, y2: node.y + 11 };
-      assert.ok(handle.y1 >= 0 && handle.y2 <= BENCH_VIEW.height, `${layout}.${node.id} handle inside view`);
-      assert.ok(handle.x1 >= 0 && handle.x2 <= BENCH_VIEW.width, `${layout}.${node.id} handle inside view horizontally`);
-      for (const label of labels) {
-        assert.ok(gap(handle, boxOf(label)) >= 0, `${layout}.${node.id} handle must not cover ${label.key}`);
+      for (const kind of ['red', 'black']) {
+        const callout = probeCalloutBox(node);
+        const handle = { x1: callout.x1, x2: callout.x2, y1: callout.y1, y2: callout.y2 };
+        const where = `${layout}.${node.id} ${kind} callout`;
+        assert.ok(handle.y1 >= 0 && handle.y2 <= BENCH_VIEW.height, `${where} inside view`);
+        assert.ok(handle.x1 >= 0 && handle.x2 <= BENCH_VIEW.width, `${where} inside view horizontally`);
+        assert.ok(
+          handle.x2 - handle.x1 >= PROBE_LABEL_TEXT[kind].length * PROBE_CALLOUT.fontSize * 0.55,
+          `${where} pill must fit «${PROBE_LABEL_TEXT[kind]}»`,
+        );
+        for (const label of labels) {
+          assert.ok(gap(handle, boxOf(label)) >= 0, `${where} must not cover ${label.key}`);
+        }
+        for (const solid of solids) {
+          assert.ok(gap(handle, solid) >= 0, `${where} must not sit on a circuit solid`);
+        }
+        for (const other of circuit.nodes) {
+          const halo = { x1: other.x - PROBE_CALLOUT.halo, x2: other.x + PROBE_CALLOUT.halo, y1: other.y - PROBE_CALLOUT.halo, y2: other.y + PROBE_CALLOUT.halo };
+          assert.ok(gap(handle, halo) >= 0, `${where} must not sit on node ${other.id}`);
+        }
+      }
+    }
+    /* the two callouts of a scene never land on each other */
+    for (const first of circuit.nodes) {
+      for (const second of circuit.nodes) {
+        if (first.id === second.id) continue;
+        assert.ok(gap(probeCalloutBox(first), probeCalloutBox(second)) >= 0, `${layout}: ${first.id} and ${second.id} callouts must not overlap`);
       }
     }
   }
