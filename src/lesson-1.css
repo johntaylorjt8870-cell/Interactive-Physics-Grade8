@@ -14,6 +14,7 @@
   --l1-border: #d5deea;
   --l1-surface: #ffffff;
   --l1-muted: #475569;
+  --l1-reading-measure: 40rem; /* max line length of running text, see «Reading measure» */
 }
 
 .l1-sidebar-legend {
@@ -1222,6 +1223,23 @@
 .l1-page .math-display {
   max-width: 100%;
   overflow-x: auto;
+}
+
+/* Reading measure -------------------------------------------------------------
+   The lesson column is 978px wide at 1366px and 1032px at 1440px, so a line of
+   running text ran about 900–980px (over 100 Arabic characters), which makes
+   long stretches of reading tiring. Only running text is capped: paragraphs and
+   list items of the stages and of the stage summary. Cards, figures, tables,
+   the stage heading and the stage pager keep their width.
+
+   Interactive regions are excluded and keep full width, so their controls and
+   layout do not change: simulations, inquiry cards, the self-check batches, the
+   practice deck and the problem workbenches. The cap only bites where the text
+   column is wider than it (laptops and wide tablets); on phones the column is
+   already narrower, so their layout is unchanged. */
+.l1-page .page-content :is(p, li):not(:is(.simulation-experience, .inquiry-card, .l1-practice-deck, .problem-workbench, [data-self-check]) *),
+.l1-page .stage-hero-card :is(p, li) {
+  max-width: var(--l1-reading-measure);
 }
 
 @media (max-width: 720px) {
