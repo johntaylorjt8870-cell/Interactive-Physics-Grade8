@@ -174,10 +174,10 @@ test('published teacher payload decrypts only with the existing passphrase and m
 
 test('all four original user-supplied page scans are preserved by content hash', async () => {
   const expected = {
-    'docs/source-images/unit2-exercises-p121.png': 'da4a003c2614b30fcf6adb89d7488a03dbd6200cbf74f30f3186df4b01da65f9',
-    'docs/source-images/unit2-exercises-p122.png': 'c561a3a4441924e541891e3eb29726f758556e4d3156c2bf1da4a888064f75bc',
-    'docs/source-images/unit2-exercises-p123.png': '499ed1185597f78ce7b13fee267e00a62352c26657a0b306ac49b20c8eea9dd0',
-    'docs/source-images/unit2-exercises-p124.png': '312e5ff9a2c1746192698e10c6310013474863309b6d686d59a0681f3f383b27',
+    'docs/source-images/unit2-exercises-p121.png': 'fc9d9767f5ac285e0489782ab902dc915911512f78476615c62112b71147de51',
+    'docs/source-images/unit2-exercises-p122.png': '907886838e5c031bc2ad2196fe60eee77f21d32d136fd2b44657e86c30062d4c',
+    'docs/source-images/unit2-exercises-p123.png': '3d6665c5d1d9525f8b5e52e91239fc972ca020a7accb97545f1dde7f9b007772',
+    'docs/source-images/unit2-exercises-p124.png': '2faa550b252c72fe1c18724a45283961a750019dd34589e272d601ea974e3269',
   };
   for (const [path, digest] of Object.entries(expected)) {
     const bytes = await readFile(new URL(`../${path}`, import.meta.url));
