@@ -1241,3 +1241,42 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* --- Step rail on short laptop screens -------------------------------------
+   The rail is a sticky flex column: intro + progress + eight step buttons +
+   the curriculum key. That stack is 849px tall, so with `top: 24px` on a
+   1366×768 window it spans 24..873 — the eighth step and the key sat below the
+   fold for the whole lesson, and `#page-nav` could not be scrolled (it was
+   `overflow: visible`). Bounding the rail and letting only the step list scroll
+   keeps the intro, the progress bar and the key on screen at every step.
+
+   Only from 821px up: below that the sidebar is `position: static` and sits in
+   the flow, where its natural height is correct. No inline padding is added —
+   the buttons must keep their exact 256px width. */
+@media (min-width: 821px) {
+  .l1-page .lesson-sidebar {
+    max-height: calc(100vh - 48px);
+    max-height: calc(100dvh - 48px);
+  }
+
+  /* the fixed parts of the rail never shrink or get clipped */
+  .l1-page .lesson-sidebar > .sidebar-intro,
+  .l1-page .lesson-sidebar > .progress-wrap,
+  .l1-page .lesson-sidebar > .sidebar-footer {
+    flex: 0 0 auto;
+  }
+
+  .l1-page .lesson-sidebar > .page-nav {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #cfc9bc transparent;
+  }
+
+  /* a scrollport clips outlines, so the focus ring is drawn just inside the
+     button instead of 3px outside it (still 2px thick, still non-colour-only) */
+  .l1-page .lesson-sidebar > .page-nav .page-nav-button:focus-visible {
+    outline-offset: -2px;
+  }
+}

@@ -6,6 +6,7 @@ import {
   mountProblemWorkbenches,
 } from './lesson-1-practice.js';
 import { mountSimulationExperiences } from './simulations.js';
+import { revealScrollTop } from './sidebar-reveal.js';
 
 let currentIndex = 0;
 
@@ -23,6 +24,40 @@ const nextButton = document.querySelector('#next-button');
 const prevLabel = document.querySelector('#previous-label');
 const nextLabel = document.querySelector('#next-label');
 const controlCenter = document.querySelector('#control-center');
+
+/**
+ * Keeps the active step visible inside the rail's own scrollport.
+ *
+ * On short laptop screens the rail is height-bound (see `src/lesson-1.css`), so
+ * only `#page-nav` scrolls. The window must not move here: changing a step
+ * already scrolls the window back to the step heading, and that behaviour is
+ * unchanged. On taller screens the list is not scrollable, so this is a no-op.
+ */
+function revealActiveStep() {
+  if (!pageNav) return;
+  const active = pageNav.querySelector('[aria-current="step"]');
+  if (!active) return;
+  const listBox = pageNav.getBoundingClientRect();
+  const stepBox = active.getBoundingClientRect();
+  pageNav.scrollTop = revealScrollTop({
+    scrollTop: pageNav.scrollTop,
+    scrollHeight: pageNav.scrollHeight,
+    clientHeight: pageNav.clientHeight,
+    listTop: listBox.top,
+    listBottom: listBox.bottom,
+    itemTop: stepBox.top,
+    itemBottom: stepBox.bottom,
+  });
+}
+
+let revealFrame = 0;
+window.addEventListener('resize', () => {
+  if (revealFrame) return;
+  revealFrame = window.requestAnimationFrame(() => {
+    revealFrame = 0;
+    revealActiveStep();
+  });
+});
 
 function renderNav() {
   if (!pageNav) return;
@@ -107,6 +142,7 @@ function renderCurrentPage() {
   if (controlCenter) controlCenter.textContent = `المرحلة ${stageNum} من ${total} · ص ${page.page}`;
 
   renderNav();
+  revealActiveStep();
 }
 
 function goToPage(index, options = {}) {
