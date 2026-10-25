@@ -100,6 +100,8 @@ import {
   BOOK_SERIES_PRESET,
   EMF_RANGE,
   MODEL_LIMITS,
+  PROBE_CALLOUT,
+  PROBE_LABEL_TEXT,
   SHARE_RANGE,
   SCENE_LABEL_ANCHORS,
   createCircuit,
@@ -107,6 +109,7 @@ import {
   formatVoltage,
   parallelRelation,
   potentialDifference,
+  probeCalloutBox,
   receiverInsideDrivenLoop,
   seriesConnectionFault,
   seriesRelation,
@@ -175,8 +178,6 @@ function paintDmm(scope, id, { value, status, points }) {
 }
 
 /* ====================================================== the bench scene SVG */
-
-const LEAD_VECTOR = Object.freeze({ up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] });
 
 const labelText = (anchor, value) =>
   `<text class="${anchor.className}" x="${anchor.x}" y="${anchor.y}" text-anchor="middle" direction="rtl">${value}</text>`;
@@ -249,16 +250,12 @@ function nodeMarkup(point, { red, black, referenceId, interactive = true, showLe
 }
 
 function probeMarkup(point, kind) {
-  const [dx, dy] = LEAD_VECTOR[point.lead] ?? [0, -1];
-  const distance = point.lead === 'up' ? 58 : 40;
-  const hx = point.x + dx * distance;
-  const hy = point.y + dy * distance;
-  const label = kind === 'red' ? 'المجس الأحمر' : 'المجس الأسود';
+  const box = probeCalloutBox(point);
   return `
   <g class="u2l3a-probe is-${kind}" aria-hidden="true">
-    <line x1="${point.x}" y1="${point.y}" x2="${hx}" y2="${hy}" />
-    <rect x="${hx - 26}" y="${hy - 11}" width="52" height="22" rx="7" />
-    <text x="${hx}" y="${hy + 4}" text-anchor="middle" direction="rtl">${label}</text>
+    <line x1="${point.x}" y1="${point.y}" x2="${box.hx}" y2="${box.hy}" />
+    <rect x="${box.x1}" y="${box.y1}" width="${box.width}" height="${box.height}" rx="${PROBE_CALLOUT.radius}" />
+    <text x="${box.hx}" y="${box.hy + 4}" text-anchor="middle" direction="rtl">${PROBE_LABEL_TEXT[kind]}</text>
   </g>`;
 }
 

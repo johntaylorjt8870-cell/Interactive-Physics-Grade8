@@ -82,6 +82,51 @@ export const nearlyEqual = (a, b) => Math.abs(finite(a, 'a') - finite(b, 'b')) <
 /** One drawing space for every bench scene; the view scales it responsively. */
 export const BENCH_VIEW = Object.freeze({ width: 780, height: 450 });
 
+/**
+ * The two probe callouts drawn on the bench, with the pill wide enough for the
+ * longer Arabic label at the scene font size (`12 characters × 11.5 px × 0.55`
+ * ≈ 76 units of text, plus 4 units of padding on each side). The pill used to
+ * be 52 units wide, so «المجس الأحمر» spilled over the white outline and onto
+ * the neighbouring part labels.
+ */
+export const PROBE_LABEL_TEXT = Object.freeze({ red: 'المجس الأحمر', black: 'المجس الأسود' });
+
+export const PROBE_CALLOUT = Object.freeze({
+  width: 84,
+  height: 22,
+  radius: 7,
+  fontSize: 11.5,
+  /* how far the pill's centre sits from its measurement point, per lead side */
+  distance: Object.freeze({ up: 58, down: 40, left: 64, right: 64 }),
+  /* the glowing point's halo radius — the pill must stay clear of it */
+  halo: 16,
+});
+
+/**
+ * The box, handle centre and leader of one probe callout. The view draws from
+ * this and the geometry test asserts on it, so a label can never drift onto a
+ * part label, a drawn symbol or a measurement point again.
+ */
+export function probeCalloutBox(point) {
+  if (!point || typeof point.x !== 'number' || typeof point.y !== 'number') {
+    throw new TypeError('A measurement point is required.');
+  }
+  const side = Object.hasOwn(PROBE_CALLOUT.distance, point.lead) ? point.lead : 'up';
+  const distance = PROBE_CALLOUT.distance[side];
+  const dx = side === 'left' ? -1 : side === 'right' ? 1 : 0;
+  const dy = side === 'up' ? -1 : side === 'down' ? 1 : 0;
+  const hx = point.x + dx * distance;
+  const hy = point.y + dy * distance;
+  const halfWidth = PROBE_CALLOUT.width / 2;
+  const halfHeight = PROBE_CALLOUT.height / 2;
+  return Object.freeze({
+    side, distance, hx, hy,
+    x1: hx - halfWidth, x2: hx + halfWidth,
+    y1: hy - halfHeight, y2: hy + halfHeight,
+    width: PROBE_CALLOUT.width, height: PROBE_CALLOUT.height,
+  });
+}
+
 const node = (id, letter, label, x, y, role = 'wire', lead = 'up') =>
   Object.freeze({ id, letter, label, x, y, role, lead });
 
@@ -169,7 +214,7 @@ const PARALLEL2 = Object.freeze({
   nodes: Object.freeze([
     node('pos', 'A', 'القطب الموجب للمولّد', 330, 90, 'source-plus', 'up'),
     node('jtop', 'B', 'الوصلة العليا بعد القاطعة', 640, 90, 'wire', 'up'),
-    node('ain', 'C', 'مدخل الفرع الأول', 430, 140, 'wire', 'left'),
+    node('ain', 'C', 'مدخل الفرع الأول', 430, 140, 'wire', 'right'),
     node('aout', 'D', 'مخرج الفرع الأول', 430, 300, 'wire', 'left'),
     node('bin', 'E', 'مدخل الفرع الثاني', 570, 140, 'wire', 'right'),
     node('bout', 'F', 'مخرج الفرع الثاني', 570, 300, 'wire', 'right'),
@@ -233,7 +278,10 @@ export const SCENE_LABEL_ANCHORS = Object.freeze({
     sourceTitle: Object.freeze({ x: 390, y: 42, className: 'u2l3a-part-label is-title' }),
     terminalPositive: Object.freeze({ x: 462, y: 62, className: 'u2l3a-part-sub' }),
     terminalNegative: Object.freeze({ x: 318, y: 62, className: 'u2l3a-part-sub' }),
-    lampOne: Object.freeze({ x: 660, y: 172, className: 'u2l3a-part-label' }),
+    /* inside the loop, to the left of the lamp: the two probe callouts sit on
+     * the right wire above and below this height, so the lamp label keeps a
+     * clear gap from «المجس الأحمر» instead of being sandwiched under it. */
+    lampOne: Object.freeze({ x: 596, y: 210, className: 'u2l3a-part-label' }),
     switchLabel: Object.freeze({ x: 196, y: 246, className: 'u2l3a-part-label' }),
   }),
   series2: Object.freeze({
