@@ -127,18 +127,21 @@ src/
   unit2-lesson3-practice.js Interactive pp98–106 activities: quizzes, blank sentences and three live meter labs
   unit2-lesson3-answers.js Lazily loaded activity keys and locked model solutions (loaded on demand only)
   unit2-lesson3-simulation.js Water analogy, series/parallel calculator, converter and practice
-  unit2-lesson3-main.js Student station navigation and interactions
+  lesson-steps.js           LessonStepper: one-step-at-a-time navigation shared by Unit 2 Lessons 1–3
+  unit2-lesson3-step-view.js Renders and mounts exactly one Lesson 3 study step (one book page)
+  unit2-lesson3-main.js     Lesson 3 step navigation, progress and interactions
   unit2-lesson3-teacher-content.js Lazily loaded worked solutions for pp97–106
   unit2-lesson3-test-data.js 20 new lesson-test questions (no answers embedded)
   unit2-lesson3-test-solutions.js Answer key and explanations loaded only after submission
   unit2-lesson3-test-diagrams.js Accessible assessment circuit diagrams
-  unit2-lesson3.css Distinctive responsive voltage-atlas lesson design
+  unit2-lesson3.css Distinctive responsive voltage-atlas lesson design, applied to the shared step layout
   unit2-lesson3-teacher.css Scoped teacher-area additions
   docs/unit-2-lesson-3-source-audit.md Source audit for textbook pages 97–106
   docs/unit-2-lesson-2-appendix-audit.md Appendix audit: sources, coverage, tests, a11y and scope for pp87–96
   teacher.css / lesson-test.css
 tests/
   unit2-lesson3.test.js     Lesson 3 source coverage, calculations, diagrams, auth and assessment checks
+  lesson-steps.test.js      Step navigation contract + guard against one-page lesson regressions
   appendices.test.js        Navigation, practice flow, direct-page and preservation checks
   appendix-physics.test.js  Resultant, force editing, presets, challenge and motion tests
   unit2-lesson1-appendix.test.js Station flow, charge/electrification/Coulomb physics, source labelling and scope checks
@@ -173,7 +176,8 @@ Fonts are vendored in `vendor/` (no CDN): IBM Plex Sans Arabic for Arabic UI and
 
 - The root URL (`index.html`) is the Course Home, not a lesson.
 - The published Lesson 1 has a stable direct URL at `lesson-1.html` and links back to the Course Home.
-- Unit 2 Lesson 3 (`unit2-lesson-3.html`) follows the published static-page architecture, uses five numbered learning stations, and covers the audited textbook pages 97–106.
+- Unit 2 Lesson 3 (`unit2-lesson-3.html`) uses the same step architecture as Unit 2 Lessons 1–2: one study step per textbook page, «السابق» / «التالي» controls, a progress bar and a step list, covering the audited pages 97–106 (ten steps, no single-page article).
+- The step contract is shared by every Unit 2 lesson that teaches page by page: `src/lesson-steps.js` owns `LessonStepper` plus `auditLessonSteps()`, and `tests/lesson-steps.test.js` fails if such a lesson collapses into one long step, drops a page, loses its headings or labels, or stops exposing the step controls. Lessons that use another approved design (Unit 2 Lesson 4's station rail) are not forced into it.
 - `unit2-lesson-3.html` links to the Lesson 2 predecessor, the course home, its separate teacher gate and its independent lesson test; the completed Unit 2 test is available from the Course Home.
 - `unit-questions.html` is a separate Unit 1 review for textbook pages 71–72, linked from the Unit 1 panel and Lesson 2; it is not part of the lesson list and is not the Unit 1 Test.
 - `unit-questions-teacher.html` is the review's separate, password-gated Teacher Area. It reuses the existing verifier and lazy-loads its solutions only after authorization.
@@ -200,6 +204,7 @@ The Unit 2 Lesson 2 Appendix («رحلة الشحنات — من المولّد 
 - Sidebar navigation follows pages 55–62 in book order, with prev/next controls and keyboard support.
 - Each page: learning goal → verbatim textbook content → platform explanation → diagram/simulation → worked structure where the book solves an example.
 - Self-check answers (p61–62) are interactive, graded locally against the frozen printed key, with explanations after checking.
+- A Unit 2 lesson that covers many textbook pages teaches one page per study step: only the active step is rendered, its own diagrams, simulations and activities travel with it, and the student's answers, hints and lab readings survive moving to another step and back. The step is built once and re-attached, so nothing is re-mounted or reset on navigation.
 
 ## Unit Questions review
 

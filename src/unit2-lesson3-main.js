@@ -1,94 +1,123 @@
-import { UNIT2L3_PAGES, UNIT2L3_STATIONS } from './unit2-lesson3-content.js';
-import { unit2l3DiagramMarkup } from './unit2-lesson3-diagrams.js';
-import { mountUnit2Lesson3Practice, unit2l3PracticeMarkup } from './unit2-lesson3-practice.js';
-import { mountUnit2Lesson3Simulations, unit2l3SimulationMarkup } from './unit2-lesson3-simulation.js';
+import { UNIT2L3_PAGES } from './unit2-lesson3-content.js';
+import { LessonStepper } from './lesson-steps.js';
+import { mountUnit2l3Step, unit2l3StepMarkup } from './unit2-lesson3-step-view.js';
 
-const root = document.querySelector('#lesson-stations');
-if (!root) throw new Error('Lesson 3 student content root is missing.');
+/**
+ * Unit 2 Lesson 3 bootstrap: one textbook page per step, with «السابق» / «التالي»,
+ * the lesson progress bar, and the step list in the sidebar. Steps are built once
+ * and then detached/reattached, so a student who answers an activity, opens a hint,
+ * or closes a lab leaves everything as it was when they come back to that step.
+ */
+const stepper = new LessonStepper(UNIT2L3_PAGES);
 
-const escapeHtml = (value) => String(value)
-  .replaceAll('&', '&amp;')
-  .replaceAll('"', '&quot;')
-  .replaceAll('<', '&lt;')
-  .replaceAll('>', '&gt;');
+const nav = document.querySelector('#page-nav');
+const pageContent = document.querySelector('#page-content');
+if (!nav || !pageContent) throw new Error('Lesson 3 student content root is missing.');
 
-function renderBlock(block, page, index) {
-  if (block.type === 'book') {
-    return `<div class="p3-book-copy" data-book-copy="p${page.page}"><span class="p3-book-copy-label">من الكتاب</span>${block.html}</div>`;
-  }
-  if (block.type === 'platform') {
-    return `<aside class="p3-platform-card p3-platform-${escapeHtml(block.kind)}" aria-label="شرح المنصة: ${escapeHtml(block.title)}"><div class="p3-platform-label"><span aria-hidden="true">✦</span> شرح المنصة</div><h4>${escapeHtml(block.title)}</h4>${block.html}</aside>`;
-  }
-  if (block.type === 'diagram') {
-    return unit2l3DiagramMarkup(block.id, `p${page.page}-figure-${index}`);
-  }
-  if (block.type === 'simulation') {
-    return unit2l3SimulationMarkup(block.id);
-  }
-  if (block.type === 'practice') {
-    return unit2l3PracticeMarkup(block.id);
-  }
-  throw new TypeError(`Unknown Lesson 3 block type: ${block.type}`);
+const pageHeading = document.querySelector('#page-heading');
+const pageNumber = document.querySelector('#page-number');
+const progressText = document.querySelector('#progress-text');
+const progressTrack = document.querySelector('#progress-track');
+const progressFill = document.querySelector('#progress-fill');
+const mobileProgressFill = document.querySelector('#mobile-progress-fill');
+const previousButton = document.querySelector('#previous-button');
+const nextButton = document.querySelector('#next-button');
+const previousLabel = document.querySelector('#previous-label');
+const nextLabel = document.querySelector('#next-label');
+const controlCenter = document.querySelector('#control-center');
+const sectionKicker = document.querySelector('#section-kicker');
+
+const steps = new Map();
+const reduceMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function buildStep(index) {
+  if (steps.has(index)) return steps.get(index);
+  const page = UNIT2L3_PAGES[index];
+  const view = document.createElement('div');
+  view.className = 'p3-step';
+  view.dataset.stepIndex = String(index);
+  view.innerHTML = unit2l3StepMarkup(page);
+  mountUnit2l3Step(view);
+  steps.set(index, view);
+  return view;
 }
 
-function renderPage(page) {
-  return `<article class="p3-page-card" id="source-page-${page.page}" data-source-page="p${page.page}" aria-labelledby="source-page-${page.page}-heading">
-    <header class="p3-page-card-heading"><div class="p3-page-marker"><span>صفحة الكتاب</span><strong dir="ltr">${page.page}</strong></div><div><p>المصدر الرسمي · الكتاب</p><h3 id="source-page-${page.page}-heading">${escapeHtml(page.heading)}</h3></div><span class="p3-page-ornament" aria-hidden="true">U</span></header>
-    <div class="p3-page-content">${page.blocks.map((block, index) => renderBlock(block, page, index)).join('')}</div>
-  </article>`;
+function updateProgress() {
+  const { current, total, percent } = stepper.progress;
+  progressText.textContent = `${current} / ${total}`;
+  progressTrack.setAttribute('aria-valuenow', String(current));
+  progressTrack.setAttribute('aria-valuemax', String(total));
+  progressFill.style.width = `${percent}%`;
+  mobileProgressFill.style.width = `${percent}%`;
+  controlCenter.textContent = `الخطوة ${current} من ${total} · صفحة ${stepper.page.page}`;
 }
 
-function renderStation(station) {
-  const pages = station.pages.map((pageNumber) => UNIT2L3_PAGES.find((page) => page.page === pageNumber)).filter(Boolean);
-  return `<section class="p3-station" id="station-${station.id}" data-lesson-station="${station.id}" aria-labelledby="station-${station.id}-heading">
-    <header class="p3-station-heading"><div class="p3-station-count"><span>${station.index}</span><i aria-hidden="true">${station.icon}</i></div><div><p>محطة ${station.index} · صفحات <bdi dir="ltr">${station.range}</bdi></p><h2 id="station-${station.id}-heading">${escapeHtml(station.title)}</h2></div><span class="p3-station-flourish" aria-hidden="true"></span></header>
-    <div class="p3-station-pages">${pages.map(renderPage).join('')}</div>
-  </section>`;
+function updateControls() {
+  previousButton.disabled = stepper.isFirst;
+  nextButton.disabled = stepper.isLast;
+  previousLabel.textContent = stepper.labelFor('previous');
+  nextLabel.textContent = stepper.labelFor('next');
 }
 
-root.innerHTML = UNIT2L3_STATIONS.map(renderStation).join('');
-mountUnit2Lesson3Practice(document);
-mountUnit2Lesson3Simulations(document);
-
-const navLinks = [...document.querySelectorAll('[data-station-link]')];
-const progressTrack = document.querySelector('#station-progress-track');
-const progressFill = document.querySelector('#station-progress-fill');
-const progressLabel = document.querySelector('#station-progress-label');
-const progressValue = document.querySelector('#station-progress-value');
-const stations = [...document.querySelectorAll('[data-lesson-station]')];
-
-function setCurrentStation(id) {
-  const index = UNIT2L3_STATIONS.findIndex((station) => station.id === id);
-  if (index < 0) return;
-  const station = UNIT2L3_STATIONS[index];
-  navLinks.forEach((link) => {
-    if (link.dataset.stationLink === id) link.setAttribute('aria-current', 'step');
-    else link.removeAttribute('aria-current');
+function updateNav() {
+  [...nav.children].forEach((button, index) => {
+    if (index === stepper.index) button.setAttribute('aria-current', 'step');
+    else button.removeAttribute('aria-current');
   });
-  progressTrack.setAttribute('aria-valuenow', String(index + 1));
-  progressFill.style.width = `${((index + 1) / UNIT2L3_STATIONS.length) * 100}%`;
-  progressLabel.textContent = `المحطة ${station.index} من ${UNIT2L3_STATIONS.length} · ${station.title}`;
-  progressValue.textContent = `${Math.round(((index + 1) / UNIT2L3_STATIONS.length) * 100)}%`;
 }
 
-if ('IntersectionObserver' in window) {
-  const visibleStations = new Map();
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) visibleStations.set(entry.target.dataset.lessonStation, entry.intersectionRatio);
-      else visibleStations.delete(entry.target.dataset.lessonStation);
-    }
-    const current = [...visibleStations.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
-    if (current) setCurrentStation(current);
-  }, { rootMargin: '-16% 0px -58% 0px', threshold: [0.01, 0.12, 0.3, 0.6] });
-  stations.forEach((station) => observer.observe(station));
-} else {
-  window.addEventListener('scroll', () => {
-    const target = stations.find((station) => station.getBoundingClientRect().top >= -120) ?? stations.at(-1);
-    if (target) setCurrentStation(target.dataset.lessonStation);
-  }, { passive: true });
+function renderStep() {
+  const page = stepper.page;
+  pageHeading.textContent = page.heading;
+  pageNumber.textContent = String(page.page);
+  sectionKicker.textContent = `الدرس 3 · فرق الكمون الكهربائي · ${stepper.position} / ${stepper.total}`;
+  pageContent.replaceChildren(buildStep(stepper.index));
+  updateProgress();
+  updateControls();
+  updateNav();
 }
 
-navLinks.forEach((link) => link.addEventListener('click', () => {
-  setCurrentStation(link.dataset.stationLink);
-}));
+function goToStep(index, moveFocus = false) {
+  pageContent.setAttribute('aria-busy', 'true');
+  const changed = stepper.goTo(index);
+  if (!changed && pageContent.childElementCount > 0) {
+    pageContent.setAttribute('aria-busy', 'false');
+    return;
+  }
+  renderStep();
+  pageContent.setAttribute('aria-busy', 'false');
+  if (moveFocus) {
+    pageHeading.focus({ preventScroll: true });
+    pageHeading.scrollIntoView({ block: 'start', behavior: reduceMotion() ? 'auto' : 'smooth' });
+  }
+}
+
+UNIT2L3_PAGES.forEach((page, index) => {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'page-nav-button';
+  button.setAttribute('aria-label', `الخطوة ${index + 1}، الصفحة ${page.page}: ${page.navLabel}`);
+  button.innerHTML = `<span class="nav-page-number" dir="ltr">${page.page}</span><span class="nav-page-copy"><strong>${escapeHtml(page.navLabel)}</strong><small>خطوة من الكتاب</small></span><span class="nav-current-mark" aria-hidden="true">↙</span>`;
+  button.addEventListener('click', () => goToStep(index, true));
+  nav.append(button);
+});
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+}
+
+previousButton.addEventListener('click', () => goToStep(stepper.index - 1, true));
+nextButton.addEventListener('click', () => goToStep(stepper.index + 1, true));
+
+window.addEventListener('keydown', (event) => {
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (event.target?.closest?.('input, button, select, textarea, a, [contenteditable="true"]')) return;
+  if (event.key === 'PageDown' && !stepper.isLast) { event.preventDefault(); goToStep(stepper.index + 1, true); }
+  if (event.key === 'PageUp' && !stepper.isFirst) { event.preventDefault(); goToStep(stepper.index - 1, true); }
+});
+
+renderStep();
