@@ -13,7 +13,7 @@ const SRC = new URL('../src/', import.meta.url);
 
 /* Published lessons that must always be audited, so a rename cannot quietly drop
    one of them from the shape-based discovery. */
-const REQUIRED_STEP_LESSONS = ['unit2-lesson1-content.js', 'unit2-lesson2-content.js', 'unit2-lesson3-content.js'];
+const REQUIRED_STEP_LESSONS = ['unit2-lesson1-content.js', 'unit2-lesson2-content.js', 'unit2-lesson3-content.js', 'unit2-lesson4-content.js'];
 
 /* Step controls every page-based student page must expose. */
 const STEP_SHELL_HOOKS = ['id="page-nav"', 'id="page-content"', 'id="previous-button"', 'id="next-button"', 'id="progress-track"', 'id="page-heading"'];
@@ -152,11 +152,15 @@ test('every page-based lesson keeps one step per textbook page and a working ste
       `${shell} does not pre-render book copy outside the step renderer`);
   }
 
-  /* lessons that use another approved design (station rail) are not forced into this one */
-  const stationLesson = await read('../src/unit2-lesson4-content.js');
-  assert.match(stationLesson, /export const STATIONS/);
-  assert.equal(discovered.some((entry) => entry.file === 'unit2-lesson4-content.js'), false,
-    'the station-rail lesson is not treated as a page-per-page lesson');
+  /* Lesson 4 was the one station-rail exception. It is now taught one textbook
+     page at a time like lessons 1–3, so the exception is retired: the lesson is
+     discovered by shape and audited by the same rule as every other lesson, and
+     its six book phases are checked through UNIT2L4_PAGES rather than STATIONS. */
+  const lesson4 = discovered.find((entry) => entry.file === 'unit2-lesson4-content.js');
+  assert.ok(lesson4, 'lesson 4 is discovered by shape and therefore audited');
+  assert.equal(lesson4.exportName, 'UNIT2L4_PAGES');
+  assert.equal(discovered.some((entry) => entry.file === 'unit2-lesson4-content.js' && entry.exportName === 'STATIONS'), false,
+    'the retired station array is not mistaken for a page-per-page lesson');
 });
 
 

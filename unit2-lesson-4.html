@@ -1,5 +1,131 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b30"><title>المقاومة الكهربائية — الوحدة الثانية، الدرس الرابع</title><link rel="stylesheet" href="./src/fonts.css"><link rel="stylesheet" href="./vendor/katex/katex.min.css"><link rel="stylesheet" href="./src/unit2-lesson4.css"></head>
-<body class="resistance-page"><a class="skip" href="#lesson-main">انتقل إلى الدرس</a><header class="lab-header"><a href="./">فـ / فيزياء ٨</a><span>الوحدة الثانية · الكهرباء</span><nav aria-label="روابط الدرس"><a href="./unit2-lesson-3.html">الدرس السابق</a><a href="./unit2-lesson-4-teacher.html">منطقة المعلم</a><a href="./unit-2-test.html">اختبار الوحدة</a></nav></header>
-<div class="lab-shell"><aside class="station-rail"><p class="eyebrow">دفتر مهندس صغير</p><h1>المقاومة<br>الكهربائية</h1><p>الدرس الرابع والأخير<br>ص<span dir="ltr">107–120</span></p><div class="rail-line" aria-hidden="true">— ∿ — Ω — ∿ —</div><nav id="station-nav" aria-label="مراحل الدرس"></nav><label for="lesson-progress">مراحل زرتها <span id="progress-text" dir="ltr">0 / 6</span></label><progress id="lesson-progress" max="6" value="0"></progress><small>مؤشر زيارة، وليس حكماً على إتقانك.</small></aside>
-<main id="lesson-main" tabindex="-1"><div class="bench-label"><span>RESISTANCE / WORKBOOK 04</span><span>استكشف · قِس · فسّر</span></div><div id="station-content"></div><div class="station-actions"><button id="previous">المرحلة السابقة</button><button id="next">المرحلة التالية ←</button></div></main></div><footer class="lab-footer">المحتوى مبني على صور الكتاب ص<span dir="ltr">107–120</span>. المحاكاة والشرح الموسع إضافات من المنصة. <a href="./">المقرر</a></footer><noscript>يلزم تفعيل JavaScript لعرض الدرس والتفاعلات.</noscript><script type="module" src="./src/unit2-lesson4-main.js"></script></body></html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#123b30" />
+  <meta name="description" content="الدرس الرابع من الوحدة الثانية في الفيزياء للصف الثامن: المقاومة الكهربائية وقانون أوم وقانون السلك وتوصيل المقاومات، صفحات الكتاب 107–120، بخطوة تعليمية واحدة لكل صفحة." />
+  <title>المقاومة الكهربائية — الدرس الرابع | الفيزياء للصف الثامن</title>
+  <link rel="stylesheet" href="./src/fonts.css" />
+  <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="stylesheet" href="./src/unit2-lesson4.css" />
+</head>
+<body class="resistance-page">
+  <a class="r4-skip-link" href="#lesson-main">انتقل إلى محتوى الدرس</a>
+  <div class="r4-app-shell">
+    <header class="r4-topbar">
+      <a class="r4-brand" href="./" aria-label="العودة إلى الصفحة الرئيسية للمنصة">
+        <span class="r4-brand-mark" aria-hidden="true">Ω</span>
+        <span><strong>فيزياء ٨</strong><small>دفتر المهندس الصغير · الوحدة الثانية</small></span>
+      </a>
+      <div class="r4-breadcrumb" aria-label="مسار الدرس">
+        <a href="./">الرئيسية</a><span aria-hidden="true">/</span>
+        <a href="./unit2-lesson-3.html">الدرس 3</a><span aria-hidden="true">/</span>
+        <strong>الدرس 4</strong>
+      </div>
+      <nav class="r4-top-actions" aria-label="روابط الدرس">
+        <a href="./unit2-lesson-3.html">الدرس السابق</a>
+        <a href="./unit-2-test.html">اختبار الوحدة</a>
+        <a class="r4-top-teacher" href="./unit2-lesson-4-teacher.html">منطقة المعلم</a>
+      </nav>
+    </header>
+
+    <section class="r4-hero" aria-labelledby="lesson-title">
+      <div class="r4-hero-copy">
+        <div class="r4-hero-eyebrow"><span class="r4-orbit-dot" aria-hidden="true"></span><span>الوحدة الثانية · الدرس الرابع</span><bdi dir="ltr">TEXTBOOK · 107—120</bdi></div>
+        <h1 id="lesson-title">المقاومة<br /><em>الكهربائية</em></h1>
+        <p>لماذا تسخن المكواة ولا يضيء سلكها؟ اكتشف المقاومة، قِس قانون أوم، استقصِ مقاومة السلك، ثم وصّل المقاومات وقارن بين التسلسل والتفرع — خطوة واحدة في كل صفحة من الكتاب.</p>
+        <div class="r4-hero-facts">
+          <span><b>14</b> خطوة تعلّم</span>
+          <span><b>6</b> مختبرات رقمية</span>
+          <span><bdi dir="ltr">Ω = V / A</bdi> وحدة المقاومة</span>
+        </div>
+        <div class="r4-hero-actions">
+          <button class="r4-start-button" type="button" id="start-lesson">ابدأ من صفحة 107 <span aria-hidden="true">←</span></button>
+          <a class="r4-quiet-link" href="#lesson-main">تصفّح الخطوات</a>
+        </div>
+      </div>
+      <figure class="r4-hero-visual" aria-label="تصوّر المقاومة الكهربائية: ناقل مقاوم يمر فيه التيار فيتحول جزء من الطاقة إلى حرارة">
+        <svg viewBox="0 0 540 400" role="img" aria-labelledby="r4-hero-title r4-hero-desc">
+          <title id="r4-hero-title">مقاومة في دارة كهربائية</title>
+          <desc id="r4-hero-desc">مولد ومقاومة في حلقة، مع رمز أوم Ω وثلاث موجات حرارة تخرج من المقاومة.</desc>
+          <defs>
+            <linearGradient id="r4-hero-glow" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#d98a4d" stop-opacity=".55" />
+              <stop offset="1" stop-color="#b04a1e" stop-opacity=".12" />
+            </linearGradient>
+          </defs>
+          <circle class="r4-hero-ring" cx="270" cy="200" r="158" />
+          <circle class="r4-hero-ring r4-hero-ring-inner" cx="270" cy="200" r="116" />
+          <path class="r4-hero-circuit" d="M128 120H412V280H128V120" />
+          <path class="r4-hero-cell" d="M404 168v64M422 180v40" />
+          <text class="r4-hero-sign" x="380" y="164" direction="ltr">+</text>
+          <text class="r4-hero-sign" x="428" y="164" direction="ltr">−</text>
+          <rect class="r4-hero-resistor" x="176" y="98" width="150" height="44" rx="6" />
+          <path class="r4-hero-zigzag" d="M190 120h12l8-12 12 24 12-24 12 24 12-24 12 24 12-24 8 12h14" />
+          <path class="r4-hero-heat" d="M204 80q-12-18 0-34M248 76q-14-22 0-42M292 80q-12-18 0-34" />
+          <path class="r4-hero-flow" d="M244 120H300" />
+          <path class="r4-hero-flow-head" d="m300 120-14-7v14z" />
+          <text class="r4-hero-label" x="251" y="340" direction="ltr">R = U / I</text>
+          <text class="r4-hero-omega" x="270" y="230" direction="ltr">Ω</text>
+          <text class="r4-hero-caption" x="270" y="374" text-anchor="middle">طاقة كهربائية ← حرارة في ناقل مقاوم</text>
+        </svg>
+        <figcaption><span class="r4-art-chip"><i></i> نموذج بصري</span><span>إعادة رسم تعليمية من المنصة</span></figcaption>
+      </figure>
+    </section>
+
+    <main class="r4-layout" id="lesson-main">
+      <aside class="r4-sidebar" aria-label="التنقل بين خطوات الدرس">
+        <div class="r4-sidebar-intro">
+          <span class="r4-eyebrow">خطوات الدرس الأربع عشرة</span>
+          <p>كل خطوة تعرض صفحة واحدة من الكتاب (107–120) مع شرحها ورسمها ونشاطها؛ انتقل بزرّي «السابق» و«التالي» أو من القائمة.</p>
+        </div>
+        <div class="r4-progress-wrap">
+          <div class="r4-progress-label"><span>تقدّم الدرس</span><span id="progress-text" class="r4-ltr" dir="ltr">1 / 14</span></div>
+          <div class="r4-progress-track" id="progress-track" role="progressbar" aria-label="تقدّم خطوات الدرس" aria-valuemin="1" aria-valuemax="14" aria-valuenow="1"><span id="progress-fill"></span></div>
+          <p class="r4-progress-note">ترقيم الخطوة يوضّح موضعك، لا مستوى إتقانك.</p>
+        </div>
+        <nav class="r4-page-nav" id="page-nav" aria-label="خطوات الدرس"></nav>
+        <div class="r4-sidebar-footer">
+          <span class="r4-source-dot" aria-hidden="true"></span>
+          <span>كل خطوة مرتبطة بصفحة من الكتاب · زرتَ <bdi dir="ltr" id="visited-text">0 / 14</bdi></span>
+        </div>
+      </aside>
+
+      <section class="r4-lesson-main" aria-label="محتوى الدرس">
+        <div class="r4-heading-row">
+          <div>
+            <p class="r4-section-kicker" id="section-kicker">الدرس 4 · المقاومة الكهربائية · 1 / 14</p>
+            <h2 id="page-heading" tabindex="-1">المقاومة الكهربائية: من الحرارة إلى المفهوم</h2>
+            <p class="r4-phase-name" id="phase-name">المرحلة 01 · لماذا تسخن الأجهزة؟</p>
+          </div>
+          <div class="r4-page-badge" aria-label="رقم صفحة الكتاب"><span>صفحة الكتاب</span><strong id="page-number" class="r4-ltr" dir="ltr">107</strong></div>
+        </div>
+        <div class="r4-progress-mobile" aria-hidden="true"><span id="mobile-progress-fill"></span></div>
+        <div id="page-content" class="r4-page-content" aria-live="polite" aria-busy="false"></div>
+        <nav class="r4-lesson-controls" aria-label="التنقل المتسلسل">
+          <button class="r4-control-button r4-previous" id="previous-button" type="button" disabled><span class="r4-control-arrow" aria-hidden="true">→</span><span><small>السابق</small><strong id="previous-label">بداية الدرس</strong></span></button>
+          <span class="r4-control-center" id="control-center">الخطوة 1 من 14 · صفحة 107</span>
+          <button class="r4-control-button r4-next" id="next-button" type="button"><span><small>التالي</small><strong id="next-label">تعريف المقاومة</strong></span><span class="r4-control-arrow" aria-hidden="true">←</span></button>
+        </nav>
+        <p class="r4-keyboard-hint">يمكنك التنقل باستخدام <kbd>Page Up</kbd> و<kbd>Page Down</kbd>.</p>
+      </section>
+    </main>
+
+    <section class="r4-end-card" aria-labelledby="lesson-end-title">
+      <div class="r4-end-mark" aria-hidden="true"><span>Ω</span><i></i></div>
+      <div><p>أكملت مسار صفحات الكتاب 107–120</p><h2 id="lesson-end-title">جاهز لاختبار الوحدة؟</h2><span>اختبار الوحدة الثانية مستقل ويغطي الدروس الأربعة؛ لا تظهر النتيجة قبل تسليم المحاولة.</span></div>
+      <a href="./unit-2-test.html">اذهب إلى اختبار الوحدة <span aria-hidden="true">←</span></a>
+    </section>
+
+    <footer class="r4-footer">
+      <a href="./unit2-lesson-3.html">→ الدرس السابق: فرق الكمون الكهربائي</a>
+      <span>الوحدة الثانية · الكهرباء · الدرس 4</span>
+      <a href="./">العودة إلى مسار الدروس</a>
+    </footer>
+  </div>
+  <noscript><p class="r4-noscript">يلزم تفعيل JavaScript لعرض محتوى الدرس والتفاعلات.</p></noscript>
+  <script type="module" src="./src/unit2-lesson4-main.js"></script>
+</body>
+</html>
