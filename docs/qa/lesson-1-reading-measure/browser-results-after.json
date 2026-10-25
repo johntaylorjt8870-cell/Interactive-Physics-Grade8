@@ -1,0 +1,7617 @@
+{
+  "phase": "after",
+  "base": "http://127.0.0.1:4191",
+  "date": "2026-10-25T23:45:26.522Z",
+  "viewports": {
+    "1366x768": [
+      {
+        "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 13,
+          "median": 65,
+          "p90": 96,
+          "max": 97
+        },
+        "prose": {
+          "lines": 53,
+          "max": 640,
+          "p90": 627
+        },
+        "lines": {
+          "count": 56,
+          "min": 36,
+          "median": 314,
+          "p90": 633,
+          "max": 640
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 606
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 355,
+            "max": 398
+          },
+          "p": {
+            "lines": 36,
+            "avg": 312,
+            "max": 640
+          },
+          "li": {
+            "lines": 10,
+            "avg": 439,
+            "max": 635
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 151,
+            "max": 431
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 9,
+          "median": 52,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 35,
+          "max": 639,
+          "p90": 594
+        },
+        "lines": {
+          "count": 50,
+          "min": 41,
+          "median": 344,
+          "p90": 630,
+          "max": 850
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 410,
+            "max": 630
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 442,
+            "max": 524
+          },
+          "h3": {
+            "lines": 6,
+            "avg": 301,
+            "max": 405
+          },
+          "li": {
+            "lines": 20,
+            "avg": 285,
+            "max": 375
+          },
+          "p": {
+            "lines": 19,
+            "avg": 374,
+            "max": 850
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 11,
+          "median": 70,
+          "p90": 86,
+          "max": 104
+        },
+        "prose": {
+          "lines": 44,
+          "max": 640,
+          "p90": 616
+        },
+        "lines": {
+          "count": 58,
+          "min": 18,
+          "median": 256,
+          "p90": 632,
+          "max": 866
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 433,
+            "max": 605
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 406,
+            "max": 454
+          },
+          "p": {
+            "lines": 31,
+            "avg": 319,
+            "max": 866
+          },
+          "li": {
+            "lines": 15,
+            "avg": 414,
+            "max": 640
+          },
+          "h3": {
+            "lines": 6,
+            "avg": 271,
+            "max": 457
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 363,
+            "max": 363
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 15,
+          "median": 39,
+          "p90": 81,
+          "max": 93
+        },
+        "prose": {
+          "lines": 60,
+          "max": 638,
+          "p90": 549
+        },
+        "lines": {
+          "count": 60,
+          "min": 31,
+          "median": 241,
+          "p90": 572,
+          "max": 638
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 631
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 412,
+            "max": 437
+          },
+          "p": {
+            "lines": 38,
+            "avg": 277,
+            "max": 638
+          },
+          "h5": {
+            "lines": 9,
+            "avg": 177,
+            "max": 260
+          },
+          "li": {
+            "lines": 7,
+            "avg": 142,
+            "max": 233
+          },
+          "h3": {
+            "lines": 1,
+            "avg": 334,
+            "max": 334
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 15,
+          "median": 34,
+          "p90": 72,
+          "max": 84
+        },
+        "prose": {
+          "lines": 50,
+          "max": 619,
+          "p90": 540
+        },
+        "lines": {
+          "count": 59,
+          "min": 20,
+          "median": 227,
+          "p90": 591,
+          "max": 873
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 452,
+            "max": 600
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 467,
+            "max": 519
+          },
+          "p": {
+            "lines": 33,
+            "avg": 325,
+            "max": 873
+          },
+          "h5": {
+            "lines": 7,
+            "avg": 139,
+            "max": 213
+          },
+          "li": {
+            "lines": 10,
+            "avg": 168,
+            "max": 232
+          },
+          "h3": {
+            "lines": 3,
+            "avg": 425,
+            "max": 549
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 188,
+            "max": 188
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 494,
+            "cw": 208
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 10,
+          "median": 88,
+          "p90": 97,
+          "max": 97
+        },
+        "prose": {
+          "lines": 34,
+          "max": 640,
+          "p90": 617
+        },
+        "lines": {
+          "count": 54,
+          "min": 5,
+          "median": 470,
+          "p90": 620,
+          "max": 862
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 409,
+            "max": 620
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 484,
+            "max": 602
+          },
+          "p": {
+            "lines": 25,
+            "avg": 422,
+            "max": 862
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 440,
+            "max": 556
+          },
+          "li": {
+            "lines": 19,
+            "avg": 357,
+            "max": 619
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 151,
+            "max": 151
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 10,
+          "median": 52,
+          "p90": 85,
+          "max": 85
+        },
+        "prose": {
+          "lines": 28,
+          "max": 632,
+          "p90": 586
+        },
+        "lines": {
+          "count": 31,
+          "min": 5,
+          "median": 347,
+          "p90": 597,
+          "max": 632
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 379,
+            "max": 608
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 407,
+            "max": 504
+          },
+          "li": {
+            "lines": 21,
+            "avg": 324,
+            "max": 632
+          },
+          "h3": {
+            "lines": 2,
+            "avg": 364,
+            "max": 374
+          },
+          "p": {
+            "lines": 3,
+            "avg": 460,
+            "max": 597
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 978,
+        "mainLeft": 40,
+        "pageContentWidth": 978,
+        "cpl": {
+          "blocks": 2,
+          "median": 72,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 8,
+          "max": 638,
+          "p90": 615
+        },
+        "lines": {
+          "count": 123,
+          "min": 30,
+          "median": 232,
+          "p90": 638,
+          "max": 892
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 466,
+            "max": 638
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 397,
+            "max": 506
+          },
+          "p": {
+            "lines": 58,
+            "avg": 268,
+            "max": 892
+          },
+          "h3": {
+            "lines": 17,
+            "avg": 587,
+            "max": 882
+          },
+          "li": {
+            "lines": 27,
+            "avg": 204,
+            "max": 560
+          },
+          "h5": {
+            "lines": 16,
+            "avg": 175,
+            "max": 242
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "form",
+            "cls": "self-check-form",
+            "sw": 936,
+            "cw": 923
+          },
+          {
+            "tag": "div",
+            "cls": "exam-question",
+            "sw": 935,
+            "cw": 921
+          },
+          {
+            "tag": "div",
+            "cls": "options-grid",
+            "sw": 917,
+            "cw": 884
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 219,
+            "cw": 213
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 206,
+            "cw": 187
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 220,
+            "cw": 213
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 207,
+            "cw": 187
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 245,
+            "cw": 213
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 232,
+            "cw": 187
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 246,
+            "cw": 213
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 233,
+            "cw": 187
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 321,
+            "cw": 199
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 397,
+            "cw": 199
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 432,
+            "cw": 199
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          }
+        ],
+        "textClipped": []
+      }
+    ],
+    "1440x900": [
+      {
+        "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 13,
+          "median": 65,
+          "p90": 96,
+          "max": 97
+        },
+        "prose": {
+          "lines": 51,
+          "max": 640,
+          "p90": 633
+        },
+        "lines": {
+          "count": 54,
+          "min": 35,
+          "median": 328,
+          "p90": 633,
+          "max": 640
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 606
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 355,
+            "max": 398
+          },
+          "p": {
+            "lines": 34,
+            "avg": 331,
+            "max": 640
+          },
+          "li": {
+            "lines": 10,
+            "avg": 439,
+            "max": 635
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 151,
+            "max": 431
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 9,
+          "median": 52,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 35,
+          "max": 639,
+          "p90": 594
+        },
+        "lines": {
+          "count": 50,
+          "min": 41,
+          "median": 371,
+          "p90": 630,
+          "max": 890
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 410,
+            "max": 630
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 442,
+            "max": 524
+          },
+          "h3": {
+            "lines": 6,
+            "avg": 301,
+            "max": 405
+          },
+          "li": {
+            "lines": 20,
+            "avg": 285,
+            "max": 400
+          },
+          "p": {
+            "lines": 19,
+            "avg": 374,
+            "max": 890
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 9,
+          "median": 70,
+          "p90": 104,
+          "max": 104
+        },
+        "prose": {
+          "lines": 43,
+          "max": 640,
+          "p90": 616
+        },
+        "lines": {
+          "count": 56,
+          "min": 44,
+          "median": 263,
+          "p90": 632,
+          "max": 902
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 433,
+            "max": 605
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 406,
+            "max": 454
+          },
+          "p": {
+            "lines": 30,
+            "avg": 330,
+            "max": 902
+          },
+          "li": {
+            "lines": 15,
+            "avg": 414,
+            "max": 640
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 327,
+            "max": 457
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 363,
+            "max": 363
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 14,
+          "median": 44,
+          "p90": 81,
+          "max": 93
+        },
+        "prose": {
+          "lines": 56,
+          "max": 638,
+          "p90": 549
+        },
+        "lines": {
+          "count": 56,
+          "min": 27,
+          "median": 265,
+          "p90": 572,
+          "max": 638
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 631
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 412,
+            "max": 437
+          },
+          "p": {
+            "lines": 35,
+            "avg": 302,
+            "max": 638
+          },
+          "h5": {
+            "lines": 8,
+            "avg": 200,
+            "max": 268
+          },
+          "li": {
+            "lines": 7,
+            "avg": 142,
+            "max": 263
+          },
+          "h3": {
+            "lines": 1,
+            "avg": 334,
+            "max": 334
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 13,
+          "median": 40,
+          "p90": 72,
+          "max": 84
+        },
+        "prose": {
+          "lines": 46,
+          "max": 619,
+          "p90": 540
+        },
+        "lines": {
+          "count": 55,
+          "min": 15,
+          "median": 272,
+          "p90": 591,
+          "max": 937
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 452,
+            "max": 600
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 467,
+            "max": 519
+          },
+          "p": {
+            "lines": 32,
+            "avg": 336,
+            "max": 937
+          },
+          "h5": {
+            "lines": 5,
+            "avg": 196,
+            "max": 271
+          },
+          "li": {
+            "lines": 9,
+            "avg": 187,
+            "max": 261
+          },
+          "h3": {
+            "lines": 3,
+            "avg": 425,
+            "max": 549
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 188,
+            "max": 188
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 494,
+            "cw": 226
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 10,
+          "median": 88,
+          "p90": 97,
+          "max": 97
+        },
+        "prose": {
+          "lines": 34,
+          "max": 640,
+          "p90": 617
+        },
+        "lines": {
+          "count": 53,
+          "min": 5,
+          "median": 470,
+          "p90": 620,
+          "max": 933
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 409,
+            "max": 620
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 484,
+            "max": 602
+          },
+          "p": {
+            "lines": 24,
+            "avg": 441,
+            "max": 933
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 440,
+            "max": 556
+          },
+          "li": {
+            "lines": 19,
+            "avg": 357,
+            "max": 619
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 151,
+            "max": 151
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 10,
+          "median": 61,
+          "p90": 85,
+          "max": 85
+        },
+        "prose": {
+          "lines": 27,
+          "max": 632,
+          "p90": 586
+        },
+        "lines": {
+          "count": 30,
+          "min": 5,
+          "median": 372,
+          "p90": 608,
+          "max": 632
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 379,
+            "max": 608
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 407,
+            "max": 504
+          },
+          "li": {
+            "lines": 20,
+            "avg": 339,
+            "max": 632
+          },
+          "h3": {
+            "lines": 2,
+            "avg": 364,
+            "max": 374
+          },
+          "p": {
+            "lines": 3,
+            "avg": 460,
+            "max": 597
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 50,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 2,
+          "median": 72,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 8,
+          "max": 638,
+          "p90": 615
+        },
+        "lines": {
+          "count": 114,
+          "min": 4,
+          "median": 252,
+          "p90": 702,
+          "max": 977
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 466,
+            "max": 638
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 397,
+            "max": 506
+          },
+          "p": {
+            "lines": 53,
+            "avg": 292,
+            "max": 977
+          },
+          "h3": {
+            "lines": 15,
+            "avg": 665,
+            "max": 937
+          },
+          "li": {
+            "lines": 25,
+            "avg": 221,
+            "max": 560
+          },
+          "h5": {
+            "lines": 16,
+            "avg": 175,
+            "max": 242
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "div",
+            "cls": "options-grid",
+            "sw": 957,
+            "cw": 938
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 206,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 207,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 245,
+            "cw": 226
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 232,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 246,
+            "cw": 226
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 233,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 321,
+            "cw": 217
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 397,
+            "cw": 217
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 432,
+            "cw": 217
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          }
+        ],
+        "textClipped": []
+      }
+    ],
+    "1920x1080": [
+      {
+        "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 13,
+          "median": 65,
+          "p90": 96,
+          "max": 97
+        },
+        "prose": {
+          "lines": 51,
+          "max": 640,
+          "p90": 633
+        },
+        "lines": {
+          "count": 54,
+          "min": 35,
+          "median": 328,
+          "p90": 633,
+          "max": 640
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 606
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 355,
+            "max": 398
+          },
+          "p": {
+            "lines": 34,
+            "avg": 331,
+            "max": 640
+          },
+          "li": {
+            "lines": 10,
+            "avg": 439,
+            "max": 635
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 151,
+            "max": 431
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 9,
+          "median": 52,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 35,
+          "max": 639,
+          "p90": 594
+        },
+        "lines": {
+          "count": 50,
+          "min": 41,
+          "median": 371,
+          "p90": 630,
+          "max": 890
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 410,
+            "max": 630
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 442,
+            "max": 524
+          },
+          "h3": {
+            "lines": 6,
+            "avg": 301,
+            "max": 405
+          },
+          "li": {
+            "lines": 20,
+            "avg": 285,
+            "max": 400
+          },
+          "p": {
+            "lines": 19,
+            "avg": 374,
+            "max": 890
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 9,
+          "median": 70,
+          "p90": 104,
+          "max": 104
+        },
+        "prose": {
+          "lines": 43,
+          "max": 640,
+          "p90": 616
+        },
+        "lines": {
+          "count": 56,
+          "min": 44,
+          "median": 263,
+          "p90": 632,
+          "max": 902
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 433,
+            "max": 605
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 406,
+            "max": 454
+          },
+          "p": {
+            "lines": 30,
+            "avg": 330,
+            "max": 902
+          },
+          "li": {
+            "lines": 15,
+            "avg": 414,
+            "max": 640
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 327,
+            "max": 457
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 363,
+            "max": 363
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 14,
+          "median": 44,
+          "p90": 81,
+          "max": 93
+        },
+        "prose": {
+          "lines": 56,
+          "max": 638,
+          "p90": 549
+        },
+        "lines": {
+          "count": 56,
+          "min": 27,
+          "median": 265,
+          "p90": 572,
+          "max": 638
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 631
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 412,
+            "max": 437
+          },
+          "p": {
+            "lines": 35,
+            "avg": 302,
+            "max": 638
+          },
+          "h5": {
+            "lines": 8,
+            "avg": 200,
+            "max": 268
+          },
+          "li": {
+            "lines": 7,
+            "avg": 142,
+            "max": 263
+          },
+          "h3": {
+            "lines": 1,
+            "avg": 334,
+            "max": 334
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 13,
+          "median": 40,
+          "p90": 72,
+          "max": 84
+        },
+        "prose": {
+          "lines": 46,
+          "max": 619,
+          "p90": 540
+        },
+        "lines": {
+          "count": 55,
+          "min": 15,
+          "median": 272,
+          "p90": 591,
+          "max": 937
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 452,
+            "max": 600
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 467,
+            "max": 519
+          },
+          "p": {
+            "lines": 32,
+            "avg": 336,
+            "max": 937
+          },
+          "h5": {
+            "lines": 5,
+            "avg": 196,
+            "max": 271
+          },
+          "li": {
+            "lines": 9,
+            "avg": 187,
+            "max": 261
+          },
+          "h3": {
+            "lines": 3,
+            "avg": 425,
+            "max": 549
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 188,
+            "max": 188
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 494,
+            "cw": 226
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 10,
+          "median": 88,
+          "p90": 97,
+          "max": 97
+        },
+        "prose": {
+          "lines": 34,
+          "max": 640,
+          "p90": 617
+        },
+        "lines": {
+          "count": 53,
+          "min": 5,
+          "median": 470,
+          "p90": 620,
+          "max": 933
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 409,
+            "max": 620
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 484,
+            "max": 602
+          },
+          "p": {
+            "lines": 24,
+            "avg": 441,
+            "max": 933
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 440,
+            "max": 556
+          },
+          "li": {
+            "lines": 19,
+            "avg": 357,
+            "max": 619
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 151,
+            "max": 151
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 10,
+          "median": 61,
+          "p90": 85,
+          "max": 85
+        },
+        "prose": {
+          "lines": 27,
+          "max": 632,
+          "p90": 586
+        },
+        "lines": {
+          "count": 30,
+          "min": 5,
+          "median": 372,
+          "p90": 608,
+          "max": 632
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 379,
+            "max": 608
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 407,
+            "max": 504
+          },
+          "li": {
+            "lines": 20,
+            "avg": 339,
+            "max": 632
+          },
+          "h3": {
+            "lines": 2,
+            "avg": 364,
+            "max": 374
+          },
+          "p": {
+            "lines": 3,
+            "avg": 460,
+            "max": 597
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 1032,
+        "mainLeft": 290,
+        "pageContentWidth": 1032,
+        "cpl": {
+          "blocks": 2,
+          "median": 72,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 8,
+          "max": 638,
+          "p90": 615
+        },
+        "lines": {
+          "count": 114,
+          "min": 4,
+          "median": 252,
+          "p90": 702,
+          "max": 977
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 466,
+            "max": 638
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 397,
+            "max": 506
+          },
+          "p": {
+            "lines": 53,
+            "avg": 292,
+            "max": 977
+          },
+          "h3": {
+            "lines": 15,
+            "avg": 665,
+            "max": 937
+          },
+          "li": {
+            "lines": 25,
+            "avg": 221,
+            "max": 560
+          },
+          "h5": {
+            "lines": 16,
+            "avg": 175,
+            "max": 242
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "div",
+            "cls": "options-grid",
+            "sw": 957,
+            "cw": 938
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 206,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 207,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 245,
+            "cw": 226
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 232,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 246,
+            "cw": 226
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 233,
+            "cw": 200
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 321,
+            "cw": 217
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 397,
+            "cw": 217
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 432,
+            "cw": 217
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          }
+        ],
+        "textClipped": []
+      }
+    ],
+    "1024x768": [
+      {
+        "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 13,
+          "median": 65,
+          "p90": 96,
+          "max": 97
+        },
+        "prose": {
+          "lines": 46,
+          "max": 640,
+          "p90": 622
+        },
+        "lines": {
+          "count": 49,
+          "min": 36,
+          "median": 344,
+          "p90": 627,
+          "max": 640
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 606
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 355,
+            "max": 398
+          },
+          "p": {
+            "lines": 29,
+            "avg": 388,
+            "max": 640
+          },
+          "li": {
+            "lines": 10,
+            "avg": 439,
+            "max": 544
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 151,
+            "max": 431
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 11,
+          "median": 31,
+          "p90": 70,
+          "max": 72
+        },
+        "prose": {
+          "lines": 48,
+          "max": 637,
+          "p90": 594
+        },
+        "lines": {
+          "count": 60,
+          "min": 17,
+          "median": 228,
+          "p90": 597,
+          "max": 637
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 410,
+            "max": 630
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 442,
+            "max": 524
+          },
+          "h3": {
+            "lines": 8,
+            "avg": 225,
+            "max": 375
+          },
+          "li": {
+            "lines": 31,
+            "avg": 180,
+            "max": 241
+          },
+          "p": {
+            "lines": 16,
+            "avg": 445,
+            "max": 637
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 9,
+          "median": 70,
+          "p90": 104,
+          "max": 104
+        },
+        "prose": {
+          "lines": 43,
+          "max": 629,
+          "p90": 587
+        },
+        "lines": {
+          "count": 58,
+          "min": 22,
+          "median": 279,
+          "p90": 609,
+          "max": 644
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 433,
+            "max": 605
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 406,
+            "max": 454
+          },
+          "p": {
+            "lines": 32,
+            "avg": 309,
+            "max": 644
+          },
+          "li": {
+            "lines": 15,
+            "avg": 413,
+            "max": 614
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 327,
+            "max": 457
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 363,
+            "max": 363
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 14,
+          "median": 44,
+          "p90": 81,
+          "max": 93
+        },
+        "prose": {
+          "lines": 56,
+          "max": 631,
+          "p90": 549
+        },
+        "lines": {
+          "count": 56,
+          "min": 27,
+          "median": 265,
+          "p90": 572,
+          "max": 631
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 631
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 412,
+            "max": 437
+          },
+          "p": {
+            "lines": 35,
+            "avg": 301,
+            "max": 626
+          },
+          "h5": {
+            "lines": 8,
+            "avg": 200,
+            "max": 268
+          },
+          "li": {
+            "lines": 7,
+            "avg": 142,
+            "max": 263
+          },
+          "h3": {
+            "lines": 1,
+            "avg": 334,
+            "max": 334
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 14,
+          "median": 41,
+          "p90": 72,
+          "max": 84
+        },
+        "prose": {
+          "lines": 48,
+          "max": 619,
+          "p90": 540
+        },
+        "lines": {
+          "count": 58,
+          "min": 41,
+          "median": 275,
+          "p90": 591,
+          "max": 650
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 452,
+            "max": 600
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 467,
+            "max": 519
+          },
+          "p": {
+            "lines": 34,
+            "avg": 316,
+            "max": 650
+          },
+          "h5": {
+            "lines": 5,
+            "avg": 196,
+            "max": 271
+          },
+          "li": {
+            "lines": 9,
+            "avg": 187,
+            "max": 261
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 318,
+            "max": 549
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 188,
+            "max": 188
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 494,
+            "cw": 232
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 333,
+            "cw": 264
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 10,
+          "median": 88,
+          "p90": 97,
+          "max": 97
+        },
+        "prose": {
+          "lines": 34,
+          "max": 631,
+          "p90": 617
+        },
+        "lines": {
+          "count": 51,
+          "min": 5,
+          "median": 498,
+          "p90": 617,
+          "max": 648
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 409,
+            "max": 620
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 484,
+            "max": 602
+          },
+          "p": {
+            "lines": 22,
+            "avg": 481,
+            "max": 648
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 440,
+            "max": 556
+          },
+          "li": {
+            "lines": 19,
+            "avg": 357,
+            "max": 619
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 151,
+            "max": 151
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 12,
+          "median": 32,
+          "p90": 75,
+          "max": 85
+        },
+        "prose": {
+          "lines": 35,
+          "max": 608,
+          "p90": 583
+        },
+        "lines": {
+          "count": 38,
+          "min": 5,
+          "median": 217,
+          "p90": 586,
+          "max": 608
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 379,
+            "max": 608
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 407,
+            "max": 504
+          },
+          "li": {
+            "lines": 26,
+            "avg": 260,
+            "max": 586
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 180,
+            "max": 250
+          },
+          "p": {
+            "lines": 3,
+            "avg": 460,
+            "max": 597
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 714,
+        "mainLeft": 24,
+        "pageContentWidth": 714,
+        "cpl": {
+          "blocks": 2,
+          "median": 72,
+          "p90": 72,
+          "max": 72
+        },
+        "prose": {
+          "lines": 8,
+          "max": 638,
+          "p90": 615
+        },
+        "lines": {
+          "count": 122,
+          "min": 4,
+          "median": 256,
+          "p90": 603,
+          "max": 650
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 466,
+            "max": 638
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 397,
+            "max": 506
+          },
+          "p": {
+            "lines": 55,
+            "avg": 281,
+            "max": 650
+          },
+          "h3": {
+            "lines": 21,
+            "avg": 474,
+            "max": 625
+          },
+          "li": {
+            "lines": 25,
+            "avg": 221,
+            "max": 560
+          },
+          "h5": {
+            "lines": 16,
+            "avg": 175,
+            "max": 242
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 112,
+            "cw": 110
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 137,
+            "cw": 135
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 321,
+            "cw": 219
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 397,
+            "cw": 219
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 22,
+            "cw": 20
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 432,
+            "cw": 219
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          }
+        ],
+        "textClipped": []
+      }
+    ],
+    "820x768": [
+      {
+        "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 13,
+          "median": 65,
+          "p90": 96,
+          "max": 97
+        },
+        "prose": {
+          "lines": 51,
+          "max": 638,
+          "p90": 618
+        },
+        "lines": {
+          "count": 54,
+          "min": 35,
+          "median": 304,
+          "p90": 618,
+          "max": 638
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 606
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 355,
+            "max": 398
+          },
+          "p": {
+            "lines": 34,
+            "avg": 317,
+            "max": 638
+          },
+          "li": {
+            "lines": 10,
+            "avg": 413,
+            "max": 635
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 144,
+            "max": 395
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 11,
+          "median": 37,
+          "p90": 93,
+          "max": 96
+        },
+        "prose": {
+          "lines": 41,
+          "max": 640,
+          "p90": 603
+        },
+        "lines": {
+          "count": 53,
+          "min": 56,
+          "median": 255,
+          "p90": 622,
+          "max": 710
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 410,
+            "max": 630
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 442,
+            "max": 524
+          },
+          "h3": {
+            "lines": 8,
+            "avg": 220,
+            "max": 375
+          },
+          "li": {
+            "lines": 26,
+            "avg": 206,
+            "max": 269
+          },
+          "p": {
+            "lines": 14,
+            "avg": 487,
+            "max": 710
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 9,
+          "median": 70,
+          "p90": 104,
+          "max": 104
+        },
+        "prose": {
+          "lines": 40,
+          "max": 638,
+          "p90": 620
+        },
+        "lines": {
+          "count": 54,
+          "min": 44,
+          "median": 312,
+          "p90": 637,
+          "max": 711
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 433,
+            "max": 605
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 406,
+            "max": 454
+          },
+          "p": {
+            "lines": 28,
+            "avg": 340,
+            "max": 711
+          },
+          "li": {
+            "lines": 15,
+            "avg": 387,
+            "max": 638
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 321,
+            "max": 425
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 363,
+            "max": 363
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 12,
+          "median": 57,
+          "p90": 93,
+          "max": 107
+        },
+        "prose": {
+          "lines": 51,
+          "max": 631,
+          "p90": 559
+        },
+        "lines": {
+          "count": 51,
+          "min": 39,
+          "median": 291,
+          "p90": 559,
+          "max": 631
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 436,
+            "max": 631
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 412,
+            "max": 437
+          },
+          "p": {
+            "lines": 32,
+            "avg": 321,
+            "max": 620
+          },
+          "h5": {
+            "lines": 8,
+            "avg": 200,
+            "max": 268
+          },
+          "li": {
+            "lines": 5,
+            "avg": 200,
+            "max": 294
+          },
+          "h3": {
+            "lines": 1,
+            "avg": 309,
+            "max": 309
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 13,
+          "median": 41,
+          "p90": 72,
+          "max": 84
+        },
+        "prose": {
+          "lines": 45,
+          "max": 639,
+          "p90": 538
+        },
+        "lines": {
+          "count": 53,
+          "min": 38,
+          "median": 305,
+          "p90": 600,
+          "max": 710
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 452,
+            "max": 600
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 467,
+            "max": 519
+          },
+          "p": {
+            "lines": 30,
+            "avg": 347,
+            "max": 710
+          },
+          "h5": {
+            "lines": 4,
+            "avg": 246,
+            "max": 316
+          },
+          "li": {
+            "lines": 9,
+            "avg": 187,
+            "max": 305
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 305,
+            "max": 549
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 188,
+            "max": 188
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 475,
+            "cw": 267
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 313,
+            "cw": 299
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 10,
+          "median": 88,
+          "p90": 97,
+          "max": 97
+        },
+        "prose": {
+          "lines": 33,
+          "max": 640,
+          "p90": 630
+        },
+        "lines": {
+          "count": 49,
+          "min": 4,
+          "median": 468,
+          "p90": 638,
+          "max": 705
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 409,
+            "max": 620
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 484,
+            "max": 602
+          },
+          "p": {
+            "lines": 21,
+            "avg": 482,
+            "max": 705
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 427,
+            "max": 556
+          },
+          "li": {
+            "lines": 18,
+            "avg": 355,
+            "max": 640
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 151,
+            "max": 151
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 12,
+          "median": 35,
+          "p90": 75,
+          "max": 85
+        },
+        "prose": {
+          "lines": 32,
+          "max": 640,
+          "p90": 504
+        },
+        "lines": {
+          "count": 35,
+          "min": 4,
+          "median": 258,
+          "p90": 597,
+          "max": 640
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 379,
+            "max": 608
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 407,
+            "max": 504
+          },
+          "li": {
+            "lines": 23,
+            "avg": 279,
+            "max": 640
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 180,
+            "max": 300
+          },
+          "p": {
+            "lines": 3,
+            "avg": 436,
+            "max": 560
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 784,
+        "mainLeft": 18,
+        "pageContentWidth": 784,
+        "cpl": {
+          "blocks": 2,
+          "median": 99,
+          "p90": 99,
+          "max": 99
+        },
+        "prose": {
+          "lines": 7,
+          "max": 638,
+          "p90": 631
+        },
+        "lines": {
+          "count": 115,
+          "min": 20,
+          "median": 274,
+          "p90": 640,
+          "max": 703
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 2,
+            "avg": 466,
+            "max": 638
+          },
+          "li@hero": {
+            "lines": 3,
+            "avg": 397,
+            "max": 506
+          },
+          "p": {
+            "lines": 50,
+            "avg": 304,
+            "max": 703
+          },
+          "h3": {
+            "lines": 21,
+            "avg": 472,
+            "max": 694
+          },
+          "li": {
+            "lines": 23,
+            "avg": 235,
+            "max": 522
+          },
+          "h5": {
+            "lines": 16,
+            "avg": 175,
+            "max": 242
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "div",
+            "cls": "options-grid",
+            "sw": 702,
+            "cw": 690
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 199,
+            "cw": 197
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 105,
+            "cw": 103
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 199,
+            "cw": 197
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 105,
+            "cw": 103
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 235,
+            "cw": 222
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 222,
+            "cw": 197
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 129,
+            "cw": 127
+          },
+          {
+            "tag": "div",
+            "cls": "option-card",
+            "sw": 236,
+            "cw": 222
+          },
+          {
+            "tag": "label",
+            "cls": "self-check-option-label",
+            "sw": 223,
+            "cw": 197
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 129,
+            "cw": 127
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 303,
+            "cw": 254
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 382,
+            "cw": 254
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 417,
+            "cw": 254
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          }
+        ],
+        "textClipped": []
+      }
+    ],
+    "390x844": [
+      {
+        "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 22,
+          "median": 35,
+          "p90": 47,
+          "max": 48
+        },
+        "prose": {
+          "lines": 72,
+          "max": 330,
+          "p90": 309
+        },
+        "lines": {
+          "count": 78,
+          "min": 20,
+          "median": 257,
+          "p90": 309,
+          "max": 330
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 289,
+            "max": 305
+          },
+          "li@hero": {
+            "lines": 6,
+            "avg": 176,
+            "max": 257
+          },
+          "p": {
+            "lines": 43,
+            "avg": 250,
+            "max": 330
+          },
+          "li": {
+            "lines": 20,
+            "avg": 205,
+            "max": 288
+          },
+          "h3": {
+            "lines": 6,
+            "avg": 120,
+            "max": 250
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 15,
+          "median": 33,
+          "p90": 46,
+          "max": 47
+        },
+        "prose": {
+          "lines": 56,
+          "max": 325,
+          "p90": 291
+        },
+        "lines": {
+          "count": 72,
+          "min": 41,
+          "median": 233,
+          "p90": 300,
+          "max": 327
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 272,
+            "max": 300
+          },
+          "li@hero": {
+            "lines": 7,
+            "avg": 187,
+            "max": 256
+          },
+          "h3": {
+            "lines": 8,
+            "avg": 214,
+            "max": 326
+          },
+          "li": {
+            "lines": 28,
+            "avg": 190,
+            "max": 250
+          },
+          "p": {
+            "lines": 26,
+            "avg": 257,
+            "max": 327
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 17,
+          "median": 40,
+          "p90": 52,
+          "max": 54
+        },
+        "prose": {
+          "lines": 59,
+          "max": 330,
+          "p90": 292
+        },
+        "lines": {
+          "count": 83,
+          "min": 4,
+          "median": 260,
+          "p90": 294,
+          "max": 330
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 287,
+            "max": 309
+          },
+          "li@hero": {
+            "lines": 6,
+            "avg": 201,
+            "max": 247
+          },
+          "p": {
+            "lines": 39,
+            "avg": 240,
+            "max": 330
+          },
+          "li": {
+            "lines": 26,
+            "avg": 220,
+            "max": 287
+          },
+          "h3": {
+            "lines": 7,
+            "avg": 220,
+            "max": 303
+          },
+          "h4": {
+            "lines": 2,
+            "avg": 180,
+            "max": 266
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 17,
+          "median": 40,
+          "p90": 55,
+          "max": 57
+        },
+        "prose": {
+          "lines": 66,
+          "max": 322,
+          "p90": 294
+        },
+        "lines": {
+          "count": 66,
+          "min": 22,
+          "median": 267,
+          "p90": 294,
+          "max": 322
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 289,
+            "max": 305
+          },
+          "li@hero": {
+            "lines": 6,
+            "avg": 204,
+            "max": 254
+          },
+          "p": {
+            "lines": 41,
+            "avg": 250,
+            "max": 322
+          },
+          "h5": {
+            "lines": 8,
+            "avg": 200,
+            "max": 268
+          },
+          "li": {
+            "lines": 6,
+            "avg": 166,
+            "max": 273
+          },
+          "h3": {
+            "lines": 2,
+            "avg": 153,
+            "max": 283
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 17,
+          "median": 37,
+          "p90": 48,
+          "max": 48
+        },
+        "prose": {
+          "lines": 58,
+          "max": 329,
+          "p90": 297
+        },
+        "lines": {
+          "count": 73,
+          "min": 35,
+          "median": 259,
+          "p90": 294,
+          "max": 329
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 4,
+            "avg": 224,
+            "max": 303
+          },
+          "li@hero": {
+            "lines": 6,
+            "avg": 232,
+            "max": 258
+          },
+          "p": {
+            "lines": 43,
+            "avg": 239,
+            "max": 320
+          },
+          "h5": {
+            "lines": 5,
+            "avg": 196,
+            "max": 271
+          },
+          "li": {
+            "lines": 9,
+            "avg": 185,
+            "max": 261
+          },
+          "h3": {
+            "lines": 5,
+            "avg": 229,
+            "max": 329
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 188,
+            "max": 188
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 426,
+            "cw": 259
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 17,
+            "cw": 15
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 19,
+          "median": 40,
+          "p90": 48,
+          "max": 51
+        },
+        "prose": {
+          "lines": 65,
+          "max": 330,
+          "p90": 298
+        },
+        "lines": {
+          "count": 89,
+          "min": 4,
+          "median": 258,
+          "p90": 301,
+          "max": 330
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 271,
+            "max": 291
+          },
+          "li@hero": {
+            "lines": 7,
+            "avg": 205,
+            "max": 256
+          },
+          "p": {
+            "lines": 39,
+            "avg": 255,
+            "max": 330
+          },
+          "h3": {
+            "lines": 7,
+            "avg": 232,
+            "max": 295
+          },
+          "li": {
+            "lines": 32,
+            "avg": 196,
+            "max": 298
+          },
+          "h4": {
+            "lines": 1,
+            "avg": 151,
+            "max": 151
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 18,
+            "cw": 16
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 16,
+            "cw": 14
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 16,
+          "median": 30,
+          "p90": 39,
+          "max": 40
+        },
+        "prose": {
+          "lines": 48,
+          "max": 305,
+          "p90": 271
+        },
+        "lines": {
+          "count": 54,
+          "min": 4,
+          "median": 203,
+          "p90": 283,
+          "max": 324
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 251,
+            "max": 305
+          },
+          "li@hero": {
+            "lines": 7,
+            "avg": 172,
+            "max": 240
+          },
+          "li": {
+            "lines": 34,
+            "avg": 186,
+            "max": 290
+          },
+          "h3": {
+            "lines": 4,
+            "avg": 180,
+            "max": 250
+          },
+          "p": {
+            "lines": 6,
+            "avg": 216,
+            "max": 324
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          }
+        ],
+        "textClipped": []
+      },
+      {
+        "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
+        "mainWidth": 364,
+        "mainLeft": 13,
+        "pageContentWidth": 364,
+        "cpl": {
+          "blocks": 5,
+          "median": 31,
+          "p90": 50,
+          "max": 50
+        },
+        "prose": {
+          "lines": 14,
+          "max": 322,
+          "p90": 312
+        },
+        "lines": {
+          "count": 164,
+          "min": 15,
+          "median": 237,
+          "p90": 289,
+          "max": 326
+        },
+        "perSelector": {
+          "p@hero": {
+            "lines": 3,
+            "avg": 309,
+            "max": 312
+          },
+          "li@hero": {
+            "lines": 7,
+            "avg": 168,
+            "max": 240
+          },
+          "p": {
+            "lines": 69,
+            "avg": 220,
+            "max": 326
+          },
+          "h3": {
+            "lines": 41,
+            "avg": 240,
+            "max": 301
+          },
+          "li": {
+            "lines": 28,
+            "avg": 193,
+            "max": 307
+          },
+          "h5": {
+            "lines": 16,
+            "avg": 175,
+            "max": 242
+          }
+        },
+        "docOverflowX": 0,
+        "offenders": [],
+        "clipped": [
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 94,
+            "cw": 92
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 94,
+            "cw": 92
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 115,
+            "cw": 113
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 115,
+            "cw": 113
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 270,
+            "cw": 225
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 339,
+            "cw": 225
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 20,
+            "cw": 18
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "katex-display",
+            "sw": 371,
+            "cw": 225
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          },
+          {
+            "tag": "span",
+            "cls": "math math-inline",
+            "sw": 19,
+            "cw": 17
+          }
+        ],
+        "textClipped": []
+      }
+    ]
+  },
+  "failures": [],
+  "passed": true
+}

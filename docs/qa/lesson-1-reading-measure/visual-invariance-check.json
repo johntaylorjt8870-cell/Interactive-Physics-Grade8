@@ -1,0 +1,83 @@
+{
+  "baseline": "http://127.0.0.1:4190",
+  "after": "http://127.0.0.1:4191",
+  "date": "2026-10-25T23:49:53.117Z",
+  "capPx": 640,
+  "passed": true,
+  "differences": 0,
+  "summary": {
+    "1366x768": {
+      "stages": 8,
+      "interactiveElements": 7286,
+      "interactiveText": 77,
+      "proseElements": 152,
+      "proseCapped": 152,
+      "textFlowElements": 3847,
+      "otherElements": 2396,
+      "markupSame": 8,
+      "textSame": 8,
+      "clippedSame": 8
+    },
+    "1440x900": {
+      "stages": 8,
+      "interactiveElements": 7286,
+      "interactiveText": 77,
+      "proseElements": 152,
+      "proseCapped": 152,
+      "textFlowElements": 3847,
+      "otherElements": 2396,
+      "markupSame": 8,
+      "textSame": 8,
+      "clippedSame": 8
+    },
+    "1920x1080": {
+      "stages": 8,
+      "interactiveElements": 7286,
+      "interactiveText": 77,
+      "proseElements": 152,
+      "proseCapped": 152,
+      "textFlowElements": 3847,
+      "otherElements": 2396,
+      "markupSame": 8,
+      "textSame": 8,
+      "clippedSame": 8
+    },
+    "1024x768": {
+      "stages": 8,
+      "interactiveElements": 7286,
+      "interactiveText": 77,
+      "proseElements": 152,
+      "proseCapped": 152,
+      "textFlowElements": 3847,
+      "otherElements": 2396,
+      "markupSame": 8,
+      "textSame": 8,
+      "clippedSame": 8
+    },
+    "820x768": {
+      "stages": 8,
+      "interactiveElements": 7286,
+      "interactiveText": 77,
+      "proseElements": 152,
+      "proseCapped": 152,
+      "textFlowElements": 3847,
+      "otherElements": 2396,
+      "markupSame": 8,
+      "textSame": 8,
+      "clippedSame": 8
+    },
+    "390x844": {
+      "stages": 8,
+      "interactiveElements": 7286,
+      "interactiveText": 77,
+      "proseElements": 152,
+      "proseCapped": 152,
+      "textFlowElements": 3847,
+      "otherElements": 2396,
+      "markupSame": 8,
+      "textSame": 8,
+      "clippedSame": 8
+    }
+  },
+  "diffs": []
+}
