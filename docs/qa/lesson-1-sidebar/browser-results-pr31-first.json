@@ -1,0 +1,1362 @@
+{
+  "phase": "pr31-first",
+  "base": "http://127.0.0.1:4175/lesson-1.html",
+  "generatedAt": "2026-10-25T23:13:18.325Z",
+  "checks": 75,
+  "failures": 4,
+  "measurements": {
+    "1366x768": {
+      "steps": [
+        {
+          "step": 1,
+          "label": "التمهيد وتمثيل شعاع القوة",
+          "active": {
+            "top": 372,
+            "bottom": 424,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 2,
+          "label": "تجربة تلاقي الحوامل والتعريف",
+          "active": {
+            "top": 426,
+            "bottom": 478,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 3,
+          "label": "إنشاء متوازي الأضلاع وعناصر المحصلة",
+          "active": {
+            "top": 480,
+            "bottom": 532,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 4,
+          "label": "مثال متوازي الأضلاع وتصنيف الرباعيات",
+          "active": {
+            "top": 534,
+            "bottom": 586,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 5,
+          "label": "فيثاغورث للقوى المتعامدة",
+          "active": {
+            "top": 588,
+            "bottom": 640,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 6,
+          "label": "تحليل القوة والمستوى المائل الأملس",
+          "active": {
+            "top": 642,
+            "bottom": 694,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 7,
+          "label": "الخلاصة وخريطة المفاهيم",
+          "active": {
+            "top": 629,
+            "bottom": 681,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 67,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        },
+        {
+          "step": 8,
+          "label": "المسائل والتدريب الشامل",
+          "active": {
+            "top": 683,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 67,
+            "overflowY": "auto"
+          },
+          "scrollY": 0,
+          "reachable": true
+        }
+      ],
+      "stuck": {
+        "viewport": {
+          "width": 1366,
+          "height": 768
+        },
+        "scrollY": 400,
+        "documentScrollsSideways": false,
+        "sidebar": {
+          "top": 24,
+          "bottom": 744,
+          "left": 1062,
+          "right": 1326,
+          "width": 264,
+          "height": 720
+        },
+        "sidebarStyle": {
+          "position": "sticky",
+          "maxHeight": "720px",
+          "overflowY": "visible"
+        },
+        "nav": {
+          "top": 269,
+          "bottom": 647,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 378,
+          "scrollHeight": 444,
+          "clientHeight": 377,
+          "scrollTop": 67,
+          "overflowY": "auto"
+        },
+        "footer": {
+          "top": 647,
+          "bottom": 738,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 91
+        },
+        "active": {
+          "top": 595,
+          "bottom": 647,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 52
+        },
+        "activeLabel": "المسائل والتدريب الشامل",
+        "stepCount": 8,
+        "buttonWidths": [
+          256
+        ],
+        "clippedLabels": [],
+        "navNeedsScroll": true
+      },
+      "top": {
+        "firstStep": {
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "scrollY": 0,
+          "documentScrollsSideways": false,
+          "sidebar": {
+            "top": 112,
+            "bottom": 832,
+            "left": 1062,
+            "right": 1326,
+            "width": 264,
+            "height": 720
+          },
+          "sidebarStyle": {
+            "position": "sticky",
+            "maxHeight": "720px",
+            "overflowY": "visible"
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "footer": {
+            "top": 735,
+            "bottom": 826,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 91
+          },
+          "active": {
+            "top": 372,
+            "bottom": 424,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "activeLabel": "التمهيد وتمثيل شعاع القوة",
+          "stepCount": 8,
+          "buttonWidths": [
+            256
+          ],
+          "clippedLabels": [],
+          "navNeedsScroll": true
+        },
+        "lastStep": {
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "scrollY": 0,
+          "documentScrollsSideways": false,
+          "sidebar": {
+            "top": 112,
+            "bottom": 832,
+            "left": 1062,
+            "right": 1326,
+            "width": 264,
+            "height": 720
+          },
+          "sidebarStyle": {
+            "position": "sticky",
+            "maxHeight": "720px",
+            "overflowY": "visible"
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 378,
+            "scrollHeight": 444,
+            "clientHeight": 377,
+            "scrollTop": 67,
+            "overflowY": "auto"
+          },
+          "footer": {
+            "top": 735,
+            "bottom": 826,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 91
+          },
+          "active": {
+            "top": 683,
+            "bottom": 735,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "activeLabel": "المسائل والتدريب الشامل",
+          "stepCount": 8,
+          "buttonWidths": [
+            256
+          ],
+          "clippedLabels": [],
+          "navNeedsScroll": true
+        }
+      }
+    },
+    "1440x900": {
+      "state": {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "scrollY": 400,
+        "documentScrollsSideways": false,
+        "sidebar": {
+          "top": 24,
+          "bottom": 873,
+          "left": 1126,
+          "right": 1390,
+          "width": 264,
+          "height": 849
+        },
+        "sidebarStyle": {
+          "position": "sticky",
+          "maxHeight": "852px",
+          "overflowY": "visible"
+        },
+        "nav": {
+          "top": 269,
+          "bottom": 777,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 507,
+          "scrollHeight": 506,
+          "clientHeight": 506,
+          "scrollTop": 0,
+          "overflowY": "auto"
+        },
+        "footer": {
+          "top": 777,
+          "bottom": 867,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 91
+        },
+        "active": {
+          "top": 284,
+          "bottom": 337,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 53
+        },
+        "activeLabel": "التمهيد وتمثيل شعاع القوة",
+        "stepCount": 8,
+        "buttonWidths": [
+          256
+        ],
+        "clippedLabels": [],
+        "navNeedsScroll": false
+      }
+    },
+    "1920x1080": {
+      "state": {
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "scrollY": 400,
+        "documentScrollsSideways": false,
+        "sidebar": {
+          "top": 24,
+          "bottom": 873,
+          "left": 1366,
+          "right": 1630,
+          "width": 264,
+          "height": 849
+        },
+        "sidebarStyle": {
+          "position": "sticky",
+          "maxHeight": "1032px",
+          "overflowY": "visible"
+        },
+        "nav": {
+          "top": 269,
+          "bottom": 777,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 507,
+          "scrollHeight": 506,
+          "clientHeight": 506,
+          "scrollTop": 0,
+          "overflowY": "auto"
+        },
+        "footer": {
+          "top": 777,
+          "bottom": 867,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 91
+        },
+        "active": {
+          "top": 284,
+          "bottom": 337,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 53
+        },
+        "activeLabel": "التمهيد وتمثيل شعاع القوة",
+        "stepCount": 8,
+        "buttonWidths": [
+          256
+        ],
+        "clippedLabels": [],
+        "navNeedsScroll": false
+      }
+    },
+    "820x768": {
+      "state": {
+        "viewport": {
+          "width": 820,
+          "height": 768
+        },
+        "scrollY": 400,
+        "documentScrollsSideways": false,
+        "sidebar": {
+          "top": -291,
+          "bottom": 211,
+          "left": 18,
+          "right": 802,
+          "width": 784,
+          "height": 502
+        },
+        "sidebarStyle": {
+          "position": "static",
+          "maxHeight": "none",
+          "overflowY": "visible"
+        },
+        "nav": {
+          "top": -77,
+          "bottom": 103,
+          "left": 35,
+          "right": 785,
+          "width": 750,
+          "height": 181,
+          "scrollHeight": 180,
+          "clientHeight": 180,
+          "scrollTop": 0,
+          "overflowY": "visible"
+        },
+        "footer": {
+          "top": 103,
+          "bottom": 194,
+          "left": 35,
+          "right": 785,
+          "width": 750,
+          "height": 91
+        },
+        "active": {
+          "top": -62,
+          "bottom": 9,
+          "left": 602,
+          "right": 785,
+          "width": 183,
+          "height": 71
+        },
+        "activeLabel": "التمهيد وتمثيل شعاع القوة",
+        "stepCount": 8,
+        "buttonWidths": [
+          183
+        ],
+        "clippedLabels": [],
+        "navNeedsScroll": false
+      }
+    },
+    "390x844": {
+      "state": {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "scrollY": 400,
+        "documentScrollsSideways": false,
+        "sidebar": {
+          "top": -216,
+          "bottom": 364,
+          "left": 13,
+          "right": 377,
+          "width": 364,
+          "height": 580
+        },
+        "sidebarStyle": {
+          "position": "static",
+          "maxHeight": "none",
+          "overflowY": "visible"
+        },
+        "nav": {
+          "top": -93,
+          "bottom": 259,
+          "left": 27,
+          "right": 363,
+          "width": 336,
+          "height": 353,
+          "scrollHeight": 352,
+          "clientHeight": 352,
+          "scrollTop": 0,
+          "overflowY": "visible"
+        },
+        "footer": {
+          "top": 259,
+          "bottom": 350,
+          "left": 27,
+          "right": 363,
+          "width": 336,
+          "height": 91
+        },
+        "active": {
+          "top": -78,
+          "bottom": -7,
+          "left": 198,
+          "right": 363,
+          "width": 165,
+          "height": 71
+        },
+        "activeLabel": "التمهيد وتمثيل شعاع القوة",
+        "stepCount": 8,
+        "buttonWidths": [
+          165
+        ],
+        "clippedLabels": [],
+        "navNeedsScroll": false
+      }
+    }
+  },
+  "results": [
+    {
+      "ok": true,
+      "message": "1366×768: the page does not scroll sideways"
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 1 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 1 «التمهيد وتمثيل شعاع القوة» is reachable without scrolling the window",
+      "detail": {
+        "top": 372,
+        "bottom": 424,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 2 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 2 «تجربة تلاقي الحوامل والتعريف» is reachable without scrolling the window",
+      "detail": {
+        "top": 426,
+        "bottom": 478,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 3 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 3 «إنشاء متوازي الأضلاع وعناصر المحصلة» is reachable without scrolling the window",
+      "detail": {
+        "top": 480,
+        "bottom": 532,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 4 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 4 «مثال متوازي الأضلاع وتصنيف الرباعيات» is reachable without scrolling the window",
+      "detail": {
+        "top": 534,
+        "bottom": 586,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 5 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 5 «فيثاغورث للقوى المتعامدة» is reachable without scrolling the window",
+      "detail": {
+        "top": 588,
+        "bottom": 640,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 6 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 6 «تحليل القوة والمستوى المائل الأملس» is reachable without scrolling the window",
+      "detail": {
+        "top": 642,
+        "bottom": 694,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 7 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 7 «الخلاصة وخريطة المفاهيم» is reachable without scrolling the window",
+      "detail": {
+        "top": 629,
+        "bottom": 681,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 8 keeps 8 rail buttons",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1366×768: step 8 «المسائل والتدريب الشامل» is reachable without scrolling the window",
+      "detail": {
+        "top": 683,
+        "bottom": 735,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the window is at the top",
+      "detail": 0
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 8): the rail ends above the fold",
+      "detail": {
+        "top": 112,
+        "bottom": 832,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 720
+      }
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 8): the curriculum key is whole, not clipped",
+      "detail": {
+        "top": 735,
+        "bottom": 826,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): «المسائل والتدريب الشامل» is inside the rail and the window",
+      "detail": {
+        "top": 683,
+        "bottom": 735,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the active step keeps clear of the window edge",
+      "detail": {
+        "step": {
+          "top": 683,
+          "bottom": 735,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 52
+        },
+        "viewportHeight": 768
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the list still shows at least four steps",
+      "detail": 377
+    },
+    {
+      "ok": true,
+      "message": "1366×768: the pinned rail fits the window",
+      "detail": {
+        "top": 24,
+        "bottom": 744,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 720
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: the curriculum key stays visible while reading",
+      "detail": {
+        "top": 647,
+        "bottom": 738,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: the rail scrolls inside itself instead of overflowing",
+      "detail": {
+        "overflowY": "auto",
+        "scrollHeight": 444,
+        "clientHeight": 377
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: reaching the last step scrolls the rail, not the window",
+      "detail": {
+        "scrollTop": 67,
+        "windowScrollY": 400
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: every rail button keeps its 256px width",
+      "detail": [
+        256
+      ]
+    },
+    {
+      "ok": true,
+      "message": "1366×768: no rail label is clipped",
+      "detail": []
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the window is at the top",
+      "detail": 0
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 1): the rail ends above the fold",
+      "detail": {
+        "top": 112,
+        "bottom": 832,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 720
+      }
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 1): the curriculum key is whole, not clipped",
+      "detail": {
+        "top": 735,
+        "bottom": 826,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): «التمهيد وتمثيل شعاع القوة» is inside the rail and the window",
+      "detail": {
+        "top": 372,
+        "bottom": 424,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the active step keeps clear of the window edge",
+      "detail": {
+        "step": {
+          "top": 372,
+          "bottom": 424,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 52
+        },
+        "viewportHeight": 768
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the list still shows at least four steps",
+      "detail": 377
+    },
+    {
+      "ok": true,
+      "message": "1366×768: changing step still moves the reader to the step heading",
+      "detail": {
+        "before": 398,
+        "after": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768: the new step is revealed after the jump",
+      "detail": {
+        "top": 426,
+        "bottom": 478,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: the rail does not scroll when every step fits",
+      "detail": {
+        "scrollHeight": 506,
+        "clientHeight": 506
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: the pinned rail fits the window",
+      "detail": {
+        "top": 24,
+        "bottom": 873,
+        "left": 1126,
+        "right": 1390,
+        "width": 264,
+        "height": 849
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: the curriculum key is visible",
+      "detail": {
+        "top": 777,
+        "bottom": 867,
+        "left": 1130,
+        "right": 1386,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: every rail button keeps its 256px width",
+      "detail": [
+        256
+      ]
+    },
+    {
+      "ok": true,
+      "message": "1440×900: no rail label is clipped",
+      "detail": []
+    },
+    {
+      "ok": true,
+      "message": "1440×900: all 8 steps are listed",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 1 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 284,
+          "bottom": 337,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 2 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 427,
+          "bottom": 480,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 3 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 482,
+          "bottom": 553,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 71
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 4 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 555,
+          "bottom": 626,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 71
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 5 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 628,
+          "bottom": 681,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 6 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 683,
+          "bottom": 754,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 71
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 7 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 756,
+          "bottom": 809,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1440×900: step 8 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 811,
+          "bottom": 865,
+          "left": 1130,
+          "right": 1386,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: the rail does not scroll when every step fits",
+      "detail": {
+        "scrollHeight": 506,
+        "clientHeight": 506
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: the pinned rail fits the window",
+      "detail": {
+        "top": 24,
+        "bottom": 873,
+        "left": 1366,
+        "right": 1630,
+        "width": 264,
+        "height": 849
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: the curriculum key is visible",
+      "detail": {
+        "top": 777,
+        "bottom": 867,
+        "left": 1370,
+        "right": 1626,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: every rail button keeps its 256px width",
+      "detail": [
+        256
+      ]
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: no rail label is clipped",
+      "detail": []
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: all 8 steps are listed",
+      "detail": 8
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 1 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 284,
+          "bottom": 337,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 2 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 427,
+          "bottom": 480,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 3 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 482,
+          "bottom": 553,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 71
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 4 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 555,
+          "bottom": 626,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 71
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 5 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 628,
+          "bottom": 681,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 6 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 683,
+          "bottom": 754,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 71
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 7 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 756,
+          "bottom": 809,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "1920×1080: step 8 is reachable with the rail unscrolled",
+      "detail": {
+        "active": {
+          "top": 811,
+          "bottom": 865,
+          "left": 1370,
+          "right": 1626,
+          "width": 256,
+          "height": 53
+        },
+        "scrollTop": 0
+      }
+    },
+    {
+      "ok": true,
+      "message": "820×768: the page does not scroll sideways"
+    },
+    {
+      "ok": true,
+      "message": "820×768: the stacked rail stays in the flow",
+      "detail": {
+        "position": "static",
+        "maxHeight": "none",
+        "overflowY": "visible"
+      }
+    },
+    {
+      "ok": true,
+      "message": "820×768: the stacked rail is not height-bound",
+      "detail": {
+        "position": "static",
+        "maxHeight": "none",
+        "overflowY": "visible"
+      }
+    },
+    {
+      "ok": true,
+      "message": "820×768: the stacked rail keeps its old overflow",
+      "detail": "visible"
+    },
+    {
+      "ok": true,
+      "message": "820×768: no rail label is clipped",
+      "detail": []
+    },
+    {
+      "ok": true,
+      "message": "390×844: the page does not scroll sideways"
+    },
+    {
+      "ok": true,
+      "message": "390×844: the stacked rail stays in the flow",
+      "detail": {
+        "position": "static",
+        "maxHeight": "none",
+        "overflowY": "visible"
+      }
+    },
+    {
+      "ok": true,
+      "message": "390×844: the stacked rail is not height-bound",
+      "detail": {
+        "position": "static",
+        "maxHeight": "none",
+        "overflowY": "visible"
+      }
+    },
+    {
+      "ok": true,
+      "message": "390×844: the stacked rail keeps its old overflow",
+      "detail": "visible"
+    },
+    {
+      "ok": true,
+      "message": "390×844: no rail label is clipped",
+      "detail": []
+    }
+  ]
+}
