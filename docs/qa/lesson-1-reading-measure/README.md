@@ -1,16 +1,16 @@
 # Lesson 1 — reading measure (line length of running text)
 
 Scope: the **running text** of `lesson-1.html` (stage paragraphs, list items and the
-stage summary). Changed file: `src/lesson-1.css` only, plus a new unit test and
-this QA folder. No content, interaction, teacher area, assessment or step-rail
-rule was touched.
+stage summary). Changed file: `src/lesson-1.css` only, plus a new unit test, two QA
+scripts and this QA folder. No content, interaction, teacher area, assessment or
+step-rail rule was touched.
 
 ## The defect
 
 The lesson column is `978px` wide at 1366px and `1032px` at 1440px (`lesson-layout`
 is a 264px rail + `minmax(0, 1fr)` column). Nothing capped the prose, so a paragraph
-line ran to the full column: **918px at 1366** and **977px at 1440** (about 120
-Arabic characters per line at 17px). That is far beyond a comfortable measure.
+line ran to the full column: **918px at 1366** and **973px at 1440** (prose only).
+That is far beyond a comfortable measure.
 
 ## The fix
 
@@ -29,46 +29,107 @@ The cap only bites where the text column is wider than 640px. On the stacked lay
 column is the viewport minus 36px, so phones (390px measured) are unchanged and the cap
 starts to apply from about 680px wide; laptops and wide tablets get the narrower measure.
 
-## Measurements (`browser-results-before.json` / `browser-results-after.json`)
+## Measurements
 
-Measured with `scripts/qa-lesson-1-reading-measure.mjs` in headless Chromium 153,
-all eight stages per viewport.
+Source: `browser-results-before.json` (baseline build, `d7b8016`) and
+`browser-results-after.json` (this change, `6fc2337` and later). Headless Chromium
+(`@sparticuz/chromium`), all eight stages per viewport. The **prose** figure is the
+longest line of a `p`/`li` outside the interactive zones (`prose.max` in the JSON),
+maximum over the eight stages.
 
 | viewport | column | longest prose line, before | after |
 | --- | --- | --- | --- |
-| 1366×768 | 978px | **918px** | **640px** |
-| 1440×900 | 1032px | **971–977px** | **640px** |
-| 1920×1080 | 1032px | 971–977px | 640px |
-| 1024×768 | 714px | 657px | 640px |
-| 820×768 | 784px | 724px | 638–640px |
+| 1366×768 | 978px | **918px** | **640px** (min 619) |
+| 1440×900 | 1032px | **973px** | **640px** (min 619) |
+| 1920×1080 | 1032px | **973px** | **640px** (min 619) |
+| 1024×768 | 714px | **659px** | **640px** (min 608) |
+| 820×768 | 784px | **733px** | **640px** (min 631) |
 | 390×844 | 364px | 330px | 330px (no change) |
 
-"Prose" excludes the interactive zones listed above; those keep their original
-width (up to 977px at 1440). Horizontal overflow (`scrollWidth > clientWidth`) is
-**0** at every viewport, before and after. No text is clipped by its box.
+"min" is the smallest per-stage maximum after the change, so the prose lines on the
+lightest stage are shorter than the cap. At 1440 and 1920 the largest line before the
+change was 977px, which belongs to an interactive zone (`lines.max` in the JSON); that
+zone keeps its width. The interactive zones keep their original width; this is by design.
 
-Lines per block (characters per line of multi-line paragraphs, median/p90) are in the
-raw JSON under `cpl`.
+Horizontal overflow (`docOverflowX`) is **0** at every viewport, before and after.
+`offenders` and `textClipped` are empty at every viewport, before and after.
 
-### Unchanged parts (`visual-invariance-check.json`)
+### Clipped boxes (information only)
 
-Compared before/after for every stage at six viewports (48 pairs):
+`clipped` lists scroll containers whose content is wider than their box. Most entries
+are intended scrollers: display equations (`katex-display`), self-check forms, option
+cards and option grids. Some are inline math spans (`span.math-inline`) that are 2px
+wider than their box. The list is **identical before and after** at every viewport
+(see the invariance check below), so it is not gated.
 
-- text content of `#page-content` — identical;
-- left rail, top bar and stage buttons (position and size) — identical;
-- every interactive zone (width, height, left, markup length and text) — identical.
-  Their **vertical position** moves when the prose above them gets shorter; that
-  is expected reflow, not a change to the zone;
-- no horizontal page overflow.
+## Gate: `scripts/qa-lesson-1-reading-measure.mjs`
 
-Result: **0 differences in 48 checks.**
+The script exits with code 1 if any of these hold on any viewport and stage:
 
-### Prose coverage
+- `prose-measured`: no prose lines were measured (the measure is not meaningful);
+- `reading-measure`: a prose line is longer than `--l1-reading-measure` plus 1px
+  (the limit is read from the live page; 40rem if the variable is absent);
+- `horizontal-overflow`: the document is wider than the viewport;
+- `outside-column`: a box lies outside the lesson column;
+- `text-clipped`: text is cut off by its own box.
 
-In the same browser run, every stage paragraph and list item outside the
-interactive zones reports `max-width: 640px` (152 elements). The 77 elements inside
-interactive zones keep their previous `max-width` (`none`, or 820px for the
-simulation headers from `styles.css`).
+On the baseline build it fails (40 checks: five viewports × eight stages, the 390px
+viewport is not over the limit). On this change it passes.
+
+## Invariance check: `scripts/qa-lesson-1-reading-invariance.mjs`
+
+Compares a baseline build with the changed build at six viewports × eight stages
+(**48 pairs**). It checks:
+
+- the lesson markup and its text are identical;
+- every element inside an interactive zone has the same computed style, size and
+  position;
+- every other element that is not running text keeps its width and left position,
+  and the sidebar and top bar are unchanged;
+- running text had no `max-width` before and has the 640px cap now (no cap overwritten);
+- the set of clipped scroll containers is unchanged.
+
+Vertical positions of ordinary containers are not compared: they move when the prose
+above them reflows. Inline pieces inside running text (`strong`, `bdi`, KaTeX spans)
+move with the line wrap, so only their style is compared.
+
+Result in `visual-invariance-check.json`: **0 differences in 48 pairs**. Per viewport:
+markup 8/8, text 8/8, clipped set 8/8; 152 prose elements (all capped at 640px, summed
+over the eight stages); 77 visible text blocks inside interactive zones (keeping their
+previous width); 7286 interactive-zone element comparisons.
+
+## Reproducing the results
+
+These scripts need `puppeteer-core` and `@sparticuz/chromium`. They are **not** in
+`package.json` and are not installed by `npm test`. Put them in any directory and point
+`QA_MODULE_DIR` at it (the directory must contain `node_modules`); set `CHROMIUM_PATH`
+to a Chromium binary if you do not want the `@sparticuz/chromium` one. Also set
+`LD_LIBRARY_PATH` if that Chromium needs shared libraries from the package.
+
+```sh
+# 1. Baseline build (commit before the change) on port 4190
+mkdir -p /tmp/base
+git archive d7b80166b43bb4d8f203797a79b707897173df2b | tar -x -C /tmp/base
+(cd /tmp/base && node scripts/build.mjs)
+python3 -m http.server 4190 --bind 0.0.0.0 --directory /tmp/base/dist &
+
+# 2. Changed build on port 4191
+npm run build
+python3 -m http.server 4191 --bind 0.0.0.0 --directory dist &
+
+# 3. Measurement gate, one run per build (each overwrites its results file)
+QA_MODULE_DIR=/path/to/qa QA_BASE_URL=http://127.0.0.1:4190 QA_PHASE=before \
+  node scripts/qa-lesson-1-reading-measure.mjs    # expected: exit 1
+QA_MODULE_DIR=/path/to/qa QA_BASE_URL=http://127.0.0.1:4191 QA_PHASE=after \
+  node scripts/qa-lesson-1-reading-measure.mjs    # expected: exit 0
+
+# 4. Invariance check (overwrites visual-invariance-check.json)
+QA_MODULE_DIR=/path/to/qa QA_BASELINE_URL=http://127.0.0.1:4190 QA_AFTER_URL=http://127.0.0.1:4191 \
+  node scripts/qa-lesson-1-reading-invariance.mjs  # expected: exit 0
+```
+
+Unit tests and build: `npm test` (344 tests: 335 pass, 0 fail, 9 skipped, as in the
+baseline plus the five new tests) and `npm run build`.
 
 ## Screenshots
 
@@ -87,11 +148,10 @@ simulation headers from `styles.css`).
 
 ## Known, not changed here
 
-- Headings (`h3`/`h4`) are not capped. Their boxes are 880–920px wide, but each
-  heading is short text, one or two lines, so the box width does not form a
-  reading line. They are left as they are.
-- Inline math spans (`.math-inline`) report a 2px scroll-width excess in the
-  existing build. This was measured, not seen: it is identical before and after,
-  and I did not check it visually.
-- The interactive zones (simulations, inquiry cards, practice, workbenches) keep
-  their full width by design, so their long prompt lines are still wide.
+- Headings (`h3`/`h4`) are not capped. Their lines reach 882px at 1366 and 937px at
+  1440 (`perSelector.h3.max`). Each heading is short text, so the box width does not
+  form a reading line. They are left as they are.
+- Interactive zones (simulations, inquiry cards, practice, workbenches) keep their
+  full width by design, so their long prompt lines are still wide.
+- Equations and self-check elements are intended scroll containers; they are listed in
+  `clipped` and are the same before and after.

@@ -1,11 +1,13 @@
 {
   "phase": "after",
-  "base": "http://127.0.0.1:4176",
-  "date": "2026-10-25T23:32:40.170Z",
+  "base": "http://127.0.0.1:4191",
+  "date": "2026-10-25T23:45:26.522Z",
   "viewports": {
     "1366x768": [
       {
         "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -74,6 +76,8 @@
       },
       {
         "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -178,6 +182,8 @@
       },
       {
         "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -395,6 +401,8 @@
       },
       {
         "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -546,6 +554,8 @@
       },
       {
         "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -702,6 +712,8 @@
       },
       {
         "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -877,6 +889,8 @@
       },
       {
         "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -945,6 +959,8 @@
       },
       {
         "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 978,
         "mainLeft": 40,
         "pageContentWidth": 978,
@@ -1290,6 +1306,8 @@
     "1440x900": [
       {
         "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -1358,6 +1376,8 @@
       },
       {
         "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -1462,6 +1482,8 @@
       },
       {
         "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -1679,6 +1701,8 @@
       },
       {
         "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -1830,6 +1854,8 @@
       },
       {
         "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -1986,6 +2012,8 @@
       },
       {
         "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -2161,6 +2189,8 @@
       },
       {
         "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -2229,6 +2259,8 @@
       },
       {
         "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 50,
         "pageContentWidth": 1032,
@@ -2550,6 +2582,8 @@
     "1920x1080": [
       {
         "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -2618,6 +2652,8 @@
       },
       {
         "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -2722,6 +2758,8 @@
       },
       {
         "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -2939,6 +2977,8 @@
       },
       {
         "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -3090,6 +3130,8 @@
       },
       {
         "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -3246,6 +3288,8 @@
       },
       {
         "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -3421,6 +3465,8 @@
       },
       {
         "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -3489,6 +3535,8 @@
       },
       {
         "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 1032,
         "mainLeft": 290,
         "pageContentWidth": 1032,
@@ -3810,6 +3858,8 @@
     "1024x768": [
       {
         "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -3878,6 +3928,8 @@
       },
       {
         "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -3982,6 +4034,8 @@
       },
       {
         "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -4199,6 +4253,8 @@
       },
       {
         "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -4350,6 +4406,8 @@
       },
       {
         "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -4512,6 +4570,8 @@
       },
       {
         "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -4687,6 +4747,8 @@
       },
       {
         "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -4755,6 +4817,8 @@
       },
       {
         "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 714,
         "mainLeft": 24,
         "pageContentWidth": 714,
@@ -5034,6 +5098,8 @@
     "820x768": [
       {
         "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5102,6 +5168,8 @@
       },
       {
         "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5206,6 +5274,8 @@
       },
       {
         "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5423,6 +5493,8 @@
       },
       {
         "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5574,6 +5646,8 @@
       },
       {
         "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5736,6 +5810,8 @@
       },
       {
         "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5911,6 +5987,8 @@
       },
       {
         "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -5979,6 +6057,8 @@
       },
       {
         "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 784,
         "mainLeft": 18,
         "pageContentWidth": 784,
@@ -6300,6 +6380,8 @@
     "390x844": [
       {
         "stage": 1,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -6368,6 +6450,8 @@
       },
       {
         "stage": 2,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -6472,6 +6556,8 @@
       },
       {
         "stage": 3,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -6689,6 +6775,8 @@
       },
       {
         "stage": 4,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -6840,6 +6928,8 @@
       },
       {
         "stage": 5,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -6996,6 +7086,8 @@
       },
       {
         "stage": 6,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -7171,6 +7263,8 @@
       },
       {
         "stage": 7,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -7239,6 +7333,8 @@
       },
       {
         "stage": 8,
+        "measureVar": "40rem",
+        "rootPx": 16,
         "mainWidth": 364,
         "mainLeft": 13,
         "pageContentWidth": 364,
@@ -7515,5 +7611,7 @@
         "textClipped": []
       }
     ]
-  }
+  },
+  "failures": [],
+  "passed": true
 }

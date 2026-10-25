@@ -1,6 +1,12 @@
-// Reading-measure QA for the Lesson 1 prose (`lesson-1.html`), in the same shape
-// as the other scripts/qa-* files. It measures the rendered line length of running
-// text and checks horizontal overflow and clipping on each of the eight stages.
+// Reading-measure QA for the Lesson 1 prose (`lesson-1.html`). It measures the
+// rendered line length of running text and checks horizontal overflow, text that
+// is clipped by its own box, and boxes outside the lesson column, on each stage.
+//
+// This script is a GATE: it exits with code 1 when any check fails, so it can be
+// run before and after a change. The limit is read from the live `--l1-reading-measure`
+// variable (falling back to 40rem, the value this change specifies, when the
+// variable is absent, e.g. on the pre-fix build). Interactive regions are not part
+// of the prose measure: the same exclusion list is used here and in `src/lesson-1.css`.
 //
 //   npm run build
 //   python3 -m http.server 4176 --bind 0.0.0.0 --directory dist
@@ -10,6 +16,9 @@
 // `QA_MODULE_DIR` must hold `puppeteer-core` and `@sparticuz/chromium`; nothing is
 // added to this repository's package.json. Results are written to
 // docs/qa/lesson-1-reading-measure/browser-results-<phase>.json (override with QA_OUT).
+// Clipping of intended scroll containers (equations, self-check options) is recorded
+// as `clipped` for information; it is compared with the baseline by
+// scripts/qa-lesson-1-reading-invariance.mjs, not gated here.
 import { writeFile, mkdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
@@ -117,7 +126,10 @@ const pageProbe = () => {
     }
   }
 
+  const measureVar = getComputedStyle(document.querySelector('.l1-page') || document.documentElement).getPropertyValue('--l1-reading-measure').trim();
   return {
+    measureVar,
+    rootPx: parseFloat(getComputedStyle(document.documentElement).fontSize),
     mainWidth: Math.round(mainBox.width),
     mainLeft: Math.round(mainBox.left),
     pageContentWidth: Math.round(r(root).width),
@@ -131,6 +143,36 @@ const pageProbe = () => {
     textClipped,
   };
 };
+
+const SPEC_REM = 40;       // the reading measure this change specifies (used only if the variable is absent)
+const TOLERANCE_PX = 1;    // sub-pixel rounding of line boxes
+
+/** Converts the computed variable (e.g. "40rem" or "640px") to CSS pixels. */
+function toPx(value, rootPx) {
+  const n = parseFloat(value);
+  if (value.endsWith('rem')) return n * rootPx;
+  if (value.endsWith('px')) return n;
+  return null;
+}
+
+/** Every failed check, with the measured value and the limit it broke. Empty means pass. */
+function judge(data) {
+  const failures = [];
+  for (const [viewport, stages] of Object.entries(data.viewports)) {
+    for (const s of stages) {
+      const where = { viewport, stage: s.stage };
+      const rootPx = s.rootPx || 16;
+      const measure = toPx(s.measureVar, rootPx) ?? SPEC_REM * rootPx;
+      const limit = measure + TOLERANCE_PX;
+      if (s.prose.lines === 0) failures.push({ ...where, check: 'prose-measured', detail: 'no running-text line was measured, so the check would be vacuous' });
+      if (s.prose.max > limit) failures.push({ ...where, check: 'reading-measure', value: s.prose.max, limit: Math.round(limit) });
+      if (s.docOverflowX > 0) failures.push({ ...where, check: 'horizontal-overflow', value: s.docOverflowX, limit: 0 });
+      if (s.offenders.length > 0) failures.push({ ...where, check: 'outside-column', value: s.offenders.length, limit: 0 });
+      if (s.textClipped.length > 0) failures.push({ ...where, check: 'text-clipped', value: s.textClipped.length, limit: 0 });
+    }
+  }
+  return failures;
+}
 
 const results = { phase: PHASE, base: BASE, date: new Date().toISOString(), viewports: {} };
 for (const vp of VIEWPORTS) {
@@ -151,6 +193,9 @@ for (const vp of VIEWPORTS) {
   await page.close();
 }
 await browser.close();
+const failures = judge(results);
+results.failures = failures;
+results.passed = failures.length === 0;
 await writeFile(OUT, JSON.stringify(results, null, 2));
 
 // Human-readable summary
@@ -163,3 +208,7 @@ for (const [name, stages] of Object.entries(results.viewports)) {
     console.log(`  ${s.stage}   | ${s.mainWidth} | ${s.pageContentWidth} | ${s.lines.count} ${s.lines.min} ${s.lines.median} ${s.lines.p90} ${s.lines.max} | ${s.docOverflowX} | ${s.offenders.length} | ${s.clipped.length} | ${s.textClipped.length}`);
   }
 }
+
+console.log(`\nRESULT ${results.passed ? 'PASS' : 'FAIL'}: ${failures.length} failed check(s). Results: ${OUT}`);
+for (const f of failures.slice(0, 30)) console.log(`  FAIL ${f.viewport} stage ${f.stage} ${f.check}: value ${f.value ?? f.detail} limit ${f.limit ?? ''}`);
+process.exitCode = results.passed ? 0 : 1;
