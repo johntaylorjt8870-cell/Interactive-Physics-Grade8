@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { readdir, readFile } from 'node:fs/promises';
 import { LessonStepper, auditLessonSteps } from '../src/lesson-steps.js';
 import { UNIT2L3_PAGES } from '../src/unit2-lesson3-content.js';
@@ -8,15 +9,14 @@ import { UNIT2L3_PRACTICE_IDS } from '../src/unit2-lesson3-practice.js';
 import { UNIT2L3_DIAGRAMS } from '../src/unit2-lesson3-diagrams.js';
 
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
-const projectUrl = (path) => new URL(`../${path}`, import.meta.url);
 const SRC = new URL('../src/', import.meta.url);
 
-/* The three published Unit 2 lessons that teach one textbook page per step. */
-const STEP_LESSONS = [
-  { html: 'unit2-lesson-1.html', module: 'unit2-lesson1-content.js', pages: 'UNIT2_PAGES', meta: null },
-  { html: 'unit2-lesson-2.html', module: 'unit2-lesson2-content.js', pages: 'UNIT2L2_PAGES', meta: 'UNIT2L2_META' },
-  { html: 'unit2-lesson-3.html', module: 'unit2-lesson3-content.js', pages: 'UNIT2L3_PAGES', meta: 'UNIT2L3_META' },
-];
+/* Published lessons that must always be audited, so a rename cannot quietly drop
+   one of them from the shape-based discovery. */
+const REQUIRED_STEP_LESSONS = ['unit2-lesson1-content.js', 'unit2-lesson2-content.js', 'unit2-lesson3-content.js'];
+
+/* Step controls every page-based student page must expose. */
+const STEP_SHELL_HOOKS = ['id="page-nav"', 'id="page-content"', 'id="previous-button"', 'id="next-button"', 'id="progress-track"', 'id="page-heading"'];
 
 /** Every exported "one entry per textbook page" array under src/, found by shape. */
 async function discoverPageLessons() {
@@ -27,11 +27,26 @@ async function discoverPageLessons() {
     for (const [exportName, value] of Object.entries(module)) {
       if (!Array.isArray(value) || value.length === 0) continue;
       if (!value.every((entry) => entry && Number.isInteger(entry.page))) continue;
+      /* declared coverage: a *_META.sourcePages object, or a bare sourcePages array */
       const meta = Object.values(module).find((candidate) => candidate && Array.isArray(candidate.sourcePages));
-      found.push({ file, exportName, pages: value, sourcePages: meta?.sourcePages ?? [] });
+      const declared = Array.isArray(module.sourcePages) && module.sourcePages.every(Number.isInteger) ? module.sourcePages : null;
+      found.push({ file, exportName, pages: value, sourcePages: meta?.sourcePages ?? declared ?? [] });
     }
   }
   return found;
+}
+
+/** The published student pages a lesson module could own, e.g. unit2-lesson3-content.js
+    → unit2-lesson-3.html / unit2-lesson3.html. */
+function shellCandidatesFor(moduleFile) {
+  const stem = moduleFile.replace(/-content\.js$/, '');
+  const dashed = stem.replace(/(lesson)(\d+)$/, '$1-$2');
+  return [...new Set([`${dashed}.html`, `${stem}.html`])];
+}
+
+/** The first existing student page for a lesson module, or null when it is not published yet. */
+function publishedShellFor(moduleFile) {
+  return shellCandidatesFor(moduleFile).find((name) => existsSync(new URL(`../${name}`, import.meta.url))) ?? null;
 }
 
 test('LessonStepper moves one study step at a time and stops at both ends', () => {
@@ -111,34 +126,39 @@ test('a lesson with many pages cannot be published as one long step', () => {
   assert.deepEqual(auditLessonSteps([]).problems, ['the lesson defines no study steps']);
 });
 
-test('every Unit 2 step lesson keeps one step per textbook page and a working step navigation shell', async () => {
+test('every page-based lesson keeps one step per textbook page and a working step navigation shell', async () => {
   const discovered = await discoverPageLessons();
-  assert.ok(discovered.length >= STEP_LESSONS.length, 'the shape-based discovery still finds the published lessons');
+  const files = new Set(discovered.map((entry) => entry.file));
+  for (const required of REQUIRED_STEP_LESSONS) {
+    assert.ok(files.has(required), `${required} is discovered by shape and therefore audited`);
+  }
 
-  for (const lesson of STEP_LESSONS) {
-    const module = await import(new URL(lesson.module, SRC).href);
-    const pages = module[lesson.pages];
-    const sourcePages = lesson.meta ? module[lesson.meta]?.sourcePages : pages.map((page) => page.page);
-    assert.ok(Array.isArray(pages), `${lesson.module} exports ${lesson.pages}`);
-    const report = auditLessonSteps(pages, { sourcePages });
-    assert.deepEqual(report.problems, [], `${lesson.module}: ${report.problems.join('; ')}`);
-    assert.ok(discovered.some((entry) => entry.file === lesson.module && entry.exportName === lesson.pages),
-      `${lesson.module} is discovered by shape, so a future lesson is audited too`);
+  /* Every lesson that ships a page-per-page array is audited, including one added
+     later: a new lesson cannot be published as one long step, lose a page, freeze
+     the book order, or ship without the step controls. */
+  for (const lesson of discovered) {
+    const report = auditLessonSteps(lesson.pages, { sourcePages: lesson.sourcePages });
+    assert.deepEqual(report.problems, [], `${lesson.file}:${lesson.exportName}: ${report.problems.join('; ')}`);
 
-    /* The student shell must expose the approved step controls and must not ship the
-       lesson body as pre-rendered markup (that is what one long page looked like). */
-    const html = await read(`../${lesson.html}`);
-    for (const hook of ['id="page-nav"', 'id="page-content"', 'id="previous-button"', 'id="next-button"', 'id="progress-track"', 'id="page-heading"']) {
-      assert.ok(html.includes(hook), `${lesson.html} exposes ${hook}`);
+    const shell = publishedShellFor(lesson.file);
+    if (!shell) continue; /* written but not published yet */
+    const html = await read(`../${shell}`);
+    for (const hook of STEP_SHELL_HOOKS) {
+      assert.ok(html.includes(hook), `${lesson.file} → ${shell} exposes ${hook}`);
     }
     const pageContent = html.match(/<div id="page-content"[^>]*>([\s\S]*?)<\/div>/)?.[1] ?? '';
-    assert.equal(pageContent.trim(), '', `${lesson.html} renders its steps at runtime, not as one static article`);
+    assert.equal(pageContent.trim(), '', `${shell} renders its steps at runtime, not as one static article`);
+    assert.equal(/<article[^>]*data-book-copy=|<div class="book-copy"/.test(html), false,
+      `${shell} does not pre-render book copy outside the step renderer`);
   }
 
   /* lessons that use another approved design (station rail) are not forced into this one */
   const stationLesson = await read('../src/unit2-lesson4-content.js');
   assert.match(stationLesson, /export const STATIONS/);
+  assert.equal(discovered.some((entry) => entry.file === 'unit2-lesson4-content.js'), false,
+    'the station-rail lesson is not treated as a page-per-page lesson');
 });
+
 
 test('Lesson 3 renders exactly one textbook page per step, with that page\'s own activities', () => {
   const diagramIdsByPage = new Map();
@@ -205,5 +225,5 @@ test('Lesson 3 bootstrap teaches through the shared step model instead of one sc
     assert.ok(css.includes(rule), `css ${rule}`);
   }
   assert.equal(/\.p3-station\b/.test(css), false, 'the retired single-page station layout is gone');
-  assert.ok(projectUrl('src/lesson-steps.js'));
+  assert.ok(existsSync(new URL('../src/lesson-steps.js', import.meta.url)), 'the shared step model is shipped in src/');
 });
