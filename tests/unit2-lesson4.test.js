@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
-import { LESSON, STATIONS, OHM_TABLE, SELF_CHECK_POINTS } from '../src/unit2-lesson4-content.js';
+import { LESSON, STATIONS, OHM_TABLE, SELF_CHECK_POINTS, UNIT2L4_PAGES, UNIT2L4_PHASES } from '../src/unit2-lesson4-content.js';
+import { auditLessonSteps } from '../src/lesson-steps.js';
+import { unit2l4StepMarkup } from '../src/unit2-lesson4-step-view.js';
 import { ACTIVITIES } from '../src/unit2-lesson4-activities.js';
 import { TEACHER_ANSWERS, renderTeacherContent } from '../src/unit2-lesson4-teacher-content.js';
 import { ohmCurrent, wireResistance, squareCentimetresToMetres, equivalentResistance, network, colourResistance, graphSlope } from '../src/unit2-lesson4-physics.js';
@@ -12,11 +14,24 @@ import { verifyTeacherPassword } from '../src/teacher-auth.js';
 import { graph, circuit } from '../src/unit2-lesson4-diagrams.js';
 import { unit2AssessmentDiagram } from '../src/unit-2-test-diagrams.js';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
-test('official lesson 4 title and all printed pp107–120 are registered once in six complete stations',()=>{
+test('official lesson 4 title and all printed pp107–120 are taught once as fourteen book steps in six phases',()=>{
  assert.equal(LESSON.title,'المقاومة الكهربائية');assert.equal(STATIONS.length,6);
  assert.deepEqual(LESSON.pages,Array.from({length:14},(_,i)=>107+i));
  assert.deepEqual(STATIONS.flatMap(s=>s.pages),LESSON.pages);
- STATIONS.forEach(s=>assert.ok(s.html.length>400));
+ /* The station shell (one long rail with six copied HTML documents) was rebuilt as
+    one step per book page. The six phases keep the book's own unit grouping and the
+    structural audit replaces the old `html.length` check: each phase must still own
+    real book copy for every page it claims, with no gap or repeat. */
+ assert.equal(UNIT2L4_PAGES.length,14);
+ assert.deepEqual(UNIT2L4_PAGES.map(page=>page.page),LESSON.pages);
+ assert.deepEqual(auditLessonSteps(UNIT2L4_PAGES,{sourcePages:LESSON.sourcePages}).problems,[]);
+ for(const phase of UNIT2L4_PHASES){
+  const pages=UNIT2L4_PAGES.filter(page=>page.phase===phase.id);
+  assert.deepEqual(pages.map(page=>page.page),phase.pages,phase.id);
+  const text=pages.flatMap(page=>page.blocks.filter(block=>block.type==='book').map(block=>block.html)).join(' ')
+    .replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  assert.ok(text.length>400,`${phase.id} keeps real book copy for every page it owns`);
+ }
 });
 test('course has four correctly ordered Unit 2 lessons before exposing the Unit 2 test',async()=>{
  const home=await read('index.html');const section=home.slice(home.indexOf('aria-label="دروس الوحدة الثانية"'),home.indexOf('id="available-tests"'));
@@ -71,8 +86,20 @@ test('four-band practice calculations and unresolved original figure are disting
  assert.equal(colourResistance(4,7,2),4700);assert.equal(colourResistance(1,5,3),15000);assert.throws(()=>colourResistance(10,1,2));
  assert.match(TEACHER_ANSWERS['p116-2'],/تعارض|لا نجزم/);assert.match(TEACHER_ANSWERS['p116-2'],/خمس/);
 });
-test('LED correction and fixed-temperature ohmic condition are explicit platform explanations',()=>{
- assert.match(STATIONS[1].html,/ثابت الحرارة/);assert.match(STATIONS[4].html,/إعادة اتحاد/);assert.match(STATIONS[4].html,/لا اقتباس/);assert.match(STATIONS[4].html,/تحديد للتيار/);
+test('LED correction, fixed-temperature ohmic condition and the unresolved colour figure stay explicit platform explanations',()=>{
+ /* These platform corrections used to live inside the six station HTML strings. They
+    now sit next to the page they explain (p117 LED, p118 ohmic condition, p116 colour
+    figure), so the same four ideas are asserted on the step content instead. */
+ const pageText=page=>UNIT2L4_PAGES.filter(entry=>entry.page===page)
+   .flatMap(entry=>entry.blocks.filter(block=>block.type==='book'||block.type==='platform').map(block=>block.html))
+   .join(' ').replace(/<[^>]+>/g,' ');
+ assert.match(pageText(118),/ثابت الحرارة/);
+ assert.match(pageText(117),/إعادة اتحاد|تعيد اتحاد/);
+ assert.match(pageText(117),/تحديد\S* للتيار/);
+ /* the platform-voice label itself must say the note is not a quotation */
+ assert.match(unit2l4StepMarkup(UNIT2L4_PAGES.find(entry=>entry.page===117)),/شرح المنصة · لا اقتباس/);
+ assert.match(pageText(116),/لا نجزم/);
+ assert.match(pageText(116),/خمس/);
 });
 test('56 unique new unit-test prompts cover every lesson according to the blueprint',()=>{
  assert.equal(UNIT_2_QUESTIONS.length,56);assert.equal(UNIT_2_TEST.id,'unit2');assert.equal(new Set(UNIT_2_QUESTIONS.map(q=>q.id)).size,56);assert.equal(new Set(UNIT_2_QUESTIONS.map(q=>q.prompt)).size,56);
@@ -97,9 +124,12 @@ test('teacher and test solutions remain in separate lazy-loaded areas, never in 
 });
 test('existing password remains somer173 without changing shared authentication',async()=>{assert.equal(await verifyTeacherPassword('somer173'),true);assert.equal(await verifyTeacherPassword('incorrect'),false);});
 test('math islands, charts, native controls, focus and reduced motion are supported',async()=>{
- const css=await read('src/unit2-lesson4.css'),boot=await read('src/unit2-lesson4-main.js');assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);assert.match(css,/unicode-bidi:isolate/);assert.match(boot,/type="reset"/);assert.match(boot,/role="status"/);
+ const css=await read('src/unit2-lesson4.css'),practice=await read('src/unit2-lesson4-practice.js');assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);assert.match(css,/unicode-bidi:isolate/);
+ /* Reset and live feedback moved from the old station boot into the practice layer,
+    which now owns every native form control. */
+ assert.match(practice,/data-r4p-action="reset"/);assert.match(practice,/role="status"/);
  assert.match(graph(OHM_TABLE),/<title/);assert.match(graph(OHM_TABLE),/<desc/);assert.match(circuit('parallel'),/العقدتين/);for(const q of UNIT_2_QUESTIONS.filter(q=>q.diagram))assert.match(unit2AssessmentDiagram(q),/role="img"/);
- assert.doesNotMatch(STATIONS.map(s=>s.html).join(''),/katex-error/);
+ assert.doesNotMatch(UNIT2L4_PAGES.map(page=>unit2l4StepMarkup(page)).join(''),/katex-error/);
 });
 test('production build registers every new HTML entry without replacing previous ones',async()=>{
  const build=await read('scripts/build.mjs');for(const f of ['unit2-lesson-4.html','unit2-lesson-4-teacher.html','unit-2-test.html','unit2-lesson-3.html','unit2-lesson-2.html','unit2-lesson-1.html'])assert.ok(build.includes(`'${f}'`),f);
