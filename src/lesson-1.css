@@ -1280,3 +1280,19 @@
     outline-offset: -2px;
   }
 }
+
+/* Short laptop windows (≤800px tall): the rail must fit before it sticks too.
+   `100vh - 48px` is the space a *pinned* rail has. At the top of the page the
+   rail starts 112px down (76px top bar + 36px layout margin), so on a 1366×768
+   screen it still ended 64px past the fold and the curriculum key was cut.
+   `--rail-max-height` is published by `src/main.js` from the rail's measured
+   position (632px at the top, 720px once pinned); the static value here is the
+   no-JS fallback and keeps the same conservative fit. Screens ≥801px tall are
+   untouched, so 1440×900, 1920×1080 and the stacked layouts keep their exact
+   current pixels. */
+@media (min-width: 821px) and (max-height: 800px) {
+  .l1-page .lesson-sidebar {
+    max-height: var(--rail-max-height, calc(100vh - 136px));
+    max-height: var(--rail-max-height, calc(100dvh - 136px));
+  }
+}

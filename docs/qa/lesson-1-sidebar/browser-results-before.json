@@ -1,9 +1,9 @@
 {
   "phase": "before",
   "base": "http://127.0.0.1:4174/lesson-1.html",
-  "generatedAt": "2026-10-25T23:00:55.880Z",
-  "checks": 63,
-  "failures": 6,
+  "generatedAt": "2026-10-25T23:13:59.550Z",
+  "checks": 75,
+  "failures": 12,
   "measurements": {
     "1366x768": {
       "steps": [
@@ -271,6 +271,120 @@
         ],
         "clippedLabels": [],
         "navNeedsScroll": false
+      },
+      "top": {
+        "firstStep": {
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "scrollY": 0,
+          "documentScrollsSideways": false,
+          "sidebar": {
+            "top": 112,
+            "bottom": 961,
+            "left": 1062,
+            "right": 1326,
+            "width": 264,
+            "height": 849
+          },
+          "sidebarStyle": {
+            "position": "sticky",
+            "maxHeight": "none",
+            "overflowY": "visible"
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 865,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 507,
+            "scrollHeight": 506,
+            "clientHeight": 506,
+            "scrollTop": 0,
+            "overflowY": "visible"
+          },
+          "footer": {
+            "top": 865,
+            "bottom": 955,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 91
+          },
+          "active": {
+            "top": 372,
+            "bottom": 425,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 53
+          },
+          "activeLabel": "التمهيد وتمثيل شعاع القوة",
+          "stepCount": 8,
+          "buttonWidths": [
+            256
+          ],
+          "clippedLabels": [],
+          "navNeedsScroll": false
+        },
+        "lastStep": {
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "scrollY": 0,
+          "documentScrollsSideways": false,
+          "sidebar": {
+            "top": 112,
+            "bottom": 961,
+            "left": 1062,
+            "right": 1326,
+            "width": 264,
+            "height": 849
+          },
+          "sidebarStyle": {
+            "position": "sticky",
+            "maxHeight": "none",
+            "overflowY": "visible"
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 865,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 507,
+            "scrollHeight": 506,
+            "clientHeight": 506,
+            "scrollTop": 0,
+            "overflowY": "visible"
+          },
+          "footer": {
+            "top": 865,
+            "bottom": 955,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 91
+          },
+          "active": {
+            "top": 811,
+            "bottom": 865,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 53
+          },
+          "activeLabel": "المسائل والتدريب الشامل",
+          "stepCount": 8,
+          "buttonWidths": [
+            256
+          ],
+          "clippedLabels": [],
+          "navNeedsScroll": false
+        }
       }
     },
     "1440x900": {
@@ -648,6 +762,67 @@
       }
     },
     {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the window is at the top",
+      "detail": 0
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 8): the rail ends above the fold",
+      "detail": {
+        "top": 112,
+        "bottom": 961,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 849
+      }
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 8): the curriculum key is whole, not clipped",
+      "detail": {
+        "top": 865,
+        "bottom": 955,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 8): «المسائل والتدريب الشامل» is inside the rail and the window",
+      "detail": {
+        "top": 811,
+        "bottom": 865,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 53
+      }
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 8): the active step keeps clear of the window edge",
+      "detail": {
+        "step": {
+          "top": 811,
+          "bottom": 865,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 53
+        },
+        "viewportHeight": 768
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the list still shows at least four steps",
+      "detail": 506
+    },
+    {
       "ok": false,
       "message": "1366×768: the pinned rail fits the window",
       "detail": {
@@ -702,9 +877,70 @@
     },
     {
       "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the window is at the top",
+      "detail": 0
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 1): the rail ends above the fold",
+      "detail": {
+        "top": 112,
+        "bottom": 961,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 849
+      }
+    },
+    {
+      "ok": false,
+      "message": "1366×768 @scrollY 0 (step 1): the curriculum key is whole, not clipped",
+      "detail": {
+        "top": 865,
+        "bottom": 955,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): «التمهيد وتمثيل شعاع القوة» is inside the rail and the window",
+      "detail": {
+        "top": 372,
+        "bottom": 425,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 53
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the active step keeps clear of the window edge",
+      "detail": {
+        "step": {
+          "top": 372,
+          "bottom": 425,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 53
+        },
+        "viewportHeight": 768
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the list still shows at least four steps",
+      "detail": 506
+    },
+    {
+      "ok": true,
       "message": "1366×768: changing step still moves the reader to the step heading",
       "detail": {
-        "before": 400,
+        "before": 398,
         "after": 0
       }
     },

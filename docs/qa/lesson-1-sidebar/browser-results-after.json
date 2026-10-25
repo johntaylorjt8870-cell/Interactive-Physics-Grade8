@@ -1,8 +1,8 @@
 {
   "phase": "after",
   "base": "http://127.0.0.1:4176/lesson-1.html",
-  "generatedAt": "2026-10-25T23:03:19.888Z",
-  "checks": 63,
+  "generatedAt": "2026-10-25T23:15:24.167Z",
+  "checks": 75,
   "failures": 0,
   "measurements": {
     "1366x768": {
@@ -20,13 +20,13 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
+            "clientHeight": 289,
             "scrollTop": 0,
             "overflowY": "auto"
           },
@@ -46,13 +46,13 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
+            "clientHeight": 289,
             "scrollTop": 0,
             "overflowY": "auto"
           },
@@ -72,13 +72,13 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
+            "clientHeight": 289,
             "scrollTop": 0,
             "overflowY": "auto"
           },
@@ -98,13 +98,13 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
+            "clientHeight": 289,
             "scrollTop": 0,
             "overflowY": "auto"
           },
@@ -124,13 +124,13 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
+            "clientHeight": 289,
             "scrollTop": 0,
             "overflowY": "auto"
           },
@@ -141,8 +141,8 @@
           "step": 6,
           "label": "تحليل القوة والمستوى المائل الأملس",
           "active": {
-            "top": 642,
-            "bottom": 694,
+            "top": 487,
+            "bottom": 539,
             "left": 1066,
             "right": 1322,
             "width": 256,
@@ -150,14 +150,14 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
-            "scrollTop": 0,
+            "clientHeight": 289,
+            "scrollTop": 155,
             "overflowY": "auto"
           },
           "scrollY": 0,
@@ -167,8 +167,8 @@
           "step": 7,
           "label": "الخلاصة وخريطة المفاهيم",
           "active": {
-            "top": 629,
-            "bottom": 681,
+            "top": 552,
+            "bottom": 604,
             "left": 1066,
             "right": 1322,
             "width": 256,
@@ -176,14 +176,14 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
-            "scrollTop": 67,
+            "clientHeight": 289,
+            "scrollTop": 144,
             "overflowY": "auto"
           },
           "scrollY": 0,
@@ -193,8 +193,8 @@
           "step": 8,
           "label": "المسائل والتدريب الشامل",
           "active": {
-            "top": 683,
-            "bottom": 735,
+            "top": 595,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
@@ -202,14 +202,14 @@
           },
           "nav": {
             "top": 357,
-            "bottom": 735,
+            "bottom": 647,
             "left": 1066,
             "right": 1322,
             "width": 256,
-            "height": 378,
+            "height": 290,
             "scrollHeight": 444,
-            "clientHeight": 377,
-            "scrollTop": 67,
+            "clientHeight": 289,
+            "scrollTop": 155,
             "overflowY": "auto"
           },
           "scrollY": 0,
@@ -271,6 +271,120 @@
         ],
         "clippedLabels": [],
         "navNeedsScroll": true
+      },
+      "top": {
+        "firstStep": {
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "scrollY": 0,
+          "documentScrollsSideways": false,
+          "sidebar": {
+            "top": 112,
+            "bottom": 744,
+            "left": 1062,
+            "right": 1326,
+            "width": 264,
+            "height": 632
+          },
+          "sidebarStyle": {
+            "position": "sticky",
+            "maxHeight": "632px",
+            "overflowY": "visible"
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 647,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 290,
+            "scrollHeight": 444,
+            "clientHeight": 289,
+            "scrollTop": 0,
+            "overflowY": "auto"
+          },
+          "footer": {
+            "top": 647,
+            "bottom": 738,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 91
+          },
+          "active": {
+            "top": 372,
+            "bottom": 424,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "activeLabel": "التمهيد وتمثيل شعاع القوة",
+          "stepCount": 8,
+          "buttonWidths": [
+            256
+          ],
+          "clippedLabels": [],
+          "navNeedsScroll": true
+        },
+        "lastStep": {
+          "viewport": {
+            "width": 1366,
+            "height": 768
+          },
+          "scrollY": 0,
+          "documentScrollsSideways": false,
+          "sidebar": {
+            "top": 112,
+            "bottom": 744,
+            "left": 1062,
+            "right": 1326,
+            "width": 264,
+            "height": 632
+          },
+          "sidebarStyle": {
+            "position": "sticky",
+            "maxHeight": "632px",
+            "overflowY": "visible"
+          },
+          "nav": {
+            "top": 357,
+            "bottom": 647,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 290,
+            "scrollHeight": 444,
+            "clientHeight": 289,
+            "scrollTop": 155,
+            "overflowY": "auto"
+          },
+          "footer": {
+            "top": 647,
+            "bottom": 738,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 91
+          },
+          "active": {
+            "top": 595,
+            "bottom": 647,
+            "left": 1066,
+            "right": 1322,
+            "width": 256,
+            "height": 52
+          },
+          "activeLabel": "المسائل والتدريب الشامل",
+          "stepCount": 8,
+          "buttonWidths": [
+            256
+          ],
+          "clippedLabels": [],
+          "navNeedsScroll": true
+        }
       }
     },
     "1440x900": {
@@ -605,8 +719,8 @@
       "ok": true,
       "message": "1366×768: step 6 «تحليل القوة والمستوى المائل الأملس» is reachable without scrolling the window",
       "detail": {
-        "top": 642,
-        "bottom": 694,
+        "top": 487,
+        "bottom": 539,
         "left": 1066,
         "right": 1322,
         "width": 256,
@@ -622,8 +736,8 @@
       "ok": true,
       "message": "1366×768: step 7 «الخلاصة وخريطة المفاهيم» is reachable without scrolling the window",
       "detail": {
-        "top": 629,
-        "bottom": 681,
+        "top": 552,
+        "bottom": 604,
         "left": 1066,
         "right": 1322,
         "width": 256,
@@ -639,13 +753,74 @@
       "ok": true,
       "message": "1366×768: step 8 «المسائل والتدريب الشامل» is reachable without scrolling the window",
       "detail": {
-        "top": 683,
-        "bottom": 735,
+        "top": 595,
+        "bottom": 647,
         "left": 1066,
         "right": 1322,
         "width": 256,
         "height": 52
       }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the window is at the top",
+      "detail": 0
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the rail ends above the fold",
+      "detail": {
+        "top": 112,
+        "bottom": 744,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 632
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the curriculum key is whole, not clipped",
+      "detail": {
+        "top": 647,
+        "bottom": 738,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): «المسائل والتدريب الشامل» is inside the rail and the window",
+      "detail": {
+        "top": 595,
+        "bottom": 647,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the active step keeps clear of the window edge",
+      "detail": {
+        "step": {
+          "top": 595,
+          "bottom": 647,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 52
+        },
+        "viewportHeight": 768
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 8): the list still shows at least four steps",
+      "detail": 289
     },
     {
       "ok": true,
@@ -699,6 +874,67 @@
       "ok": true,
       "message": "1366×768: no rail label is clipped",
       "detail": []
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the window is at the top",
+      "detail": 0
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the rail ends above the fold",
+      "detail": {
+        "top": 112,
+        "bottom": 744,
+        "left": 1062,
+        "right": 1326,
+        "width": 264,
+        "height": 632
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the curriculum key is whole, not clipped",
+      "detail": {
+        "top": 647,
+        "bottom": 738,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 91
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): «التمهيد وتمثيل شعاع القوة» is inside the rail and the window",
+      "detail": {
+        "top": 372,
+        "bottom": 424,
+        "left": 1066,
+        "right": 1322,
+        "width": 256,
+        "height": 52
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the active step keeps clear of the window edge",
+      "detail": {
+        "step": {
+          "top": 372,
+          "bottom": 424,
+          "left": 1066,
+          "right": 1322,
+          "width": 256,
+          "height": 52
+        },
+        "viewportHeight": 768
+      }
+    },
+    {
+      "ok": true,
+      "message": "1366×768 @scrollY 0 (step 1): the list still shows at least four steps",
+      "detail": 289
     },
     {
       "ok": true,

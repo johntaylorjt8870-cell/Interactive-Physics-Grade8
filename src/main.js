@@ -6,7 +6,7 @@ import {
   mountProblemWorkbenches,
 } from './lesson-1-practice.js';
 import { mountSimulationExperiences } from './simulations.js';
-import { revealScrollTop } from './sidebar-reveal.js';
+import { railMaxHeight, revealScrollTop } from './sidebar-reveal.js';
 
 let currentIndex = 0;
 
@@ -24,6 +24,36 @@ const nextButton = document.querySelector('#next-button');
 const prevLabel = document.querySelector('#previous-label');
 const nextLabel = document.querySelector('#next-label');
 const controlCenter = document.querySelector('#control-center');
+const sidebar = document.querySelector('.lesson-sidebar');
+
+/**
+ * On short laptop screens the rail must also fit *before* it sticks.
+ *
+ * The CSS bounds it to `100vh - 48px`, which is the space a pinned rail has. At
+ * the top of the page the rail starts lower (76px top bar + 36px layout margin),
+ * so at 1366×768 it still ended 64px below the fold and the curriculum key was
+ * cut. Publishing the measured space as `--rail-max-height` lets the stylesheet
+ * use the real value at any scroll position while keeping the static value as a
+ * no-JS fallback. `railMaxHeight()` holds the arithmetic and is unit tested.
+ */
+const shortRailQuery = window.matchMedia?.('(min-width: 821px) and (max-height: 800px)');
+
+function fitRailToViewport() {
+  if (!sidebar) return;
+  if (!shortRailQuery?.matches) {
+    if (sidebar.style.getPropertyValue('--rail-max-height')) sidebar.style.removeProperty('--rail-max-height');
+    return;
+  }
+  const height = railMaxHeight({
+    viewportHeight: window.innerHeight,
+    railTop: sidebar.getBoundingClientRect().top,
+  });
+  if (height === null) {
+    sidebar.style.removeProperty('--rail-max-height');
+    return;
+  }
+  sidebar.style.setProperty('--rail-max-height', `${height}px`);
+}
 
 /**
  * Keeps the active step visible inside the rail's own scrollport.
@@ -51,13 +81,31 @@ function revealActiveStep() {
 }
 
 let revealFrame = 0;
-window.addEventListener('resize', () => {
+/**
+ * Re-measures the rail once per frame.
+ *
+ * `reveal` is off for window scrolling on purpose: the rail only ever grows as
+ * the page scrolls down (632px at the top, 720px once pinned), so a fit cannot
+ * hide the active step — and re-centring the list on every scroll would fight a
+ * reader who is browsing the other steps by hand. The list is re-centred when
+ * the layout actually changes (resize, breakpoint crossing, step change).
+ */
+function refreshRail({ reveal = true } = {}) {
   if (revealFrame) return;
   revealFrame = window.requestAnimationFrame(() => {
     revealFrame = 0;
-    revealActiveStep();
+    // fit first: the step list's scrollport depends on the rail's height
+    fitRailToViewport();
+    if (reveal) revealActiveStep();
   });
-});
+}
+
+const refitOnly = () => refreshRail({ reveal: false });
+const refitAndReveal = () => refreshRail({ reveal: true });
+window.addEventListener('resize', refitAndReveal);
+window.addEventListener('scroll', refitOnly, { passive: true });
+shortRailQuery?.addEventListener?.('change', refitAndReveal);
+fitRailToViewport();
 
 function renderNav() {
   if (!pageNav) return;
@@ -142,6 +190,8 @@ function renderCurrentPage() {
   if (controlCenter) controlCenter.textContent = `المرحلة ${stageNum} من ${total} · ص ${page.page}`;
 
   renderNav();
+  // the rail's height decides the step list's scrollport; fit it before revealing
+  fitRailToViewport();
   revealActiveStep();
 }
 

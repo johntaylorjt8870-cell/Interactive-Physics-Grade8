@@ -53,3 +53,34 @@ export function revealScrollTop({
   const centred = current + (itemTop - listTop) - (boxHeight - stepHeight) / 2;
   return Math.min(Math.max(Math.round(centred), 0), maxScroll);
 }
+
+/**
+ * Height the step rail may occupy at its current place in the window.
+ *
+ * The rail is sticky at `top: 24px`, but at the top of the page it starts lower
+ * (the 76px top bar plus the layout's 36px margin), so a rail bounded only by
+ * `100vh - 48px` still ends 64px past the fold on a 1366×768 screen and the
+ * curriculum key is cut. This measures the space the rail actually has from
+ * where it currently sits, so the same rule works at every scroll position:
+ * 632px before it sticks, 720px once it is pinned, with a 24px bottom gutter.
+ *
+ * The rail never sits above its sticky offset, so a smaller measured top (the
+ * container pushing the rail up at the very end of a page) falls back to it.
+ *
+ * Like `revealScrollTop`, this is DOM-free: the caller passes the two numbers
+ * it reads from the layout.
+ *
+ * @param {object} metrics
+ * @param {number} metrics.viewportHeight current window inner height
+ * @param {number} metrics.railTop        rail's current top, viewport px
+ * @param {number} [metrics.gutter]       space kept below the rail (default 24)
+ * @param {number} [metrics.stickyTop]    the rail's sticky offset (default 24)
+ * @returns {number} available height in px, a finite non-negative integer, or
+ *   `null` when the metrics are unusable and the caller should keep its fallback
+ */
+export function railMaxHeight({ viewportHeight, railTop, gutter = 24, stickyTop = 24 } = {}) {
+  if (![viewportHeight, railTop, gutter, stickyTop].every((value) => typeof value === 'number' && Number.isFinite(value))) return null;
+  if (viewportHeight <= 0 || gutter < 0) return null;
+  const top = Math.min(Math.max(railTop, stickyTop), viewportHeight);
+  return Math.max(0, Math.round(viewportHeight - top - gutter));
+}

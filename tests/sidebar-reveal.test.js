@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { revealScrollTop } from '../src/sidebar-reveal.js';
+import { railMaxHeight, revealScrollTop } from '../src/sidebar-reveal.js';
 
 /**
  * The rail on a 1366×768 laptop: the list scrollport is 377px tall for 444px of
@@ -107,4 +107,45 @@ test('the module is pure: repeated calls with the same metrics return the same v
   // and it does not mutate the caller's object
   const frozen = Object.freeze({ ...metrics });
   assert.doesNotThrow(() => revealScrollTop(frozen));
+});
+
+/* The rail is sticky at `top: 24px`, but at the top of the page it starts under
+   the 76px top bar plus the layout's 36px margin. Bounding it by `100vh - 48px`
+   alone still left it 64px past the fold on a 1366×768 screen, cutting the
+   curriculum key. `railMaxHeight()` measures the space from where the rail
+   actually sits, so the key is whole at every scroll position. */
+test('the rail gets the space it has from where it currently sits', () => {
+  // 1366×768: 112px down at the top of the page, 24px once pinned
+  assert.equal(railMaxHeight({ viewportHeight: 768, railTop: 112 }), 632);
+  assert.equal(railMaxHeight({ viewportHeight: 768, railTop: 24 }), 720);
+  // 1440×900 and 1920×1080 keep the same rule; the media query decides whether it applies
+  assert.equal(railMaxHeight({ viewportHeight: 900, railTop: 112 }), 764);
+  assert.equal(railMaxHeight({ viewportHeight: 1080, railTop: 24 }), 1032);
+});
+
+test('the rail height keeps the 24px gutter and never goes negative', () => {
+  assert.equal(railMaxHeight({ viewportHeight: 768, railTop: 112, gutter: 32 }), 624);
+  assert.equal(railMaxHeight({ viewportHeight: 768, railTop: 112, stickyTop: 8 }), 632);
+  assert.equal(railMaxHeight({ viewportHeight: 300, railTop: 290 }), 0);
+  assert.equal(railMaxHeight({ viewportHeight: 300, railTop: 900 }), 0);
+  // a rail pushed up by its container falls back to the sticky offset
+  assert.equal(railMaxHeight({ viewportHeight: 768, railTop: -40 }), 720);
+});
+
+test('unusable rail metrics are reported as null so the caller keeps its fallback', () => {
+  for (const metrics of [undefined, {}, { viewportHeight: 768 }, { viewportHeight: '768', railTop: 112 },
+    { viewportHeight: Number.NaN, railTop: 112 }, { viewportHeight: 0, railTop: 112 },
+    { viewportHeight: 768, railTop: 112, gutter: -1 }]) {
+    assert.equal(railMaxHeight(metrics), null, `expected null for ${JSON.stringify(metrics)}`);
+  }
+});
+
+test('the measured height always leaves the rail inside the window', () => {
+  // every scroll position of an 8-step lesson: the rail's top walks 112 → 24
+  for (let railTop = 112; railTop >= 24; railTop -= 1) {
+    const height = railMaxHeight({ viewportHeight: 768, railTop });
+    assert.ok(railTop + height <= 768 - 24, `rail overflows at top ${railTop}: ${railTop + height}`);
+    // and it still leaves room for more than four 54px steps
+    assert.ok(height - 165 - 72 - 91 >= 216, `only ${height}px for the rail at top ${railTop}`);
+  }
 });

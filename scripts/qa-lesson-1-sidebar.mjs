@@ -113,6 +113,22 @@ async function openSidebarPage() {
   return page;
 }
 
+async function settleScroll(page) {
+  await page.evaluate(async () => {
+    const started = Date.now();
+    let last = -1;
+    let stable = 0;
+    while (Date.now() - started < 2500) {
+      await new Promise((done) => requestAnimationFrame(done));
+      const y = Math.round(window.scrollY);
+      stable = y === last ? stable + 1 : 0;
+      last = y;
+      if (stable >= 3) return;
+    }
+  });
+  await page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))));
+}
+
 async function stepForward(page, expected) {
   await page.evaluate(() => document.querySelector('#next-button').click());
   await page.waitForFunction((page_number) => document.querySelector('#page-number')?.textContent.trim() === String(page_number), {}, expected);
@@ -161,6 +177,38 @@ async function stepForward(page, expected) {
     check(activeStepReachable(state), `${width}×${height}: step ${step} «${state.activeLabel}» is reachable without scrolling the window`, state.active);
   }
 
+  /* --- scrollY = 0: the rail has not stuck yet, and must still be whole ---
+     At the top of the page the rail starts 112px down (76px top bar + 36px
+     layout margin). Bounding it by `100vh - 48px` left it 64px past the fold and
+     cut the curriculum key, so the top of the page is checked on its own, both
+     for step 1 and after moving to step 8. */
+  const topOfPage = async (label) => {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await settleScroll(page);
+    const state = await readSidebar(page);
+    check(state.scrollY === 0, `${width}×${height} @scrollY 0 (${label}): the window is at the top`, state.scrollY);
+    check(state.sidebar.bottom <= height - 8, `${width}×${height} @scrollY 0 (${label}): the rail ends above the fold`, state.sidebar);
+    check(Boolean(state.footer) && state.footer.top >= 0 && state.footer.bottom <= height - 8,
+      `${width}×${height} @scrollY 0 (${label}): the curriculum key is whole, not clipped`, state.footer);
+    check(activeStepReachable(state), `${width}×${height} @scrollY 0 (${label}): «${state.activeLabel}» is inside the rail and the window`, state.active);
+    // the active step must not touch the window edge: the key sits below the list
+    check(Boolean(state.active) && height - state.active.bottom >= 24,
+      `${width}×${height} @scrollY 0 (${label}): the active step keeps clear of the window edge`, { step: state.active, viewportHeight: height });
+    check(state.nav.clientHeight >= 4 * 54,
+      `${width}×${height} @scrollY 0 (${label}): the list still shows at least four steps`, state.nav?.clientHeight);
+    return state;
+  };
+
+  // the eighth step is active here (the loop above ended on it) and is the one
+  // that used to hang over the bottom edge of the screen
+  const topLastStep = await topOfPage('step 8');
+  await page.evaluate(() => {
+    const rect = document.querySelector('.lesson-sidebar').getBoundingClientRect();
+    window.__clip = { x: Math.max(0, Math.round(rect.left) - 10), y: 0, width: Math.min(Math.round(rect.width) + 20, window.innerWidth - Math.round(rect.left)), height: window.innerHeight };
+  });
+  await page.screenshot({ path: resolve(outDir, `${phase}-${width}x${height}-top-step8.png`) });
+  await page.screenshot({ path: resolve(outDir, `${phase}-${width}x${height}-top-step8-sidebar.png`), clip: await page.evaluate(() => window.__clip) });
+
   // the rail is pinned under the top bar once the reader scrolls
   await page.evaluate((top) => window.scrollTo(0, top), STUCK_SCROLL);
   await page.evaluate(() => new Promise((done) => requestAnimationFrame(done)));
@@ -178,6 +226,12 @@ async function stepForward(page, expected) {
     `${width}×${height}: every rail button keeps its 256px width`, stuck.buttonWidths);
   check(stuck.clippedLabels.length === 0,
     `${width}×${height}: no rail label is clipped`, stuck.clippedLabels);
+
+  // and the same at the top of the page with the first step active
+  await page.evaluate(() => document.querySelectorAll('.page-nav-button')[0].click());
+  await page.waitForFunction(() => document.querySelector('#page-number')?.textContent.trim() === '55');
+  const topFirstStep = await topOfPage('step 1');
+  await page.evaluate((top) => window.scrollTo(0, top), STUCK_SCROLL);
 
   // the window still returns to the top of the step (the lesson's own behaviour)
   await page.evaluate(() => document.querySelectorAll('.page-nav-button')[0].click());
@@ -205,7 +259,7 @@ async function stepForward(page, expected) {
   });
   await page.screenshot({ path: resolve(outDir, `${phase}-${width}x${height}-sidebar.png`), clip: sidebarClip });
 
-  measurements[`${width}x${height}`] = { steps, stuck };
+  measurements[`${width}x${height}`] = { steps, stuck, top: { firstStep: topFirstStep, lastStep: topLastStep } };
   await page.close();
 }
 

@@ -6,6 +6,7 @@ import { readFile } from 'node:fs/promises';
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 
 const LAPTOP_MEDIA = '@media (min-width: 821px)';
+const SHORT_MEDIA = '@media (min-width: 821px) and (max-height: 800px)';
 
 /** Locates the first CSS block introduced by `header`, braces included. */
 function findBlock(css, header) {
@@ -63,9 +64,10 @@ test('the step rail is height-bound from 821px up and only the step list scrolls
   assert.match(laptop, /\.l1-page \.lesson-sidebar > \.sidebar-intro,\s*\.l1-page \.lesson-sidebar > \.progress-wrap,\s*\.l1-page \.lesson-sidebar > \.sidebar-footer \{\s*flex: 0 0 auto;/);
 });
 
-test('the rail height rule does not leak outside the laptop media query', async () => {
+test('the rail height rule does not leak outside the laptop media queries', async () => {
   const css = await read('../src/lesson-1.css');
-  const outside = outsideBlock(css, LAPTOP_MEDIA);
+  // both rail rules are media-scoped: the pinned one and the short-window one
+  const outside = outsideBlock(outsideBlock(css, LAPTOP_MEDIA), SHORT_MEDIA);
 
   assert.ok(!/\.lesson-sidebar\s*\{[^}]*max-height/.test(outside), 'the rail must stay unbounded below 821px, where it is in the flow');
   assert.ok(!/\.page-nav\s*\{[^}]*overflow-y:\s*(auto|scroll|hidden)/.test(outside), 'the step list must not scroll below 821px');
@@ -108,13 +110,13 @@ test('the keyboard focus ring is drawn inside the scrollport', async () => {
 test('main.js reveals the active step in the rail without moving the window', async () => {
   const main = await read('../src/main.js');
 
-  assert.match(main, /import \{ revealScrollTop \} from '\.\/sidebar-reveal\.js';/);
+  assert.match(main, /import \{ railMaxHeight, revealScrollTop \} from '\.\/sidebar-reveal\.js';/);
   assert.match(main, /function revealActiveStep\(\)/);
   assert.match(main, /pageNav\.scrollTop = revealScrollTop\(\{/);
   // called on every render, right after the rail is rebuilt
-  assert.match(main, /  renderNav\(\);\s*\n  revealActiveStep\(\);/);
+  assert.match(main, /  renderNav\(\);[\s\S]{0,160}?  revealActiveStep\(\);/);
   // and when the window is resized past the laptop breakpoint
-  assert.match(main, /window\.addEventListener\('resize', \(\) => \{/);
+  assert.match(main, /window\.addEventListener\('resize', refitAndReveal\);/);
 
   // the window is still scrolled only by the existing step change, never by the reveal
   assert.doesNotMatch(main, /scrollIntoView/);
@@ -123,7 +125,7 @@ test('main.js reveals the active step in the rail without moving the window', as
 test('the reveal calculation lives in a DOM-free module', async () => {
   const module = await read('../src/sidebar-reveal.js');
   assert.match(module, /export function revealScrollTop\(/);
-  assert.doesNotMatch(module, /document\.|window\.|querySelector/, 'the reveal maths must be testable without a browser');
+  assert.doesNotMatch(module, /document\.|querySelector|addEventListener|requestAnimationFrame|window\.\w+\s*[=(]/, 'the reveal maths must be testable without a browser');
 });
 
 test('Lesson 1 keeps its own assets and the shared lesson styles are untouched by it', async () => {
@@ -134,4 +136,39 @@ test('Lesson 1 keeps its own assets and the shared lesson styles are untouched b
   assert.match(page, /<link rel="stylesheet" href="\.\/src\/styles\.css" \/>\s*<link rel="stylesheet" href="\.\/src\/lesson-1\.css" \/>/);
   assert.match(page, /<script type="module" src="\.\/src\/main\.js"><\/script>/);
   assert.equal((page.match(/<link rel="stylesheet"/g) ?? []).length, 4, 'lesson-1.html links fonts, KaTeX, styles and its own stylesheet');
+});
+
+/* At scrollY = 0 the rail has not stuck yet: it starts under the top bar and the
+   layout's top margin, 112px down. Bounding it only by `100vh - 48px` left it
+   64px past the fold and cut the curriculum key, so a short-window rule takes
+   the measured space instead. Screens ≥801px tall must not enter that rule. */
+test('short windows bound the rail by the space it actually has', async () => {
+  const css = await read('../src/lesson-1.css');
+  const short = mediaBlock(css, SHORT_MEDIA);
+
+  assert.match(short, /max-height: var\(--rail-max-height, calc\(100vh - 136px\)\);/);
+  assert.match(short, /max-height: var\(--rail-max-height, calc\(100dvh - 136px\)\);/);
+  // 136px = 112px top of the rail + 24px gutter: the key is whole at scrollY 0
+  assert.equal(136 - 112, 24);
+
+  // 1440×900 and taller are outside the rule, so their pixels cannot change
+  assert.ok(900 > 800 && 1080 > 800, 'the tall laptop viewports stay out of the short rule');
+});
+
+test('main.js publishes the measured rail height and refreshes it on scroll', async () => {
+  const main = await read('../src/main.js');
+
+  assert.match(main, /import \{ railMaxHeight, revealScrollTop \} from '\.\/sidebar-reveal\.js';/);
+  assert.match(main, /window\.matchMedia\?\.\('\(min-width: 821px\) and \(max-height: 800px\)'\);/);
+  assert.match(main, /sidebar\.style\.setProperty\('--rail-max-height', `\$\{height\}px`\);/);
+  // the property is dropped again outside the short rule, so tall screens fall back to CSS
+  assert.match(main, /sidebar\.style\.removeProperty\('--rail-max-height'\)/);
+  // measured again while scrolling (the rail's top changes until it sticks) and on resize
+  assert.match(main, /window\.addEventListener\('scroll', refitOnly, \{ passive: true \}\);/);
+  assert.match(main, /window\.addEventListener\('resize', refitAndReveal\);/);
+  assert.match(main, /shortRailQuery\?\.addEventListener\?\.\('change', refitAndReveal\);/);
+  // the fit runs before the reveal, because the height decides the scrollport
+  assert.match(main, /  renderNav\(\);\s*\n  \/\/ the rail's height decides the step list's scrollport; fit it before revealing\s*\n  fitRailToViewport\(\);\s*\n  revealActiveStep\(\);/);
+  // and the window is still never scrolled from this module
+  assert.doesNotMatch(main, /scrollIntoView/);
 });
