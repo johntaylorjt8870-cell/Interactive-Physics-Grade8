@@ -718,28 +718,102 @@
 .u2l1a-choice-list { display: grid; gap: 8px; margin-top: 8px; }
 .u2l1a-choice-list-inline { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 
+/* The answer options carry the choice in this lab, so their edge is a token of
+   its own rather than the whisper-thin `--line-soft` (1.27:1 against the
+   option's own fill on this dark field). `--choice-line` measures 3.4:1 there,
+   which clears WCAG 1.4.11 non-text contrast before anything is hovered, and
+   the three interactive states stay separate steps that also change shape and
+   weight, not only hue:
+     normal   → 1px --choice-line edge, muted label
+     hover    → spark edge and a lighter fill
+     selected → spark edge + 1px inset ring (2px visual weight) + cyan fill,
+                plus a filled radio dot, so colour is never the only cue
+     focus    → 3px spark outline around the whole option, drawn by the label
+                from the input's :focus-visible
+   Everything here is scoped to `.u2l1a-choice`, so no other page or panel of
+   the site is affected. */
 .u2l1a-choice {
+  --choice-line: rgba(146, 178, 224, 0.55);
+  --choice-fill: rgba(10, 17, 32, 0.72);
+  --choice-fill-hover: rgba(22, 36, 60, 0.85);
+  --choice-fill-selected: rgba(88, 205, 242, 0.22);
+  --choice-radio-line: rgba(146, 178, 224, 0.62);
+
   display: flex;
   align-items: flex-start;
   gap: 10px;
   padding: 10px 14px;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--line-soft);
-  background: rgba(10, 17, 32, 0.6);
+  border: 1px solid var(--choice-line);
+  background: var(--choice-fill);
   color: var(--muted);
   cursor: pointer;
-  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
-.u2l1a-choice:hover { border-color: var(--spark); color: var(--ink); }
+.u2l1a-choice:hover {
+  border-color: rgba(88, 205, 242, 0.8);
+  background: var(--choice-fill-hover);
+  color: var(--ink);
+}
 
 .u2l1a-choice:has(input:checked) {
   border-color: var(--spark);
-  background: var(--spark-soft);
+  background: var(--choice-fill-selected);
   color: var(--ink-strong);
+  box-shadow: inset 0 0 0 1px rgba(88, 205, 242, 0.55);
 }
 
+/* Keyboard focus belongs to the whole option: the native ring around an 18px
+   circle is too small to read on this field, so the label draws it instead and
+   the input's own outline is dropped to avoid a double ring. */
+.u2l1a-page .u2l1a-choice:has(input:focus-visible) {
+  outline: 3px solid var(--spark);
+  outline-offset: 2px;
+}
+
+.u2l1a-page .u2l1a-choice input:focus-visible { outline: none; }
+
 .u2l1a-choice input { margin-top: 0.42em; accent-color: var(--spark); inline-size: 18px; block-size: 18px; flex: 0 0 auto; }
+
+/* An unstyled radio renders as a light-mode widget: a white disc that reads as
+   "already chosen" on the dark field. It is drawn here from the page palette
+   instead: a ring measured at 8.6:1 on the option fill, and a cyan dot that
+   only the checked option shows. */
+.u2l1a-choice input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  place-content: center;
+  border: 2px solid var(--choice-radio-line);
+  border-radius: 50%;
+  background: rgba(6, 11, 22, 0.75);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.u2l1a-choice input[type="radio"]::before {
+  content: '';
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  background: var(--spark);
+  transform: scale(0);
+  transition: transform 140ms ease;
+}
+
+.u2l1a-choice:hover input[type="radio"] { border-color: var(--spark); }
+.u2l1a-choice input[type="radio"]:checked { border-color: var(--spark); }
+.u2l1a-choice input[type="radio"]:checked::before { transform: scale(1); }
+
+/* In a forced-colours theme the palette is replaced, so hand the radio back to
+   the engine rather than losing its dot. */
+@media (forced-colors: active) {
+  .u2l1a-choice input[type="radio"] { appearance: auto; -webkit-appearance: auto; }
+  .u2l1a-choice input[type="radio"]::before { content: none; }
+  .u2l1a-choice:has(input:checked) { box-shadow: none; outline: 2px solid Highlight; outline-offset: -2px; }
+}
+
 .u2l1a-choice span { font-size: 0.93rem; line-height: 1.7; }
 
 .u2l1a-choice-pill { border-radius: 999px; align-items: center; }
