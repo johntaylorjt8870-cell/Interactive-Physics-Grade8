@@ -1,6 +1,51 @@
 import { DIAGRAMS } from './diagrams.js';
 import { SELF_CHECK_ANSWERS } from './self-check-answers.js';
 import { PRACTICE_DECK, PRACTICE_LEVELS, TEXTBOOK_PROBLEMS } from './lesson-1-practice-data.js';
+import {
+  clearChoice,
+  clearChoices,
+  loadChoices,
+  readChoice,
+  revealCorrection,
+  revealHint,
+  saveChoices,
+  selectChoice,
+  summarizeChoices,
+  verifyChoice,
+} from './lesson-1-choice-state.js';
+
+/* --- 0. Shared answer state for every «اختر الإجابة» widget in Lesson 1 ----
+   `src/main.js` re-renders the whole stage on each step change, so a radio that
+   is only checked in the DOM loses the choice, the verdict and the hint level as
+   soon as the student navigates away and back. The state lives in
+   `lesson-1-choice-state.js` (pure reducers) plus a module-level map here, and is
+   mirrored to localStorage best-effort so a reload does not wipe the attempt
+   either. Nothing is graded before the student presses a check button. */
+
+let choiceState = loadChoices();
+
+function setChoiceState(next) {
+  choiceState = next;
+  saveChoices(choiceState);
+}
+
+const selfCheckStateKey = (key) => `selfcheck:${key}`;
+const deckStateKey = (id) => `deck:${id}`;
+const inquiryStateKey = (name) => `inquiry:${name}`;
+
+const ARABIC_DIGITS = Object.freeze(['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']);
+
+/** Arabic-Indic digits, to match the printed lesson counters. */
+function arabicDigits(value) {
+  return String(value).replace(/[0-9]/g, (digit) => ARABIC_DIGITS[Number(digit)]);
+}
+
+/** The answer key already opens some option feedback with the verdict; the
+    wrapper adds it too, so strip the duplicate instead of repeating it. */
+function withoutLead(text, lead) {
+  const value = String(text ?? '').trim();
+  return value.startsWith(lead) ? value.slice(lead.length).trim() : value;
+}
 
 /* --- 1. Enhanced Textbook Self-Check (pp. 61-62) ------------------------- */
 
@@ -13,9 +58,16 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
   if (!optionsGrid) return;
 
   const RadioName = `self-check-${key}`;
-  for (const option of optionsGrid.querySelectorAll('.option-card[data-option]')) {
+  const stateKey = selfCheckStateKey(key);
+  const optionCards = [...optionsGrid.querySelectorAll('.option-card[data-option]')];
+  const codes = optionCards.map((card) => card.dataset.option);
+
+  for (const option of optionCards) {
     const code = option.dataset.option;
     if (option.querySelector('input[type="radio"]')) continue;
+    // The card becomes one big hit area: the whole label fills it, so a tap near
+    // the border is a real tap instead of a dead zone (worst on phones).
+    option.classList.add('is-choice');
     const radio = document.createElement('input');
     radio.type = 'radio';
     radio.className = 'self-check-radio';
@@ -30,12 +82,21 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
     option.append(label);
   }
 
+  // name the radio group after the printed question so screen readers read it
+  const promptEl = questionEl.querySelector(':scope > p');
+  if (promptEl) {
+    if (!promptEl.id) promptEl.id = `self-check-prompt-${key}`;
+    optionsGrid.setAttribute('role', 'radiogroup');
+    optionsGrid.setAttribute('aria-labelledby', promptEl.id);
+  }
+
   const tools = document.createElement('div');
   tools.className = 'l1-question-tools';
   tools.innerHTML = `
     <div class="l1-question-tool-buttons">
       <button type="button" class="l1-btn l1-btn-hint" data-q-hint>تلميح تدريجي (١/٢)</button>
       <button type="button" class="l1-btn l1-btn-check" data-q-check>تحقّق من هذه الفقرة</button>
+      <button type="button" class="l1-btn l1-btn-ghost" data-q-reveal hidden>اعرض التصحيح</button>
       <button type="button" class="l1-btn l1-btn-ghost" data-q-retry hidden>أعد المحاولة</button>
     </div>
     <div class="l1-hint-box" data-q-hint-box hidden></div>
@@ -43,24 +104,108 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
   `;
   questionEl.append(tools);
 
-  let hintStage = 0;
   const hintBtn = tools.querySelector('[data-q-hint]');
   const checkBtn = tools.querySelector('[data-q-check]');
+  const revealBtn = tools.querySelector('[data-q-reveal]');
   const retryBtn = tools.querySelector('[data-q-retry]');
   const hintBox = tools.querySelector('[data-q-hint-box]');
   const feedbackBox = tools.querySelector('[data-q-feedback]');
+  const totalHints = answer.hints?.length ?? 0;
 
-  const clearVisuals = () => {
-    for (const card of questionEl.querySelectorAll('.option-card[data-option]')) {
+  const entryOf = () => readChoice(choiceState, stateKey, codes, totalHints);
+
+  const syncSelection = (entry) => {
+    for (const card of optionCards) {
+      card.classList.toggle('is-selected', card.dataset.option === entry.choice);
+    }
+    for (const radio of questionEl.querySelectorAll('input[type="radio"]')) {
+      radio.checked = radio.value === entry.choice;
+    }
+  };
+
+  const clearVerdict = () => {
+    for (const card of optionCards) {
       card.classList.remove('is-selected-correct', 'is-selected-wrong', 'is-correct-answer');
     }
     feedbackBox.hidden = true;
     feedbackBox.innerHTML = '';
     feedbackBox.className = 'l1-item-feedback';
+    retryBtn.hidden = true;
+    revealBtn.hidden = true;
+  };
+
+  /* The worked correction — the key option plus the book explanation. It is
+     rendered from the stored `revealed` flag, so it is still there after the
+     student walks to another stage and comes back. */
+  const appendCorrection = () => {
+    questionEl.querySelector(`.option-card[data-option="${answer.correct}"]`)?.classList.add('is-correct-answer');
+    revealBtn.hidden = true;
+    if (feedbackBox.querySelector('[data-q-correction]')) return;
+    const note = document.createElement('div');
+    note.className = 'l1-correction-note l1-explanation-sub';
+    note.dataset.qCorrection = 'true';
+    note.innerHTML = `<strong>التصحيح:</strong> الإجابة الصحيحة هي
+      <span class="l1-correction-answer" dir="auto">${answer.answerLabel}</span>.
+      <div class="l1-explanation-sub">${answer.explanation}</div>`;
+    feedbackBox.append(note);
+  };
+
+  const renderVerdict = (entry) => {
+    clearVerdict();
+    if (!entry.checked || entry.choice === null) return;
+    const chosenCard = questionEl.querySelector(`.option-card[data-option="${entry.choice}"]`);
+    const specific = answer.optionFeedback?.[entry.choice] ?? '';
+    retryBtn.hidden = false;
+    feedbackBox.hidden = false;
+    if (entry.isCorrect) {
+      chosenCard?.classList.add('is-selected-correct');
+      feedbackBox.className = 'l1-item-feedback is-correct';
+      feedbackBox.innerHTML = `<strong>إجابة صحيحة!</strong> ${withoutLead(specific, 'إجابة صحيحة!')}
+        <div class="l1-explanation-sub">${answer.explanation}</div>`;
+      return;
+    }
+    chosenCard?.classList.add('is-selected-wrong');
+    feedbackBox.className = 'l1-item-feedback is-wrong';
+    feedbackBox.innerHTML = `<strong>ليس هذا الاختيار الدقيق:</strong> ${specific}
+      <div class="l1-explanation-sub">صحّح اختيارك أو اطلب تلميحاً وأعد المحاولة، أو اعرض التصحيح الكامل بعد أن جرّبت.</div>`;
+    if (entry.revealed) appendCorrection();
+    else revealBtn.hidden = false;
+  };
+
+  /* Revealed on demand — only after a committed wrong attempt, so the key is
+     never on screen before the student has answered. */
+  const renderCorrection = () => {
+    setChoiceState(revealCorrection(choiceState, stateKey, codes, totalHints));
+    renderVerdict(entryOf());
+  };
+
+  /* The batch score is derived state, so it must follow every single-question
+     verdict too, not only the «تحقّق من جميع الاختيارات» press. */
+  const refreshSectionSummary = () => {
+    questionEl.closest('[data-self-check]')?._renderSelfCheckSummary?.();
+  };
+
+  const renderHints = (level) => {
+    if (!totalHints || level <= 0) {
+      hintBox.hidden = true;
+      hintBox.innerHTML = '';
+      hintBtn.disabled = false;
+      hintBtn.textContent = `تلميح تدريجي (١/${arabicDigits(totalHints || 2)})`;
+      return;
+    }
+    hintBox.hidden = false;
+    hintBox.innerHTML = answer.hints
+      .slice(0, level)
+      .map((text, idx) => `<p><strong>تلميح ${idx + 1}:</strong> ${text}</p>`)
+      .join('');
+    hintBtn.disabled = level >= totalHints;
+    hintBtn.textContent = level >= totalHints
+      ? `عُرض التلميحان (${arabicDigits(totalHints)}/${arabicDigits(totalHints)})`
+      : `اطلب التلميح التالي (${arabicDigits(level + 1)}/${arabicDigits(totalHints)})`;
   };
 
   const evaluateSingle = () => {
-    clearVisuals();
+    clearVerdict();
     const checked = questionEl.querySelector('input[type="radio"]:checked');
     if (!checked) {
       feedbackBox.hidden = false;
@@ -68,55 +213,61 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
       feedbackBox.textContent = 'اختر أحد البدائل أولاً قبل التحقق.';
       return null;
     }
-    const chosen = checked.value;
-    const isCorrect = chosen === answer.correct;
-    const chosenCard = questionEl.querySelector(`.option-card[data-option="${chosen}"]`);
-    chosenCard?.classList.add(isCorrect ? 'is-selected-correct' : 'is-selected-wrong');
-    retryBtn.hidden = false;
-
-    const specific = answer.optionFeedback?.[chosen] ?? '';
-    feedbackBox.hidden = false;
-    feedbackBox.className = `l1-item-feedback ${isCorrect ? 'is-correct' : 'is-wrong'}`;
-    feedbackBox.innerHTML = isCorrect
-      ? `<strong>إجابة صحيحة!</strong> ${specific}<div class="l1-explanation-sub">${answer.explanation}</div>`
-      : `<strong>ليس هذا الاختيار الدقيق:</strong> ${specific}<div class="l1-explanation-sub">استعن بالتلميح إن احتجت ثم اختر بديلاً آخر واضغط «تحقّق».</div>`;
-    return isCorrect;
+    // verifyChoice keeps an already-open correction when the same pick is
+    // checked again; only a genuinely different pick starts a new verdict.
+    setChoiceState(verifyChoice(choiceState, stateKey, checked.value, answer.correct, codes, totalHints));
+    const entry = entryOf();
+    syncSelection(entry);
+    renderVerdict(entry);
+    refreshSectionSummary();
+    return entry.isCorrect;
   };
 
   questionEl._evaluateSingle = evaluateSingle;
   questionEl._resetSingle = () => {
-    for (const r of questionEl.querySelectorAll('input[type="radio"]')) r.checked = false;
-    clearVisuals();
-    hintStage = 0;
-    hintBox.hidden = true;
-    hintBox.innerHTML = '';
-    hintBtn.disabled = false;
-    hintBtn.textContent = 'تلميح تدريجي (١/٢)';
-    retryBtn.hidden = true;
+    setChoiceState(clearChoice(choiceState, stateKey));
+    for (const radio of questionEl.querySelectorAll('input[type="radio"]')) radio.checked = false;
+    for (const card of optionCards) card.classList.remove('is-selected');
+    clearVerdict();
+    renderHints(0);
+    refreshSectionSummary();
   };
 
-  for (const r of questionEl.querySelectorAll('input[type="radio"]')) {
-    r.addEventListener('change', clearVisuals);
+  for (const radio of questionEl.querySelectorAll('input[type="radio"]')) {
+    radio.addEventListener('change', () => {
+      setChoiceState(selectChoice(choiceState, stateKey, radio.value, codes, totalHints));
+      const entry = entryOf();
+      syncSelection(entry);
+      renderVerdict(entry);
+      refreshSectionSummary();
+    });
+  }
+
+  /* The label fills the card, but a click on the card's border ring or on the
+     wrapper itself would otherwise be a dead tap. Forward it to the radio. */
+  for (const card of optionCards) {
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('.self-check-option-label, input')) return;
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio && !radio.checked) radio.click();
+    });
   }
 
   hintBtn.addEventListener('click', () => {
-    if (!answer.hints?.length) return;
-    hintStage = Math.min(answer.hints.length, hintStage + 1);
-    hintBox.hidden = false;
-    hintBox.innerHTML = answer.hints
-      .slice(0, hintStage)
-      .map((text, idx) => `<p><strong>تلميح ${idx + 1}:</strong> ${text}</p>`)
-      .join('');
-    if (hintStage >= answer.hints.length) {
-      hintBtn.disabled = true;
-      hintBtn.textContent = 'عُرض التلميحان (٢/٢)';
-    } else {
-      hintBtn.textContent = `اطلب التلميح الثاني (${hintStage + 1}/٢)`;
-    }
+    if (!totalHints) return;
+    setChoiceState(revealHint(choiceState, stateKey, totalHints, codes));
+    renderHints(entryOf().hintLevel);
   });
 
   checkBtn.addEventListener('click', evaluateSingle);
+  revealBtn.addEventListener('click', renderCorrection);
   retryBtn.addEventListener('click', () => questionEl._resetSingle());
+
+  // Restore whatever this question already holds after a re-render or a reload.
+  const restored = entryOf();
+  syncSelection(restored);
+  renderHints(restored.hintLevel);
+  renderVerdict(restored);
 }
 
 export function enhanceLesson1SelfCheck(container) {
@@ -142,8 +293,8 @@ export function enhanceLesson1SelfCheck(container) {
     const actions = document.createElement('div');
     actions.className = 'self-check-actions';
     actions.innerHTML = `
-      <button class="self-check-submit" type="submit">تحقّق من جميع اختيارات هذه الدفعة</button>
-      <button class="self-check-reset" type="reset">إعادة ضبط الدفعة</button>
+      <button class="self-check-submit l1-btn l1-btn-check" type="submit">تحقّق من جميع اختيارات هذه الدفعة</button>
+      <button class="self-check-reset l1-btn l1-btn-ghost" type="reset">إعادة ضبط الدفعة</button>
     `;
 
     const summary = document.createElement('div');
@@ -155,28 +306,41 @@ export function enhanceLesson1SelfCheck(container) {
     form.append(actions, summary);
     section.append(form);
 
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      let correctCount = 0;
-      let answeredCount = 0;
-      for (const q of questions) {
-        const checked = q.querySelector('input[type="radio"]:checked');
-        if (checked) {
-          answeredCount += 1;
-          if (q._evaluateSingle?.()) correctCount += 1;
-        } else {
-          q._evaluateSingle?.();
-        }
+    const sectionKeys = questions.map((q) => selfCheckStateKey(q.dataset.selfCheckKey));
+    const sectionSpec = Object.fromEntries(questions.map((q) => [
+      selfCheckStateKey(q.dataset.selfCheckKey),
+      { choices: [...q.querySelectorAll('.option-card[data-option]')].map((card) => card.dataset.option) },
+    ]));
+
+    /* The batch result is derived from the stored answers, not from a DOM
+       snapshot, so it is still accurate after the stage is re-rendered. */
+    const renderSummary = () => {
+      const batch = summarizeChoices(choiceState, sectionKeys, sectionSpec);
+      if (!batch.checked) {
+        summary.hidden = true;
+        summary.innerHTML = '';
+        return;
       }
       summary.hidden = false;
-      summary.innerHTML = `<p class="self-check-score"><strong>ملخص الدفعة:</strong> أجبتَ عن <bdi dir="ltr">${answeredCount}</bdi> من <bdi dir="ltr">${questions.length}</bdi>، وعدد الإجابات الصحيحة الآن <bdi dir="ltr">${correctCount} / ${questions.length}</bdi>. راجع التغذية الراجعة التفصيلية أسفل كل فقرة.</p>`;
+      summary.innerHTML = `<p class="self-check-score"><strong>ملخص الدفعة:</strong> أجبتَ عن <bdi dir="ltr">${batch.answered}</bdi> من <bdi dir="ltr">${batch.total}</bdi>، وعدد الإجابات الصحيحة الآن <bdi dir="ltr">${batch.correct} / ${batch.total}</bdi>. راجع التغذية الراجعة التفصيلية أسفل كل فقرة.</p>`;
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      // Each question grades its own stored pick; an unanswered one only warns.
+      for (const q of questions) q._evaluateSingle?.();
+      renderSummary();
     });
 
     form.addEventListener('reset', () => {
+      setChoiceState(clearChoices(choiceState, sectionKeys));
       for (const q of questions) q._resetSingle?.();
       summary.hidden = true;
       summary.innerHTML = '';
     });
+
+    section._renderSelfCheckSummary = renderSummary;
+    renderSummary();
   }
 }
 
@@ -378,14 +542,21 @@ export function mountPracticeDeck(container) {
   if (!deck || deck.dataset.mounted === 'true') return;
   deck.dataset.mounted = 'true';
 
-  const mastered = new Set();
   const progressText = deck.querySelector('[data-deck-progress-text]');
   const progressPercent = deck.querySelector('[data-deck-percent]');
   const progressFill = deck.querySelector('[data-deck-progress-fill]');
 
+  const deckSpec = Object.fromEntries(PRACTICE_DECK.map((item) => [
+    deckStateKey(item.id),
+    { choices: item.options.map((option) => option.id) },
+  ]));
+  const deckKeys = Object.keys(deckSpec);
+
+  /* Mastery is derived from the stored answers, so the meter is still correct
+     after the stage is re-rendered or the page is reloaded. */
   const updateProgress = () => {
-    const count = mastered.size;
     const total = PRACTICE_DECK.length;
+    const count = summarizeChoices(choiceState, deckKeys, deckSpec).correct;
     const pct = Math.round((count / total) * 100);
     if (progressText) progressText.textContent = `التقدم في التدريب: أتقنتَ ${count} من ${total} تمارين`;
     if (progressPercent) progressPercent.innerHTML = `<bdi dir="ltr">${pct}%</bdi>`;
@@ -410,75 +581,115 @@ export function mountPracticeDeck(container) {
   for (const card of deck.querySelectorAll('[data-practice-item]')) {
     const item = byId.get(card.dataset.practiceItem);
     if (!item) continue;
-    let hintStage = 0;
+    const stateKey = deckStateKey(item.id);
+    const codes = item.options.map((option) => option.id);
+    const optionLabels = [...card.querySelectorAll('[data-practice-opt]')];
     const checkBtn = card.querySelector('[data-deck-check]');
     const hintBtn = card.querySelector('[data-deck-hint]');
     const retryBtn = card.querySelector('[data-deck-retry]');
     const hintBox = card.querySelector('[data-deck-hint-box]');
     const feedback = card.querySelector('[data-deck-feedback]');
+    const totalHints = item.hints.length;
 
-    const clearStates = () => {
-      for (const opt of card.querySelectorAll('[data-practice-opt]')) {
-        opt.classList.remove('is-correct', 'is-wrong');
+    const entryOf = () => readChoice(choiceState, stateKey, codes, totalHints);
+
+    const syncSelection = (entry) => {
+      for (const label of optionLabels) {
+        label.classList.toggle('is-selected', label.dataset.practiceOpt === entry.choice);
       }
+      for (const radio of card.querySelectorAll('input[type="radio"]')) {
+        radio.checked = radio.value === entry.choice;
+      }
+    };
+
+    const renderHints = (level) => {
+      if (level <= 0) {
+        hintBox.hidden = true;
+        hintBox.innerHTML = '';
+        hintBtn.disabled = false;
+        hintBtn.textContent = `تلميح تدريجي (١/${arabicDigits(totalHints)})`;
+        return;
+      }
+      hintBox.hidden = false;
+      hintBox.innerHTML = item.hints
+        .slice(0, level)
+        .map((h, i) => `<p><strong>تلميح ${i + 1}:</strong> ${h}</p>`)
+        .join('');
+      hintBtn.disabled = level >= totalHints;
+      hintBtn.textContent = level >= totalHints
+        ? `عُرض التلميحان (${arabicDigits(totalHints)}/${arabicDigits(totalHints)})`
+        : `اطلب التلميح التالي (${arabicDigits(level + 1)}/${arabicDigits(totalHints)})`;
+    };
+
+    const renderVerdict = (entry) => {
+      for (const opt of optionLabels) opt.classList.remove('is-correct', 'is-wrong');
+      card.classList.remove('is-mastered');
       feedback.hidden = true;
       feedback.innerHTML = '';
+      feedback.className = 'l1-item-feedback';
+      retryBtn.hidden = true;
+      if (!entry.checked || entry.choice === null) return;
+      const chosen = item.options.find((option) => option.id === entry.choice);
+      card.querySelector(`[data-practice-opt="${entry.choice}"]`)?.classList.add(entry.isCorrect ? 'is-correct' : 'is-wrong');
+      retryBtn.hidden = false;
+      feedback.hidden = false;
+      feedback.className = `l1-item-feedback ${entry.isCorrect ? 'is-correct' : 'is-wrong'}`;
+      feedback.innerHTML = entry.isCorrect
+        ? `<strong>إجابة صحيحة!</strong> ${chosen?.feedback ?? ''}`
+        : `<strong>تأمّل سبب الخطأ:</strong> ${chosen?.feedback ?? ''}
+           <div class="l1-explanation-sub">يمكنك تعديل اختيارك والمحاولة مرة أخرى.</div>`;
+      if (entry.isCorrect) card.classList.add('is-mastered');
     };
 
     for (const radio of card.querySelectorAll('input[type="radio"]')) {
-      radio.addEventListener('change', clearStates);
+      radio.addEventListener('change', () => {
+        setChoiceState(selectChoice(choiceState, stateKey, radio.value, codes, totalHints));
+        const entry = entryOf();
+        syncSelection(entry);
+        renderVerdict(entry);
+        updateProgress();
+      });
     }
 
     checkBtn.addEventListener('click', () => {
-      clearStates();
       const checked = card.querySelector('input[type="radio"]:checked');
       if (!checked) {
+        for (const opt of optionLabels) opt.classList.remove('is-correct', 'is-wrong');
         feedback.hidden = false;
         feedback.className = 'l1-item-feedback is-warning';
         feedback.textContent = 'اختر إجابة أولاً قبل التحقق.';
         return;
       }
-      const optObj = item.options.find((o) => o.id === checked.value);
-      const isCorrect = checked.value === item.correct;
-      const optLabel = card.querySelector(`[data-practice-opt="${checked.value}"]`);
-      optLabel?.classList.add(isCorrect ? 'is-correct' : 'is-wrong');
-      retryBtn.hidden = false;
-      feedback.hidden = false;
-      feedback.className = `l1-item-feedback ${isCorrect ? 'is-correct' : 'is-wrong'}`;
-      feedback.innerHTML = `<strong>${isCorrect ? 'إجابة صحيحة!' : 'تأمّل سبب الخطأ:'}</strong> ${optObj?.feedback ?? ''}`;
-      if (isCorrect) {
-        mastered.add(item.id);
-        card.classList.add('is-mastered');
-        updateProgress();
-      }
+      setChoiceState(verifyChoice(choiceState, stateKey, checked.value, item.correct, codes, totalHints));
+      const entry = entryOf();
+      syncSelection(entry);
+      renderVerdict(entry);
+      updateProgress();
     });
 
     hintBtn.addEventListener('click', () => {
-      hintStage = Math.min(item.hints.length, hintStage + 1);
-      hintBox.hidden = false;
-      hintBox.innerHTML = item.hints
-        .slice(0, hintStage)
-        .map((h, i) => `<p><strong>تلميح ${i + 1}:</strong> ${h}</p>`)
-        .join('');
-      if (hintStage >= item.hints.length) {
-        hintBtn.disabled = true;
-        hintBtn.textContent = 'عُرض التلميحان (٢/٢)';
-      } else {
-        hintBtn.textContent = 'اطلب التلميح الثاني (٢/٢)';
-      }
+      setChoiceState(revealHint(choiceState, stateKey, totalHints, codes));
+      renderHints(entryOf().hintLevel);
     });
 
     retryBtn.addEventListener('click', () => {
-      for (const r of card.querySelectorAll('input[type="radio"]')) r.checked = false;
-      clearStates();
-      hintStage = 0;
-      hintBox.hidden = true;
-      hintBox.innerHTML = '';
-      hintBtn.disabled = false;
-      hintBtn.textContent = 'تلميح تدريجي (١/٢)';
-      retryBtn.hidden = true;
+      setChoiceState(clearChoice(choiceState, stateKey));
+      for (const radio of card.querySelectorAll('input[type="radio"]')) radio.checked = false;
+      const entry = entryOf();
+      syncSelection(entry);
+      renderVerdict(entry);
+      renderHints(0);
+      updateProgress();
     });
+
+    // Restore the stored pick, verdict and hint level after a re-render.
+    const restored = entryOf();
+    syncSelection(restored);
+    renderHints(restored.hintLevel);
+    renderVerdict(restored);
   }
+
+  updateProgress();
 }
 
 /* --- 4. Interactive Inquiry Cards & Stepper Worked Examples -------------- */
@@ -492,6 +703,35 @@ export function mountInquiryCards(container) {
     const feedback = card.querySelector('[data-inquiry-feedback]');
     if (!checkBtn || !feedback) continue;
 
+    const radios = [...card.querySelectorAll('input[type="radio"]')];
+    if (!radios.length) continue;
+    const codes = radios.map((radio) => radio.value);
+    const stateKey = inquiryStateKey(radios[0].name || card.dataset.inquiryCard || 'card');
+    const optionLabels = [...card.querySelectorAll('.inquiry-opt')];
+
+    const entryOf = () => readChoice(choiceState, stateKey, codes);
+
+    const renderVerdict = (entry) => {
+      for (const label of optionLabels) {
+        label.classList.remove('is-selected', 'is-checked-correct', 'is-checked-wrong');
+        const radio = label.querySelector('input[type="radio"]');
+        const isSelected = Boolean(radio) && radio.value === entry.choice;
+        label.classList.toggle('is-selected', isSelected);
+        if (isSelected) radio.checked = true;
+        if (isSelected && entry.checked) {
+          label.classList.add(entry.isCorrect ? 'is-checked-correct' : 'is-checked-wrong');
+        }
+      }
+      feedback.hidden = true;
+      feedback.innerHTML = '';
+      feedback.className = 'l1-item-feedback';
+      if (!entry.checked || entry.choice === null) return;
+      const chosen = radios.find((radio) => radio.value === entry.choice);
+      feedback.hidden = false;
+      feedback.className = `l1-item-feedback ${entry.isCorrect ? 'is-correct' : 'is-wrong'}`;
+      feedback.innerHTML = `<strong>${entry.isCorrect ? 'استنتاج سليم!' : 'فكّر مرة أخرى:'}</strong> ${chosen?.dataset.feedback ?? ''}`;
+    };
+
     checkBtn.addEventListener('click', () => {
       const checked = card.querySelector('input[type="radio"]:checked');
       if (!checked) {
@@ -500,12 +740,19 @@ export function mountInquiryCards(container) {
         feedback.textContent = 'اختر إجابتك أولاً ثم اضغط «تحقّق وافتح التفسير».';
         return;
       }
-      const isCorrect = checked.value === correct;
-      const msg = checked.dataset.feedback || '';
-      feedback.hidden = false;
-      feedback.className = `l1-item-feedback ${isCorrect ? 'is-correct' : 'is-wrong'}`;
-      feedback.innerHTML = `<strong>${isCorrect ? 'استنتاج سليم!' : 'فكّر مرة أخرى:'}</strong> ${msg}`;
+      setChoiceState(verifyChoice(choiceState, stateKey, checked.value, correct, codes));
+      renderVerdict(entryOf());
     });
+
+    // Changing the pick must not leave the previous verdict on screen.
+    for (const radio of radios) {
+      radio.addEventListener('change', () => {
+        setChoiceState(selectChoice(choiceState, stateKey, radio.value, codes));
+        renderVerdict(entryOf());
+      });
+    }
+
+    renderVerdict(entryOf());
   }
 
   for (const stepper of container.querySelectorAll('[data-worked-stepper]')) {
