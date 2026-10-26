@@ -159,8 +159,8 @@ const vectorAnatomySvg = svgFrame(
     ${pointMarker({ x: 454.605, y: 153.798 }, 'M', { x: 12, y: -10 })}
 
     <g class="diagram-callout">
-      <line x1="170" y1="258" x2="170" y2="314" stroke="#64748b" stroke-dasharray="4 3" />
-      <text x="170" y="335" class="diagram-caption-ar" text-anchor="middle">١. نقطة التأثير O (بداية السهم)</text>
+      <line x1="170" y1="258" x2="170" y2="338" stroke="#64748b" stroke-dasharray="4 3" />
+      <text x="170" y="360" class="diagram-caption-ar" text-anchor="middle">١. نقطة التأثير O (بداية السهم)</text>
     </g>
     <g class="diagram-callout">
       <line x1="336" y1="215" x2="352" y2="294" stroke="#64748b" stroke-dasharray="4 3" />
@@ -446,8 +446,6 @@ const inclinedPlaneSvg = svgFrame(
     ${forceSymbol(weightTip.x - 32, weightTip.y + 8, { letter: 'w', color: 'coral' })}
     ${pointMarker(blockOrigin, 'O', { x: 14, y: -8 })}
 
-    <text x="500" y="294" class="diagram-caption-ar" text-anchor="middle">الشكل الناتج من تحليل الثقل:</text>
-    <text x="500" y="316" class="diagram-caption-ar" text-anchor="middle" font-weight="700">مستطيل قطره w وضلعاه F₁ وF₂</text>
   `,
 );
 
@@ -533,7 +531,7 @@ const problem1ScaleSvg = svgFrame(
     ${vectorLine('problem1-scale', p1Origin, p1FTip, 'coral')}
     ${vectorLine('problem1-scale', p1Origin, p1FPrimeTip, 'plum')}
 
-    <text x="${fmt(p1Origin.x + 52)}" y="${fmt(p1Origin.y + 22)}" class="diagram-measure" direction="ltr" text-anchor="middle">3 cm (9 N)</text>
+    <text x="${fmt(p1Origin.x + 52)}" y="${fmt(p1Origin.y + 50)}" class="diagram-measure" direction="ltr" text-anchor="middle">3 cm (9 N)</text>
     <text x="${fmt(p1Origin.x - 48)}" y="${fmt(p1Origin.y - 64)}" class="diagram-measure" direction="ltr" text-anchor="middle">4 cm (12 N)</text>
     <text x="${fmt(p1Origin.x + 82)}" y="${fmt(p1Origin.y - 78)}" class="diagram-measure" direction="ltr" text-anchor="middle">5 cm (15 N)</text>
     <text x="${fmt(p1Origin.x - 90)}" y="${fmt(p1Origin.y + 78)}" class="diagram-measure" direction="ltr" text-anchor="middle">5 cm (15 N)</text>
@@ -577,7 +575,7 @@ const problem2ScaleSvg = svgFrame(
     ${vectorLine('problem2-scale', bagOrigin, bagF2Tip, 'blue')}
     ${vectorLine('problem2-scale', bagOrigin, bagFTip, 'coral')}
 
-    <text x="${fmt(bagOrigin.x - 78)}" y="${fmt(bagOrigin.y - 26)}" class="diagram-measure" direction="ltr" text-anchor="middle">3 cm (30 N)</text>
+    <text x="${fmt(bagOrigin.x - 90)}" y="${fmt(bagOrigin.y - 7)}" class="diagram-measure" direction="ltr" text-anchor="middle">3 cm (30 N)</text>
     <text x="${fmt(bagOrigin.x + 88)}" y="${fmt(bagOrigin.y - 58)}" class="diagram-measure" direction="ltr" text-anchor="middle">4 cm (40 N)</text>
     <text x="${fmt(bagOrigin.x + 42)}" y="${fmt(bagOrigin.y - 118)}" class="diagram-measure" direction="ltr" text-anchor="middle">5 cm (50 N)</text>
 

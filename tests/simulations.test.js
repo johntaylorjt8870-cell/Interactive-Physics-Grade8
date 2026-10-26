@@ -192,21 +192,46 @@ function fakeForceResolutionRoot() {
     ['#sim-d-x-value', new TestNode()],
     ['#sim-d-y-value', new TestNode()],
     ['#sim-d-status', new TestNode()],
+    ['#sim-d-incline-angle-value', new TestNode()],
+    ['#sim-d-incline-weight-value', new TestNode()],
+    ['#sim-d-inc-f1', new TestNode()],
+    ['#sim-d-inc-f2', new TestNode()],
+    ['#sim-d-inc-r', new TestNode()],
+    ['#sim-d-incline-status', new TestNode()],
+    ['#sim-inc-base', new TestNode()],
+    ['#sim-inc-ramp', new TestNode()],
+    ['#sim-inc-block', new TestNode()],
+    ['#sim-inc-rect', new TestNode()],
+    ['#sim-inc-proj1', new TestNode()],
+    ['#sim-inc-proj2', new TestNode()],
+    ['#sim-inc-vec-r', new TestNode()],
+    ['#sim-inc-vec-f1', new TestNode()],
+    ['#sim-inc-vec-f2', new TestNode()],
+    ['#sim-inc-vec-w', new TestNode()],
+    ['#sim-inc-origin', new TestNode()],
+    ['#sim-inc-lbl-r', new TestNode()],
+    ['#sim-inc-lbl-f1', new TestNode()],
+    ['#sim-inc-lbl-f2', new TestNode()],
+    ['#sim-inc-lbl-w', new TestNode()],
     ['[data-role="why-changed"]', new TestNode()],
     ['[data-role="diagram-description"]', new TestNode()],
   ]);
   const force = new TestNode({ value: '8', step: '0.5' });
   const angle = new TestNode({ value: '35', step: '1' });
+  const inclineAngle = new TestNode({ value: '25', step: '1' });
+  const inclineWeight = new TestNode({ value: '8', step: '1' });
   nodes.set('[data-input="force"]', force);
   nodes.set('[data-input="angle"]', angle);
+  nodes.set('[data-incline-input="angle"]', inclineAngle);
+  nodes.set('[data-incline-input="weight"]', inclineWeight);
   const root = {
     dataset: { simulation: 'force-resolution' },
     querySelector: (selector) => nodes.get(selector),
-    querySelectorAll: (selector) => (selector === 'input[type="range"]' ? [force, angle] : []),
+    querySelectorAll: (selector) => (selector === 'input[type="range"]' ? [force, angle, inclineAngle, inclineWeight] : []),
   };
   return {
     container: { querySelectorAll: () => [root] },
-    inputs: { force, angle },
+    inputs: { force, angle, inclineAngle, inclineWeight },
     nodes,
   };
 }
@@ -281,7 +306,7 @@ test('Lab 4 orthogonal resolution and smooth inclined-plane model conserve origi
   const axes = resolveForceIntoPerpendicularComponents(8, 35);
   near(Math.hypot(axes.componentX, axes.componentY), 8);
 
-  for (const angle of [0, 25, 45, 60]) {
+  for (const angle of Array.from({ length: 61 }, (_, value) => value)) {
     const inc = inclinedPlaneResolution(10, angle);
     near(inc.reconstructedWeight, 10);
     near(inc.normalReactionR, inc.normalF2);
@@ -289,6 +314,24 @@ test('Lab 4 orthogonal resolution and smooth inclined-plane model conserve origi
     const v1 = vectorBetween(geo.origin, geo.f1Tip);
     const v2 = vectorBetween(geo.origin, geo.f2Tip);
     near(dot(v1, v2), 0, 1e-7);
+
+    const maximum = inclinedPlaneDiagramGeometry(inclinedPlaneResolution(12, angle));
+    const points = {
+      baseStart: maximum.baseStart,
+      baseEnd: maximum.baseEnd,
+      rampEnd: maximum.rampEnd,
+      origin: maximum.origin,
+      weightTip: maximum.weightTip,
+      f1Tip: maximum.f1Tip,
+      f2Tip: maximum.f2Tip,
+      normalTip: maximum.normalTip,
+    };
+    for (const [name, point] of Object.entries(points)) {
+      assert.ok(point.x >= 0 && point.x <= 640, `${name}.x stays inside the incline diagram`);
+      assert.ok(point.y >= 0 && point.y <= 390, `${name}.y stays inside the incline diagram`);
+    }
+    assert.ok(maximum.weightTip.y + 10 <= 390, 'the maximum weight arrowhead stays inside the SVG');
+    assert.ok(maximum.rampEnd.y >= 10, 'the top of the ramp remains visible at the maximum angle');
   }
   assert.throws(() => inclinedPlaneResolution(8, 70), RangeError);
 });
@@ -330,6 +373,35 @@ test('mounted simulation experiences update live SVG vectors, causal explanation
   const expectedD = forceResolutionDiagramGeometry(resolveForceIntoPerpendicularComponents(9.5, 60));
   near(Number(simD.nodes.get('#sim-d-force-vector').getAttribute('x2')), expectedD.resultantTip.x);
   assert.equal(simD.inputs.angle.getAttribute('aria-valuetext'), '60 درجة');
+
+  simD.inputs.inclineAngle.value = '0';
+  simD.inputs.inclineWeight.value = '12';
+  simD.inputs.inclineWeight.emit('input');
+  const flatGeo = inclinedPlaneDiagramGeometry(inclinedPlaneResolution(12, 0));
+  near(Number(simD.nodes.get('#sim-inc-base').getAttribute('y1')), flatGeo.baseStart.y);
+  near(Number(simD.nodes.get('#sim-inc-base').getAttribute('y2')), flatGeo.baseEnd.y);
+  near(Number(simD.nodes.get('#sim-inc-ramp').getAttribute('x2')), flatGeo.rampEnd.x);
+  near(Number(simD.nodes.get('#sim-inc-vec-w').getAttribute('y2')), flatGeo.weightTip.y);
+  near(Number(simD.nodes.get('#sim-inc-lbl-w').getAttribute('y')), flatGeo.weightTip.y - 4);
+  near(Number(simD.nodes.get('#sim-inc-lbl-f2').getAttribute('y')), flatGeo.f2Tip.y - 6);
+  assert.equal(simD.nodes.get('#sim-inc-vec-f1').getAttribute('visibility'), 'hidden');
+  assert.ok(Number(simD.nodes.get('#sim-inc-lbl-w').getAttribute('y')) < 390, 'weight label stays in-bounds at 0° and maximum weight');
+
+  simD.inputs.inclineAngle.value = '60';
+  simD.inputs.inclineAngle.emit('input');
+  const steepGeo = inclinedPlaneDiagramGeometry(inclinedPlaneResolution(12, 60));
+  near(Number(simD.nodes.get('#sim-inc-ramp').getAttribute('y2')), steepGeo.rampEnd.y);
+  near(Number(simD.nodes.get('#sim-inc-vec-f1').getAttribute('x2')), steepGeo.f1Tip.x);
+  near(Number(simD.nodes.get('#sim-inc-vec-r').getAttribute('y2')), steepGeo.normalTip.y);
+  near(Number(simD.nodes.get('#sim-inc-lbl-f1').getAttribute('x')), steepGeo.f1Tip.x - 42);
+  assert.equal(simD.nodes.get('#sim-inc-vec-f1').getAttribute('visibility'), 'visible');
+  assert.ok(steepGeo.rampEnd.y >= 10, 'inclined-plane edge stays visible at 60°');
+
+  simD.inputs.inclineAngle.value = '8';
+  simD.inputs.inclineAngle.emit('input');
+  const nearFlatGeo = inclinedPlaneDiagramGeometry(inclinedPlaneResolution(12, 8));
+  near(Number(simD.nodes.get('#sim-inc-lbl-w').getAttribute('x')), nearFlatGeo.weightTip.x - 46);
+  near(Number(simD.nodes.get('#sim-inc-lbl-w').getAttribute('y')), nearFlatGeo.weightTip.y - 4);
 });
 
 test('every simulation markup includes reset controls, live status, causal explanation slot, and a Predict-Observe-Explain card', () => {
