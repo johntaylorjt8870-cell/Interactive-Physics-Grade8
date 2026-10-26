@@ -1,5 +1,6 @@
 import { DIAGRAMS } from './diagrams.js';
 import {
+  alignedSteps,
   formula,
   V_F1,
   V_F2,
@@ -52,14 +53,18 @@ const pythagoreanFormula = formula(
   'F=\\sqrt{F_{1}^{2}+F_{2}^{2}}',
   'F = square root of F one squared plus F two squared',
 );
-const p59Substitution = formula(
-  'F=\\sqrt{(60)^{2}+(80)^{2}}=\\sqrt{3600+6400}=\\sqrt{10000}=100\\,\\mathrm{N}',
-  'F equals square root of 60 squared plus 80 squared equals 100 newtons',
-);
-const inversePythagoras = formula(
-  'F_{1}=\\sqrt{F^{2}-F_{2}^{2}}\\quad,\\quad F_{2}=\\sqrt{F^{2}-F_{1}^{2}}',
-  'F1 equals square root of F squared minus F2 squared, and F2 equals square root of F squared minus F1 squared',
-);
+/* The book prints this chain on one line; inside a 265px worked-step card that
+   line needs ~513px, so it is typeset as an aligned derivation on the relation
+   signs instead of being cut off (same numbers, same order, same units). */
+const p59Substitution = alignedSteps([
+  'F&=\\sqrt{(60)^{2}+(80)^{2}}',
+  '&=\\sqrt{3600+6400}',
+  '&=\\sqrt{10000}=100\\,\\mathrm{N}',
+], 'F equals square root of 60 squared plus 80 squared equals square root of 3600 plus 6400 equals 100 newtons');
+const inversePythagoras = alignedSteps([
+  'F_{1}&=\\sqrt{F^{2}-F_{2}^{2}}',
+  'F_{2}&=\\sqrt{F^{2}-F_{1}^{2}}',
+], 'F1 equals square root of F squared minus F2 squared, and F2 equals square root of F squared minus F1 squared');
 const vectorSumIdentity = formula(
   '\\vec{\\mathrm{OM}}=\\vec{\\mathrm{OX}}+\\vec{\\mathrm{OY}}',
   'vector OM equals vector OX plus vector OY',
