@@ -367,13 +367,13 @@ export function inclinedPlaneDiagramGeometry(model, scale = 14) {
   const rad = angle * Math.PI / 180;
   const cosA = Math.cos(rad);
   const sinA = Math.sin(rad);
-  const baseStart = { x: 76, y: 334 };
-  const rampLength = 460;
+  const baseStart = { x: 120, y: 220 };
+  const rampLength = 240;
   const rampEnd = {
     x: baseStart.x + rampLength * cosA,
     y: baseStart.y - rampLength * sinA,
   };
-  const along = 250;
+  const along = 120;
   const surfacePoint = {
     x: baseStart.x + along * cosA,
     y: baseStart.y - along * sinA,
@@ -382,8 +382,8 @@ export function inclinedPlaneDiagramGeometry(model, scale = 14) {
   const intoNormal = { x: sinA, y: cosA };
   const downRamp = { x: -cosA, y: sinA };
   const origin = {
-    x: surfacePoint.x + outNormal.x * 18,
-    y: surfacePoint.y + outNormal.y * 18,
+    x: surfacePoint.x + outNormal.x * 12,
+    y: surfacePoint.y + outNormal.y * 12,
   };
   const wPx = model.weightNewtons * scale;
   const f1Px = model.parallelF1 * scale;

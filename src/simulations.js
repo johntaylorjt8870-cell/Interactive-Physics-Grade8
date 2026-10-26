@@ -630,19 +630,19 @@ function forceResolutionMarkup() {
               <title id="sim-d-inc-title">نموذج نشاط المستوى المائل الأملس وتحليل قوة الثقل</title>
               <desc id="sim-d-inc-desc">جسم صلب على مستو مائل أملس؛ يتحلل ثقله w إلى مركبة موازية F1 ومركبة عمودية F2 تشكلان مستطيلاً، بينما يعامد رد الفعل R السطح.</desc>
               ${markerDefs('sim-inc')}
-              <line id="sim-inc-base" class="simulation-axis" x1="76" y1="334" x2="566" y2="334" />
-              <line id="sim-inc-ramp" class="simulation-resolution-axis" x1="76" y1="334" x2="500" y2="180" />
+              <line id="sim-inc-base" class="simulation-axis" x1="120" y1="220" x2="566" y2="220" />
+              <line id="sim-inc-ramp" class="simulation-resolution-axis" x1="120" y1="220" x2="337.514" y2="118.572" />
               <polygon id="sim-inc-rect" class="simulation-triangle-fill simulation-resolution-fill" points="0,0" />
               <line id="sim-inc-proj1" class="simulation-construction" x1="0" y1="0" x2="0" y2="0" />
               <line id="sim-inc-proj2" class="simulation-construction" x1="0" y1="0" x2="0" y2="0" />
-              <g id="sim-inc-block">
-                <rect x="-28" y="-15" width="56" height="30" rx="5" fill="#fde68a" stroke="#b45309" stroke-width="2" />
+              <g id="sim-inc-block" transform="translate(223.686 158.410) rotate(-25)">
+                <rect x="-18" y="-10" width="36" height="20" rx="4" fill="#fde68a" stroke="#b45309" stroke-width="2" />
               </g>
               <line id="sim-inc-vec-r" class="simulation-vector" stroke="#334155" marker-end="url(#sim-inc-slate-arrow)" x1="0" y1="0" x2="0" y2="0" />
               <line id="sim-inc-vec-f1" class="simulation-vector sim-vector-f1" marker-end="url(#sim-inc-f1-arrow)" x1="0" y1="0" x2="0" y2="0" />
               <line id="sim-inc-vec-f2" class="simulation-vector sim-vector-f2" marker-end="url(#sim-inc-f2-arrow)" x1="0" y1="0" x2="0" y2="0" />
               <line id="sim-inc-vec-w" class="simulation-vector sim-vector-result" marker-end="url(#sim-inc-result-arrow)" x1="0" y1="0" x2="0" y2="0" />
-              <circle id="sim-inc-origin" class="simulation-point" r="4.5" cx="300" cy="200" />
+              <circle id="sim-inc-origin" class="simulation-point" r="4.5" cx="223.686" cy="158.410" />
               <text id="sim-inc-lbl-r" class="simulation-force-label" direction="ltr">R</text>
               <text id="sim-inc-lbl-f1" class="simulation-force-label" direction="ltr">F₁</text>
               <text id="sim-inc-lbl-f2" class="simulation-force-label" direction="ltr">F₂</text>
@@ -987,6 +987,7 @@ function updateForceResolutionSimulation(root) {
 
     const incModel = inclinedPlaneResolution(incWeight, incAngle);
     const incGeo = inclinedPlaneDiagramGeometry(incModel);
+    setLine(root.querySelector('#sim-inc-base'), incGeo.baseStart, incGeo.baseEnd, true);
     setLine(root.querySelector('#sim-inc-ramp'), incGeo.baseStart, incGeo.rampEnd, true);
     const blockGroup = root.querySelector('#sim-inc-block');
     if (blockGroup) {
@@ -1006,10 +1007,12 @@ function updateForceResolutionSimulation(root) {
     setLine(root.querySelector('#sim-inc-vec-f2'), incGeo.origin, incGeo.f2Tip, showF2);
     setLine(root.querySelector('#sim-inc-vec-w'), incGeo.origin, incGeo.weightTip, true);
     setPoint(root.querySelector('#sim-inc-origin'), incGeo.origin, true);
-    setLabel(root.querySelector('#sim-inc-lbl-r'), incGeo.normalTip, showF2, 10, 4);
-    setLabel(root.querySelector('#sim-inc-lbl-f1'), incGeo.f1Tip, showF1, -28, 6);
-    setLabel(root.querySelector('#sim-inc-lbl-f2'), incGeo.f2Tip, showF2, 10, 8);
-    setLabel(root.querySelector('#sim-inc-lbl-w'), incGeo.weightTip, true, -24, 14);
+    setLabel(root.querySelector('#sim-inc-lbl-r'), incGeo.normalTip, showF2, -30, 4);
+    setLabel(root.querySelector('#sim-inc-lbl-f1'), incGeo.f1Tip, showF1, -42, 6);
+    setLabel(root.querySelector('#sim-inc-lbl-f2'), incGeo.f2Tip, showF2, 26, -6);
+    const weightLabelNearBottom = incGeo.weightTip.y >= 330;
+    setLabel(root.querySelector('#sim-inc-lbl-w'), incGeo.weightTip, true,
+      weightLabelNearBottom ? -46 : 24, weightLabelNearBottom ? -4 : 14);
 
     root.querySelector('#sim-d-inc-f1').innerHTML = `<bdi dir="ltr">${formatNumber(incModel.parallelF1)} N</bdi>`;
     root.querySelector('#sim-d-inc-f2').innerHTML = `<bdi dir="ltr">${formatNumber(incModel.normalF2)} N</bdi>`;

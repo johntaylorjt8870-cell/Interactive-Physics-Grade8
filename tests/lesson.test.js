@@ -28,6 +28,12 @@ const dot = (first, second) => first.x * second.x + first.y * second.y;
 const nearly = (actual, expected, tolerance = 0.02) => {
   assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} differs from ${expected}`);
 };
+const svgTextPosition = (svg, text) => {
+  const match = [...svg.matchAll(/<text x="([^"]+)" y="([^"]+)"[^>]*>([^<]*)<[/]text>/g)]
+    .find(([, , , content]) => content === text);
+  assert.ok(match, `Missing SVG text: ${text}`);
+  return { x: Number(match[1]), y: Number(match[2]) };
+};
 
 test('Phase 1 source audit document and all 8 textbook source images are archived in docs/sources/unit1-lesson1', async () => {
   assert.equal(existsSync(new URL('../docs/unit-1-lesson-1-source-audit.md', import.meta.url)), true);
@@ -71,6 +77,12 @@ test('Stage 1 (p55) teaches force as a 4-element vector with scale reading and c
   }
   const html = page(55).blocks.join('\n');
   assert.equal((html.match(/data-inquiry-card/g) ?? []).length, 3, '3 interactive parachutist inquiry questions');
+
+  const anatomySvg = DIAGRAMS['force-vector-anatomy'].svg;
+  const pointCallout = svgTextPosition(anatomySvg, '١. نقطة التأثير O (بداية السهم)');
+  const strengthCallout = svgTextPosition(anatomySvg, '٢. الشدة: طول السهم × المقياس (20 N)');
+  assert.ok(pointCallout.y - strengthCallout.y >= 40, 'p55 vector callouts have clear vertical separation');
+  assert.ok(pointCallout.y < 370, 'p55 point-of-impact callout remains within the SVG viewBox');
 });
 
 test('Stage 2 (p56) includes audited magnetic spring-board tools, definition, and concurrent vs non-concurrent comparison', () => {
@@ -78,6 +90,9 @@ test('Stage 2 (p56) includes audited magnetic spring-board tools, definition, an
   assert.ok(content.includes('لوح الربائع المغناطيسي'));
   assert.ok(content.includes('القوى المتلاقية: هي القوى التي تتلاقى حواملها في نقطة واحدة.'));
   assert.doesNotMatch(content, /غير محسوم|موضع الصورة الأصلية/);
+  const comparisonCaption = page(56).blocks.join('\n');
+  assert.match(comparisonCaption, /ثلاث حوامل تتقاطع اثنين اثنين في ثلاث نقاط مختلفة/);
+  assert.doesNotMatch(comparisonCaption, /على اليسار قوى متوازية منفصلة الحوامل/);
 
   const { geometry, svg } = DIAGRAMS.concurrent;
   const { origin, forceTips, carriers } = geometry;
@@ -153,6 +168,29 @@ test('all 13 custom SVG diagrams exist with titles, accessible roles, and valid 
   nearly(vF.x + vFPrime.x, 0);
   nearly(vF.y + vFPrime.y, 0);
   nearly(dot(vectorBetween(p1.origin, p1.f1Tip), vectorBetween(p1.origin, p1.f2Tip)), 0);
+  const p1F1Measurement = svgTextPosition(DIAGRAMS['problem1-scale'].svg, '3 cm (9 N)');
+  assert.equal(p1F1Measurement.x, p1.origin.x + 52);
+  assert.equal(p1F1Measurement.y, p1.origin.y + 50, 'p62 problem 1 measurement clears O and its label');
+
+  const p2 = DIAGRAMS['problem2-scale'].geometry;
+  const p2F1 = vectorBetween(p2.origin, p2.f1Tip);
+  const p2F2 = vectorBetween(p2.origin, p2.f2Tip);
+  const p2Result = vectorBetween(p2.origin, p2.fTip);
+  nearly(dot(p2F1, p2F2), 0, 0.01);
+  nearly(vectorLength(p2F1), 132);
+  nearly(vectorLength(p2F2), 176);
+  nearly(vectorLength(p2Result), 220);
+  nearly(p2F1.x + p2F2.x, p2Result.x);
+  nearly(p2F1.y + p2F2.y, p2Result.y);
+  const p2F1Measurement = svgTextPosition(DIAGRAMS['problem2-scale'].svg, '3 cm (30 N)');
+  assert.equal(p2F1Measurement.x, p2.origin.x - 90);
+  assert.equal(p2F1Measurement.y, p2.origin.y - 7, 'p62 problem 2 measurement is offset clear of the F1 shaft');
+
+  const inclineText = [...DIAGRAMS['inclined-plane'].svg.matchAll(/<text[^>]*>([^<]*)<[/]text>/g)]
+    .map(([, text]) => text)
+    .join(' ');
+  assert.doesNotMatch(inclineText, /الشكل الناتج من تحليل الثقل|مستطيل قطره w وضلعاه/);
+  assert.match(DIAGRAMS['inclined-plane'].description, /مستطيل قطره w/);
 });
 
 test('KaTeX vector helpers render LTR-isolated math including prime equilibrant notation', () => {
