@@ -1,5 +1,44 @@
-import { formula } from './math.js';
-const e=s=>formula(s,s);
+import { formula, ltrText } from './math.js';
+import { UNIT_2_QUESTIONS } from './unit-2-test-data.js';
+
+const equationLabels = new Map(Object.entries({
+  "F_2/F_1=(r_1/r_2)^2=(1/2)^2=1/4": "نسبة القوة بعد مضاعفة البعد إلى القوة الأصلية",
+  "F_2/F_1=3\\times(1/2)=1.5": "نسبة القوة بعد تغيير مقداري الشحنتين",
+  "F=k\\frac{|q_1q_2|}{r^2}=9\\times10^9\\frac{(2\\times10^{-6})(3\\times10^{-6})}{0.3^2}=0.6\\,\\mathrm N": "حساب مقدار قوة كولوم من الشحنتين والبعد",
+  "I=q/t=18/6=3\\,\\mathrm A": "حساب شدة التيار بقسمة الشحنة على الزمن",
+  "t=2\\times60=120\\,\\mathrm s": "تحويل دقيقتين إلى ثوانٍ",
+  "q=It=0.25\\times120=30\\,\\mathrm C": "حساب الشحنة بضرب شدة التيار في الزمن",
+  "t=q/I=48/0.8=60\\,\\mathrm s": "حساب الزمن بقسمة الشحنة على شدة التيار",
+  "I_1=650/1000=0.65\\,\\mathrm A": "تحويل تيار الفرع الأول من ميلي أمبير إلى أمبير",
+  "I_2=I-I_1=1.8-0.65=1.15\\,\\mathrm A": "حساب شدة التيار في الفرع الثاني",
+  "\\text{الميل}=\\Delta q/\\Delta t=I": "ميل منحنى الشحنة والزمن يساوي شدة التيار",
+  "500\\,\\mathrm{mA}=500\\times10^{-3}=0.5\\,\\mathrm A": "تحويل 500 ميلي أمبير إلى أمبير",
+  "1.25\\,\\mathrm{kV}=1.25\\times1000=1250\\,\\mathrm V": "تحويل 1.25 كيلو فولت إلى فولت",
+  "75\\,\\mathrm{mV}=75/1000=0.075\\,\\mathrm V": "تحويل 75 ميلي فولت إلى فولت",
+  "U_3=U-U_1-U_2=18-3-7=8\\,\\mathrm V": "حساب فرق الكمون على العنصر الثالث",
+  "U=U_1+U_2": "مجموع فروق الكمون في دارة التسلسل",
+  "R=U/I=10/0.4=25\\,\\Omega": "حساب المقاومة بقسمة فرق الكمون على شدة التيار",
+  "I=U/R=9/15=0.6\\,\\mathrm A": "حساب شدة التيار بقسمة فرق الكمون على المقاومة",
+  "\\Delta U/\\Delta I=R": "ميل منحنى فرق الكمون بدلالة التيار يساوي المقاومة",
+  "\\text{الميل}=\\Delta I/\\Delta U=1/R": "ميل منحنى التيار بدلالة فرق الكمون يساوي مقلوب المقاومة",
+  "R=\\rho\\ell/S": "علاقة مقاومة الناقل بمقاومته النوعية وطوله ومساحة مقطعه",
+  "R_2/R_1=S_1/S_2=1/2": "نسبة المقاومتين عند تغيير مساحة المقطع",
+  "12\\,\\mathrm{cm}^2=12\\times(10^{-2})^2=0.0012\\,\\mathrm m^2": "تحويل مساحة 12 سنتيمترًا مربعًا إلى متر مربع",
+  "\\rho=RS/\\ell=30\\times0.002/2=0.03\\,\\Omega\\cdot\\mathrm m": "حساب المقاومة النوعية من المقاومة والطول ومساحة المقطع",
+  "R_{eq}=7+5=12\\,\\Omega": "حساب المقاومة المكافئة لمقاومتين على التسلسل",
+  "1/R_{eq}=1/6+1/12=3/12=1/4\\,\\Omega^{-1}": "جمع مقلوبات المقاومات على التفرع",
+  "R_{eq}=4\\,\\Omega": "حساب المقاومة المكافئة بعد قلب مجموع المقلوبات",
+  "R=(10\\times1+5)\\times10^3=15000\\,\\Omega": "حساب قيمة المقاومة من شيفرة الألوان",
+  "R_{eq}=R_1+R_2": "علاقة المقاومة المكافئة في التوصيل على التسلسل"
+}));
+const e = (source) => {
+  const label = equationLabels.get(source);
+  if (!label) throw new Error(`Missing accessible label for Unit 2 solution equation: ${source}`);
+  return formula(source, label);
+};
+const arabicChoiceLabels = Object.freeze({ a: 'أ', b: 'ب', c: 'ج', d: 'د' });
+const questionsById = new Map(UNIT_2_QUESTIONS.map((question) => [question.id, question]));
+
 // This module is imported only by the shared runtime after final submission.
 const rows=[
  [1,'b','الكاشف يكشف وجود التكهرب؛ لا يعطي بذاته قياساً للمقاومة أو عدد الإلكترونات.'],
@@ -59,7 +98,19 @@ const rows=[
  [55,'b','الـLED قطبي وغير خطي. يتطلب تياراً مضبوطاً وتوصيلاً مناسباً؛ الضوء ليس توهج فتيل. لذلك لا يطبق عليه نموذج مقاومة ثابتة مباشرة.'],
  [56,'c',`للمقاومتين الموجبتين في التسلسل ${e('R_{eq}=R_1+R_2')} وهذا أكبر من كل منهما منفردة. مع ثبات الجهد يخفض المكافئ الأكبر التيار.`]
 ];
-const items=rows.map(([n,answerKey,explanationHtml])=>Object.freeze({questionId:`u2-${n}`,answerKey,answerHtml:typeof answerKey==='string'?`الخيار ${answerKey.toUpperCase()}`:`${answerKey.value} ${answerKey.unit}`,explanationHtml:`<div>${explanationHtml}</div>`}));
+const items = rows.map(([n, answerKey, explanationHtml]) => {
+ const questionId = `u2-${n}`;
+ const question = questionsById.get(questionId);
+ if (!question) throw new Error(`Missing Unit 2 question data for ${questionId}`);
+ const answerHtml = typeof answerKey === 'string'
+  ? (() => {
+     const option = question.options.find((candidate) => candidate.id === answerKey);
+     if (!option) throw new Error(`Missing correct option ${answerKey} for ${questionId}`);
+     return `الخيار ${arabicChoiceLabels[answerKey]}: ${option.content}`;
+    })()
+  : ltrText(`${answerKey.value} ${answerKey.unit}`);
+ return Object.freeze({ questionId, answerKey, answerHtml, explanationHtml: `<div>${explanationHtml}</div>` });
+});
 export const ANSWER_KEY=Object.freeze(Object.fromEntries(items.map(i=>[i.questionId,i.answerKey])));
 export const SOLUTIONS=Object.freeze(Object.fromEntries(items.map(i=>[i.questionId,i])));
 export const SOLUTION_GROUPS=Object.freeze(Array.from({length:6},(_,i)=>({id:`unit2-solutions-${i+1}`,title:`الأسئلة ${i*10+1}–${Math.min(56,i*10+10)}`,questionIds:items.slice(i*10,i*10+10).map(x=>x.questionId),items:items.slice(i*10,i*10+10)})));
