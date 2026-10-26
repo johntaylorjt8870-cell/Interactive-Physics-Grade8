@@ -150,16 +150,59 @@
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   padding: 0.55rem 0.8rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+/* Interactive cards: the label fills the card, so the whole surface — including
+   the padding a thumb lands on — is a hit area, not just the text run. */
+.option-card.is-choice {
+  padding: 0;
+}
+
+.option-card.is-choice .self-check-option-label {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: inherit;
+}
+
+.option-card.is-choice:hover {
+  border-color: #94a3b8;
+}
+
+/* The pick the student currently holds — visible before and after checking. */
+.option-card.is-selected {
+  border-color: var(--l1-navy);
+  background: #eef2ff;
+  box-shadow: inset 0 0 0 1px var(--l1-navy);
+}
+
+.option-card.is-selected .self-check-option-text {
+  font-weight: 600;
 }
 
 .option-card.is-selected-correct {
   border-color: #10b981;
   background: #ecfdf5;
+  box-shadow: inset 0 0 0 1px #10b981;
 }
 
 .option-card.is-selected-wrong {
   border-color: #ef4444;
   background: #fef2f2;
+  box-shadow: inset 0 0 0 1px #ef4444;
+}
+
+/* The key, shown only after a committed wrong attempt and on request. */
+.option-card.is-correct-answer {
+  border-color: #10b981;
+  border-style: dashed;
+  background: #f0fdf4;
+  box-shadow: none;
+}
+
+.option-card:focus-within {
+  outline: 3px solid rgba(23, 49, 84, 0.28);
+  outline-offset: 2px;
 }
 
 .self-check-option-label {
@@ -169,10 +212,37 @@
   cursor: pointer;
 }
 
+.option-card .self-check-radio {
+  flex: 0 0 auto;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  margin: 0;
+  accent-color: var(--l1-navy);
+}
+
 .self-check-option-text {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+.self-check-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.l1-correction-note {
+  background: #f0fdf4;
+  border: 1px solid #6ee7b7;
+  border-radius: 9px;
+  padding: 0.6rem 0.8rem;
+  color: #065f46;
+}
+
+.l1-correction-answer {
+  font-weight: 700;
 }
 
 /* Stage Hero Header */
@@ -460,6 +530,30 @@
 
 .inquiry-opt:hover {
   background: #eef2ff;
+}
+
+.inquiry-opt.is-selected {
+  background: #eef2ff;
+  box-shadow: inset 0 0 0 1px #93a6c9;
+}
+
+.inquiry-opt.is-selected > span {
+  font-weight: 600;
+}
+
+.inquiry-opt.is-checked-correct {
+  background: #ecfdf5;
+  box-shadow: inset 0 0 0 1px #10b981;
+}
+
+.inquiry-opt.is-checked-wrong {
+  background: #fef2f2;
+  box-shadow: inset 0 0 0 1px #ef4444;
+}
+
+.inquiry-opt:focus-within {
+  outline: 3px solid rgba(23, 49, 84, 0.28);
+  outline-offset: 1px;
 }
 
 .inquiry-opt input {
@@ -1132,14 +1226,27 @@
   cursor: pointer;
 }
 
+.l1-practice-option.is-selected {
+  border-color: var(--l1-navy);
+  background: #eef2ff;
+  box-shadow: inset 0 0 0 1px var(--l1-navy);
+}
+
+.l1-practice-option:focus-within {
+  outline: 3px solid rgba(23, 49, 84, 0.28);
+  outline-offset: 2px;
+}
+
 .l1-practice-option.is-correct {
   border-color: #10b981;
   background: #ecfdf5;
+  box-shadow: inset 0 0 0 1px #10b981;
 }
 
 .l1-practice-option.is-wrong {
   border-color: #ef4444;
   background: #fef2f2;
+  box-shadow: inset 0 0 0 1px #ef4444;
 }
 
 .l1-opt-code {
