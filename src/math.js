@@ -49,10 +49,18 @@ export function calculation(source, label = source) {
   return formula(source, label);
 }
 
-/** Multi-line aligned derivation; each entry is one TeX line, aligned at '&'. */
+/**
+ * Multi-line aligned derivation; each entry is one TeX line, aligned at '&'.
+ *
+ * Rows are joined by a single `\\` separator: no separator after the last row
+ * and no stray '&' cell. Both of those used to create an empty final row, so a
+ * two-line derivation rendered as three lines with a blank gap at the bottom.
+ * Prefer `calculation()` whenever the whole chain fits on one horizontal flow.
+ */
 export function alignedSteps(lines, label) {
-  const source = `\\begin{aligned}${lines.map((line) => ` ${line} \\\\`).join('')}&\\end{aligned}`;
-  return formula(source, label ?? lines.join(' ; '));
+  const rows = Array.isArray(lines) ? lines : [];
+  const source = `\\begin{aligned}${rows.map((line) => ` ${line} `).join('\\\\')}\\end{aligned}`;
+  return formula(source, label ?? rows.join(' ; '));
 }
 
 /* --- semantic symbol helpers ------------------------------------------------ */

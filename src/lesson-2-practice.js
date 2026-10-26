@@ -1,5 +1,11 @@
 import { LESSON_2_DIAGRAMS } from './lesson-2-diagrams.js';
 import { SELF_CHECK_ITEMS, PRACTICE_DECK, PRACTICE_LEVELS, TEXTBOOK_PROBLEMS } from './lesson-2-practice-data.js';
+import { createLesson2ChoiceStore } from './lesson-2-choice-state.js';
+
+/* `src/lesson-2-main.js` re-renders `#page-content` on every step change. The
+   self-check state therefore lives outside the DOM (pure reducers + a
+   best-effort localStorage mirror), exactly like Lesson 1's «اختر الإجابة». */
+const choiceStore = createLesson2ChoiceStore(SELF_CHECK_ITEMS);
 
 function injectQuestionTools(questionEl, answer) {
   if (!answer || questionEl.dataset.l2Enhanced === 'true') return;
@@ -8,9 +14,13 @@ function injectQuestionTools(questionEl, answer) {
   const optionsGrid = questionEl.querySelector('.options-grid');
   if (!optionsGrid) return;
 
-  const name = `l2-self-${questionEl.dataset.selfcheckItem ?? Math.random().toString(36).slice(2)}`;
-  for (const option of optionsGrid.querySelectorAll('.option-card[data-option]')) {
+  const key = questionEl.dataset.selfcheckItem;
+  const name = `l2-self-${key ?? Math.random().toString(36).slice(2)}`;
+  const optionCards = [...optionsGrid.querySelectorAll('.option-card[data-option]')];
+  for (const option of optionCards) {
     if (option.querySelector('input[type="radio"]')) continue;
+    // The whole card becomes the radio's hit area, not just the tiny circle.
+    option.classList.add('is-choice');
     const radio = document.createElement('input');
     radio.type = 'radio';
     radio.className = 'self-check-radio';
@@ -23,6 +33,15 @@ function injectQuestionTools(questionEl, answer) {
     label.className = 'self-check-option-label';
     label.append(radio, textWrap);
     option.append(label);
+  }
+
+  if (choiceStore.has(key)) {
+    const prompt = questionEl.querySelector('p');
+    if (prompt) {
+      if (!prompt.id) prompt.id = `l2-self-check-prompt-${key}`;
+      optionsGrid.setAttribute('role', 'radiogroup');
+      optionsGrid.setAttribute('aria-labelledby', prompt.id);
+    }
   }
 
   const tools = document.createElement('div');
@@ -38,65 +57,85 @@ function injectQuestionTools(questionEl, answer) {
   `;
   questionEl.append(tools);
 
-  let hintStage = 0;
   const hintBtn = tools.querySelector('[data-q-hint]');
   const checkBtn = tools.querySelector('[data-q-check]');
   const retryBtn = tools.querySelector('[data-q-retry]');
   const hintBox = tools.querySelector('[data-q-hint-box]');
   const feedbackBox = tools.querySelector('[data-q-feedback]');
+  const totalHints = answer.hints?.length ?? 0;
+  const radios = [...questionEl.querySelectorAll('input[type="radio"]')];
+
+  const syncSelection = (entry) => {
+    for (const radio of radios) radio.checked = radio.value === entry.choice;
+    for (const card of optionCards) card.classList.toggle('is-selected', card.dataset.option === entry.choice);
+  };
 
   const clearVisuals = () => {
-    for (const card of questionEl.querySelectorAll('.option-card[data-option]')) {
+    for (const card of optionCards) {
       card.classList.remove('is-selected-correct', 'is-selected-wrong', 'is-correct-answer');
     }
     feedbackBox.hidden = true;
     feedbackBox.innerHTML = '';
     feedbackBox.className = 'l2-item-feedback';
+    retryBtn.hidden = true;
+  };
+
+  const renderHints = (level) => {
+    hintBox.hidden = level === 0;
+    hintBox.innerHTML = answer.hints.slice(0, level).map((hint, index) => `<p><strong>تلميح ${index + 1}:</strong> ${hint}</p>`).join('');
+    hintBtn.textContent = level >= totalHints ? 'عُرض التلميحان (٢/٢)' : level > 0 ? 'تلميح (٢/٢)' : 'تلميح تدريجي (١/٢)';
+    hintBtn.disabled = totalHints === 0 || level >= totalHints;
+  };
+
+  const renderVerdict = (entry) => {
+    if (!entry.checked) {
+      clearVisuals();
+      return;
+    }
+    const chosenCard = optionCards.find((card) => card.dataset.option === entry.choice);
+    chosenCard?.classList.add(entry.isCorrect ? 'is-selected-correct' : 'is-selected-wrong');
+    retryBtn.hidden = false;
+    const specific = answer.optionFeedback?.[entry.choice] ?? '';
+    feedbackBox.hidden = false;
+    feedbackBox.className = `l2-item-feedback ${entry.isCorrect ? 'is-correct' : 'is-wrong'}`;
+    feedbackBox.innerHTML = entry.isCorrect
+      ? `<strong>إجابة صحيحة.</strong> ${specific}<div class="l2-explanation-sub">${answer.explanation}</div>`
+      : `<strong>ليس هذا الاختيار الدقيق:</strong> ${specific}<div class="l2-explanation-sub">استعن بالتلميح إن احتجت ثم اختر بديلاً آخر.</div>`;
   };
 
   const evaluate = () => {
-    clearVisuals();
     const checked = questionEl.querySelector('input[type="radio"]:checked');
     if (!checked) {
+      clearVisuals();
       feedbackBox.hidden = false;
       feedbackBox.className = 'l2-item-feedback is-warning';
       feedbackBox.textContent = 'اختر أحد البدائل أولاً قبل التحقق.';
       return;
     }
-    const chosen = checked.value;
-    const isCorrect = chosen === answer.correct;
-    const chosenCard = questionEl.querySelector(`.option-card[data-option="${chosen}"]`);
-    chosenCard?.classList.add(isCorrect ? 'is-selected-correct' : 'is-selected-wrong');
-    retryBtn.hidden = false;
-    const specific = answer.optionFeedback?.[chosen] ?? '';
-    feedbackBox.hidden = false;
-    feedbackBox.className = `l2-item-feedback ${isCorrect ? 'is-correct' : 'is-wrong'}`;
-    feedbackBox.innerHTML = isCorrect
-      ? `<strong>إجابة صحيحة.</strong> ${specific}<div class="l2-explanation-sub">${answer.explanation}</div>`
-      : `<strong>ليس هذا الاختيار الدقيق:</strong> ${specific}<div class="l2-explanation-sub">استعن بالتلميح إن احتجت ثم اختر بديلاً آخر.</div>`;
+    clearVisuals();
+    renderVerdict(choiceStore.verify(key, checked.value));
   };
 
-  for (const radio of questionEl.querySelectorAll('input[type="radio"]')) {
-    radio.addEventListener('change', clearVisuals);
+  for (const radio of radios) {
+    radio.addEventListener('change', () => {
+      const entry = choiceStore.select(key, radio.value);
+      clearVisuals();
+      syncSelection(entry);
+    });
   }
   checkBtn.addEventListener('click', evaluate);
-  hintBtn.addEventListener('click', () => {
-    hintStage = Math.min(answer.hints.length, hintStage + 1);
-    hintBox.hidden = false;
-    hintBox.innerHTML = answer.hints.slice(0, hintStage).map((h, i) => `<p><strong>تلميح ${i + 1}:</strong> ${h}</p>`).join('');
-    hintBtn.textContent = hintStage >= answer.hints.length ? 'عُرض التلميحان (٢/٢)' : 'تلميح (٢/٢)';
-    if (hintStage >= answer.hints.length) hintBtn.disabled = true;
-  });
+  hintBtn.addEventListener('click', () => renderHints(choiceStore.hint(key).hintLevel));
   retryBtn.addEventListener('click', () => {
-    for (const radio of questionEl.querySelectorAll('input[type="radio"]')) radio.checked = false;
+    syncSelection(choiceStore.reset(key));
     clearVisuals();
-    hintStage = 0;
-    hintBox.hidden = true;
-    hintBox.innerHTML = '';
-    hintBtn.disabled = false;
-    hintBtn.textContent = 'تلميح تدريجي (١/٢)';
-    retryBtn.hidden = true;
+    renderHints(0);
   });
+
+  // A step re-render (or a page reload) must not wipe the attempt.
+  const restored = choiceStore.read(key);
+  syncSelection(restored);
+  renderHints(restored.hintLevel);
+  renderVerdict(restored);
 }
 
 export function enhanceLesson2SelfCheck(container) {

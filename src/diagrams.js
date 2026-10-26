@@ -9,13 +9,18 @@ const unit = (vector) => {
   return { x: vector.x / magnitude, y: vector.y / magnitude };
 };
 
-const MARKER_COLORS = {
-  blue: '#3b5fc0',
-  teal: '#168782',
-  coral: '#d55b43',
+/* Arrowheads must use the same colour as the shaft rules in styles.css
+   (.force-*). Exporting the palette lets the diagram audit test verify that
+   every colour has both a marker and a visible stroke, not just an arrowhead. */
+export const FORCE_PALETTE = Object.freeze({
+  blue: '#46629f',
+  teal: '#17807a',
+  coral: '#c96a4f',
   plum: '#7a4a72',
   slate: '#334155',
-};
+});
+
+const MARKER_COLORS = FORCE_PALETTE;
 
 function markerDefs(prefix) {
   return `<defs>${Object.entries(MARKER_COLORS).map(([name, color]) => `

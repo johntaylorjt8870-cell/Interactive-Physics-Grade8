@@ -578,9 +578,13 @@ button { color: inherit; }
 .diagram-canvas svg { width: 100%; height: auto; display: block; min-height: 200px; }
 
 .vector-line { fill: none; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
+/* Every colour in diagrams.js MARKER_COLORS needs a shaft rule here: an SVG
+   <line> defaults to stroke:none, so a missing rule leaves only the arrowhead. */
 .force-blue { stroke: #46629f; }
 .force-teal { stroke: #17807a; }
 .force-coral { stroke: #c96a4f; }
+.force-plum { stroke: #7a4a72; }
+.force-slate { stroke: #334155; }
 .carrier-line { stroke: #a6adbb; stroke-width: 1.6; stroke-dasharray: 5 7; }
 .construction-line { fill: none; stroke: #7fa6ae; stroke-width: 2; stroke-dasharray: 6 6; }
 .axis-line { stroke: #5d6b85; stroke-width: 2.5; }
@@ -594,10 +598,14 @@ button { color: inherit; }
 /* Force symbols inside SVGs: LTR group, arrow path above its own letter,
    subscript anchored to the same letter — geometry, not text flow. */
 .force-symbol-group { color: #2c3a55; }
+/* The label (letter, vector arrow and prime) must match its shaft colour, or a
+   force looks like it belongs to a different vector than the arrow it labels. */
 .sym-teal { color: #10665f; }
 .sym-blue { color: #33518c; }
 .sym-coral { color: #a8553d; }
-.force-symbol, .force-sub {
+.sym-plum { color: #7a4a72; }
+.sym-slate { color: #334155; }
+.force-symbol, .force-sub, .force-prime {
   paint-order: stroke;
   stroke: #ffffff;
   stroke-width: 4.5px;
@@ -608,6 +616,7 @@ button { color: inherit; }
 }
 .force-symbol { font-size: 23px; }
 .force-sub { font-size: 14px; }
+.force-prime { font-size: 16px; font-weight: 700; font-style: normal; }
 .force-vec-arrow { fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
 
 .diagram-legend { margin: 14px 0 6px; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 22px; list-style: none; }

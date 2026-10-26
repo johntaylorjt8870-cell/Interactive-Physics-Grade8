@@ -39,7 +39,7 @@ test('teacher area solves all activities and both textbook problems with data, l
   ]) {
     assert.ok(markup.includes(phrase), phrase);
   }
-  for (const value of ['50\\\\,\\\\mathrm{N}', '0.2\\\\,\\\\mathrm{m}', '100\\\\,\\\\mathrm{N}', '180\\\\,\\\\mathrm{cm}', '150\\\\,\\\\mathrm{cm}', '160}{3']) {
+  for (const value of ['50\\,\\mathrm{N}', '0.2\\,\\mathrm{m}', '100\\,\\mathrm{N}', '180\\,\\mathrm{cm}', '150\\,\\mathrm{cm}', '160/3']) {
     assert.ok(markup.includes(value), value);
   }
   assert.match(markup, /المعطيات:/);
@@ -48,5 +48,5 @@ test('teacher area solves all activities and both textbook problems with data, l
   assert.match(markup, /التحقق/);
   assert.match(markup, /أخطاء شائعة/);
   assert.match(markup, /لوح الربائع المغناطيسي/);
-  assert.match(markup, /10d_\{2\}|d_\{2\}=120|120\\\\,\\\\mathrm\{cm\}/);
+  assert.match(markup, /10d_\{2\}|d_\{2\}=120|120\\,\\mathrm\{cm\}/);
 });

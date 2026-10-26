@@ -36,7 +36,7 @@ export const SELF_CHECK_ITEMS = Object.freeze({
       'القوتان شاقوليتان وبجهة واحدة.',
       'F = 3 + 4.',
     ],
-    explanation: `جهة واحدة: ${tex('F=3+4=7\\\\,\\\\mathrm{N}', 'F equals 3 plus 4 equals 7 newtons')}. الخيار 5 N هو جمع متعامد (فيثاغورث) من الدرس السابق، ولا يُستخدم هنا.`,
+    explanation: `جهة واحدة: ${tex('F=3+4=7\\,\\mathrm{N}', 'F equals 3 plus 4 equals 7 newtons')}. الخيار 5 N هو جمع متعامد (فيثاغورث) من الدرس السابق، ولا يُستخدم هنا.`,
     optionFeedback: {
       a: '1 N هو الفرق 4 − 3، وهذا للتعاكس لا للجهة الواحدة.',
       b: '5 N يساوي وتر المثلث 3-4-5، وهي قاعدة قوتين متعامدتين متلاقيتين وليست قوى متوازية.',
@@ -66,9 +66,9 @@ export const TEXTBOOK_PROBLEMS = Object.freeze([
     title: 'المسألة الأولى · ص 70',
     lead: `قوتان شاقوليتان وبجهة واحدة شدتهما ${qty(40, 'N')} و ${qty(10, 'N')} تؤثران في طرفي مسطرة خفيفة أفقية، وبُعد حامل القوة الأولى عن حامل المحصلة ${qty(30, 'cm')}.`,
     givens: [
-      `${tex('F_{1}=40\\\\,\\\\mathrm{N}', 'F one equals 40 newtons')}`,
-      `${tex('F_{2}=10\\\\,\\\\mathrm{N}', 'F two equals 10 newtons')}`,
-      `${tex('d_{1}=30\\\\,\\\\mathrm{cm}', 'd one equals 30 centimeters')}`,
+      `${tex('F_{1}=40\\,\\mathrm{N}', 'F one equals 40 newtons')}`,
+      `${tex('F_{2}=10\\,\\mathrm{N}', 'F two equals 10 newtons')}`,
+      `${tex('d_{1}=30\\,\\mathrm{cm}', 'd one equals 30 centimeters')}`,
       'الجهتان واحدة والحوامل شاقولية.',
     ],
     interactiveSteps: [
@@ -132,9 +132,9 @@ export const TEXTBOOK_PROBLEMS = Object.freeze([
     lead: `قوتان شاقوليتان بجهتين متعاكستين شدتهما ${qty(80, 'N')} و ${qty(20, 'N')} تؤثران في طرفي مسطرة خفيفة أفقية طولها ${qty(40, 'cm')}.`,
     sourceNote: `<strong>حدّ قراءة المسح — الطلب 1:</strong> في تكبير صورة ص 70 تُقرأ العبارة «احسب شدّة وصلة القوتين». لم تُحسم الحروف بما يكفي لنسب كلمة «محصّلة» أو «وصلة» إلى الكتاب. لا ندرّس «وصلة» مصطلحاً. الطلبان 2 و 3 يستعملان صراحة «حامل المحصلة» و«عناصر محصلة هاتين القوتين»، لذلك نحسب هنا الشدّة ${tex('F', 'F')} بقانون التعاكس في ص 67، وهي الكمية اللازمة للطلبين التاليين.`,
     givens: [
-      `${tex('F_{1}=80\\\\,\\\\mathrm{N}', 'F one equals 80 newtons')}`,
-      `${tex('F_{2}=20\\\\,\\\\mathrm{N}', 'F two equals 20 newtons')}`,
-      `${tex('d=40\\\\,\\\\mathrm{cm}', 'd equals 40 centimeters')}`,
+      `${tex('F_{1}=80\\,\\mathrm{N}', 'F one equals 80 newtons')}`,
+      `${tex('F_{2}=20\\,\\mathrm{N}', 'F two equals 20 newtons')}`,
+      `${tex('d=40\\,\\mathrm{cm}', 'd equals 40 centimeters')}`,
       'الجهتان متعاكستان.',
     ],
     interactiveSteps: [
