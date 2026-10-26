@@ -58,7 +58,7 @@ function activities() {
         <li>تدل الربيعة على قوة ${V_F3} تساوي مجموع الثقلين عند الاتزان وتعاكس محصلتهما.</li>
         <li>حامل ${V_F3} بين حاملي الثقلين وأقرب إلى القوة الأكبر.</li>
         <li>القوة ${V_F} المعاكسة لـ ${V_F3} هي محصلة ${V_F1} و ${V_F2}، وجهتها جهتهما.</li>
-        <li>يظهر القياس: ${tex('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'products equal')}.</li>
+        <li>يظهر القياس: ${tex('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'products equal')}.</li>
       </ol>`)}
       ${explanation(65, `<p>تحافظ المسطرة على عدم الدوران عندما يتساوى الجداءان حول C:</p>
         ${equation('F_{1}d_{1}=F_{2}d_{2}', 'F one d one equals F two d two')}
@@ -71,9 +71,9 @@ function activities() {
       <h4>علاقة التناسب وسؤال «أفكر» · p66</h4>
       ${answer(`<p>إذا كانت القوتان متساويتين، تستقر النقطة <span dir="ltr">C</span> في منتصف المسافة بينهما.</p>`)}
       ${explanation(66, `<p>من ${tex('F_{1}=F_{2}', 'equal')} والعلاقة ${tex('F_{1}d_{1}=F_{2}d_{2}', 'products')} نحصل على:</p>
-        ${equation('d_{1}=d_{2}=\\\\frac{d}{2}', 'd one equals d two equals d over two')}
+        ${equation('d_{1}=d_{2}=d/2', 'd one equals d two equals d over two')}
         <p>سلسلة التناسب في الكتاب:</p>
-        ${equation('\\\\frac{F_{1}}{d_{2}}=\\\\frac{F_{2}}{d_{1}}=\\\\frac{F_{1}+F_{2}}{d_{2}+d_{1}}=\\\\frac{F}{d}', 'proportion chain')}`)}
+        ${equation('\\frac{F_{1}}{d_{2}}=\\frac{F_{2}}{d_{1}}=\\frac{F_{1}+F_{2}}{d_{2}+d_{1}}=\\frac{F}{d}', 'proportion chain')}`)}
       ${sourceDisclosure(66, `<p>ترتيب العلاقة، خصائص التناسب، سؤال أفكر، وبداية التطبيق المحلول AB = 0.5 m و F1 = 20 N و F2 = 30 N حتى F = 50 N.</p>`)}
     </article>
 
@@ -82,7 +82,7 @@ function activities() {
       ${answer(`<p>عند عكس جهة إحدى القوتين تصبح المحصلة بجهة القوة الأكبر، وشدتها فرق الشدتين، وتقع نقطة تأثيرها خارج القطعة الواصلة بين القوتين ومن جهة القوة الأكبر.</p>
         <p>تعليمات التجربة في الكتاب: أنزع الثقل w1 = F1، ماذا ألاحظ؟ أعيد الثقل F1، ما دور هذا الثقل؟ ماذا أسمّي هذا الثقل بالنسبة للقوتين F2 و F3؟</p>`)}
       ${explanation(67, `<p>لا يتغير توازي الحاملين، لكن تتغير الجهة. يُستبدل الجمع بالطرح:</p>
-        ${equation('F=F_{2}-F_{1}\\\\quad(F_{2}>F_{1})', 'difference when F two greater')}
+        ${equation('F=F_{2}-F_{1}\\quad(F_{2}>F_{1})', 'difference when F two greater')}
         <p>تبقى علاقة تساوي الجداءين صحيحة، لكن C تخرج من القطعة.</p>`)}
       ${sourceDisclosure(67, `<p>تتمة التطبيق (d2 = 0.2 m والعناصر) ثم فقرة التعاكس واستنتاج العناصر الأربعة مع F = F2 − F1.</p>`)}
     </article>
@@ -97,20 +97,20 @@ function workedExamples() {
       ${answer(`<p><strong>المعطيات:</strong> ${ltr('d = 0.5 m')}، ${ltr('F₁ = 20 N')}، ${ltr('F₂ = 30 N')}.</p>
         <p><strong>المطلوب:</strong> الشدة، بعد حامل القوة الثانية، العناصر، الرسم.</p>
         <p><strong>القانون والتعويض:</strong></p>
-        ${calculation('F=F_{1}+F_{2}=20+30=50\\\\,\\\\mathrm{N}', '50 N')}
-        ${calculation('\\\\frac{F}{d}=\\\\frac{F_{1}}{d_{2}}\\\\Rightarrow\\\\frac{50}{0.5}=\\\\frac{20}{d_{2}}\\\\Rightarrow d_{2}=0.2\\\\,\\\\mathrm{m}', 'd two equals 0.2 m')}
+        ${calculation('F=F_{1}+F_{2}=20+30=50\\,\\mathrm{N}', '50 N')}
+        ${calculation('F/d=F_{1}/d_{2}\\Rightarrow50/0.5=20/d_{2}\\Rightarrow d_{2}=0.2\\,\\mathrm{m}', 'd two equals 0.2 m')}
         <p><strong>العناصر:</strong> نقطة التأثير بين القوتين، على بعد ${ltr('0.2 m')} من حامل القوة الثانية لأنها الأكبر؛ الحامل موازٍ؛ الجهة جهة القوتين؛ الشدة ${ltr('50 N')}.</p>
         <p><strong>الرسم:</strong> ${V_F1} و ${V_F2} متوازيان في جهة واحدة عند A و B، ثم ${V_F} بينهما عند C مع ${ltr('d₂ = 0.2 m')} و ${ltr('d₁ = 0.3 m')}.</p>`)}
-      ${explanation(67, `<p><strong>التحقق:</strong></p>${equation('20\\\\times0.3=30\\\\times0.2=6\\\\,\\\\mathrm{N\\\\,m}', '6 N m')}<p>مجموع البعدين ${ltr('0.3 + 0.2 = 0.5 m')}.</p>`)}
+      ${explanation(67, `<p><strong>التحقق:</strong></p>${equation('20\\times0.3=30\\times0.2=6\\,\\mathrm{N\\,m}', '6 N m')}<p>مجموع البعدين ${ltr('0.3 + 0.2 = 0.5 m')}.</p>`)}
     </article>
     <article class="teacher-subsection" data-page-reference="p68">
       <h4>تطبيق الجهتين المتعاكستين · p68</h4>
       ${answer(`<p><strong>المعطيات:</strong> ${ltr('d = 60 cm')}، ${ltr('F₁ = 200 N')}، ${ltr('F₂ = 300 N')}، والجهتان متعاكستان.</p>
-        ${calculation('F=F_{2}-F_{1}=300-200=100\\\\,\\\\mathrm{N}', '100 N')}
-        ${calculation('\\\\frac{F_{2}}{d_{1}}=\\\\frac{F}{d}\\\\Rightarrow\\\\frac{300}{d_{1}}=\\\\frac{100}{60}\\\\Rightarrow d_{1}=180\\\\,\\\\mathrm{cm}', 'd one equals 180 cm')}
+        ${calculation('F=F_{2}-F_{1}=300-200=100\\,\\mathrm{N}', '100 N')}
+        ${calculation('F_{2}/d_{1}=F/d\\Rightarrow300/d_{1}=100/60\\Rightarrow d_{1}=180\\,\\mathrm{cm}', 'd one equals 180 cm')}
         <p><strong>العناصر:</strong> الشدة ${ltr('100 N')}، والجهة جهة ${V_F2} الأكبر، والحامل موازٍ، ونقطة التأثير خارج القطعة من جهة ${V_F2}.</p>`)}
       ${explanation(68, `<p><strong>التحقق العددي:</strong> بعد القوة الأكبر عن المحصلة ${ltr('d₂ = 180 − 60 = 120 cm')}.</p>
-        ${equation('200\\\\times180=300\\\\times120=36000\\\\,\\\\mathrm{N\\\\,cm}', '36000 N cm')}
+        ${equation('200\\times180=300\\times120=36000\\,\\mathrm{N\\,cm}', '36000 N cm')}
         <p>المحصلة أصغر من الأكبر واتجاهها اتجاهه وموضعها خارج القطعة.</p>`)}
       ${sourceDisclosure(68, `<p>ساق طويلة مهملة الكتلة، البعد 60 cm، F1 = 200 N، F2 = 300 N، الحل F = 100 N و d1 = 180 cm.</p>`)}
     </article>
@@ -140,7 +140,7 @@ function textbookQuestions() {
       ${answer(`<ol>
         <li><strong>a:</strong> ${tex('F=F_{1}+F_{2}', 'sum')} لأن الجهتين واحدة.</li>
         <li><strong>c:</strong> ${tex('F=F_{2}-F_{1}', 'difference')} لأن ${tex('F_{2}>F_{1}', 'F two greater')} والجهتين متعاكستان.</li>
-        <li><strong>c:</strong> ${calculation('F=3+4=7\\\\,\\\\mathrm{N}', '7 N')} (5 N مشتت فيثاغورث من الدرس السابق).</li>
+        <li><strong>c:</strong> ${calculation('F=3+4=7\\,\\mathrm{N}', '7 N')} (5 N مشتت فيثاغورث من الدرس السابق).</li>
         <li><strong>a:</strong> ${tex('d=d_{1}+d_{2}', 'sum of distances')} لأن المحصلة بين القوتين.</li>
       </ol>`)}
       ${explanation(70, `<p>اطلب تحديد الجهة قبل العملية. السؤال الرابع هندسي: في الجهة الواحدة يقسم حامل المحصلة المسافة إلى جزأين.</p>`)}
@@ -148,22 +148,22 @@ function textbookQuestions() {
       <h4>السؤال الثاني · المسألة الأولى</h4>
       ${answer(`<p><strong>المعطيات:</strong> ${ltr('F₁ = 40 N')}، ${ltr('F₂ = 10 N')}، ${ltr('d₁ = 30 cm')}، القوتان بجهة واحدة.</p>
         <p><strong>المطلوب 1 — بعد حامل القوة الثانية عن حامل المحصلة:</strong></p>
-        ${calculation('F_{1}d_{1}=F_{2}d_{2}\\\\Rightarrow40\\\\times30=10d_{2}\\\\Rightarrow d_{2}=120\\\\,\\\\mathrm{cm}', 'd two equals 120 cm')}
+        ${calculation('F_{1}d_{1}=F_{2}d_{2}\\Rightarrow40\\times30=10d_{2}\\Rightarrow d_{2}=120\\,\\mathrm{cm}', 'd two equals 120 cm')}
         <p><strong>المطلوب 2 — طول المسطرة:</strong></p>
-        ${calculation('d=d_{1}+d_{2}=30+120=150\\\\,\\\\mathrm{cm}', 'd equals 150 cm')}
-        <p><strong>المطلوب 3 — العناصر:</strong> الشدة ${calculation('F=40+10=50\\\\,\\\\mathrm{N}', '50 N')}؛ الجهة جهة القوتين؛ الحامل موازٍ؛ نقطة التأثير بينهما، على بعد ${ltr('30 cm')} من القوة الأكبر ${V_F1} و ${ltr('120 cm')} من ${V_F2}.</p>
+        ${calculation('d=d_{1}+d_{2}=30+120=150\\,\\mathrm{cm}', 'd equals 150 cm')}
+        <p><strong>المطلوب 3 — العناصر:</strong> الشدة ${calculation('F=40+10=50\\,\\mathrm{N}', '50 N')}؛ الجهة جهة القوتين؛ الحامل موازٍ؛ نقطة التأثير بينهما، على بعد ${ltr('30 cm')} من القوة الأكبر ${V_F1} و ${ltr('120 cm')} من ${V_F2}.</p>
         <p><strong>التحقق:</strong> ${ltr('40 × 30 = 10 × 120 = 1200 N·cm')}.</p>`)}
 
       <h4>السؤال الثاني · المسألة الثانية</h4>
       ${answer(`<p><strong>المعطيات:</strong> ${ltr('F₁ = 80 N')}، ${ltr('F₂ = 20 N')}، ${ltr('d = 40 cm')}، الجهتان متعاكستان.</p>
         <p><strong>المطلوب 1 — الشدّة F (قراءة كلمة المسح غير محسومة؛ القيمة بقانون التعاكس):</strong></p>
-        ${calculation('F=F_{1}-F_{2}=80-20=60\\\\,\\\\mathrm{N}', '60 N')}
+        ${calculation('F=F_{1}-F_{2}=80-20=60\\,\\mathrm{N}', '60 N')}
         <p><strong>المطلوب 2 — بعد حامل القوة الثانية عن المحصلة:</strong></p>
-        ${calculation('\\\\frac{F_{1}}{d_{2}}=\\\\frac{F}{d}\\\\Rightarrow\\\\frac{80}{d_{2}}=\\\\frac{60}{40}\\\\Rightarrow d_{2}=\\\\frac{160}{3}\\\\,\\\\mathrm{cm}\\\\approx53.3\\\\,\\\\mathrm{cm}', '160 over 3 cm')}
+        ${calculation('F_{1}/d_{2}=F/d\\Rightarrow80/d_{2}=60/40\\Rightarrow d_{2}=160/3\\,\\mathrm{cm}\\approx53.3\\,\\mathrm{cm}', '160 over 3 cm')}
         <p><strong>المطلوب 3 — العناصر:</strong> الشدة ${ltr('60 N')}؛ الجهة جهة ${V_F1} الأكبر؛ الحامل موازٍ؛ نقطة التأثير خارج القطعة من جهة ${V_F1}. المسافة من ${V_F1} إلى المحصلة ${ltr('13.3 cm')}.</p>
         <p>لا ننسب إلى الكتاب في هذا الطلب كلمة «محصّلة» ولا «وصلة». القيمة 60 N تلزم الطلب 2 عبر F/d = 60/40، فلا تناقض بين المطاليب.</p>
-        <p><strong>التحقق:</strong> بالكسر الدقيق ${tex('80\\\\times\\\\frac{40}{3}=20\\\\times\\\\frac{160}{3}', 'products equal')}.</p>`) }
-      ${explanation(70, `<p><strong>أخطاء شائعة:</strong> جمع القوتين المتعاكستين؛ وضع محصلتهما بين الحاملين؛ استعمال ${ltr('40 cm')} مباشرة بوصفها بعد القوة الأكبر عن المحصلة؛ إسقاط الوحدة؛ أو تقريب المسافة في وسط الحساب. احتفظ بالكسر ${tex('\\\\frac{160}{3}', '160 over 3')} حتى النهاية.</p>
+        <p><strong>التحقق:</strong> بالكسر الدقيق ${tex('80\\times(40/3)=20\\times(160/3)', 'products equal')}.</p>`) }
+      ${explanation(70, `<p><strong>أخطاء شائعة:</strong> جمع القوتين المتعاكستين؛ وضع محصلتهما بين الحاملين؛ استعمال ${ltr('40 cm')} مباشرة بوصفها بعد القوة الأكبر عن المحصلة؛ إسقاط الوحدة؛ أو تقريب المسافة في وسط الحساب. احتفظ بالكسر ${tex('160/3', '160 over 3')} حتى النهاية.</p>
         <p><strong>معيار الرسم:</strong> يجب أن تظهر الأسهم والحوامل والجهات والنقاط والمسافات.</p>
         <p><strong>حدّ قراءة المسح ص 70 الطلب 1:</strong> عند تكبير صورة الصفحة تُقرأ العبارة «احسب شدّة وصلة القوتين». لم تُحسم الحروف بما يكفي لإثبات أن المطبوعة هي «محصّلة» أو أن «وصلة» مصطلح مقصود. لا تُدرَّس «وصلة». الكمية 60 N هي شدة المحصلة بقانون ص 67، وهي ما يستخدمه الطلبان 2 و 3.</p>`)}
       ${sourceDisclosure(70, `<p>السؤال الأول أربع فقرات، والمسألة الأولى (بعد القوة الثانية ثم طول المسطرة ثم العناصر) والمسألة الثانية (الشدة ثم بعد القوة الثانية ثم العناصر) بالقيم 40 N و 10 N و 30 cm و 80 N و 20 N و 40 cm.</p>`)}

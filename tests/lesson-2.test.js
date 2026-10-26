@@ -101,11 +101,11 @@ test('page 64 uses the audited apparatus list, definition, and remaining-wonder 
 test('pages 65–67 keep laws, experiment steps, and the same-sense worked example', () => {
   const p65 = htmlOf(65);
   const p66 = htmlOf(66) + htmlOf(67);
-  assert.ok(p65.includes('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}'));
+  assert.ok(p65.includes('F_{1}\\times d_{1}=F_{2}\\times d_{2}'));
   assert.ok(p65.includes('F=F_{1}+F_{2}'));
   assert.ok(p65.includes('أحسب الجداءين') || pageTextBlocks(page(65)).includes('أحسب الجداءين'));
   assert.match(p65, /parallel-resultant-lab/);
-  for (const value of ['0.5\\\\,\\\\mathrm{m}', '20\\\\,\\\\mathrm{N}', '30\\\\,\\\\mathrm{N}', '50\\\\,\\\\mathrm{N}']) {
+  for (const value of ['0.5\\,\\mathrm{m}', '20\\,\\mathrm{N}', '30\\,\\mathrm{N}', '50\\,\\mathrm{N}']) {
     assert.ok(p66.includes(value), value);
   }
   assert.ok(pageTextBlocks(page(66)).includes('أين ستقع النقطة') || pageTextBlocks(page(66)).includes('أين تستقر'));

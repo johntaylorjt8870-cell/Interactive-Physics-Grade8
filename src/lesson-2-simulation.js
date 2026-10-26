@@ -107,7 +107,7 @@ function resultantLabMarkup() {
         <span class="simulation-model-label">Educational simplified model</span>
       </div>
       <h3 id="parallel-lab-title">مختبر موضع محصلة قوتين متوازيتين</h3>
-      <p>غيّر الشدتين والمسافة والجهتين. يتحدّث الرسم والحساب معاً وفق ${formula('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'F one times d one equals F two times d two')}. النموذج هندسي ولا يحاكي مرونة المسطرة.</p>
+      <p>غيّر الشدتين والمسافة والجهتين. يتحدّث الرسم والحساب معاً وفق ${formula('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'F one times d one equals F two times d two')}. النموذج هندسي ولا يحاكي مرونة المسطرة.</p>
     </header>
     <div class="simulation-workbench">
       <section class="simulation-controls" aria-label="ضوابط القوى المتوازية">

@@ -40,11 +40,11 @@ const diagramFigure = (key, caption, badgeHtml = '') => {
   </figure>`;
 };
 
-const SAME_MOMENT = formula('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'F one times d one equals F two times d two');
+const SAME_MOMENT = formula('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'F one times d one equals F two times d two');
 const SAME_SUM = formula('F=F_{1}+F_{2}', 'F equals F one plus F two');
 const OPPOSITE_DIFF = formula('F=F_{2}-F_{1}', 'F equals F two minus F one');
 const PROPORTION = formula(
-  '\\\\dfrac{F_{1}}{d_{2}}=\\\\dfrac{F_{2}}{d_{1}}=\\\\dfrac{F_{1}+F_{2}}{d_{2}+d_{1}}=\\\\dfrac{F}{d}',
+  '\\dfrac{F_{1}}{d_{2}}=\\dfrac{F_{2}}{d_{1}}=\\dfrac{F_{1}+F_{2}}{d_{2}+d_{1}}=\\dfrac{F}{d}',
   'F one over d two equals F two over d one equals F over d',
 );
 
@@ -235,7 +235,7 @@ export const LESSON_2_PAGES = [
           <li>أمثّل القوى بالرسم.</li>
           <li>أقيس بُعد النقطة C عن النقطة A ولتكن ${tex('d_{1}', 'd one')}.</li>
           <li>أقيس بُعد النقطة C عن النقطة B ولتكن ${tex('d_{2}', 'd two')}.</li>
-          <li>أحسب الجداءين ${tex('F_{1}\\\\times d_{1}', 'F one times d one')} والجداء ${tex('F_{2}\\\\times d_{2}', 'F two times d two')}.</li>
+          <li>أحسب الجداءين ${tex('F_{1}\\times d_{1}', 'F one times d one')} والجداء ${tex('F_{2}\\times d_{2}', 'F two times d two')}.</li>
         </ol>
         <div class="callout-box callout-tip">
           <h3>لماذا نرسم ${V_F} معاكسة لـ ${V_F3}؟</h3>
@@ -283,15 +283,15 @@ export const LESSON_2_PAGES = [
       `<section class="content-card">
         <div class="card-badges">${bookBadge('ترتيب العلاقة · ص 66')}</div>
         <h2>من الجداءين إلى التناسب</h2>
-        <p>بترتيب العلاقة ${tex('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'F one d one equals F two d two')} نجد:</p>
-        ${formula('\\\\dfrac{F_{1}}{d_{2}}=\\\\dfrac{F_{2}}{d_{1}}', 'F one over d two equals F two over d one')}
+        <p>بترتيب العلاقة ${tex('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'F one d one equals F two d two')} نجد:</p>
+        ${formula('\\dfrac{F_{1}}{d_{2}}=\\dfrac{F_{2}}{d_{1}}', 'F one over d two equals F two over d one')}
         <div class="callout-box callout-book">
           <h3>من خصائص التناسب في الرياضيات</h3>
-          ${formula('\\\\dfrac{A}{B}=\\\\dfrac{C}{D}=\\\\dfrac{A+C}{B+D}=\\\\dfrac{K}{L}', 'A over B equals C over D equals A plus C over B plus D')}
+          ${formula('\\dfrac{A}{B}=\\dfrac{C}{D}=\\dfrac{A+C}{B+D}=\\dfrac{K}{L}', 'A over B equals C over D equals A plus C over B plus D')}
           <p>يؤدي ذلك إلى السلسلة نفسها بعد إعادة التسمية. وحسب خصائص التناسب نكتب:</p>
         </div>
         ${PROPORTION}
-        ${formula('\\\\dfrac{F_{1}}{d_{2}}=\\\\dfrac{F_{2}}{d_{1}}=\\\\dfrac{F}{d}', 'F one over d two equals F two over d one equals F over d')}
+        ${formula('\\dfrac{F_{1}}{d_{2}}=\\dfrac{F_{2}}{d_{1}}=\\dfrac{F}{d}', 'F one over d two equals F two over d one equals F over d')}
         <p>حيث ${tex('F=F_{1}+F_{2}', 'F equals F one plus F two')} و ${tex('d=d_{1}+d_{2}', 'd equals d one plus d two')} في حالة الجهة الواحدة. هذه السلسلة لا تغيّر القانون؛ هي ترتيب يسهّل حساب مجهول واحد إذا عُرفت ثلاثة مقادير.</p>
       </section>`,
 
@@ -316,7 +316,7 @@ export const LESSON_2_PAGES = [
         <div class="card-badges">${bookBadge('تطبيق محلول · ص 66')}</div>
         <h2>ساق مهملة الكتلة طولها 0.5 m</h2>
         <div class="problem-box">
-          <p>ساق مهملة الكتلة طولها ${tex('AB=0.5\\\\,\\\\mathrm{m}', 'A B equals 0.5 meters')} تؤثر في طرفيها قوتان متوازيتان وبجهة واحدة شدتاهما: ${tex('F_{1}=20\\\\,\\\\mathrm{N}', 'F one equals 20 newtons')} ، ${tex('F_{2}=30\\\\,\\\\mathrm{N}', 'F two equals 30 newtons')}. المطلوب:</p>
+          <p>ساق مهملة الكتلة طولها ${tex('AB=0.5\\,\\mathrm{m}', 'A B equals 0.5 meters')} تؤثر في طرفيها قوتان متوازيتان وبجهة واحدة شدتاهما: ${tex('F_{1}=20\\,\\mathrm{N}', 'F one equals 20 newtons')} ، ${tex('F_{2}=30\\,\\mathrm{N}', 'F two equals 30 newtons')}. المطلوب:</p>
           <ol>
             <li>أحسب شدة محصلة هاتين القوتين.</li>
             <li>أحسب بُعد حامل القوة الثانية عن حامل المحصلة.</li>
@@ -331,12 +331,12 @@ export const LESSON_2_PAGES = [
           </div>
           <div class="worked-step-card" data-worked-step>
             <h5>المعطيات</h5>
-            <p>جهة واحدة، ${qty(20, 'N')} و ${qty(30, 'N')} ، ${tex('AB=0.5\\\\,\\\\mathrm{m}', '0.5 meters')}. الكتلة مهملة فلا وزن للساق نفسها.</p>
+            <p>جهة واحدة، ${qty(20, 'N')} و ${qty(30, 'N')} ، ${tex('AB=0.5\\,\\mathrm{m}', '0.5 meters')}. الكتلة مهملة فلا وزن للساق نفسها.</p>
           </div>
           <div class="worked-step-card" data-worked-step>
             <h5>المطلوب 1 — الشدة</h5>
             <p>لماذا الجمع؟ لأن الجهتين واحدة، فالاستنتاج يعطي ${tex('F=F_{1}+F_{2}', 'F equals F one plus F two')}.</p>
-            ${calculation('F=F_{1}+F_{2}=20+30=50\\\\,\\\\mathrm{N}', 'F equals 20 plus 30 equals 50 newtons')}
+            ${calculation('F=F_{1}+F_{2}=20+30=50\\,\\mathrm{N}', 'F equals 20 plus 30 equals 50 newtons')}
           </div>
         </div>
         <p>تتمة الحل (البعد والعناصر والرسم) في المرحلة التالية كما يتابعها الكتاب في الصفحة 67.</p>
@@ -370,13 +370,13 @@ export const LESSON_2_PAGES = [
           <div class="worked-step-card" data-worked-step>
             <h5>2. بعد حامل القوة الثانية عن حامل المحصلة</h5>
             <p>نستعمل ${tex('F/d=F_{1}/d_{2}', 'F over d equals F one over d two')} لأن المجهول هو d2 المرتبط بالقوة الأولى في سلسلة التناسب.</p>
-            ${formula('\\\\dfrac{F}{d}=\\\\dfrac{F_{1}}{d_{2}}=\\\\dfrac{F_{2}}{d_{1}}', 'F over d equals F one over d two equals F two over d one')}
-            ${calculation('\\\\dfrac{50}{0.5}=\\\\dfrac{20}{d_{2}}\\\\quad\\\\Rightarrow\\\\quad d_{2}=0.2\\\\,\\\\mathrm{m}', '50 over 0.5 equals 20 over d two, so d two equals 0.2 meters')}
+            ${formula('\\dfrac{F}{d}=\\dfrac{F_{1}}{d_{2}}=\\dfrac{F_{2}}{d_{1}}', 'F over d equals F one over d two equals F two over d one')}
+            ${calculation('50/0.5=20/d_{2}\\;\\Rightarrow\\;d_{2}=0.2\\,\\mathrm{m}', '50 over 0.5 equals 20 over d two, so d two equals 0.2 meters')}
           </div>
           <div class="worked-step-card" data-worked-step>
             <h5>التحقق قبل كتابة العناصر</h5>
             <p>d1 = 0.5 − 0.2 = 0.3 m، والجداءان:</p>
-            ${calculation('20\\\\times 0.3=30\\\\times 0.2=6\\\\,\\\\mathrm{N\\\\cdot m}', '20 times 0.3 equals 30 times 0.2 equals 6 newton meters')}
+            ${calculation('20\\times 0.3=30\\times 0.2=6\\,\\mathrm{N\\cdot m}', '20 times 0.3 equals 30 times 0.2 equals 6 newton meters')}
             <p>C أقرب إلى 30 N لأن 0.2 m &lt; 0.3 m.</p>
           </div>
           <div class="worked-step-card" data-worked-step>
@@ -385,7 +385,7 @@ export const LESSON_2_PAGES = [
               <li><strong>نقطة التأثير:</strong> تقع على القطعة المستقيمة AB الواصلة بين نقطتي تأثير القوتين وأقرب إلى القوة الأكبر ${V_F2}، وعلى بعد ${qty(0.2, 'm')} من حامل القوة الثانية.</li>
               <li><strong>حاملها:</strong> يوازي حاملي القوتين ${V_F1} ، ${V_F2}.</li>
               <li><strong>جهتها:</strong> بجهة القوتين ${V_F1} ، ${V_F2}.</li>
-              <li><strong>شدتها:</strong> ${tex('F=50\\\\,\\\\mathrm{N}', 'F equals 50 newtons')}.</li>
+              <li><strong>شدتها:</strong> ${tex('F=50\\,\\mathrm{N}', 'F equals 50 newtons')}.</li>
             </ul>
           </div>
         </div>
@@ -411,7 +411,7 @@ export const LESSON_2_PAGES = [
         <div class="card-badges">${bookBadge('أستنتج · ص 67')}</div>
         <h2>عناصر محصلة قوتين متوازيتين وبجهتين متعاكستين</h2>
         <ul class="worked-elements-list">
-          <li><strong>نقطة تأثيرها:</strong> تقع على امتداد القطعة المستقيمة ${tex('(AB)', 'line A B')} الواصلة بين نقطتي تأثير القوتين وأقرب إلى القوة الأكبر ${V_F2} وتحقق العلاقة ${tex('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'F one times d one equals F two times d two')}.</li>
+          <li><strong>نقطة تأثيرها:</strong> تقع على امتداد القطعة المستقيمة ${tex('(AB)', 'line A B')} الواصلة بين نقطتي تأثير القوتين وأقرب إلى القوة الأكبر ${V_F2} وتحقق العلاقة ${tex('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'F one times d one equals F two times d two')}.</li>
           <li><strong>حاملها:</strong> يوازي حاملي القوتين ${V_F1} ، ${V_F2}.</li>
           <li><strong>جهتها:</strong> بجهة القوة الأكبر ${V_F2}.</li>
           <li><strong>شدتها:</strong> حاصل طرح شدتي القوتين:</li>
@@ -444,7 +444,7 @@ export const LESSON_2_PAGES = [
         <div class="card-badges">${bookBadge('تطبيق محلول · ص 68')}</div>
         <h2>ساق طويلة مهملة الكتلة</h2>
         <div class="problem-box">
-          <p>ساق طويلة مهملة الكتلة تُحدَّد عليها النقطتان ${tex('A', 'A')} ، ${tex('B', 'B')} البعد بينهما ${qty(60, 'cm')} تؤثر في كل من النقطتين A ، B قوتان متوازيتان متعاكستان بالجهة شدتاهما ${tex('F_{1}=200\\\\,\\\\mathrm{N}', 'F one equals 200 newtons')} ، ${tex('F_{2}=300\\\\,\\\\mathrm{N}', 'F two equals 300 newtons')}. المطلوب:</p>
+          <p>ساق طويلة مهملة الكتلة تُحدَّد عليها النقطتان ${tex('A', 'A')} ، ${tex('B', 'B')} البعد بينهما ${qty(60, 'cm')} تؤثر في كل من النقطتين A ، B قوتان متوازيتان متعاكستان بالجهة شدتاهما ${tex('F_{1}=200\\,\\mathrm{N}', 'F one equals 200 newtons')} ، ${tex('F_{2}=300\\,\\mathrm{N}', 'F two equals 300 newtons')}. المطلوب:</p>
           <ol>
             <li>أحسب شدة محصلة القوتين.</li>
             <li>أكتب عناصر محصلة القوتين.</li>
@@ -459,27 +459,27 @@ export const LESSON_2_PAGES = [
           <div class="worked-step-card" data-worked-step>
             <h5>1. شدة المحصلة</h5>
             <p>الجهتان متعاكستان و 300 N أكبر، فنطرح:</p>
-            ${calculation('F=F_{2}-F_{1}=300-200=100\\\\,\\\\mathrm{N}', 'F equals 300 minus 200 equals 100 newtons')}
+            ${calculation('F=F_{2}-F_{1}=300-200=100\\,\\mathrm{N}', 'F equals 300 minus 200 equals 100 newtons')}
           </div>
           <div class="worked-step-card" data-worked-step>
             <h5>2. العناصر — الشدة والجهة والحامل</h5>
             <ul class="worked-elements-list">
               <li><strong>الحامل:</strong> يوازي حاملي القوتين.</li>
               <li><strong>الجهة:</strong> بجهة القوة الأكبر ${V_F2}.</li>
-              <li><strong>الشدة:</strong> ${tex('F=100\\\\,\\\\mathrm{N}', 'F equals 100 newtons')}.</li>
+              <li><strong>الشدة:</strong> ${tex('F=100\\,\\mathrm{N}', 'F equals 100 newtons')}.</li>
             </ul>
           </div>
           <div class="worked-step-card" data-worked-step>
             <h5>نقطة التأثير وحساب d1</h5>
             <p>تقع على المستقيم الواصل بين نقطتي تأثير القوتين وخارج القطعة المستقيمة ومن جهة القوة الأكبر، وتحقق:</p>
-            ${formula('\\\\dfrac{F_{1}}{d_{2}}=\\\\dfrac{F_{2}}{d_{1}}=\\\\dfrac{F}{d}', 'F one over d two equals F two over d one equals F over d')}
-            ${formula('\\\\dfrac{F_{2}}{d_{1}}=\\\\dfrac{F}{d}', 'F two over d one equals F over d')}
-            ${calculation('\\\\dfrac{300}{d_{1}}=\\\\dfrac{100}{60}\\\\quad\\\\Rightarrow\\\\quad d_{1}=180\\\\,\\\\mathrm{cm}', '300 over d one equals 100 over 60, so d one equals 180 centimeters')}
+            ${formula('\\dfrac{F_{1}}{d_{2}}=\\dfrac{F_{2}}{d_{1}}=\\dfrac{F}{d}', 'F one over d two equals F two over d one equals F over d')}
+            ${formula('\\dfrac{F_{2}}{d_{1}}=\\dfrac{F}{d}', 'F two over d one equals F over d')}
+            ${calculation('300/d_{1}=100/60\\;\\Rightarrow\\;d_{1}=180\\,\\mathrm{cm}', '300 over d one equals 100 over 60, so d one equals 180 centimeters')}
           </div>
           <div class="worked-step-card" data-worked-step>
             <h5>تحقق الوحدة والموضع</h5>
             <p>المسافة المعطاة بالسنتيمتر فظهرت d1 بالسنتيمتر. القيمة 180 cm أكبر من 60 cm، وهذا ينسجم مع وقوع C خارج القطعة. بعد القوة الأكبر عن C يساوي 180 − 60 = 120 cm، و:</p>
-            ${calculation('200\\\\times 180=300\\\\times 120=36000\\\\,\\\\mathrm{N\\\\cdot cm}', '200 times 180 equals 300 times 120')}
+            ${calculation('200\\times 180=300\\times 120=36000\\,\\mathrm{N\\cdot cm}', '200 times 180 equals 300 times 120')}
           </div>
         </div>
         ${diagramFigure('worked-opposite', 'C يساراً خارج القطعة، ثم B ثم A. F بجهة F2 إلى أسفل، و d1 = CA = 180 cm.', bookBadge('رسم الحل ص 68'))}
@@ -509,7 +509,7 @@ export const LESSON_2_PAGES = [
           <li><strong>القوى المتوازية:</strong> هي القوى التي تكون حواملها مستقيمات متوازية.</li>
           <li><strong>عناصر محصلة قوتين متوازيتين بجهة واحدة، ${tex('F_{2}>F_{1}', 'F two greater than F one')}:</strong>
             <ul>
-              <li>نقطة تأثيرها: تقع على القطعة المستقيمة ${tex('(AB)', 'A B')} الواصلة بين نقطتي تأثير القوتين وأقرب إلى القوة الأكبر ${V_F2} وتحقق العلاقة ${tex('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'F one d one equals F two d two')}.</li>
+              <li>نقطة تأثيرها: تقع على القطعة المستقيمة ${tex('(AB)', 'A B')} الواصلة بين نقطتي تأثير القوتين وأقرب إلى القوة الأكبر ${V_F2} وتحقق العلاقة ${tex('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'F one d one equals F two d two')}.</li>
               <li>حاملها: يوازي حاملي القوتين ${V_F1} ، ${V_F2}.</li>
               <li>جهتها: بجهة القوتين ${V_F1} ، ${V_F2}.</li>
               <li>شدتها: حاصل جمع شدتي القوتين: ${tex('F=F_{1}+F_{2}', 'F equals F one plus F two')}.</li>
@@ -517,7 +517,7 @@ export const LESSON_2_PAGES = [
           </li>
           <li><strong>عناصر محصلة قوتين متوازيتين وبجهتين متعاكستين، ${tex('F_{2}>F_{1}', 'F two greater than F one')}:</strong>
             <ul>
-              <li>نقطة تأثيرها: تقع على امتداد القطعة المستقيمة ${tex('(AB)', 'A B')} الواصلة بين نقطتي تأثير القوتين ومن جهة القوة الأكبر ${V_F2} وتحقق العلاقة ${tex('F_{1}\\\\times d_{1}=F_{2}\\\\times d_{2}', 'F one d one equals F two d two')}.</li>
+              <li>نقطة تأثيرها: تقع على امتداد القطعة المستقيمة ${tex('(AB)', 'A B')} الواصلة بين نقطتي تأثير القوتين ومن جهة القوة الأكبر ${V_F2} وتحقق العلاقة ${tex('F_{1}\\times d_{1}=F_{2}\\times d_{2}', 'F one d one equals F two d two')}.</li>
               <li>حاملها: يوازي حاملي القوتين ${V_F1} ، ${V_F2}.</li>
               <li>جهتها: بجهة القوة الأكبر ${V_F2}.</li>
               <li>شدتها: حاصل طرح شدتي القوتين: ${tex('F=F_{2}-F_{1}', 'F equals F two minus F one')}.</li>
@@ -581,19 +581,19 @@ export const LESSON_2_PAGES = [
         <div class="exam-question" data-selfcheck-item="70-1">
           <p><strong>1.</strong> محصلة قوتين متوازيتين وبجهة واحدة تحسب بالعلاقة:</p>
           <div class="options-grid">
-            ${renderChoice('a', formula('F=F_{1}+F_{2}', 'F equals F one plus F two'))}
-            ${renderChoice('b', formula('F=F_{1}-F_{2}', 'F equals F one minus F two'))}
-            ${renderChoice('c', formula('F=F_{1}\\\\times F_{2}', 'F equals F one times F two'))}
-            ${renderChoice('d', formula('F=F_{1}\\\\div F_{2}', 'F equals F one divided by F two'))}
+            ${renderChoice('a', tex('F=F_{1}+F_{2}', 'F equals F one plus F two'))}
+            ${renderChoice('b', tex('F=F_{1}-F_{2}', 'F equals F one minus F two'))}
+            ${renderChoice('c', tex('F=F_{1}\\times F_{2}', 'F equals F one times F two'))}
+            ${renderChoice('d', tex('F=F_{1}\\div F_{2}', 'F equals F one divided by F two'))}
           </div>
         </div>
         <div class="exam-question" data-selfcheck-item="70-2">
           <p><strong>2.</strong> محصلة قوتين متوازيتين وبجهتين متعاكستين (حيث ${tex('F_{2}', 'F two')} أكبر من ${tex('F_{1}', 'F one')}) تحسب بالعلاقة:</p>
           <div class="options-grid">
-            ${renderChoice('a', formula('F=F_{1}+F_{2}', 'sum'))}
-            ${renderChoice('b', formula('F=F_{1}-F_{2}', 'F one minus F two'))}
-            ${renderChoice('c', formula('F=F_{2}-F_{1}', 'F two minus F one'))}
-            ${renderChoice('d', formula('F=F_{1}\\\\div F_{2}', 'division'))}
+            ${renderChoice('a', tex('F=F_{1}+F_{2}', 'sum'))}
+            ${renderChoice('b', tex('F=F_{1}-F_{2}', 'F one minus F two'))}
+            ${renderChoice('c', tex('F=F_{2}-F_{1}', 'F two minus F one'))}
+            ${renderChoice('d', tex('F=F_{1}\\div F_{2}', 'division'))}
           </div>
         </div>
         <div class="exam-question" data-selfcheck-item="70-3">
@@ -608,10 +608,10 @@ export const LESSON_2_PAGES = [
         <div class="exam-question" data-selfcheck-item="70-4">
           <p><strong>4.</strong> ${V_F1} ، ${V_F2} قوتان شاقوليتان وبجهة واحدة، بُعدا حامليهما عن حامل المحصلة ${tex('d_{1},d_{2}', 'd one, d two')} على الترتيب، فالبعد بين حامليهما ${tex('d', 'd')} يُعطى بالعلاقة:</p>
           <div class="options-grid">
-            ${renderChoice('a', formula('d=d_{1}+d_{2}', 'd equals d one plus d two'))}
-            ${renderChoice('b', formula('d=d_{1}-d_{2}', 'd equals d one minus d two'))}
-            ${renderChoice('c', formula('d=d_{1}\\\\times d_{2}', 'product'))}
-            ${renderChoice('d', formula('d=d_{1}\\\\div d_{2}', 'quotient'))}
+            ${renderChoice('a', tex('d=d_{1}+d_{2}', 'd equals d one plus d two'))}
+            ${renderChoice('b', tex('d=d_{1}-d_{2}', 'd equals d one minus d two'))}
+            ${renderChoice('c', tex('d=d_{1}\\times d_{2}', 'product'))}
+            ${renderChoice('d', tex('d=d_{1}\\div d_{2}', 'quotient'))}
           </div>
         </div>
       </section>`,

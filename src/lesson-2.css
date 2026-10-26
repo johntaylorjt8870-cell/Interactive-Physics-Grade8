@@ -216,6 +216,13 @@
 .self-check-option-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
 .self-check-option-text { display: inline-flex; align-items: center; gap: 0.4rem; }
 .option-code { font-weight: 800; color: var(--l2-teal); margin-left: 0.35rem; }
+/* The whole option is one radio hit area; inline math stays on the same line. */
+.option-card.is-choice { padding: 0; }
+.option-card.is-choice .self-check-option-label { padding: 0.55rem 0.8rem; min-height: 2.6rem; }
+.option-card.is-choice:focus-within { outline: 2px solid var(--l2-teal); outline-offset: 2px; }
+.option-card.is-selected { border-color: var(--l2-teal); background: #f0fdfa; }
+.option-card .math.math-inline { display: inline-block; }
+.option-card .katex { font-size: 1.05em; }
 
 .l2-btn, .sim-btn {
   appearance: none; border-radius: 8px; padding: 0.42rem 0.85rem;
