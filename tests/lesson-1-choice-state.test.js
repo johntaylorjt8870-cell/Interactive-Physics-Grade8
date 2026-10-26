@@ -16,6 +16,7 @@ import {
   saveChoices,
   selectChoice,
   summarizeChoices,
+  verifyChoice,
 } from '../src/lesson-1-choice-state.js';
 
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
@@ -151,6 +152,51 @@ test('changing the answer invalidates the old verdict and its correction', () =>
   });
 });
 
+test('re-verifying the same wrong answer keeps the correction the student opened', () => {
+  // wrong answer → verify → open the correction
+  let state = verifyChoice(emptyChoiceState(), 'selfcheck:61-2', 'a', 'b', CODES, 2);
+  assert.equal(readChoice(state, 'selfcheck:61-2', CODES).isCorrect, false);
+  state = revealCorrection(state, 'selfcheck:61-2', CODES, 2);
+  assert.equal(readChoice(state, 'selfcheck:61-2', CODES).revealed, true);
+
+  // pressing «تحقّق من هذه الفقرة» again on the same pick is not a new answer
+  const reverified = verifyChoice(state, 'selfcheck:61-2', 'a', 'b', CODES, 2);
+  assert.deepEqual(readChoice(reverified, 'selfcheck:61-2', CODES), {
+    choice: 'a',
+    checked: true,
+    isCorrect: false,
+    hintLevel: 0,
+    revealed: true,
+  });
+
+  // the open correction also survives a re-render (storage round-trip)
+  const memory = new Map();
+  const storage = { getItem: (k) => memory.get(k) ?? null, setItem: (k, v) => memory.set(k, v) };
+  saveChoices(reverified, storage);
+  assert.equal(readChoice(loadChoices(storage), 'selfcheck:61-2', CODES).revealed, true);
+});
+
+test('verifying a different answer after opening the correction hides it again', () => {
+  let state = verifyChoice(emptyChoiceState(), 'selfcheck:61-2', 'a', 'b', CODES, 2);
+  state = revealCorrection(state, 'selfcheck:61-2', CODES, 2);
+  assert.equal(readChoice(state, 'selfcheck:61-2', CODES).revealed, true);
+
+  // a genuinely different pick starts from a clean verdict
+  const changed = verifyChoice(state, 'selfcheck:61-2', 'c', 'b', CODES, 2);
+  assert.deepEqual(readChoice(changed, 'selfcheck:61-2', CODES), {
+    choice: 'c',
+    checked: true,
+    isCorrect: false,
+    hintLevel: 0,
+    revealed: false,
+  });
+
+  // a different pick that happens to be correct never carries a correction
+  const corrected = verifyChoice(state, 'selfcheck:61-2', 'b', 'b', CODES, 2);
+  assert.equal(readChoice(corrected, 'selfcheck:61-2', CODES).isCorrect, true);
+  assert.equal(readChoice(corrected, 'selfcheck:61-2', CODES).revealed, false);
+});
+
 test('retry clears one question only and the batch reset clears the whole batch', () => {
   let state = emptyChoiceState();
   state = selectChoice(state, 'selfcheck:61-1', 'd', CODES);
@@ -221,7 +267,7 @@ test('storage round-trip is best-effort and never breaks the lesson', () => {
 
 test('the lesson wires every «اختر الإجابة» widget to the shared answer state', async () => {
   const practice = await read('../src/lesson-1-practice.js');
-  for (const hook of ['readChoice', 'selectChoice', 'commitChoice', 'revealHint', 'loadChoices', 'saveChoices', 'summarizeChoices']) {
+  for (const hook of ['readChoice', 'selectChoice', 'verifyChoice', 'revealHint', 'loadChoices', 'saveChoices', 'summarizeChoices']) {
     assert.match(practice, new RegExp(`\\b${hook}\\(`), `${hook} must be used by the lesson widgets`);
   }
   // The correction is student-requested and gated on a committed wrong answer;
@@ -233,6 +279,17 @@ test('the lesson wires every «اختر الإجابة» widget to the shared an
     reducer.slice(gate, gate + 320),
     /if \(!current\.checked \|\| current\.isCorrect\) return state;/,
     'the key is never opened before a wrong answer is committed',
+  );
+
+  // Check buttons grade through verifyChoice: select-then-commit would wipe an
+  // already-open correction when the same wrong pick is checked again.
+  assert.match(practice, /verifyChoice\(choiceState, stateKey, checked\.value, answer\.correct/, 'self-check grades through verifyChoice');
+  assert.match(practice, /verifyChoice\(choiceState, stateKey, checked\.value, item\.correct/, 'practice deck grades through verifyChoice');
+  assert.match(practice, /verifyChoice\(choiceState, stateKey, checked\.value, correct/, 'inquiry cards grade through verifyChoice');
+  assert.doesNotMatch(
+    practice,
+    /setChoiceState\(selectChoice\(choiceState, stateKey, checked\.value[\s\S]{0,120}?setChoiceState\(commitChoice/,
+    'no check button may select-then-commit, which drops the open correction',
   );
 
   // The correction is rendered from the stored flag, so it is restored with the

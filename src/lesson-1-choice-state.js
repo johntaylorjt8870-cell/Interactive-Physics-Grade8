@@ -71,6 +71,23 @@ export function commitChoice(state, key, correctChoice, allowedChoices = null, t
   };
 }
 
+/**
+ * The «تحقّق» path shared by every check button: grade the option the student
+ * currently holds.
+ *
+ * It re-selects only when the pick actually differs, because `selectChoice`
+ * deliberately drops the old verdict — and, with it, an already-open
+ * correction. Pressing «تحقّق من هذه الفقرة» again on the same wrong option is
+ * not a new answer, so the correction the student just opened must stay.
+ */
+export function verifyChoice(state, key, chosenChoice, correctChoice, allowedChoices = null, totalHints = null) {
+  const current = readChoice(state, key, allowedChoices, totalHints);
+  const base = current.choice === chosenChoice
+    ? state
+    : selectChoice(state, key, chosenChoice, allowedChoices, totalHints);
+  return commitChoice(base, key, correctChoice, allowedChoices, totalHints);
+}
+
 /** Opens the worked correction — only for a committed wrong answer. */
 export function revealCorrection(state, key, allowedChoices = null, totalHints = null) {
   const current = readChoice(state, key, allowedChoices, totalHints);

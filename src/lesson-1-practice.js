@@ -4,7 +4,6 @@ import { PRACTICE_DECK, PRACTICE_LEVELS, TEXTBOOK_PROBLEMS } from './lesson-1-pr
 import {
   clearChoice,
   clearChoices,
-  commitChoice,
   loadChoices,
   readChoice,
   revealCorrection,
@@ -12,6 +11,7 @@ import {
   saveChoices,
   selectChoice,
   summarizeChoices,
+  verifyChoice,
 } from './lesson-1-choice-state.js';
 
 /* --- 0. Shared answer state for every «اختر الإجابة» widget in Lesson 1 ----
@@ -213,8 +213,9 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
       feedbackBox.textContent = 'اختر أحد البدائل أولاً قبل التحقق.';
       return null;
     }
-    setChoiceState(selectChoice(choiceState, stateKey, checked.value, codes, totalHints));
-    setChoiceState(commitChoice(choiceState, stateKey, answer.correct, codes, totalHints));
+    // verifyChoice keeps an already-open correction when the same pick is
+    // checked again; only a genuinely different pick starts a new verdict.
+    setChoiceState(verifyChoice(choiceState, stateKey, checked.value, answer.correct, codes, totalHints));
     const entry = entryOf();
     syncSelection(entry);
     renderVerdict(entry);
@@ -659,8 +660,7 @@ export function mountPracticeDeck(container) {
         feedback.textContent = 'اختر إجابة أولاً قبل التحقق.';
         return;
       }
-      setChoiceState(selectChoice(choiceState, stateKey, checked.value, codes, totalHints));
-      setChoiceState(commitChoice(choiceState, stateKey, item.correct, codes, totalHints));
+      setChoiceState(verifyChoice(choiceState, stateKey, checked.value, item.correct, codes, totalHints));
       const entry = entryOf();
       syncSelection(entry);
       renderVerdict(entry);
@@ -740,8 +740,7 @@ export function mountInquiryCards(container) {
         feedback.textContent = 'اختر إجابتك أولاً ثم اضغط «تحقّق وافتح التفسير».';
         return;
       }
-      setChoiceState(selectChoice(choiceState, stateKey, checked.value, codes));
-      setChoiceState(commitChoice(choiceState, stateKey, correct, codes));
+      setChoiceState(verifyChoice(choiceState, stateKey, checked.value, correct, codes));
       renderVerdict(entryOf());
     });
 
