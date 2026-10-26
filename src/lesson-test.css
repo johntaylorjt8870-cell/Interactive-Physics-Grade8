@@ -242,16 +242,6 @@ button, select, input { font: inherit; }
 
 .math { direction: ltr; unicode-bidi: isolate; }
 .math-inline { display: inline-block; vertical-align: -0.22em; margin-inline: 0.06em; font-size: 1.06em; line-height: 1.2; }
-
-/* Some solution modules (`src/unit-2-test-solutions.js`) emit a display equation
-   without the `.assessment-formula` wrapper, so the equation box itself has to
-   own the horizontal scroll. KaTeX renders the display line with
-   `white-space: nowrap` (see vendor/katex/katex.min.css), so a long chain such as
-   F = k|q₁q₂|/r² or ρ = RS/ℓ would otherwise widen the whole page on a narrow
-   screen. The declarations only add scrolling; the `.assessment-formula .equation`
-   rule below keeps the existing padding, border and background untouched. */
-.equation { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
-
 .assessment-formula { max-width: 100%; margin: 12px 0; }
 .assessment-formula .equation {
   margin: 0 auto;
