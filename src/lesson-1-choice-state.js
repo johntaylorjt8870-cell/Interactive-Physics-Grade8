@@ -9,13 +9,16 @@
  * contract can be tested with `node --test` (no browser, no jsdom).
  *
  * Entry shape:
- *   { choice: 'd' | null, checked: boolean, isCorrect: boolean, hintLevel: number }
+ *   { choice, checked, isCorrect, hintLevel, revealed }
  *
- * Two invariants matter for the student experience:
+ * Invariants that matter for the student experience:
  *   1. `commitChoice` refuses to grade a question with no choice, so the answer
  *      can never be revealed before the student actually picks an option.
- *   2. `selectChoice` always clears `checked`/`isCorrect`: changing an answer
- *      must not keep an old verdict attached to the new choice.
+ *   2. `selectChoice` always clears `checked`/`isCorrect`/`revealed`: changing an
+ *      answer must not keep an old verdict (or an old correction) attached to
+ *      the new choice.
+ *   3. `revealCorrection` only opens the worked correction for a committed wrong
+ *      attempt, so the full solution is never on screen on its own.
  */
 
 export const CHOICE_STORAGE_KEY = 'physics8.lesson1.choice.v1';
@@ -31,7 +34,7 @@ export function emptyChoiceState() {
 
 /** Normalized read; unknown/malformed entries read as untouched. */
 export function readChoice(state, key, allowedChoices = null, totalHints = null) {
-  const entry = { choice: null, checked: false, isCorrect: false, hintLevel: 0 };
+  const entry = { choice: null, checked: false, isCorrect: false, hintLevel: 0, revealed: false };
   const raw = state?.[key];
   if (!raw || typeof raw !== 'object') return entry;
   const allowed = Array.isArray(allowedChoices) ? allowedChoices : null;
@@ -41,6 +44,7 @@ export function readChoice(state, key, allowedChoices = null, totalHints = null)
   entry.hintLevel = clampHintLevel(raw.hintLevel, totalHints ?? undefined);
   entry.checked = Boolean(raw.checked) && entry.choice !== null;
   entry.isCorrect = entry.checked && Boolean(raw.isCorrect);
+  entry.revealed = entry.checked && !entry.isCorrect && Boolean(raw.revealed);
   return entry;
 }
 
@@ -49,17 +53,29 @@ export function selectChoice(state, key, choice, allowedChoices = null, totalHin
   const allowed = Array.isArray(allowedChoices) ? allowedChoices : null;
   if (typeof choice !== 'string' || (allowed && !allowed.includes(choice))) return state;
   const current = readChoice(state, key, allowed, totalHints);
-  return { ...state, [key]: { choice, checked: false, isCorrect: false, hintLevel: current.hintLevel } };
+  return {
+    ...state,
+    [key]: { choice, checked: false, isCorrect: false, hintLevel: current.hintLevel, revealed: false },
+  };
 }
 
 /** Grades the recorded pick. No choice → no verdict (never reveals early). */
 export function commitChoice(state, key, correctChoice, allowedChoices = null, totalHints = null) {
   const current = readChoice(state, key, allowedChoices, totalHints);
   if (current.choice === null) return state;
+  const isCorrect = current.choice === correctChoice;
   return {
     ...state,
-    [key]: { ...current, checked: true, isCorrect: current.choice === correctChoice },
+    // a correct pick never carries a correction; a repeated wrong pick keeps it
+    [key]: { ...current, checked: true, isCorrect, revealed: isCorrect ? false : Boolean(current.revealed) },
   };
+}
+
+/** Opens the worked correction — only for a committed wrong answer. */
+export function revealCorrection(state, key, allowedChoices = null, totalHints = null) {
+  const current = readChoice(state, key, allowedChoices, totalHints);
+  if (!current.checked || current.isCorrect) return state;
+  return { ...state, [key]: { ...current, revealed: true } };
 }
 
 /** Advances the progressive hint counter, capped at the number of hints. */
@@ -106,6 +122,8 @@ export function normalizeChoices(raw, spec = {}) {
       checked: Boolean(entry.checked) && choice !== null,
       isCorrect: Boolean(entry.checked) && Boolean(entry.isCorrect) && choice !== null,
       hintLevel: clampHintLevel(entry.hintLevel, spec[key]?.hints ?? undefined),
+      revealed: Boolean(entry.revealed)
+        && Boolean(entry.checked) && Boolean(entry.isCorrect) === false && choice !== null,
     };
   }
   return next;

@@ -11,6 +11,7 @@ import {
   normalizeChoices,
   parseStoredChoices,
   readChoice,
+  revealCorrection,
   revealHint,
   saveChoices,
   selectChoice,
@@ -32,6 +33,7 @@ test('a question is never graded before the student picks an option', () => {
     checked: false,
     isCorrect: false,
     hintLevel: 0,
+    revealed: false,
   });
 
   // a forged entry cannot carry a verdict without a real, known option
@@ -48,6 +50,7 @@ test('picking an option records it and drops any previous verdict', () => {
     checked: false,
     isCorrect: false,
     hintLevel: 0,
+    revealed: false,
   });
 
   state = commitChoice(state, 'selfcheck:61-2', 'b', CODES);
@@ -61,6 +64,7 @@ test('picking an option records it and drops any previous verdict', () => {
     checked: false,
     isCorrect: false,
     hintLevel: 0,
+    revealed: false,
   });
 
   state = commitChoice(state, 'selfcheck:61-2', 'b', CODES);
@@ -91,6 +95,60 @@ test('progressive hints survive a re-render and stay capped at the two book hint
     { 'selfcheck:62-2': { choices: CODES, hints: 2 } },
   );
   assert.equal(readChoice(clamped, 'selfcheck:62-2', CODES, 2).hintLevel, 2);
+});
+
+test('the worked correction is stored and survives a re-render, but only after a wrong answer', () => {
+  // asking for the correction before any attempt does nothing
+  let state = revealCorrection(emptyChoiceState(), 'selfcheck:61-2', CODES, 2);
+  assert.deepEqual(state, emptyChoiceState());
+
+  state = selectChoice(state, 'selfcheck:61-2', 'a', CODES, 2);
+  state = revealCorrection(state, 'selfcheck:61-2', CODES, 2);
+  assert.equal(readChoice(state, 'selfcheck:61-2', CODES).revealed, false, 'an unverified pick cannot open the key');
+
+  state = commitChoice(state, 'selfcheck:61-2', 'b', CODES, 2);
+  state = revealCorrection(state, 'selfcheck:61-2', CODES, 2);
+  assert.deepEqual(readChoice(state, 'selfcheck:61-2', CODES), {
+    choice: 'a',
+    checked: true,
+    isCorrect: false,
+    hintLevel: 0,
+    revealed: true,
+  });
+
+  // the flag survives storage, so the correction is still there after navigating
+  const memory = new Map();
+  const storage = { getItem: (k) => memory.get(k) ?? null, setItem: (k, v) => memory.set(k, v) };
+  saveChoices(state, storage);
+  assert.equal(readChoice(loadChoices(storage), 'selfcheck:61-2', CODES).revealed, true);
+
+  // a verified wrong answer that is re-verified keeps the open correction
+  assert.equal(readChoice(commitChoice(state, 'selfcheck:61-2', 'b', CODES), 'selfcheck:61-2', CODES).revealed, true);
+
+  // a correct answer can never carry a correction
+  const corrected = commitChoice(state, 'selfcheck:61-2', 'a', CODES);
+  assert.equal(readChoice(corrected, 'selfcheck:61-2', CODES).revealed, false);
+  assert.deepEqual(revealCorrection(corrected, 'selfcheck:61-2', CODES), corrected);
+
+  // forging the flag without a committed wrong answer is refused on read
+  const forged = normalizeChoices({ 'selfcheck:61-2': { choice: 'a', checked: false, revealed: true } });
+  assert.equal(readChoice(forged, 'selfcheck:61-2', CODES).revealed, false);
+});
+
+test('changing the answer invalidates the old verdict and its correction', () => {
+  let state = selectChoice(emptyChoiceState(), 'selfcheck:61-2', 'a', CODES);
+  state = commitChoice(state, 'selfcheck:61-2', 'b', CODES);
+  state = revealCorrection(state, 'selfcheck:61-2', CODES);
+  assert.equal(readChoice(state, 'selfcheck:61-2', CODES).revealed, true);
+
+  const changed = selectChoice(state, 'selfcheck:61-2', 'b', CODES);
+  assert.deepEqual(readChoice(changed, 'selfcheck:61-2', CODES), {
+    choice: 'b',
+    checked: false,
+    isCorrect: false,
+    hintLevel: 0,
+    revealed: false,
+  });
 });
 
 test('retry clears one question only and the batch reset clears the whole batch', () => {
@@ -135,6 +193,7 @@ test('stored answers are read back defensively', () => {
     checked: true,
     isCorrect: true,
     hintLevel: 0,
+    revealed: false,
   });
 });
 
@@ -165,14 +224,26 @@ test('the lesson wires every «اختر الإجابة» widget to the shared an
   for (const hook of ['readChoice', 'selectChoice', 'commitChoice', 'revealHint', 'loadChoices', 'saveChoices', 'summarizeChoices']) {
     assert.match(practice, new RegExp(`\\b${hook}\\(`), `${hook} must be used by the lesson widgets`);
   }
-  // The correction is student-requested and gated on a committed answer.
-  const correctionStart = practice.indexOf('const renderCorrection = () => {');
-  assert.notEqual(correctionStart, -1, 'the self-check exposes a correction renderer');
+  // The correction is student-requested and gated on a committed wrong answer;
+  // the gate itself lives in the reducer (`revealCorrection`).
+  const reducer = await read('../src/lesson-1-choice-state.js');
+  const gate = reducer.indexOf('export function revealCorrection');
+  assert.notEqual(gate, -1, 'the reducer exposes the correction gate');
   assert.match(
-    practice.slice(correctionStart, correctionStart + 220),
-    /if \(!entry\.checked \|\| entry\.isCorrect\) return;/,
-    'the key is never rendered before a wrong answer is committed',
+    reducer.slice(gate, gate + 320),
+    /if \(!current\.checked \|\| current\.isCorrect\) return state;/,
+    'the key is never opened before a wrong answer is committed',
   );
+
+  // The correction is rendered from the stored flag, so it is restored with the
+  // rest of the answer instead of depending on the button click.
+  assert.match(
+    practice,
+    /if \(entry\.revealed\) appendCorrection\(\);/,
+    'a restored correction must be re-rendered from state',
+  );
+  // The batch score is derived, so every single-question verdict refreshes it.
+  assert.match(practice, /_renderSelfCheckSummary\?\.\(\)/, 'per-question events refresh the batch summary');
 
   const css = await read('../src/lesson-1.css');
   // The selected option must be visible, the card must be one hit area, and the

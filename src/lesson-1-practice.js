@@ -7,6 +7,7 @@ import {
   commitChoice,
   loadChoices,
   readChoice,
+  revealCorrection,
   revealHint,
   saveChoices,
   selectChoice,
@@ -133,6 +134,22 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
     revealBtn.hidden = true;
   };
 
+  /* The worked correction — the key option plus the book explanation. It is
+     rendered from the stored `revealed` flag, so it is still there after the
+     student walks to another stage and comes back. */
+  const appendCorrection = () => {
+    questionEl.querySelector(`.option-card[data-option="${answer.correct}"]`)?.classList.add('is-correct-answer');
+    revealBtn.hidden = true;
+    if (feedbackBox.querySelector('[data-q-correction]')) return;
+    const note = document.createElement('div');
+    note.className = 'l1-correction-note l1-explanation-sub';
+    note.dataset.qCorrection = 'true';
+    note.innerHTML = `<strong>التصحيح:</strong> الإجابة الصحيحة هي
+      <span class="l1-correction-answer" dir="auto">${answer.answerLabel}</span>.
+      <div class="l1-explanation-sub">${answer.explanation}</div>`;
+    feedbackBox.append(note);
+  };
+
   const renderVerdict = (entry) => {
     clearVerdict();
     if (!entry.checked || entry.choice === null) return;
@@ -148,27 +165,24 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
       return;
     }
     chosenCard?.classList.add('is-selected-wrong');
-    revealBtn.hidden = false;
     feedbackBox.className = 'l1-item-feedback is-wrong';
     feedbackBox.innerHTML = `<strong>ليس هذا الاختيار الدقيق:</strong> ${specific}
       <div class="l1-explanation-sub">صحّح اختيارك أو اطلب تلميحاً وأعد المحاولة، أو اعرض التصحيح الكامل بعد أن جرّبت.</div>`;
+    if (entry.revealed) appendCorrection();
+    else revealBtn.hidden = false;
   };
 
   /* Revealed on demand — only after a committed wrong attempt, so the key is
      never on screen before the student has answered. */
   const renderCorrection = () => {
-    const entry = entryOf();
-    if (!entry.checked || entry.isCorrect) return;
-    questionEl.querySelector(`.option-card[data-option="${answer.correct}"]`)?.classList.add('is-correct-answer');
-    revealBtn.hidden = true;
-    if (feedbackBox.querySelector('[data-q-correction]')) return;
-    const note = document.createElement('div');
-    note.className = 'l1-correction-note l1-explanation-sub';
-    note.dataset.qCorrection = 'true';
-    note.innerHTML = `<strong>التصحيح:</strong> الإجابة الصحيحة هي
-      <span class="l1-correction-answer" dir="auto">${answer.answerLabel}</span>.
-      <div class="l1-explanation-sub">${answer.explanation}</div>`;
-    feedbackBox.append(note);
+    setChoiceState(revealCorrection(choiceState, stateKey, codes, totalHints));
+    renderVerdict(entryOf());
+  };
+
+  /* The batch score is derived state, so it must follow every single-question
+     verdict too, not only the «تحقّق من جميع الاختيارات» press. */
+  const refreshSectionSummary = () => {
+    questionEl.closest('[data-self-check]')?._renderSelfCheckSummary?.();
   };
 
   const renderHints = (level) => {
@@ -204,6 +218,7 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
     const entry = entryOf();
     syncSelection(entry);
     renderVerdict(entry);
+    refreshSectionSummary();
     return entry.isCorrect;
   };
 
@@ -214,6 +229,7 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
     for (const card of optionCards) card.classList.remove('is-selected');
     clearVerdict();
     renderHints(0);
+    refreshSectionSummary();
   };
 
   for (const radio of questionEl.querySelectorAll('input[type="radio"]')) {
@@ -222,6 +238,7 @@ function injectQuestionHintsAndFeedback(questionEl, key) {
       const entry = entryOf();
       syncSelection(entry);
       renderVerdict(entry);
+      refreshSectionSummary();
     });
   }
 
@@ -321,6 +338,7 @@ export function enhanceLesson1SelfCheck(container) {
       summary.innerHTML = '';
     });
 
+    section._renderSelfCheckSummary = renderSummary;
     renderSummary();
   }
 }
