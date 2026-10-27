@@ -13,7 +13,7 @@
  *     never presented as measured book readings (the book prints none for them);
  *   - the disputed p116 figure is not turned into a definite ohm value.
  */
-import { formula, qty, tex } from './math.js';
+import { alignedSteps, formula, qty, tex } from './math.js';
 
 const b = (html) => ({ type: 'book', html });
 const pl = (title, html, kind = 'note') => ({ type: 'platform', title, html, kind });
@@ -293,7 +293,10 @@ ${formula('R_{eq}\\times I=R_{1}\\times I+R_{2}\\times I', 'R المكافئة �
 ${formula('I_{eq}=I_{1}+I_{2}+\\cdots', '(1) التيار المكافئ يساوي مجموع تيارات الفروع')}
 <p>لكن ${tex('I_{1}=\\dfrac{U}{R_{1}}', 'I واحد تساوي U على R واحد')} و${tex('I_{2}=\\dfrac{U}{R_{2}}', 'I اثنان تساوي U على R اثنان')}، وبالمثل ${tex('I_{eq}=\\dfrac{U}{R_{eq}}', 'I المكافئة تساوي U على R المكافئة')}.</p>
 <p>نعوّض في (1):</p>
-${formula('\\dfrac{U}{R_{eq}}=\\dfrac{U}{R_{1}}+\\dfrac{U}{R_{2}}+\\cdots\\;\\Longrightarrow\\;\\dfrac{1}{R_{eq}}=\\dfrac{1}{R_{1}}+\\dfrac{1}{R_{2}}+\\cdots', 'نقسم على U فنحصل على مجموع المقلوبات')}
+${alignedSteps([
+        '\\dfrac{U}{R_{eq}}&=\\dfrac{U}{R_{1}}+\\dfrac{U}{R_{2}}+\\cdots',
+        '\\Longrightarrow\\;\\dfrac{1}{R_{eq}}&=\\dfrac{1}{R_{1}}+\\dfrac{1}{R_{2}}+\\cdots',
+      ], 'نقسم على U فنحصل على مجموع المقلوبات')}
 </section>
 <section class="r4-book-section"><h3>تطبيق محلول:</h3>
 <p>مولّد متواصل، التوتر الكهربائي بين قطبيه ${qty(12, 'V')} وُصلت معه مقاومتان متماثلتان قيمة كل منهما ${qty(3, '\\Omega')}.</p>
@@ -304,8 +307,15 @@ ${formula('\\dfrac{U}{R_{eq}}=\\dfrac{U}{R_{1}}+\\dfrac{U}{R_{2}}+\\cdots\\;\\Lo
 </ol>
 <p><strong>الحل:</strong></p>
 <p>1. ${formula('R_{eq}=R_{1}+R_{2}=3+3=6\\,\\Omega', 'المكافئة تساوي 6 أوم')}
-${formula('U_{eq}=R_{eq}\\times I\\;\\Longrightarrow\\;I=\\dfrac{U}{R_{eq}}=\\dfrac{12}{6}=2\\,\\mathrm A', 'التيار يساوي 2 أمبير')}</p>
-<p>2. ${formula('\\dfrac{1}{R_{eq}}=\\dfrac{1}{R_{1}}+\\dfrac{1}{R_{2}}=\\dfrac{1}{3}+\\dfrac{1}{3}=\\dfrac{2}{3}\\;\\Longrightarrow\\;R_{eq}=\\dfrac{3}{2}=1.5\\,\\Omega', 'المكافئة في التفرع 1.5 أوم')}
+${alignedSteps([
+        'U_{eq}&=R_{eq}\\times I',
+        '\\Longrightarrow\\;I&=\\dfrac{U}{R_{eq}}=\\dfrac{12}{6}=2\\,\\mathrm A',
+      ], 'التيار يساوي 2 أمبير')}</p>
+<p>2. ${alignedSteps([
+        '\\dfrac{1}{R_{eq}}&=\\dfrac{1}{R_{1}}+\\dfrac{1}{R_{2}}',
+        '&=\\dfrac{1}{3}+\\dfrac{1}{3}=\\dfrac{2}{3}',
+        '\\Longrightarrow\\;R_{eq}&=\\dfrac{3}{2}=1.5\\,\\Omega',
+      ], 'المكافئة في التفرع 1.5 أوم')}
 ${formula('I=\\dfrac{U}{R_{eq}}=\\dfrac{12}{1.5}=8\\,\\mathrm A', 'التيار الكلي 8 أمبير')}</p></section>`),
       dg('equivalent-summary'),
       sim('network'),

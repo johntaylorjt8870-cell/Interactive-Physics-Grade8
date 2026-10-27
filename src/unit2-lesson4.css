@@ -265,7 +265,12 @@
 .r4-progress-mobile span { display: block; width: 7%; height: 100%; background: linear-gradient(90deg, var(--r4-green), #c58a4a); }
 
 .r4-page-content { min-height: 300px; }
-.r4-step-view { display: grid; gap: 17px; }
+/* One explicit column and min-width:0 on the items: a wide display equation is a
+   single unbreakable box, and the default `min-width:auto` of a grid item lets it
+   push the whole column — and the page — wider than a phone viewport (p115). With
+   the column pinned to the container, the equation's own overflow-x handles it. */
+.r4-step-view { display: grid; grid-template-columns: minmax(0, 1fr); gap: 17px; }
+.r4-step-view > * { min-width: 0; }
 .r4-step-source {
   display: flex;
   flex-wrap: wrap;

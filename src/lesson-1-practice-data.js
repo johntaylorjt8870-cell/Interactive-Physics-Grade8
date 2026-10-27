@@ -1,4 +1,5 @@
 import {
+  alignedSteps,
   formula,
   V_F1,
   V_F2,
@@ -450,9 +451,16 @@ export const TEXTBOOK_PROBLEMS = Object.freeze([
       <div class="worked-eight-grid">
         <div class="worked-step-card"><h5>١. المطلوب</h5><p>حساب شدة ${V_F1}، وتحديد العناصر الأربعة لكلٍّ من المحصلة ${V_F} وقوة الموازنة ${V_F_PRIME}، وتمثيل القوى الأربع <bdi dir="ltr">(${V_F_PRIME}, ${V_F}, ${V_F1}, ${V_F2})</bdi> بمقياس رسم مناسب.</p></div>
         <div class="worked-step-card"><h5>٢. المعطيات بالرموز والواحدات</h5><p>قوتان متلاقيتان في <bdi dir="ltr">O</bdi> حاملاهما متعامدان (<bdi dir="ltr">90°</bdi>)، <bdi dir="ltr">${S_F2} = 12 N</bdi>، <bdi dir="ltr">${S_F} = 15 N</bdi>، والجملة متوازنة بوجود ${V_F_PRIME}.</p></div>
-        <div class="worked-step-card"><h5>٣. القانون المختار وسببه</h5><p>بما أن حاملي ${V_F1} و${V_F2} متعامدان، فالشكل المنشأ مستطيل وقطره ${SEG_OM} وتر في مثلث قائم، فنطبق نظرية فيثاغورث:</p><div class="worked-math">${formula('F^{2}=F_{1}^{2}+F_{2}^{2}\\implies F_{1}=\\sqrt{F^{2}-F_{2}^{2}}', 'F squared equals F1 squared plus F2 squared implies F1 equals square root of F squared minus F2 squared')}</div></div>
+        <div class="worked-step-card"><h5>٣. القانون المختار وسببه</h5><p>بما أن حاملي ${V_F1} و${V_F2} متعامدان، فالشكل المنشأ مستطيل وقطره ${SEG_OM} وتر في مثلث قائم، فنطبق نظرية فيثاغورث:</p><div class="worked-math">${alignedSteps([
+          'F^{2}&=F_{1}^{2}+F_{2}^{2}',
+          '\\implies F_{1}&=\\sqrt{F^{2}-F_{2}^{2}}',
+        ], 'F squared equals F1 squared plus F2 squared implies F1 equals square root of F squared minus F2 squared')}</div></div>
         <div class="worked-step-card"><h5>٤. التمثيل الشعاعي والمرجع</h5><p>نعتمد مبدأ الأشعة في نقطة التلاقي <bdi dir="ltr">O</bdi>، ونختار حامل ${V_F1} أفقياً نحو اليمين وحامل ${V_F2} شاقولياً نحو الأعلى، فيكون القطر ${SEG_OM} حاملاً مشتركاً لـ ${V_F} و${V_F_PRIME}.</p></div>
-        <div class="worked-step-card"><h5>٥. الحساب خطوة بخطوة</h5><div class="worked-math">${formula('F_{1}=\\sqrt{15^{2}-12^{2}}=\\sqrt{225-144}=\\sqrt{81}=9\\,\\mathrm{N}', 'F1 equals square root of 15 squared minus 12 squared equals 9 newtons')}</div></div>
+        <div class="worked-step-card"><h5>٥. الحساب خطوة بخطوة</h5><div class="worked-math">${alignedSteps([
+          'F_{1}&=\\sqrt{15^{2}-12^{2}}',
+          '&=\\sqrt{225-144}',
+          '&=\\sqrt{81}=9\\,\\mathrm{N}',
+        ], 'F1 equals square root of 15 squared minus 12 squared equals 9 newtons')}</div></div>
         <div class="worked-step-card"><h5>٦. العناصر الكاملة والنتائج مع الواحدات</h5>
           <ul class="worked-elements-list">
             <li><strong>شدة القوة الأولى:</strong> <bdi dir="ltr">${S_F1} = 9 N</bdi>.</li>
@@ -519,7 +527,11 @@ export const TEXTBOOK_PROBLEMS = Object.freeze([
         <div class="worked-step-card"><h5>٢. المعطيات بالرموز والواحدات</h5><p>قوتان متلاقيتان في عقدة ربط الحقيبة <bdi dir="ltr">O</bdi>، الزاوية بين الحبلين <bdi dir="ltr">90°</bdi>، <bdi dir="ltr">${S_F1} = 30 N</bdi>، <bdi dir="ltr">${S_F2} = 40 N</bdi>.</p></div>
         <div class="worked-step-card"><h5>٣. القانون المختار وسببه</h5><p>لأن الحبلين متعامدان يتحول متوازي الأضلاع إلى مستطيل ويكون القطر وتراً في مثلث قائم الزاوية، فنطبق نظرية فيثاغورث:</p><div class="worked-math">${formula('F=\\sqrt{F_{1}^{2}+F_{2}^{2}}', 'F equals square root of F1 squared plus F2 squared')}</div></div>
         <div class="worked-step-card"><h5>٤. التمثيل الشعاعي والمرجع</h5><p>نجعل نقطة تعليق الحقيبة <bdi dir="ltr">O</bdi> مبدأً مشتركاً، ونرسم ${V_F1} على المحور الأول و${V_F2} عموديةً عليها على المحور الثاني، ونكمل المستطيل حتى الرأس <bdi dir="ltr">M</bdi>.</p></div>
-        <div class="worked-step-card"><h5>٥. الحساب خطوة بخطوة</h5><div class="worked-math">${formula('F=\\sqrt{30^{2}+40^{2}}=\\sqrt{900+1600}=\\sqrt{2500}=50\\,\\mathrm{N}', 'F equals square root of 30 squared plus 40 squared equals 50 newtons')}</div></div>
+        <div class="worked-step-card"><h5>٥. الحساب خطوة بخطوة</h5><div class="worked-math">${alignedSteps([
+          'F&=\\sqrt{30^{2}+40^{2}}',
+          '&=\\sqrt{900+1600}',
+          '&=\\sqrt{2500}=50\\,\\mathrm{N}',
+        ], 'F equals square root of 30 squared plus 40 squared equals 50 newtons')}</div></div>
         <div class="worked-step-card"><h5>٦. عناصر المحصلة الأربعة والنتيجة</h5>
           <ul class="worked-elements-list">
             <li><strong>نقطة التأثير:</strong> نقطة التقاء الحبلين في الحقيبة <bdi dir="ltr">O</bdi>.</li>
