@@ -31,12 +31,16 @@ import {
   DRAWING_CHALLENGES,
   EXAMPLES,
   GALLERY_GROUPS,
+  LESSON_STEPS,
   OPENING_CHALLENGE,
   PREDICT_SCENARIO,
   STATIONS,
   STATION_QUIZZES,
+  STATION_THEORY,
   findExample,
 } from '../src/physics-in-life-content.js';
+import { createMotionController } from '../src/physics-in-life-motion.js';
+import { LessonStepper } from '../src/lesson-steps.js';
 import { PHYSICS_IN_LIFE_LESSONS, SECTION_META } from '../src/physics-in-life-lessons.js';
 import {
   concurrentStationScene,
@@ -607,8 +611,14 @@ test('the lesson page loads only the section bundle and exposes every live regio
   assert.match(page, /id="pil-gallery-groups"/);
   assert.match(page, /id="pil-drawing-scene"/);
   assert.match(page, /href="\.\/physics-in-life-teacher\.html"/);
-  assert.match(page, /role="tablist"/);
-  assert.equal((page.match(/role="tabpanel"/g) ?? []).length, 3);
+  /* The lesson is a sidebar station stepper, not one long page or tab strip. */
+  assert.match(page, /class="lesson-layout pil-lesson-layout"/);
+  assert.match(page, /id="pil-step-nav"/);
+  assert.match(page, /id="pil-step-heading"[^>]*tabindex="-1"/);
+  assert.match(page, /id="previous-button"/);
+  assert.match(page, /id="next-button"/);
+  assert.equal((page.match(/data-step-id="/g) ?? []).length, 12);
+  assert.doesNotMatch(page, /role="tablist"/);
   assert.doesNotMatch(page, /somer173/);
 });
 
@@ -669,4 +679,303 @@ test('the section stylesheet keeps equations scrollable and never breaks RTL iso
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /\.pil-f1|--pil-f1: #16706b/);
   assert.match(css, /\.pil-workbench \{/);
+});
+
+/* ============================================================================
+   Pre-merge revision: «حرّك القوى» motion + the twelve-station sidebar stepper.
+   The motion clock is DOM-free, so these tests run the real frame loop with an
+   injected clock and prove play / pause / replay / reduced-motion behaviour.
+   ========================================================================== */
+
+function fakeFrameClock() {
+  let time = 0;
+  let nextId = 0;
+  const pending = new Map();
+  return {
+    request(callback) {
+      nextId += 1;
+      pending.set(nextId, callback);
+      return nextId;
+    },
+    cancel(id) {
+      pending.delete(id);
+    },
+    advance(ms) {
+      time += ms;
+      const callbacks = [...pending.values()];
+      pending.clear();
+      callbacks.forEach((callback) => callback(time));
+    },
+    pending: () => pending.size,
+    now: () => time,
+  };
+}
+
+function vectorSegment(svg, marker) {
+  const pattern = new RegExp(
+    `<line class="pil-vector[^"]*" x1="([-\\d.]+)" y1="([-\\d.]+)" x2="([-\\d.]+)" y2="([-\\d.]+)"[^>]*marker-end="url\\(#[^)]*-${marker}\\)"`,
+  );
+  const match = svg.match(pattern);
+  assert.ok(match, `missing ${marker} arrow`);
+  return { x1: Number(match[1]), y1: Number(match[2]), x2: Number(match[3]), y2: Number(match[4]) };
+}
+
+const segmentLength = (segment) => Math.hypot(segment.x2 - segment.x1, segment.y2 - segment.y1);
+const segmentAngle = (segment) => (Math.atan2(-(segment.y2 - segment.y1), segment.x2 - segment.x1) * 180) / Math.PI;
+
+test('«حرّك القوى» starts a real frame loop, pauses where it stopped, and replays from zero', () => {
+  const clock = fakeFrameClock();
+  const frames = [];
+  const controller = createMotionController({
+    duration: 1000,
+    requestFrame: (callback) => clock.request(callback),
+    cancelFrame: (id) => clock.cancel(id),
+    onFrame: (reveal) => frames.push(reveal),
+  });
+
+  assert.equal(controller.getState().reveal, 1, 'the static diagram starts complete');
+  controller.play();
+  assert.equal(controller.getState().status, 'playing');
+  assert.equal(clock.pending(), 1, 'play schedules an animation frame');
+  assert.equal(frames.at(-1), 0, 'a new run clears the drawing first');
+
+  clock.advance(0);
+  clock.advance(250);
+  assert.ok(Math.abs(controller.getState().reveal - 0.25) < 1e-9, 'the clock advances the drawing factor');
+  assert.equal(frames.at(-1), controller.getState().reveal);
+
+  controller.pause();
+  assert.equal(controller.getState().status, 'paused');
+  const frozen = controller.getState().reveal;
+  assert.equal(clock.pending(), 0, 'pause cancels the pending frame');
+  clock.advance(400);
+  assert.equal(controller.getState().reveal, frozen, 'nothing moves while paused');
+
+  controller.play();
+  assert.equal(controller.getState().status, 'playing', 'play resumes a paused run');
+  clock.advance(0);
+  assert.ok(Math.abs(controller.getState().reveal - frozen) < 1e-9, 'resume keeps the exact drawing position');
+  clock.advance(250);
+  assert.ok(Math.abs(controller.getState().reveal - 0.5) < 1e-9);
+
+  clock.advance(1000);
+  assert.equal(controller.getState().status, 'done');
+  assert.equal(controller.getState().reveal, 1);
+  assert.equal(clock.pending(), 0, 'a finished run releases the frame loop');
+
+  controller.play();
+  assert.equal(controller.getState().status, 'playing', 'play after completion is a replay');
+  assert.equal(controller.getState().reveal, 0, 'a replay starts from the initial, empty frame');
+  controller.destroy();
+  assert.equal(clock.pending(), 0, 'teardown cancels every remaining frame');
+});
+
+test('«إيقاف» stops the loop and reset settles on a clean full diagram', () => {
+  const clock = fakeFrameClock();
+  const controller = createMotionController({
+    duration: 800,
+    requestFrame: (callback) => clock.request(callback),
+    cancelFrame: (id) => clock.cancel(id),
+  });
+  controller.play();
+  clock.advance(0);
+  clock.advance(200);
+  const stopped = controller.stop({ settle: true });
+  assert.equal(stopped.status, 'idle');
+  assert.equal(stopped.reveal, 1);
+  assert.equal(clock.pending(), 0);
+  clock.advance(800);
+  assert.equal(controller.getState().reveal, 1, 'no late frame may repaint after stop');
+
+  const reset = controller.reset();
+  assert.equal(reset.status, 'idle');
+  assert.equal(reset.reveal, 1);
+  const blank = controller.reset({ reveal: 0 });
+  assert.equal(blank.reveal, 0, 'reset can also return to the blank starting frame');
+});
+
+test('reduced motion shows the finished drawing at once and never starts a frame loop', () => {
+  let requested = 0;
+  const frames = [];
+  const controller = createMotionController({
+    duration: 900,
+    requestFrame: (callback) => { requested += 1; return 1; },
+    cancelFrame: () => {},
+    reducedMotion: () => true,
+    onFrame: (reveal) => frames.push(reveal),
+  });
+  const state = controller.play();
+  assert.equal(state.status, 'done');
+  assert.equal(state.reveal, 1);
+  assert.equal(state.reduced, true);
+  assert.equal(requested, 0, 'prefers-reduced-motion must not schedule animation frames');
+  assert.deepEqual(frames, [1]);
+});
+
+test('the drawing factor keeps every vector sum exact at every stage and after value changes', () => {
+  const base = { f1: 60, f2: 45, angle: 65, direction: 15, scale: 2.6, showConstruction: true };
+  const blank = concurrentStationScene({ ...base, reveal: 0 }, 'motion-blank');
+  const half = concurrentStationScene({ ...base, reveal: 0.5 }, 'motion-half');
+  const full = concurrentStationScene({ ...base, reveal: 1 }, 'motion-full');
+
+  assert.equal((blank.match(/marker-end=/g) ?? []).length, 0, 'reveal 0 draws no force arrow');
+  assert.equal((half.match(/pil-vector-tag/g) ?? []).length, 0, 'labels wait until the drawing is complete');
+  assert.ok((full.match(/pil-vector-tag/g) ?? []).length >= 3, 'the finished scene labels every vector');
+
+  const fullF1 = vectorSegment(full, 'f1');
+  const halfF1 = vectorSegment(half, 'f1');
+  assert.ok(segmentLength(halfF1) > 0.5, 'halfway through, a real arrow is visible');
+  /* half of the run builds 50/70 of the arrows: the forces fill first, the diagonal last */
+  near(segmentLength(halfF1), segmentLength(fullF1) * (0.5 / 0.7), 0.6);
+  assert.ok(Math.abs(segmentAngle(halfF1) - segmentAngle(fullF1)) < 0.5, 'the direction never drifts while drawing');
+  assert.equal((half.match(/marker-end="url\(#motion-half-resultant\)"/g) ?? []).length, 0, 'the diagonal appears after the parallelogram');
+
+  const cases = [
+    { f1: 20, f2: 80, angle: 30, direction: 10 },
+    { f1: 80, f2: 20, angle: 120, direction: 40 },
+    { f1: 35, f2: 35, angle: 90, direction: 0 },
+  ];
+  cases.forEach((input, index) => {
+    const svg = concurrentStationScene({ ...input, scale: 2.6, showConstruction: true, reveal: 1 }, `sum-${index}`);
+    const result = concurrentResultant(input);
+    const diagonal = vectorSegment(svg, 'resultant');
+    const first = vectorSegment(svg, 'f1');
+    const second = vectorSegment(svg, 'f2');
+    near(segmentLength(diagonal) / 2.6, result.magnitude, 0.15);
+    near(segmentAngle(diagonal), result.directionDegrees, 0.05);
+    /* the diagonal ends exactly at F1 + F2 drawn from the same origin */
+    near(diagonal.x2, first.x1 + (first.x2 - first.x1) + (second.x2 - second.x1), 0.3);
+    near(diagonal.y2, first.y1 + (first.y2 - first.y1) + (second.y2 - second.y1), 0.3);
+  });
+
+  const perpendicular = perpendicularStationScene({ f1: 30, f2: 40, reveal: 1 }, 'perp-motion');
+  const perpDiagonal = vectorSegment(perpendicular, 'resultant');
+  near(segmentLength(perpDiagonal) / 2.6, perpendicularResultant(30, 40).magnitude, 0.1);
+  const perpHalf = perpendicularStationScene({ f1: 30, f2: 40, reveal: 0.5 }, 'perp-half');
+  near(segmentLength(vectorSegment(perpHalf, 'f1')) / 2.6, 30 * (0.5 / 0.7), 0.1);
+});
+
+test('the incline animation draws both weight components exactly, and never turns w⊥ into R', () => {
+  const state = { weight: 600, angle: 30, showReaction: true, reveal: 1 };
+  const full = inclineStationScene(state, 'inc-motion');
+  const half = inclineStationScene({ ...state, reveal: 0.5 }, 'inc-half');
+  const components = inclineComponents(state.weight, state.angle);
+
+  const weight = vectorSegment(full, 'weight');
+  const parallel = vectorSegment(full, 'parallel');
+  const perpendicular = vectorSegment(full, 'perpendicular');
+  const reaction = vectorSegment(full, 'reaction');
+
+  near(segmentLength(weight) / 0.19, 600, 0.5);
+  near(segmentLength(parallel) / 0.19, components.parallel, 0.5);
+  near(segmentLength(perpendicular) / 0.19, components.perpendicular, 0.5);
+  near(segmentAngle(weight), -90, 1e-6);
+  near(segmentAngle(parallel), -180 + state.angle, 0.1);
+  near(segmentAngle(perpendicular), state.angle - 90, 0.1);
+  near(segmentAngle(reaction), 90 + state.angle, 0.1);
+  near(segmentLength(half === full ? parallel : vectorSegment(half, 'parallel')), segmentLength(parallel) / 2, 0.6);
+  near(segmentLength(vectorSegment(half, 'perpendicular')), segmentLength(perpendicular) / 2, 0.6);
+  assert.equal((half.match(/pil-vector-tag/g) ?? []).length, 0, 'component values wait for the completed drawing');
+
+  assert.match(full, /∥/);
+  assert.match(full, /⊥/);
+  assert.match(full, /ليست مركبة من الثقل/);
+  assert.ok(!/رد فعل السطح[\s\S]{0,80}المركبة العمودية/.test(full), 'R keeps its own label and arrow');
+});
+
+test('the lesson defines twelve unique stations that the stepper reaches in both directions', () => {
+  assert.equal(LESSON_STEPS.length, 12);
+  assert.equal(new Set(LESSON_STEPS.map((step) => step.id)).size, 12);
+  LESSON_STEPS.forEach((step) => {
+    assert.ok(step.title.length > 3, `${step.id} needs a title`);
+    assert.ok(step.navLabel.length > 2, `${step.id} needs a sidebar label`);
+    assert.ok(step.kindLabel.length > 2, `${step.id} needs a status label`);
+    assert.ok(!('locked' in step) && !('requires' in step), 'the lesson defines no hidden lock');
+    if (step.station) {
+      assert.ok(STATIONS.some((station) => station.id === step.station), `${step.id} points at a real station`);
+    }
+  });
+  for (const station of STATIONS) {
+    assert.ok(STATION_THEORY[station.id], `missing theory for ${station.id}`);
+    assert.ok(LESSON_STEPS.some((step) => step.kind === 'theory' && step.station === station.id));
+    assert.ok(LESSON_STEPS.some((step) => step.kind === 'lab' && step.station === station.id));
+  }
+
+  const stepper = new LessonStepper(LESSON_STEPS);
+  const forward = [stepper.page.id];
+  while (!stepper.isLast) {
+    assert.equal(stepper.next(), true);
+    forward.push(stepper.page.id);
+  }
+  assert.equal(forward.length, 12, 'every station is reachable forwards');
+  assert.equal(new Set(forward).size, 12);
+
+  const backward = [stepper.page.id];
+  while (!stepper.isFirst) {
+    assert.equal(stepper.previous(), true);
+    backward.push(stepper.page.id);
+  }
+  assert.equal(backward.length, 12, 'every station is reachable backwards');
+  assert.deepEqual(backward, [...forward].reverse());
+});
+
+test('every station owns exactly one page section and only the active one is visible', async () => {
+  const page = await read('../physics-in-life-lesson-1.html');
+  const sections = [...page.matchAll(/<section class="pil-step" id="pil-step-[^"]+" data-step-id="([^"]+)"([^>]*)>/g)];
+  assert.equal(sections.length, 12);
+  assert.deepEqual(sections.map((match) => match[1]), LESSON_STEPS.map((step) => step.id));
+  sections.forEach((match) => {
+    const [, id, attributes] = match;
+    if (id === 'intro') assert.doesNotMatch(attributes, /\bhidden\b/);
+    else assert.match(attributes, /\bhidden\b/, `${id} must start hidden`);
+  });
+
+  assert.match(page, /id="pil-step-nav"/);
+  assert.match(page, /id="previous-button"[\s\S]{0,700}id="next-button"/);
+  assert.match(page, /id="progress-track"[^>]*role="progressbar"/);
+  assert.doesNotMatch(page, /role="tabpanel"/, 'the old horizontal tab strip is gone');
+  /* every lab keeps its controls, quiz and live readouts in its own station */
+  for (const prefix of ['st1', 'st2', 'st3']) {
+    assert.match(page, new RegExp(`id="${prefix}-quiz"`));
+    assert.match(page, new RegExp(`id="${prefix}-equation"`));
+    assert.match(page, new RegExp(`id="${prefix}-motion-play"`));
+    assert.match(page, new RegExp(`id="${prefix}-motion-pause"`));
+    assert.match(page, new RegExp(`id="${prefix}-reset"`));
+  }
+});
+
+test('station navigation only toggles visibility, so values and answers cannot be lost', async () => {
+  const source = await read('../src/physics-in-life-lesson-1.js');
+  const start = source.indexOf('function showStep(');
+  const end = source.indexOf('function initSteps(', start);
+  assert.ok(start > 0 && end > start);
+  const body = source.slice(start, end);
+  assert.match(body, /section\.hidden = section\.dataset\.stepId !== step\.id/);
+  assert.doesNotMatch(body, /innerHTML\s*=/, 'navigation must not re-render a station');
+  assert.doesNotMatch(body, /\.value\s*=/, 'navigation must not reset a control');
+  assert.doesNotMatch(body, /\.reset\(/, 'navigation must not reset the experiment');
+  assert.doesNotMatch(body, /stationState\s*=/, 'navigation keeps the module state object');
+  assert.match(source, /stopInactiveMotions\(step\.kind === 'lab' \? step\.station : null\)/);
+  assert.match(source, /data-goto-step/);
+  assert.match(source, /'pil-stations': 'lab-concurrent'/, 'old anchors still open their station');
+  assert.match(source, /createMotionController/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+});
+
+test('the motion layer belongs to Lesson 1 only: the teacher area and section links stay intact', async () => {
+  const [page, teacher, teacherPage, landing] = await Promise.all([
+    read('../physics-in-life-lesson-1.html'),
+    read('../src/physics-in-life-teacher.js'),
+    read('../physics-in-life-teacher.html'),
+    read('../physics-in-life.html'),
+  ]);
+  assert.doesNotMatch(teacher, /physics-in-life-motion|LESSON_STEPS|createMotionController/);
+  assert.match(teacher, /verifyTeacherPassword/);
+  assert.match(teacherPage, /id="teacher-login"/);
+  assert.doesNotMatch(page, /somer173/);
+  assert.doesNotMatch(teacherPage, /somer173/);
+  assert.match(landing, /physics-in-life-lesson-1\.html/);
+  assert.equal((page.match(/<script type="module"/g) ?? []).length, 1, 'one lesson bundle, no new dependency');
+  assert.doesNotMatch(page, /cdn\.|unpkg|jsdelivr/);
+  assert.equal(Object.values(STATION_QUIZZES).reduce((total, questions) => total + questions.length, 0), 16);
 });

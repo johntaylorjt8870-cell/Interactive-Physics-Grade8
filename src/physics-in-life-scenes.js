@@ -106,6 +106,11 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+/** A point `t` of the way from `from` to `to`; the «حرّك القوى» drawing factor. */
+function along(from, to, t) {
+  return { x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t };
+}
+
 /** Symbol tag: italic symbol with a small subscript and the numeric value. */
 function symbolTag({ x, y, symbol, sub = '', value = '', color = INK, width = 74, height = 44 }) {
   const left = x - width / 2;
@@ -330,11 +335,21 @@ export function concurrentStationScene(state, prefix = 'pil-concurrent') {
   const scale = [1.6, 2.1, 2.6].includes(Number(state.scale)) ? Number(state.scale) : TUG_SCALE;
   const result = concurrentResultant({ f1, f2, angle, direction });
   const O = TUG_ORIGIN;
-  const p1 = pointAt(O, toPixels(f1, scale), result.firstAngle);
-  const p2 = pointAt(O, toPixels(f2, scale), result.secondAngle);
-  const tip = pointAt(O, toPixels(result.magnitude, scale), result.directionDegrees ?? result.bisectorDegrees);
+  /* `reveal` is a drawing factor from «حرّك القوى», never a physics input. */
+  const reveal = clamp(Number(state.reveal ?? 1), 0, 1);
+  const grow = clamp(reveal / 0.7, 0, 1); // the two forces + the parallelogram
+  const resultGrow = clamp((reveal - 0.7) / 0.3, 0, 1); // the diagonal, last
+  const fullP1 = pointAt(O, toPixels(f1, scale), result.firstAngle);
+  const fullP2 = pointAt(O, toPixels(f2, scale), result.secondAngle);
+  const fullTip = pointAt(O, toPixels(result.magnitude, scale), result.directionDegrees ?? result.bisectorDegrees);
+  const p1 = along(O, fullP1, grow);
+  const p2 = along(O, fullP2, grow);
+  const tip = along(O, fullTip, grow);
+  const resultTip = along(O, fullTip, resultGrow);
+  /* Labels arrive only when the arrows have reached their true length. */
+  const showTags = reveal >= 0.985;
 
-  const construction = showConstruction && !result.isZero
+  const construction = showConstruction && !result.isZero && grow > 0.02
     ? `<g class="pil-construction" aria-hidden="true">
         <polygon points="${O.x},${O.y} ${p1.x.toFixed(1)},${p1.y.toFixed(1)} ${tip.x.toFixed(1)},${tip.y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}" fill="${SCENE_COLORS.resultant}" fill-opacity="0.055" />
         ${helperLine({ from: p1, to: tip })}
@@ -342,25 +357,25 @@ export function concurrentStationScene(state, prefix = 'pil-concurrent') {
       </g>`
     : '';
 
-  const firstArrow = f1 > 0 ? arrow(prefix, { from: O, to: p1, color: 'f1', width: 5.5 }) : '';
-  const secondArrow = f2 > 0 ? arrow(prefix, { from: O, to: p2, color: 'f2', width: 5.5 }) : '';
+  const firstArrow = f1 > 0 && grow > 0.001 ? arrow(prefix, { from: O, to: p1, color: 'f1', width: 5.5 }) : '';
+  const secondArrow = f2 > 0 && grow > 0.001 ? arrow(prefix, { from: O, to: p2, color: 'f2', width: 5.5 }) : '';
   const resultantArrow = result.isZero
-    ? zeroResultantTag({ x: O.x + 10, y: O.y + 66 })
-    : arrow(prefix, { from: O, to: tip, color: 'resultant', width: 6.5, className: 'pil-resultant-vector' });
+    ? (showTags ? zeroResultantTag({ x: O.x + 10, y: O.y + 66 }) : '')
+    : (resultGrow > 0.001 ? arrow(prefix, { from: O, to: resultTip, color: 'resultant', width: 6.5, className: 'pil-resultant-vector' }) : '');
 
   const anglePoint = angleLabelPoint({ center: O, radius: 74, fromDegrees: result.firstAngle, toDegrees: result.secondAngle });
   const tagObstacles = [
     { x: O.x - 186, y: O.y - 34, w: 196, h: 68 },
     { x: anglePoint.x - 42, y: anglePoint.y - 16, w: 84, h: 32 },
   ];
-  if (f1 > 4) tagObstacles.push({ x: p1.x - 30, y: p1.y - 22, w: 60, h: 44 });
-  if (f2 > 4) tagObstacles.push({ x: p2.x - 30, y: p2.y - 22, w: 60, h: 44 });
+  if (f1 > 4) tagObstacles.push({ x: fullP1.x - 30, y: fullP1.y - 22, w: 60, h: 44 });
+  if (f2 > 4) tagObstacles.push({ x: fullP2.x - 30, y: fullP2.y - 22, w: 60, h: 44 });
   if (result.isZero) tagObstacles.push({ x: O.x - 70, y: O.y + 50, w: 150, h: 80 });
   const tagItems = [];
-  if (f1 > 0) tagItems.push({ from: O, to: p1, color: 'f1', symbol: 'F', sub: '1', value: `${fmt(f1, 1)} N` });
-  if (f2 > 0) tagItems.push({ from: O, to: p2, color: 'f2', symbol: 'F', sub: '2', value: `${fmt(f2, 1)} N` });
-  if (!result.isZero) tagItems.push({ from: O, to: tip, color: 'resultant', symbol: 'F', value: `${fmt(result.magnitude, 1)} N`, beyond: true });
-  const forceTags = placeArrowTags(prefix, tagItems, { viewW: TUG_W, viewH: TUG_H, obstacles: tagObstacles });
+  if (f1 > 0) tagItems.push({ from: O, to: fullP1, color: 'f1', symbol: 'F', sub: '1', value: `${fmt(f1, 1)} N` });
+  if (f2 > 0) tagItems.push({ from: O, to: fullP2, color: 'f2', symbol: 'F', sub: '2', value: `${fmt(f2, 1)} N` });
+  if (!result.isZero) tagItems.push({ from: O, to: fullTip, color: 'resultant', symbol: 'F', value: `${fmt(result.magnitude, 1)} N`, beyond: true });
+  const forceTags = showTags ? placeArrowTags(prefix, tagItems, { viewW: TUG_W, viewH: TUG_H, obstacles: tagObstacles }) : '';
 
   return `${svgOpen(prefix, {
     w: TUG_W,
@@ -373,14 +388,14 @@ export function concurrentStationScene(state, prefix = 'pil-concurrent') {
     ${shipHull(O)}
     <line class="pil-rope" x1="${O.x}" y1="${O.y}" x2="${p1.x.toFixed(1)}" y2="${p1.y.toFixed(1)}" />
     <line class="pil-rope" x1="${O.x}" y1="${O.y}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" />
-    ${f1 > 4 ? tugboat({ x: p1.x + Math.cos(rad(result.firstAngle)) * 20, y: p1.y - Math.sin(rad(result.firstAngle)) * 20, angle: result.firstAngle, color: SCENE_COLORS.f1 }) : ''}
-    ${f2 > 4 ? tugboat({ x: p2.x + Math.cos(rad(result.secondAngle)) * 20, y: p2.y - Math.sin(rad(result.secondAngle)) * 20, angle: result.secondAngle, color: SCENE_COLORS.f2 }) : ''}
+    ${f1 > 4 && grow > 0.5 ? tugboat({ x: p1.x + Math.cos(rad(result.firstAngle)) * 20, y: p1.y - Math.sin(rad(result.firstAngle)) * 20, angle: result.firstAngle, color: SCENE_COLORS.f1 }) : ''}
+    ${f2 > 4 && grow > 0.5 ? tugboat({ x: p2.x + Math.cos(rad(result.secondAngle)) * 20, y: p2.y - Math.sin(rad(result.secondAngle)) * 20, angle: result.secondAngle, color: SCENE_COLORS.f2 }) : ''}
     ${construction}
     ${firstArrow}
     ${secondArrow}
     ${resultantArrow}
     ${forceTags}
-    ${angleArc({ center: O, radius: 74, fromDegrees: result.firstAngle, toDegrees: result.secondAngle, label: 'θ', value: `${fmt(angle)}°` })}
+    ${grow > 0.55 ? angleArc({ center: O, radius: 74, fromDegrees: result.firstAngle, toDegrees: result.secondAngle, label: 'θ', value: `${fmt(angle)}°` }) : ''}
     ${pointMarker({ x: O.x, y: O.y, color: INK, label: 'O' })}
   ${svgClose}`;
 }
@@ -415,9 +430,18 @@ export function perpendicularStationScene(state, prefix = 'pil-perpendicular') {
   const { f1, f2 } = state;
   const result = perpendicularResultant(f1, f2);
   const O = PERP_ORIGIN;
-  const p1 = { x: O.x + toPixels(f1, PERP_SCALE), y: O.y };
-  const p2 = { x: O.x, y: O.y - toPixels(f2, PERP_SCALE) };
+  const reveal = clamp(Number(state.reveal ?? 1), 0, 1);
+  const grow = clamp(reveal / 0.7, 0, 1);
+  const resultGrow = clamp((reveal - 0.7) / 0.3, 0, 1);
+  const fullP1 = { x: O.x + toPixels(f1, PERP_SCALE), y: O.y };
+  const fullP2 = { x: O.x, y: O.y - toPixels(f2, PERP_SCALE) };
+  const fullTip = { x: fullP1.x, y: fullP2.y };
+  const p1 = along(O, fullP1, grow);
+  const p2 = along(O, fullP2, grow);
   const tip = { x: p1.x, y: p2.y };
+  const resultTip = along(O, fullTip, resultGrow);
+  /* Labels arrive only when the arrows have reached their true length. */
+  const showTags = reveal >= 0.985;
 
   return `${svgOpen(prefix, {
     w: PERP_W,
@@ -430,21 +454,21 @@ export function perpendicularStationScene(state, prefix = 'pil-perpendicular') {
     ${cart(O)}
     <line class="pil-rope" x1="${O.x}" y1="${O.y}" x2="${p1.x}" y2="${p1.y}" />
     <line class="pil-rope" x1="${O.x}" y1="${O.y}" x2="${p2.x}" y2="${p2.y}" />
-    <g class="pil-construction" aria-hidden="true">
+    ${grow > 0.02 ? `<g class="pil-construction" aria-hidden="true">
       <polygon points="${O.x},${O.y} ${p1.x.toFixed(1)},${p1.y.toFixed(1)} ${tip.x.toFixed(1)},${tip.y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}" fill="${SCENE_COLORS.resultant}" fill-opacity="0.055" />
       ${helperLine({ from: p1, to: tip })}
       ${helperLine({ from: p2, to: tip })}
-      <path d="M ${O.x + 22} ${O.y} L ${O.x + 22} ${O.y - 22} L ${O.x} ${O.y - 22}" fill="none" stroke="${MUTED}" stroke-width="1.5" />
-    </g>
-    ${f1 > 0 ? arrow(prefix, { from: O, to: p1, color: 'f1', width: 5.5 }) : ''}
-    ${f2 > 0 ? arrow(prefix, { from: O, to: p2, color: 'f2', width: 5.5 }) : ''}
+    </g>` : ''}
+    ${grow > 0.15 ? `<path d="M ${O.x + 22} ${O.y} L ${O.x + 22} ${O.y - 22} L ${O.x} ${O.y - 22}" fill="none" stroke="${MUTED}" stroke-width="1.5" />` : ''}
+    ${f1 > 0 && grow > 0.001 ? arrow(prefix, { from: O, to: p1, color: 'f1', width: 5.5 }) : ''}
+    ${f2 > 0 && grow > 0.001 ? arrow(prefix, { from: O, to: p2, color: 'f2', width: 5.5 }) : ''}
     ${result.isZero
-    ? zeroResultantTag({ x: O.x + 74, y: O.y - 60, text: 'المحصلة = 0 N' })
-    : arrow(prefix, { from: O, to: tip, color: 'resultant', width: 6.5, className: 'pil-resultant-vector' })}
-    ${placeArrowTags(prefix, [
-    ...(f1 > 0 ? [{ from: O, to: p1, color: 'f1', symbol: 'F', sub: '1', value: `${fmt(f1, 1)} N` }] : []),
-    ...(f2 > 0 ? [{ from: O, to: p2, color: 'f2', symbol: 'F', sub: '2', value: `${fmt(f2, 1)} N` }] : []),
-    ...(result.isZero ? [] : [{ from: O, to: tip, color: 'resultant', symbol: 'F', value: `${fmt(result.magnitude, 1)} N`, beyond: true }]),
+    ? (showTags ? zeroResultantTag({ x: O.x + 74, y: O.y - 60, text: 'المحصلة = 0 N' }) : '')
+    : (resultGrow > 0.001 ? arrow(prefix, { from: O, to: resultTip, color: 'resultant', width: 6.5, className: 'pil-resultant-vector' }) : '')}
+    ${showTags ? placeArrowTags(prefix, [
+    ...(f1 > 0 ? [{ from: O, to: fullP1, color: 'f1', symbol: 'F', sub: '1', value: `${fmt(f1, 1)} N` }] : []),
+    ...(f2 > 0 ? [{ from: O, to: fullP2, color: 'f2', symbol: 'F', sub: '2', value: `${fmt(f2, 1)} N` }] : []),
+    ...(result.isZero ? [] : [{ from: O, to: fullTip, color: 'resultant', symbol: 'F', value: `${fmt(result.magnitude, 1)} N`, beyond: true }]),
   ], {
     viewW: PERP_W,
     viewH: PERP_H,
@@ -453,7 +477,7 @@ export function perpendicularStationScene(state, prefix = 'pil-perpendicular') {
       { x: O.x - 4, y: O.y - 62, w: 70, h: 58 },
       ...(result.isZero ? [{ x: O.x + 20, y: O.y - 96, w: 150, h: 80 }] : []),
     ],
-  })}
+  }) : ''}
     ${pointMarker({ x: O.x, y: O.y, color: INK, label: 'O' })}
     ${rightAngleLabel(O)}
   ${svgClose}`;
@@ -550,19 +574,39 @@ function inclineLabels({ center, weightTip, parallelTip, perpTip, reactionTip, c
 /** Station 3: weight resolution on an inclined plane. */
 export function inclineStationScene(state, prefix = 'pil-incline') {
   const { weight, angle, showReaction = false } = state;
+  const reveal = clamp(Number(state.reveal ?? 1), 0, 1);
   const geometry = inclineGeometry(angle, weight);
   const { alpha, top, contact, center, components, outward, downSlope, intoSurface } = geometry;
   const lengthWeight = toPixels(weight, INC_SCALE);
   const lengthParallel = toPixels(components.parallel, INC_SCALE);
   const lengthPerp = toPixels(components.perpendicular, INC_SCALE);
 
-  const weightTip = { x: center.x, y: center.y + lengthWeight };
-  const parallelTip = { x: center.x + downSlope.x * lengthParallel, y: center.y + downSlope.y * lengthParallel };
-  const perpTip = { x: center.x + intoSurface.x * lengthPerp, y: center.y + intoSurface.y * lengthPerp };
-  const reactionTip = { x: center.x + outward.x * lengthPerp, y: center.y + outward.y * lengthPerp };
-  const labels = inclineLabels({
-    center, weightTip, parallelTip, perpTip, reactionTip, components, weight, alpha, lengthParallel, lengthPerp, showReaction,
-  });
+  const fullWeightTip = { x: center.x, y: center.y + lengthWeight };
+  const fullParallelTip = { x: center.x + downSlope.x * lengthParallel, y: center.y + downSlope.y * lengthParallel };
+  const fullPerpTip = { x: center.x + intoSurface.x * lengthPerp, y: center.y + intoSurface.y * lengthPerp };
+  const fullReactionTip = { x: center.x + outward.x * lengthPerp, y: center.y + outward.y * lengthPerp };
+  /* One common factor keeps the decomposition exact on every frame. */
+  const weightTip = along(center, fullWeightTip, reveal);
+  const parallelTip = along(center, fullParallelTip, reveal);
+  const perpTip = along(center, fullPerpTip, reveal);
+  const reactionTip = along(center, fullReactionTip, reveal);
+  /* Labels arrive only when the arrows have reached their true length. */
+  const showTags = reveal >= 0.985;
+  const labels = showTags
+    ? inclineLabels({
+      center,
+      weightTip: fullWeightTip,
+      parallelTip: fullParallelTip,
+      perpTip: fullPerpTip,
+      reactionTip: fullReactionTip,
+      components,
+      weight,
+      alpha,
+      lengthParallel,
+      lengthPerp,
+      showReaction,
+    })
+    : { tags: '', note: '' };
 
   return `${svgOpen(prefix, {
     w: INC_W,
@@ -574,14 +618,14 @@ export function inclineStationScene(state, prefix = 'pil-incline') {
     ${inclineBackdrop(prefix, INC_W, INC_H, INC_BASE, top, 'ski')}
     ${inclineAngleLabel(INC_BASE, alpha)}
     ${sledder(center, alpha)}
-    <g class="pil-construction" aria-hidden="true">
+    ${reveal > 0.02 ? `<g class="pil-construction" aria-hidden="true">
       ${helperLine({ from: parallelTip, to: weightTip })}
       ${helperLine({ from: perpTip, to: weightTip })}
-    </g>
-    ${arrow(prefix, { from: center, to: weightTip, color: 'weight', width: 5.5 })}
-    ${lengthParallel > 3 ? arrow(prefix, { from: center, to: parallelTip, color: 'parallel', width: 5.5 }) : ''}
-    ${lengthPerp > 3 ? arrow(prefix, { from: center, to: perpTip, color: 'perpendicular', width: 5.5 }) : ''}
-    ${showReaction && lengthPerp > 3 ? arrow(prefix, { from: center, to: reactionTip, color: 'reaction', width: 3.5, dashed: true, className: 'pil-reaction-vector' }) : ''}
+    </g>` : ''}
+    ${reveal > 0.001 ? arrow(prefix, { from: center, to: weightTip, color: 'weight', width: 5.5 }) : ''}
+    ${lengthParallel > 3 && reveal > 0.001 ? arrow(prefix, { from: center, to: parallelTip, color: 'parallel', width: 5.5 }) : ''}
+    ${lengthPerp > 3 && reveal > 0.001 ? arrow(prefix, { from: center, to: perpTip, color: 'perpendicular', width: 5.5 }) : ''}
+    ${showReaction && lengthPerp > 3 && reveal > 0.001 ? arrow(prefix, { from: center, to: reactionTip, color: 'reaction', width: 3.5, dashed: true, className: 'pil-reaction-vector' }) : ''}
     ${labels.tags}
     ${labels.note}
     ${pointMarker({ x: center.x, y: center.y, color: INK, label: 'O' })}

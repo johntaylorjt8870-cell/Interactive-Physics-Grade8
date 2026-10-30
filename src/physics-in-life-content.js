@@ -25,9 +25,38 @@ export const LESSON_META = Object.freeze({
   intro: 'ادخل مختبراً افتراضياً: اسحب، غيّر الزوايا، توقّع النتيجة، ثم اكتشف القوانين بنفسك.',
   subject: 'الوحدة الأولى · الحركة والقوى',
   modelLabel: 'نموذج تعليمي مبسّط — Educational simplified model',
+  objectives: Object.freeze([
+    'تميّز القوى المتلاقية من غيرها، وتحدّد نقطة تأثير كل قوة على الجسم.',
+    'توجد محصلة قوتين متلاقيتين بقاعدة متوازي الأضلاع، وتشرح لماذا هي جمع متجهي لا جمع عددي.',
+    'تحسب محصلة قوتين متعامدتين بنظرية فيثاغورس، وتحدّد اتجاهها بالنسبة إلى القوتين.',
+    'تحلّل ثقل جسم على سطح مائل إلى مركبتين، وتميّز المركبة العمودية من رد الفعل العمودي.',
+    'تفسّر أمثلة من الحياة وتتخذ قراراً في مسألة قوى، مع تمييز المحصلة الصفرية من اتزان الجسم.',
+  ]),
 });
 
 export const SESSION_NOTE = 'تقدمك في هذه الصفحة يبقى في المتصفح ولا يُحفظ في أي مكان، ولا يستطيع المعلم استعراض نتائج الطلاب.';
+
+/* --------------------------------------------------------------- lesson path */
+
+/**
+ * The twelve stations the lesson is taught in. The mount renders exactly one at
+ * a time and the sidebar is built from this list, so the navigation contract is
+ * content, not markup. All stations are open: the lesson defines no lock.
+ */
+export const LESSON_STEPS = Object.freeze([
+  Object.freeze({ id: 'intro', title: 'مقدمة الدرس والأهداف', navLabel: 'مقدمة وأهداف', kind: 'intro', kindLabel: 'بداية الدرس' }),
+  Object.freeze({ id: 'concept', title: 'ما القوى المتلاقية؟', navLabel: 'ما القوى المتلاقية؟', kind: 'concept', kindLabel: 'تحدٍّ افتتاحي' }),
+  Object.freeze({ id: 'theory-concurrent', title: 'محصلة قوتين — قاعدة متوازي الأضلاع', navLabel: 'قاعدة متوازي الأضلاع', kind: 'theory', kindLabel: 'شرح قصير', station: 'concurrent' }),
+  Object.freeze({ id: 'lab-concurrent', title: 'مختبر المحطة الأولى', navLabel: 'مختبر ١: قوتان متلاقيتان', kind: 'lab', kindLabel: 'مختبر تفاعلي', station: 'concurrent' }),
+  Object.freeze({ id: 'theory-perpendicular', title: 'القوى المتعامدة ونظرية فيثاغورس', navLabel: 'فيثاغورس والمتعامدة', kind: 'theory', kindLabel: 'شرح قصير', station: 'perpendicular' }),
+  Object.freeze({ id: 'lab-perpendicular', title: 'مختبر المحطة الثانية', navLabel: 'مختبر ٢: قوتان متعامدتان', kind: 'lab', kindLabel: 'مختبر تفاعلي', station: 'perpendicular' }),
+  Object.freeze({ id: 'theory-incline', title: 'تحليل القوة على سطح مائل', navLabel: 'تحليل القوة على منحدر', kind: 'theory', kindLabel: 'شرح قصير', station: 'incline' }),
+  Object.freeze({ id: 'lab-incline', title: 'مختبر المحطة الثالثة', navLabel: 'مختبر ٣: المنحدر', kind: 'lab', kindLabel: 'مختبر تفاعلي', station: 'incline' }),
+  Object.freeze({ id: 'gallery', title: 'الفيزياء حولنا: اكتشف القوى في كل مشهد', navLabel: 'عشرة أمثلة من الحياة', kind: 'gallery', kindLabel: '10 مشاهد' }),
+  Object.freeze({ id: 'drawing', title: 'أنت رسّام القوى', navLabel: 'تحدي رسم القوى', kind: 'drawing', kindLabel: 'نشاط تقييم' }),
+  Object.freeze({ id: 'predict', title: 'تدرّب وتحقق: توقّع ثم جرّب', navLabel: 'تدرّب وتحقّق', kind: 'practice', kindLabel: 'توقّع وتحقق' }),
+  Object.freeze({ id: 'summary', title: 'ملخص الدرس والتحدي النهائي', navLabel: 'الملخص والتحدي', kind: 'summary', kindLabel: 'خلاصة' }),
+]);
 
 /* --------------------------------------------------------- opening challenge */
 
@@ -159,6 +188,56 @@ export function findStation(id) {
   if (!station) throw new RangeError(`Unknown station: ${id}`);
   return station;
 }
+
+/* ------------------------------------------------------------- station theory */
+
+/**
+ * The short explanation that opens each lab. It restates the authored station
+ * text and exploration answers as a compact, ordered rule set; the mount renders
+ * it before the workbench so the student meets the idea before the controls.
+ * `formula` is TeX for math.js; the mount renders it with KaTeX.
+ */
+export const STATION_THEORY = Object.freeze({
+  concurrent: Object.freeze({
+    station: 'concurrent',
+    question: 'كيف نوجد محصلة قوتين تؤثران في النقطة نفسها؟',
+    lead: 'تؤثر القاطرتان في نقطة ارتباط واحدة على السفينة. سترى القوتين والمحصلة ومتوازي الأضلاع كاملاً، ثم تغيّر كل شيء بنفسك.',
+    points: Object.freeze([
+      Object.freeze({ title: 'نقطة تأثير واحدة', body: 'القوتان تؤثران في النقطة نفسها O، لذلك تُرسمان من O نفسه وتُرسم المحصلة منها أيضاً. هذا معنى «متلاقيتان».' }),
+      Object.freeze({ title: 'مقياس رسم واحد', body: 'نستخدم مقياساً واحداً للقوتين والمحصلة، فيتناسب طول كل سهم مع مقدار قوته الحقيقي. تغيير المقياس يكبّر الرسم أو يصغّره ولا يغيّر أي قيمة.' }),
+      Object.freeze({ title: 'متوازي الأضلاع', body: 'نكمل من طرفي القوتين خطين متقطعين موازيين للقوة الأخرى، فيتكوّن متوازي أضلاع. القطر الخارج من O هو المحصلة.' }),
+      Object.freeze({ title: 'ليست جمعاً عددياً', body: 'لا نجمع 60 N و45 N لنحصل على 105 N إلا إذا كانت القوتان على الاتجاه نفسه. عندما بينهما زاوية، تجمع المركبات لا المقادير.' }),
+      Object.freeze({ title: 'المنصف حالة خاصة', body: 'تقع المحصلة على منصف الزاوية فقط عندما يتساوى مقدارا القوتين. وإذا تساويا وتعاكسا كانت المحصلة صفرية، وهذا لا يعني بالضرورة أن السفينة متزنة.' }),
+    ]),
+    formula: Object.freeze({ tex: '\\vec{F}=\\vec{F}_{1}+\\vec{F}_{2}', aria: 'the resultant vector is the vector sum of the two forces' }),
+  }),
+  perpendicular: Object.freeze({
+    station: 'perpendicular',
+    question: 'لماذا لا نجمع 6 + 8 = 14 عندما تكون القوتان متعامدتين؟',
+    lead: 'حبلان متعامدان يسحبان عربة واحدة من نقطة واحدة. غيّر القوتين وراقب القطر: إنه المحصلة، ويُحسب بنظرية فيثاغورس.',
+    points: Object.freeze([
+      Object.freeze({ title: 'الزاوية قائمة وثابتة', body: 'في هذه المحطة الزاوية بين القوتين 90°، لذلك نغيّر المقدارين فقط ولا نغيّر الزاوية.' }),
+      Object.freeze({ title: 'المستطيل وقطره', body: 'القوتان المتعامدتان تشكّلان ضلعي مستطيل، والقطر الخارج من نقطة التأثير هو المحصلة.' }),
+      Object.freeze({ title: 'فيثاغورس', body: 'مقدار المحصلة هو وتر المثلث القائم: جذر مجموع مربعي القوتين. والزاوية التي تصنعها مع القوة الأولى تُحسب من ظل الزاوية.' }),
+      Object.freeze({ title: 'حالات حدّية', body: 'إذا صفرت إحدى القوتين صارت المحصلة هي القوة الأخرى نفسها. وإذا تساوت القوتان المتعامدتان صنعت المحصلة 45° مع كل منهما.' }),
+      Object.freeze({ title: 'مثال عددي', body: 'قوتان 5 N و5 N متعامدتان تعطيان محصلة تقارب 7.07 N، وليست 10 N؛ لأن القوتين ليستا على الاتجاه نفسه.' }),
+    ]),
+    formula: Object.freeze({ tex: 'F=\\sqrt{F_{1}^{2}+F_{2}^{2}}', aria: 'F equals the square root of F1 squared plus F2 squared' }),
+  }),
+  incline: Object.freeze({
+    station: 'incline',
+    question: 'كيف يؤثر ثقل المتزلج على المنحدر؟',
+    lead: 'الثقل قوة واحدة رأسية، لكننا نحللها إلى مركبتين متعامدتين: واحدة موازية للمنحدر وأخرى عمودية عليه. غيّر الزاوية وراقب القيمتين.',
+    points: Object.freeze([
+      Object.freeze({ title: 'زاوية السطح', body: 'الزاوية α هي زاوية ميل السطح عن الأفق، وليست الزاوية بين الثقل والسطح.' }),
+      Object.freeze({ title: 'المركبة الموازية', body: 'المركبة الموازية للمنحدر تساوي w sin α، واتجاهها إلى أسفل المنحدر. تزداد كلما زادت الزاوية من 0° إلى 90°.' }),
+      Object.freeze({ title: 'المركبة العمودية', body: 'المركبة العمودية على السطح تساوي w cos α، واتجاهها إلى داخل السطح. تتناقص كلما زادت الزاوية من 0° إلى 90°.' }),
+      Object.freeze({ title: 'ليست رد الفعل العمودي', body: 'المركبة العمودية جزء من ثقل الجسم وتؤثر في الجسم نفسه. أما رد الفعل العمودي R فهو قوة يبذلها السطح على الجسم في الاتجاه المعاكس؛ قوتان مختلفتان من حيث المصدر والجسم المؤثر عليه.' }),
+      Object.freeze({ title: 'التسارع ليس من مركبة واحدة', body: 'المركبة الموازية هي أحد المؤثرات فقط. الاحتكاك أو الفرامل قد تؤثر في اتجاه المنحدر، لذلك لا يُستنتج التسارع من w∥ وحدها.' }),
+    ]),
+    formula: Object.freeze({ tex: 'w_{\\parallel}=w\\sin\\alpha \\qquad w_{\\perp}=w\\cos\\alpha', aria: 'w parallel equals w sine alpha, and w perpendicular equals w cosine alpha' }),
+  }),
+});
 
 /* ------------------------------------------------------------ station quizzes */
 

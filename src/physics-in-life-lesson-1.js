@@ -13,13 +13,17 @@ import {
   EXAMPLES,
   GALLERY_GROUPS,
   LESSON_META,
+  LESSON_STEPS,
   OPENING_CHALLENGE,
   PREDICT_SCENARIO,
   SESSION_NOTE,
   STATIONS,
   STATION_QUIZZES,
+  STATION_THEORY,
   findExample,
 } from './physics-in-life-content.js';
+import { LessonStepper } from './lesson-steps.js';
+import { createMotionController } from './physics-in-life-motion.js';
 import {
   COMPASS_DIRECTIONS,
   angularDifference,
@@ -225,11 +229,19 @@ function mountLesson() {
 
   let progress = createProgress(EXPERIENCE_IDS);
   const stationState = {
-    concurrent: { ...STATIONS[0].defaults, showConstruction: true, scale: 2.6 },
-    perpendicular: { ...STATIONS[1].defaults, hideResult: false },
-    incline: { ...STATIONS[2].defaults, showReaction: false },
+    concurrent: { ...STATIONS[0].defaults, showConstruction: true, scale: 2.6, reveal: 1 },
+    perpendicular: { ...STATIONS[1].defaults, hideResult: false, reveal: 1 },
+    incline: { ...STATIONS[2].defaults, showReaction: false, reveal: 1 },
   };
   const quizControllers = {};
+  const motions = {};
+  const STATION_MOTION_UI = {
+    concurrent: { play: 'st1-motion-play', pause: 'st1-motion-pause', status: 'st1-motion-status', bar: 'st1-motion-bar', fill: 'st1-motion-fill' },
+    perpendicular: { play: 'st2-motion-play', pause: 'st2-motion-pause', status: 'st2-motion-status', bar: 'st2-motion-bar', fill: 'st2-motion-fill' },
+    incline: { play: 'st3-motion-play', pause: 'st3-motion-pause', status: 'st3-motion-status', bar: 'st3-motion-bar', fill: 'st3-motion-fill' },
+  };
+  const prefersReducedMotion = () => typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* --------------------------------------------------------------- progress */
 
@@ -254,17 +266,93 @@ function mountLesson() {
     if (experienceNode) experienceNode.textContent = `${summary.seen}/${summary.total}`;
     if (quizNode) quizNode.textContent = `${quizTotal}/${TOTAL_STATION_QUESTIONS}`;
     if (examplesNode) examplesNode.textContent = `${examplesSeen}/${EXAMPLES.length}`;
-
-    qsa('.pil-station-check').forEach((node) => {
-      const panel = node.closest('[role="tabpanel"]');
-      const seen = panel && progress.seen.includes(`station-${panel.id.replace('pil-panel-', '')}`);
-      node.hidden = !seen;
-    });
   }
 
   function touchExperience(id) {
     progress = markExperience(progress, id, EXPERIENCE_IDS);
     updateProgress();
+  }
+
+  /* ------------------------------------------------------ «حرّك القوى» clock */
+
+  function motionMessage(info) {
+    if (info.playing) return 'جارٍ بناء الرسم من القيم والزوايا الحالية…';
+    if (info.status === 'paused') return 'الحركة متوقفة. اضغط «متابعة الحركة» أو «إعادة التجربة».';
+    if (info.reduced) return 'عُرض الرسم كاملاً مباشرة احتراماً لإعداد تقليل الحركة.';
+    if (info.status === 'done') return 'اكتمل العرض: الرسم مطابق للقيم والزوايا الحالية.';
+    return 'جاهز — اضغط «حرّك القوى» لبناء الرسم.';
+  }
+
+  function paintMotion(key) {
+    const controller = motions[key];
+    if (!controller) return;
+    const ui = STATION_MOTION_UI[key];
+    const info = controller.getState();
+    const play = $(ui.play);
+    const pause = $(ui.pause);
+    const status = $(ui.status);
+    const bar = $(ui.bar);
+    const fill = $(ui.fill);
+    if (play) {
+      play.disabled = info.playing;
+      play.textContent = info.playing
+        ? 'جارٍ التحريك…'
+        : info.status === 'paused' ? 'متابعة الحركة' : info.status === 'done' ? 'أعد العرض' : 'حرّك القوى';
+    }
+    if (pause) pause.disabled = !info.playing;
+    const percent = Math.round(info.reveal * 100);
+    if (bar) bar.setAttribute('aria-valuenow', String(percent));
+    if (fill) fill.style.width = `${percent}%`;
+    if (status) {
+      const message = motionMessage(info);
+      /* The live region only receives phase changes, never a per-frame count. */
+      if (status.textContent !== message) status.textContent = message;
+    }
+  }
+
+  /**
+   * Wire one experiment's motion clock. `render` rebuilds the scene from
+   * `stationState[key]`, so every frame shows the real values of the current
+   * inputs and the physical numbers can never drift from the drawing.
+   */
+  function initMotion(key, render) {
+    const ui = STATION_MOTION_UI[key];
+    let lastRendered = -1;
+    const controller = createMotionController({
+      reducedMotion: prefersReducedMotion,
+      onFrame: (reveal) => {
+        stationState[key].reveal = reveal;
+        const percent = Math.round(reveal * 100);
+        const fill = $(ui.fill);
+        const bar = $(ui.bar);
+        if (fill) fill.style.width = `${percent}%`;
+        if (bar) bar.setAttribute('aria-valuenow', String(percent));
+        /* About 28 fps of SVG rebuilds: visibly smooth, light on the DOM. */
+        if (reveal === 0 || reveal === 1 || Math.abs(reveal - lastRendered) >= 0.02) {
+          lastRendered = reveal;
+          render();
+        }
+      },
+      onStateChange: () => paintMotion(key),
+    });
+    motions[key] = controller;
+    $(ui.play)?.addEventListener('click', () => {
+      controller.play();
+      paintMotion(key);
+    });
+    $(ui.pause)?.addEventListener('click', () => {
+      controller.pause();
+      paintMotion(key);
+    });
+    paintMotion(key);
+  }
+
+  function stopInactiveMotions(activeStation = null) {
+    Object.entries(motions).forEach(([key, controller]) => {
+      if (key === activeStation) return;
+      const info = controller.getState();
+      if (info.playing || info.paused) controller.stop({ settle: true });
+    });
   }
 
   /* ---------------------------------------------------------------- opening */
@@ -377,6 +465,7 @@ function mountLesson() {
         ...state,
         showConstruction: state.showConstruction,
         scale: state.scale,
+        reveal: state.reveal,
       }, 'pil-station-concurrent');
     }
     setScaleButtons(state.scale);
@@ -452,6 +541,7 @@ function mountLesson() {
   }
 
   function initConcurrent() {
+    initMotion('concurrent', renderConcurrent);
     const binding = [
       ['st1-f1', (value) => { stationState.concurrent.f1 = value; }],
       ['st1-f2', (value) => { stationState.concurrent.f2 = value; }],
@@ -479,12 +569,13 @@ function mountLesson() {
       touchExperience('station-concurrent');
     });
     $('st1-reset')?.addEventListener('click', () => {
-      stationState.concurrent = { ...STATIONS[0].defaults, showConstruction: true, scale: 2.6 };
+      stationState.concurrent = { ...STATIONS[0].defaults, showConstruction: true, scale: 2.6, reveal: 1 };
       $('st1-f1').value = stationState.concurrent.f1;
       $('st1-f2').value = stationState.concurrent.f2;
       $('st1-angle').value = stationState.concurrent.angle;
       $('st1-direction').value = stationState.concurrent.direction;
-      renderConcurrent();
+      motions.concurrent?.reset();
+      paintMotion('concurrent');
     });
 
     const symbol = $('st1-result-symbol');
@@ -500,7 +591,9 @@ function mountLesson() {
     const state = stationState.perpendicular;
     const result = perpendicularResultant(state.f1, state.f2);
     const scene = $('pil-scene-perpendicular');
-    if (scene) scene.innerHTML = perpendicularStationScene(state, 'pil-station-perpendicular');
+    if (scene) {
+      scene.innerHTML = perpendicularStationScene({ ...state, reveal: state.reveal }, 'pil-station-perpendicular');
+    }
     const setOut = (id, text) => {
       const node = $(id);
       if (node) node.textContent = text;
@@ -548,6 +641,7 @@ function mountLesson() {
   }
 
   function initPerpendicular() {
+    initMotion('perpendicular', renderPerpendicular);
     ['st2-f1', 'st2-f2'].forEach((id) => {
       const input = $(id);
       input?.addEventListener('input', () => {
@@ -562,10 +656,11 @@ function mountLesson() {
       touchExperience('station-perpendicular');
     });
     $('st2-reset')?.addEventListener('click', () => {
-      stationState.perpendicular = { ...STATIONS[1].defaults, hideResult: false };
+      stationState.perpendicular = { ...STATIONS[1].defaults, hideResult: false, reveal: 1 };
       $('st2-f1').value = stationState.perpendicular.f1;
       $('st2-f2').value = stationState.perpendicular.f2;
-      renderPerpendicular();
+      motions.perpendicular?.reset();
+      paintMotion('perpendicular');
     });
     const symbol = $('st2-result-symbol');
     if (symbol) symbol.innerHTML = vector('F');
@@ -585,6 +680,7 @@ function mountLesson() {
         weight: state.weight,
         angle: state.angle,
         showReaction: state.showReaction,
+        reveal: state.reveal,
       }, 'pil-station-incline');
     }
     const setOut = (id, text) => {
@@ -628,6 +724,7 @@ function mountLesson() {
   }
 
   function initIncline() {
+    initMotion('incline', renderIncline);
     $('st3-weight')?.addEventListener('input', (event) => {
       stationState.incline.weight = Number(event.target.value);
       renderIncline();
@@ -644,10 +741,11 @@ function mountLesson() {
       touchExperience('station-incline');
     });
     $('st3-reset')?.addEventListener('click', () => {
-      stationState.incline = { ...STATIONS[2].defaults, showReaction: false };
+      stationState.incline = { ...STATIONS[2].defaults, showReaction: false, reveal: 1 };
       $('st3-weight').value = stationState.incline.weight;
       $('st3-angle').value = stationState.incline.angle;
-      renderIncline();
+      motions.incline?.reset();
+      paintMotion('incline');
     });
     const symbol = $('st3-result-symbol');
     if (symbol) symbol.innerHTML = vector('w');
@@ -1257,6 +1355,32 @@ function mountLesson() {
     renderDrawing();
   }
 
+  /* ------------------------------------------------- content for the steps */
+
+  function renderTheory() {
+    Object.values(STATION_THEORY).forEach((theory) => {
+      const id = theory.station;
+      const question = $(`pil-theory-${id}-question`);
+      const lead = $(`pil-theory-${id}-lead`);
+      const points = $(`pil-theory-${id}-points`);
+      const formulaNode = $(`pil-theory-${id}-formula`);
+      if (question) question.textContent = theory.question;
+      if (lead) lead.textContent = theory.lead;
+      if (points) {
+        points.innerHTML = theory.points.map((point) => `<li><strong>${escapeHtml(point.title)}</strong><span>${escapeHtml(point.body)}</span></li>`).join('');
+      }
+      if (formulaNode) formulaNode.innerHTML = formula(theory.formula.tex, theory.formula.aria);
+    });
+
+    const objectives = $('pil-objectives-list');
+    if (objectives) objectives.innerHTML = LESSON_META.objectives.map((goal) => `<li>${escapeHtml(goal)}</li>`).join('');
+
+    [STATION_THEORY.concurrent, STATION_THEORY.perpendicular, STATION_THEORY.incline].forEach((theory, index) => {
+      const node = $(`pil-summary-formula-${index + 1}`);
+      if (node) node.innerHTML = formula(theory.formula.tex, theory.formula.aria);
+    });
+  }
+
   /* ------------------------------------------------------------- station ui */
 
   function initStations() {
@@ -1287,35 +1411,160 @@ function mountLesson() {
       controller.attach(container);
       quizControllers[stationId] = controller;
     });
+  }
 
-    const tabs = qsa('.pil-station-tab');
-    const selectTab = (target) => {
-      tabs.forEach((tab) => {
-        const selected = tab === target;
-        tab.setAttribute('aria-selected', String(selected));
-        tab.tabIndex = selected ? 0 : -1;
-        const panel = $(tab.getAttribute('aria-controls'));
-        if (panel) panel.hidden = !selected;
-      });
-    };
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
-        selectTab(tab);
-        touchExperience(`station-${tab.getAttribute('aria-controls').replace('pil-panel-', '')}`);
-      });
-      tab.addEventListener('keydown', (event) => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-        event.preventDefault();
-        let next = index;
-        if (event.key === 'ArrowLeft') next = (index + 1) % tabs.length;
-        if (event.key === 'ArrowRight') next = (index - 1 + tabs.length) % tabs.length;
-        if (event.key === 'Home') next = 0;
-        if (event.key === 'End') next = tabs.length - 1;
-        tabs[next].focus();
-        selectTab(tabs[next]);
-        touchExperience(`station-${tabs[next].getAttribute('aria-controls').replace('pil-panel-', '')}`);
-      });
+  /* ------------------------------------------------------- twelve-step stepper */
+
+  const stepper = new LessonStepper(LESSON_STEPS);
+  const visitedSteps = new Set([LESSON_STEPS[0].id]);
+
+  function stepState(step, index) {
+    if (index === stepper.index) return 'current';
+    return visitedSteps.has(step.id) ? 'complete' : 'upcoming';
+  }
+
+  function paintStepNav() {
+    qsa('#pil-step-nav [data-step-index]').forEach((button) => {
+      const index = Number(button.dataset.stepIndex);
+      const step = LESSON_STEPS[index];
+      if (!step) return;
+      const state = stepState(step, index);
+      if (state === 'current') button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
+      const marker = button.querySelector('[data-step-state]');
+      if (marker) {
+        marker.dataset.stepState = state;
+        marker.textContent = state === 'current' ? 'أنت هنا' : state === 'complete' ? 'تمت ✓' : 'قادمة';
+      }
     });
+  }
+
+  function buildStepNav() {
+    const nav = $('pil-step-nav');
+    if (!nav) return;
+    nav.innerHTML = LESSON_STEPS.map((step, index) => `
+      <button class="page-nav-button" type="button" data-step-index="${index}">
+        <span class="nav-page-number" dir="ltr">${index + 1}</span>
+        <span class="nav-page-copy"><strong>${escapeHtml(step.navLabel)}</strong><small>${escapeHtml(step.kindLabel)}</small></span>
+        <span class="pil-step-state" data-step-state="upcoming">قادمة</span>
+      </button>`).join('');
+
+    nav.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-step-index]');
+      if (!button) return;
+      showStep(Number(button.dataset.stepIndex), { focusHeading: true });
+    });
+
+    nav.addEventListener('keydown', (event) => {
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      let next = stepper.index;
+      if (event.key === 'ArrowDown') next = (stepper.index + 1) % LESSON_STEPS.length;
+      if (event.key === 'ArrowUp') next = (stepper.index - 1 + LESSON_STEPS.length) % LESSON_STEPS.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = LESSON_STEPS.length - 1;
+      showStep(next, { focusHeading: true });
+      qsa('#pil-step-nav [data-step-index]')[next]?.focus({ preventScroll: true });
+    });
+  }
+
+  /**
+   * Show exactly one station. Every section stays mounted so slider values,
+   * answers and quiz state survive navigation; only visibility changes.
+   */
+  function showStep(index, { focusHeading = false, updateHash = true } = {}) {
+    stepper.goTo(index);
+    const step = stepper.page;
+    visitedSteps.add(step.id);
+    stopInactiveMotions(step.kind === 'lab' ? step.station : null);
+
+    qsa('#pil-step-content [data-step-id]').forEach((section) => {
+      section.hidden = section.dataset.stepId !== step.id;
+    });
+
+    const heading = $('pil-step-heading');
+    if (heading) heading.textContent = step.title;
+    const kicker = $('pil-step-kicker');
+    if (kicker) kicker.textContent = `المحطة ${stepper.position} من ${stepper.total}`;
+    const badge = $('pil-step-badge');
+    if (badge) badge.textContent = String(stepper.position);
+    const counter = $('progress-text');
+    if (counter) counter.textContent = `${visitedSteps.size} / ${stepper.total}`;
+    const fill = $('progress-fill');
+    if (fill) fill.style.width = `${(visitedSteps.size / stepper.total) * 100}%`;
+    const track = $('progress-track');
+    if (track) {
+      track.setAttribute('aria-valuemax', String(stepper.total));
+      track.setAttribute('aria-valuenow', String(visitedSteps.size));
+    }
+
+    const previousButton = $('previous-button');
+    const nextButton = $('next-button');
+    if (previousButton) previousButton.disabled = stepper.isFirst;
+    if (nextButton) nextButton.disabled = stepper.isLast;
+    const previousLabel = $('previous-label');
+    const nextLabel = $('next-label');
+    if (previousLabel) previousLabel.textContent = stepper.isFirst ? 'بداية الدرس' : stepper.labelFor('previous');
+    if (nextLabel) nextLabel.textContent = stepper.isLast ? 'نهاية الدرس' : stepper.labelFor('next');
+    const center = $('control-center');
+    if (center) center.textContent = `المحطة ${stepper.position} من ${stepper.total}`;
+
+    paintStepNav();
+
+    if (updateHash) {
+      try { history.replaceState(null, '', `#${step.id}`); } catch { /* file:// or sandboxed frame */ }
+    }
+    if (focusHeading) {
+      heading?.focus({ preventScroll: true });
+      try {
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      } catch { /* very old browser */ }
+    }
+  }
+
+  function initSteps() {
+    buildStepNav();
+    $('previous-button')?.addEventListener('click', () => showStep(stepper.index - 1, { focusHeading: true }));
+    $('next-button')?.addEventListener('click', () => showStep(stepper.index + 1, { focusHeading: true }));
+
+    $('pil-content')?.addEventListener('click', (event) => {
+      const trigger = event.target.closest('[data-goto-step]');
+      if (!trigger) return;
+      const index = LESSON_STEPS.findIndex((step) => step.id === trigger.dataset.gotoStep);
+      if (index >= 0) showStep(index, { focusHeading: true });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.defaultPrevented) return;
+      const tag = event.target?.tagName;
+      if (event.target?.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA'].includes(tag)) return;
+      if (event.key === 'PageUp' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        showStep(stepper.index - 1, { focusHeading: true });
+      } else if (event.key === 'PageDown' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showStep(stepper.index + 1, { focusHeading: true });
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) Object.values(motions).forEach((controller) => controller.pause());
+    });
+    window.addEventListener('pagehide', () => {
+      Object.values(motions).forEach((controller) => controller.destroy());
+    });
+
+    /* Keep the old in-page anchors working for bookmarks and shared links. */
+    const LEGACY_HASHES = {
+      'pil-stations': 'lab-concurrent',
+      'pil-predict': 'predict',
+      'pil-gallery': 'gallery',
+      'pil-drawing': 'drawing',
+    };
+    const rawHash = window.location?.hash?.replace('#', '') ?? '';
+    const hash = LEGACY_HASHES[rawHash] ?? rawHash;
+    const start = LESSON_STEPS.findIndex((step) => step.id === hash);
+    showStep(start > 0 ? start : 0, { updateHash: true });
   }
 
   /* ------------------------------------------------------------------- boot */
@@ -1329,6 +1578,8 @@ function mountLesson() {
   const lead = $('pil-lesson-lead');
   if (lead) lead.textContent = LESSON_META.intro;
 
+  renderTheory();
+  initSteps();
   initStations();
   initOpening();
   initPredict();
