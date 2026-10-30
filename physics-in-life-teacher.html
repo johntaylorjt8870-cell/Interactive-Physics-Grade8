@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta name="description" content="منطقة المعلم لقسم الفيزياء في حياتنا — الدرس الأول: القوى المتلاقية وتحليل القوة. حلول الأسئلة والتفسيرات العلمية وحدود النماذج." />
+    <title>منطقة المعلم — الفيزياء في حياتنا | القوى المتلاقية</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="stylesheet" href="./src/teacher.css" />
+    <link rel="stylesheet" href="./src/physics-in-life.css" />
+  </head>
+  <body class="teacher-page pil-teacher-page">
+    <a class="teacher-skip-link" href="#teacher-main">انتقل إلى المحتوى</a>
+    <div class="teacher-shell">
+      <header class="teacher-topbar">
+        <a class="teacher-back-link" href="./physics-in-life-lesson-1.html" aria-label="العودة إلى درس الطالب">
+          <span aria-hidden="true">←</span>
+          <span>صفحة الطالب</span>
+        </a>
+        <div class="teacher-heading-lockup">
+          <p class="teacher-kicker">مساحة مستقلة عن صفحات الطالب</p>
+          <h1>منطقة المعلم</h1>
+        </div>
+        <span class="teacher-scope-badge">الفيزياء في حياتنا · الدرس الأول</span>
+      </header>
+
+      <main class="teacher-main" id="teacher-main">
+        <section class="teacher-intro" aria-labelledby="teacher-intro-heading">
+          <div class="teacher-intro-copy">
+            <p class="teacher-eyebrow">الصف الثامن · الفيزياء · قسم «الفيزياء في حياتنا»</p>
+            <h2 id="teacher-intro-heading">القوى المتلاقية وتحليل القوة</h2>
+            <p class="teacher-lesson-name">ثلاث محطات · عشرة أمثلة من الحياة · تحدي رسم · 16 سؤالاً قصيراً</p>
+            <p class="teacher-intro-note">دليل المعلم للتجارب التفاعلية: ما يعرضه كل مشهد، وما القيم الافتراضية، وحلول أسئلة المحطات ومعرض الحياة وتحدي الرسم، مع حدود النموذج والأخطاء الشائعة.</p>
+          </div>
+          <div class="teacher-source-stamp" aria-label="نطاق منطقة المعلم">
+            <span>النطاق</span>
+            <strong>الدرس الأول</strong>
+          </div>
+        </section>
+
+        <section class="teacher-gate" aria-labelledby="teacher-gate-heading">
+          <div class="teacher-gate-icon" aria-hidden="true">م</div>
+          <div class="teacher-gate-copy">
+            <h2 id="teacher-gate-heading">دخول المعلم</h2>
+            <p>أدخل كلمة المرور المعتمدة لعرض الحلول والتفسيرات. لا تُحمَّل مادة المعلم إلى الصفحة قبل اجتياز التحقق.</p>
+            <form id="teacher-login" class="teacher-login-form" novalidate>
+              <label for="teacher-password">كلمة مرور منطقة المعلم</label>
+              <div class="teacher-login-row">
+                <input id="teacher-password" name="password" type="password" required autocomplete="current-password" aria-describedby="teacher-gate-help" />
+                <button id="teacher-login-submit" type="submit">تحقق من كلمة المرور</button>
+              </div>
+              <p id="teacher-gate-help" class="teacher-gate-help">لا تُحفظ كلمة المرور في المتصفح. البوابة فصل تنظيمي داخل موقع ثابت على طرف العميل، وليست حماية خادم خلفية. لا تُسجَّل نتائج الطلاب في المنصة، ولا تعرض هذه الصفحة نتائج فردية.</p>
+              <p id="teacher-auth-message" class="teacher-auth-message" role="alert" aria-live="assertive" hidden></p>
+            </form>
+          </div>
+        </section>
+
+        <section id="teacher-workspace" class="teacher-workspace" aria-label="محتوى منطقة المعلم" hidden></section>
+      </main>
+
+      <footer class="teacher-footer">
+        <span>مساحة المعلم · الفيزياء في حياتنا · الدرس الأول</span>
+        <a href="./physics-in-life-lesson-1.html">العودة إلى الدرس</a>
+      </footer>
+    </div>
+    <script type="module" src="./src/physics-in-life-teacher.js"></script>
+  </body>
+</html>
