@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { webcrypto } from 'node:crypto';
 
 import {
   COMPASS_DIRECTIONS,
@@ -52,6 +53,7 @@ import {
   predictScene,
 } from '../src/physics-in-life-scenes.js';
 import { renderTeacherContent } from '../src/physics-in-life-teacher-content.js';
+import { PHYSICS_IN_LIFE_TEACHER_PAYLOAD } from '../src/physics-in-life-teacher-payload.js';
 
 const near = (actual, expected, tolerance = 1e-9) => {
   assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} differs from ${expected} by more than ${tolerance}`);
@@ -650,11 +652,62 @@ test('the teacher area reuses the existing verifier and never prints the passphr
   assert.match(page, /id="teacher-workspace"/);
   assert.match(script, /verifyTeacherPassword/);
   assert.match(script, /mountTeacherArea/);
-  assert.match(script, /physics-in-life-teacher-content\.js/);
+  assert.match(script, /PHYSICS_IN_LIFE_TEACHER_PAYLOAD/);
+  assert.match(script, /crypto\.subtle\.decrypt/);
+  assert.match(script, /passPasswordToContent: true/);
+  assert.doesNotMatch(script, /^import .*teacher-content\.js/m);
   assert.doesNotMatch(page, /somer173/);
   assert.doesNotMatch(script, /somer173/);
   assert.doesNotMatch(auth, /somer173/);
   assert.match(auth, /PBKDF2/);
+});
+
+const decodeBase64 = (value) => Uint8Array.from(Buffer.from(value, 'base64'));
+
+async function decryptTeacherPayload(password) {
+  const encoder = new TextEncoder();
+  const material = await webcrypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await webcrypto.subtle.deriveKey({
+    name: 'PBKDF2',
+    salt: decodeBase64(PHYSICS_IN_LIFE_TEACHER_PAYLOAD.salt),
+    iterations: PHYSICS_IN_LIFE_TEACHER_PAYLOAD.iterations,
+    hash: 'SHA-256',
+  }, material, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plaintext = await webcrypto.subtle.decrypt({
+    name: 'AES-GCM',
+    iv: decodeBase64(PHYSICS_IN_LIFE_TEACHER_PAYLOAD.iv),
+  }, key, decodeBase64(PHYSICS_IN_LIFE_TEACHER_PAYLOAD.ciphertext));
+  return new TextDecoder().decode(plaintext);
+}
+
+test('the teacher guide ships only as authenticated ciphertext, never as deployed prose', async () => {
+  const payloadSource = await read('../src/physics-in-life-teacher-payload.js');
+  for (const marker of ['حلول الاختبارات القصيرة', 'الإجابة:', 'التفسير:', 'pil-teacher-quizzes', '<section', 'دليل المعلم']) {
+    assert.ok(!payloadSource.includes(marker), `payload source leaks plaintext marker: ${marker}`);
+  }
+  assert.equal(PHYSICS_IN_LIFE_TEACHER_PAYLOAD.iterations, 180000);
+  assert.ok(PHYSICS_IN_LIFE_TEACHER_PAYLOAD.ciphertext.length > 100000);
+  assert.equal(await decryptTeacherPayload('somer173'), renderTeacherContent());
+});
+
+test('the teacher payload rejects a wrong password instead of yielding partial content', async () => {
+  await assert.rejects(() => decryptTeacherPayload('somer172'));
+  await assert.rejects(() => decryptTeacherPayload(''));
+});
+
+test('the production build excludes the plaintext guide while the page decrypts it', async () => {
+  const [build, script] = await Promise.all([
+    read('../scripts/build.mjs'),
+    read('../src/physics-in-life-teacher.js'),
+  ]);
+  assert.match(build, /PLAINTEXT_TEACHER_CONTENT/);
+  assert.match(build, /'physics-in-life-teacher-content\.js'/);
+  assert.match(build, /filter: \(source\) => !PLAINTEXT_TEACHER_CONTENT\.some/);
+  assert.match(build, /'unit2-exercises-teacher-content\.js'/);
+  assert.match(script, /from '\.\/physics-in-life-teacher-payload\.js'/);
+  assert.match(script, /'PBKDF2'/);
+  assert.match(script, /'AES-GCM'/);
+  assert.match(script, /teacher-payload-integrity-failed/);
 });
 
 test('teacher content renders every key without KaTeX errors', () => {

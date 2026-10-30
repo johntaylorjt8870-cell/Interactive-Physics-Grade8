@@ -40,8 +40,16 @@ await cp(resolve(projectDirectory, 'unit2-lesson-3-test.html'), resolve(outputDi
 for (const entry of ['unit2-lesson-4.html', 'unit2-lesson-4-teacher.html', 'unit-2-test.html', 'unit2-exercises.html', 'unit2-exercises-teacher.html']) {
   await cp(resolve(projectDirectory, entry), resolve(outputDirectory, entry));
 }
-// Keep authored plaintext teacher solutions out of the static deployment.
-await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), { recursive: true, filter: (source) => !source.endsWith('unit2-exercises-teacher-content.js') });
+// Keep authored plaintext teacher solutions out of the static deployment. The
+// deployed pages decrypt their authenticated ciphertext payload after the gate.
+const PLAINTEXT_TEACHER_CONTENT = Object.freeze([
+  'unit2-exercises-teacher-content.js',
+  'physics-in-life-teacher-content.js',
+]);
+await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), {
+  recursive: true,
+  filter: (source) => !PLAINTEXT_TEACHER_CONTENT.some((name) => source.endsWith(name)),
+});
 await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
 
 console.log('Production static build written to dist/.');
