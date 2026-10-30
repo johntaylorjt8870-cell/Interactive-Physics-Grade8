@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1a2438" />
+    <meta name="description" content="الفيزياء في حياتنا — الدرس الأول: القوى المتلاقية وتحليل القوة. مختبر افتراضي بثلاث محطات وعشرة أمثلة من الحياة وتحدي رسم القوى." />
+    <title>القوى المتلاقية وتحليل القوة | الفيزياء في حياتنا</title>
+    <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="./src/home.css" />
+    <link rel="stylesheet" href="./src/physics-in-life.css" />
+  </head>
+  <body class="pil-page">
+    <a class="pil-skip-link" href="#pil-content">انتقل إلى المختبر</a>
+    <div class="pil-shell">
+      <header class="pil-topbar">
+        <a class="pil-brand" href="./" aria-label="الصفحة الرئيسية لمنصة Interactive Physics">
+          <span class="pil-brand-mark" aria-hidden="true">ف</span>
+          <span class="pil-brand-copy">
+            <strong dir="ltr">Interactive Physics</strong>
+            <span>مسار الفيزياء · الصف الثامن</span>
+          </span>
+        </a>
+        <nav class="pil-breadcrumb" aria-label="مسار الموقع">
+          <a href="./">الرئيسية</a>
+          <span aria-hidden="true">/</span>
+          <a href="./physics-in-life.html">الفيزياء في حياتنا</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">القوى المتلاقية</span>
+        </nav>
+        <nav class="pil-topnav" aria-label="التنقل في الدرس">
+          <a href="#pil-stations">المحطات</a>
+          <a href="#pil-predict">توقّع ثم جرّب</a>
+          <a href="#pil-gallery">أمثلة الحياة</a>
+          <a href="#pil-drawing">تحدي الرسم</a>
+          <a class="pil-teacher-link" href="./physics-in-life-teacher.html">منطقة المعلم</a>
+        </nav>
+      </header>
+
+      <main id="pil-content">
+        <section class="pil-lesson-hero" aria-labelledby="pil-lesson-title">
+          <div>
+            <p class="pil-eyebrow" id="pil-lesson-kicker">الفيزياء في حياتنا · الدرس الأول</p>
+            <h1 id="pil-lesson-title">القوى المتلاقية وتحليل القوة</h1>
+            <p class="pil-opening-question" id="pil-lesson-opening">ماذا يحدث عندما تسحب قوتان جسماً في اتجاهين مختلفين؟</p>
+            <p class="pil-hero-lead" id="pil-lesson-lead">ادخل مختبراً افتراضياً: اسحب، غيّر الزوايا، توقّع النتيجة، ثم اكتشف القوانين بنفسك.</p>
+          </div>
+          <div class="pil-hero-side" aria-label="ملخص الدرس والتقدم">
+            <div class="pil-stat"><span>المحطات</span><b>3</b></div>
+            <div class="pil-stat"><span>أمثلة من الحياة</span><b>10</b></div>
+            <div class="pil-stat"><span>تقدمك في الصفحة</span><b id="pil-progress-percent">0%</b></div>
+            <div class="pil-progress-track" role="progressbar" aria-labelledby="pil-progress-caption" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pil-progress-bar">
+              <div class="pil-progress-fill" id="pil-progress-fill"></div>
+            </div>
+            <p class="pil-progress-caption" id="pil-progress-caption">0 من 15 تجربة — يبقى التقدم في هذه الصفحة ولا يُحفظ.</p>
+          </div>
+        </section>
+
+        <section class="pil-panel pil-challenge" id="pil-opening" aria-labelledby="pil-opening-title">
+          <div class="pil-panel-heading">
+            <div>
+              <p class="pil-kicker">التحدي الافتتاحي</p>
+              <h2 id="pil-opening-title">توقّع قبل أن ترى النتيجة</h2>
+              <p id="pil-opening-hint">سجّل توقعك أولاً. لن نكشف الإجابة حتى تضغط «قارن توقعي»، وبعدها ستستطيع تغيير القيم ومشاهدة المحصلة.</p>
+            </div>
+            <span class="pil-chip">الخطوة ١ من ٣</span>
+          </div>
+          <div class="pil-challenge-grid">
+            <div class="pil-challenge-scene" id="pil-opening-scene" aria-live="polite"></div>
+            <div class="pil-challenge-controls">
+              <p class="pil-question" id="pil-opening-question-text">إذا سحب شخصان جسماً بقوتين مختلفتين، فهل يتحرك الجسم باتجاه القوة الأكبر دائماً، أم باتجاه آخر؟</p>
+              <div class="pil-choices" id="pil-opening-choices" role="group" aria-labelledby="pil-opening-question-text"></div>
+              <div class="pil-feedback is-neutral" id="pil-opening-status" role="status" aria-live="polite" hidden></div>
+              <div class="pil-actions">
+                <button class="pil-btn is-primary" id="pil-opening-compare" type="button" disabled>قارن توقعي</button>
+                <a class="pil-btn is-quiet" href="#pil-stations">انتقل إلى التجربة الأولى ↓</a>
+              </div>
+              <div class="pil-feedback is-neutral" id="pil-opening-feedback" role="status" aria-live="polite" hidden></div>
+              <div id="pil-opening-sliders" hidden>
+                <div class="pil-slider is-f1">
+                  <div class="pil-slider-head"><label for="pil-opening-f1">مقدار القوة الأولى F₁</label><output id="pil-opening-f1-value" for="pil-opening-f1">70 N</output></div>
+                  <input id="pil-opening-f1" type="range" min="10" max="80" step="5" value="70" aria-describedby="pil-opening-f1-hint" />
+                  <span class="pil-slider-hint" id="pil-opening-f1-hint">حرّك القيمة وقارن اتجاه المحصلة بتوقعك.</span>
+                </div>
+                <div class="pil-slider is-f2">
+                  <div class="pil-slider-head"><label for="pil-opening-f2">مقدار القوة الثانية F₂</label><output id="pil-opening-f2-value" for="pil-opening-f2">40 N</output></div>
+                  <input id="pil-opening-f2" type="range" min="10" max="80" step="5" value="40" aria-describedby="pil-opening-f2-hint" />
+                  <span class="pil-slider-hint" id="pil-opening-f2-hint">جرّب أن تجعل القوتين متساويتين ثم مختلفتين.</span>
+                </div>
+              </div>
+              <p class="pil-note" id="pil-session-note">تقدمك في هذه الصفحة يبقى في المتصفح ولا يُحفظ في أي مكان، ولا يستطيع المعلم استعراض نتائج الطلاب.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pil-lab" id="pil-stations" aria-labelledby="pil-stations-title">
+          <div class="pil-section-heading">
+            <div>
+              <p class="pil-kicker">المختبر الافتراضي</p>
+              <h2 id="pil-stations-title">ثلاث محطات مستقلة</h2>
+            </div>
+            <p>كل محطة تجربة كاملة: مشهد متجهي، تحكم حيّ، حساب فعلي، أسئلة استكشاف، ثم اختبار قصير.</p>
+          </div>
+
+          <div class="pil-station-rail" role="tablist" aria-label="محطات الدرس">
+            <button class="pil-station-tab" id="pil-tab-concurrent" type="button" role="tab" aria-selected="true" aria-controls="pil-panel-concurrent" tabindex="0">
+              <span class="pil-station-number" aria-hidden="true">١</span>
+              <span><strong>قوتان متلاقيتان</strong><small>متوازي الأضلاع · سفينة وقاطرتان</small><span class="pil-station-check" hidden>تم الاستكشاف ✓</span></span>
+            </button>
+            <button class="pil-station-tab" id="pil-tab-perpendicular" type="button" role="tab" aria-selected="false" aria-controls="pil-panel-perpendicular" tabindex="-1">
+              <span class="pil-station-number" aria-hidden="true">٢</span>
+              <span><strong>قوتان متعامدتان</strong><small>فيثاغورس · عربة وحبلان</small><span class="pil-station-check" hidden>تم الاستكشاف ✓</span></span>
+            </button>
+            <button class="pil-station-tab" id="pil-tab-incline" type="button" role="tab" aria-selected="false" aria-controls="pil-panel-incline" tabindex="-1">
+              <span class="pil-station-number" aria-hidden="true">٣</span>
+              <span><strong>تحليل القوة على منحدر</strong><small>مركبتان · متزلج وسطح مائل</small><span class="pil-station-check" hidden>تم الاستكشاف ✓</span></span>
+            </button>
+          </div>
+
+          <section class="pil-station-panel" id="pil-panel-concurrent" role="tabpanel" aria-labelledby="pil-tab-concurrent" tabindex="0">
+            <div class="pil-station-header">
+              <div>
+                <span class="pil-station-scene-name" id="st1-scene-name">المشهد: سفينة تسحبها قاطرتان</span>
+                <h2 id="st1-title">محصلة قوتين متلاقيتين وقاعدة متوازي الأضلاع</h2>
+                <p>تؤثر القاطرتان في نقطة ارتباط واحدة على السفينة. غيّر القوتين والزاوية، وشاهد المحصلة ومتوازي الأضلاع يتغيران معاً.</p>
+              </div>
+            </div>
+            <div class="pil-workbench">
+              <figure class="pil-panel pil-scene-panel">
+                <div class="pil-scene-canvas" id="pil-scene-concurrent" aria-live="polite"></div>
+                <figcaption class="pil-scene-caption">
+                  <span class="pil-scale-note"><span class="pil-scale-dot" aria-hidden="true"></span> مقياس الرسم: <span id="st1-scale-caption">1 N = 2.6 px</span></span>
+                  <span>O نقطة تأثير القوتين · الخطوط المتقطعة مساعدة</span>
+                </figcaption>
+              </figure>
+              <div class="pil-controls">
+                <section class="pil-panel pil-control-card" aria-labelledby="st1-controls-title">
+                  <h3 id="st1-controls-title">تحكّم في التجربة</h3>
+                  <p>كل تغيير يعيد حساب المحصلة والرسم فوراً.</p>
+                  <div class="pil-slider is-f1">
+                    <div class="pil-slider-head"><label for="st1-f1">مقدار القوة الأولى F₁</label><output id="st1-f1-value" for="st1-f1">60 N</output></div>
+                    <input id="st1-f1" type="range" min="10" max="80" step="5" value="60" />
+                  </div>
+                  <div class="pil-slider is-f2">
+                    <div class="pil-slider-head"><label for="st1-f2">مقدار القوة الثانية F₂</label><output id="st1-f2-value" for="st1-f2">45 N</output></div>
+                    <input id="st1-f2" type="range" min="10" max="80" step="5" value="45" />
+                  </div>
+                  <div class="pil-slider is-angle">
+                    <div class="pil-slider-head"><label for="st1-angle">الزاوية θ بين القوتين</label><output id="st1-angle-value" for="st1-angle">65°</output></div>
+                    <input id="st1-angle" type="range" min="0" max="180" step="5" value="65" />
+                  </div>
+                  <div class="pil-slider is-angle">
+                    <div class="pil-slider-head"><label for="st1-direction">اتجاه الزوج حول O</label><output id="st1-direction-value" for="st1-direction">15°</output></div>
+                    <input id="st1-direction" type="range" min="0" max="40" step="5" value="15" />
+                  </div>
+                  <div class="pil-scale-picker" role="group" aria-label="مقياس الرسم">
+                    <span class="pil-scale-picker-label">مقياس الرسم</span>
+                    <button class="pil-scale-option" type="button" data-st1-scale="1.6" aria-pressed="false">1 N = 1.6 px</button>
+                    <button class="pil-scale-option" type="button" data-st1-scale="2.1" aria-pressed="false">1 N = 2.1 px</button>
+                    <button class="pil-scale-option" type="button" data-st1-scale="2.6" aria-pressed="true">1 N = 2.6 px</button>
+                  </div>
+                  <p class="pil-slider-hint">تغيير مقياس الرسم يكبّر الرسم أو يصغّره، ولا يغيّر مقدار المحصلة.</p>
+                  <div class="pil-toggles">
+                    <button class="pil-btn" id="st1-toggle-construction" type="button" aria-pressed="true">إخفاء البناء الهندسي</button>
+                    <button class="pil-btn is-quiet" id="st1-reset" type="button">أعد التجربة</button>
+                  </div>
+                </section>
+
+                <section class="pil-panel pil-result" aria-labelledby="st1-result-title">
+                  <div class="pil-result-head">
+                    <h3 id="st1-result-title">النتيجة الحيّة</h3>
+                    <span class="pil-result-symbol" id="st1-result-symbol" aria-hidden="true"></span>
+                  </div>
+                  <div class="pil-readouts">
+                    <div class="pil-readout"><span>مقدار المحصلة F</span><output id="st1-result-magnitude">—</output></div>
+                    <div class="pil-readout"><span>الزاوية θ بين القوتين</span><output id="st1-result-theta">—</output></div>
+                    <div class="pil-readout"><span>الزاوية بين F وF₁</span><output id="st1-result-from-f1">—</output></div>
+                    <div class="pil-readout"><span>انحراف F عن منصف الزاوية</span><output id="st1-result-deviation">—</output></div>
+                  </div>
+                  <div class="pil-equation" id="st1-equation"></div>
+                  <p class="pil-result-note" id="st1-observation" aria-live="polite"></p>
+                </section>
+
+                <div class="pil-explore" id="st1-explore"></div>
+                <div class="pil-notes" id="st1-notes"></div>
+              </div>
+            </div>
+            <section class="pil-panel pil-quiz" id="st1-quiz" aria-label="اختبار المحطة الأولى"></section>
+          </section>
+
+          <section class="pil-station-panel" id="pil-panel-perpendicular" role="tabpanel" aria-labelledby="pil-tab-perpendicular" tabindex="0" hidden>
+            <div class="pil-station-header">
+              <div>
+                <span class="pil-station-scene-name" id="st2-scene-name">المشهد: عربة تُسحب بحبلين متعامدين</span>
+                <h2 id="st2-title">محصلة قوتين متعامدتين</h2>
+                <p>حبلان متعامدان يسحبان عربة من نقطة واحدة. المحصلة هي قطر المستطيل، ويُحسب مقدارها بنظرية فيثاغورس.</p>
+              </div>
+            </div>
+            <div class="pil-workbench">
+              <figure class="pil-panel pil-scene-panel">
+                <div class="pil-scene-canvas" id="pil-scene-perpendicular" aria-live="polite"></div>
+                <figcaption class="pil-scene-caption">
+                  <span class="pil-scale-note"><span class="pil-scale-dot" aria-hidden="true"></span> مقياس ثابت: 1 N = 2.6 px داخل هذه المحطة</span>
+                  <span>الزاوية بين القوتين 90° ثابتة</span>
+                </figcaption>
+              </figure>
+              <div class="pil-controls">
+                <section class="pil-panel pil-control-card" aria-labelledby="st2-controls-title">
+                  <h3 id="st2-controls-title">تحكّم في التجربة</h3>
+                  <p>غيّر المقدارين فقط؛ الزاوية تبقى قائمة في هذه المحطة.</p>
+                  <div class="pil-slider is-f1">
+                    <div class="pil-slider-head"><label for="st2-f1">مقدار القوة الأولى F₁ (أفقية)</label><output id="st2-f1-value" for="st2-f1">50 N</output></div>
+                    <input id="st2-f1" type="range" min="10" max="80" step="5" value="50" />
+                  </div>
+                  <div class="pil-slider is-f2">
+                    <div class="pil-slider-head"><label for="st2-f2">مقدار القوة الثانية F₂ (شاقولية)</label><output id="st2-f2-value" for="st2-f2">70 N</output></div>
+                    <input id="st2-f2" type="range" min="10" max="80" step="5" value="70" />
+                  </div>
+                  <div class="pil-toggles">
+                    <button class="pil-btn" id="st2-hide-result" type="button" aria-pressed="false">إخفاء النتيجة العددية</button>
+                    <button class="pil-btn is-quiet" id="st2-reset" type="button">أعد التجربة</button>
+                  </div>
+                </section>
+
+                <section class="pil-panel pil-result" aria-labelledby="st2-result-title">
+                  <div class="pil-result-head">
+                    <h3 id="st2-result-title">النتيجة الحيّة</h3>
+                    <span class="pil-result-symbol" id="st2-result-symbol" aria-hidden="true"></span>
+                  </div>
+                  <div class="pil-readouts">
+                    <div class="pil-readout"><span>مقدار المحصلة F</span><output id="st2-result-magnitude">—</output></div>
+                    <div class="pil-readout"><span>الزاوية بين F وF₁</span><output id="st2-result-angle">—</output></div>
+                  </div>
+                  <div class="pil-feedback is-neutral" id="st2-mask-note" role="status" aria-live="polite" hidden>النتيجة مخفية: توقّع مقدار المحصلة أولاً، ثم أظهر القيمة للمقارنة.</div>
+                  <div class="pil-equation" id="st2-equation"></div>
+                  <p class="pil-result-note" id="st2-observation" aria-live="polite"></p>
+                </section>
+
+                <div class="pil-explore" id="st2-explore"></div>
+                <div class="pil-notes" id="st2-notes"></div>
+              </div>
+            </div>
+            <section class="pil-panel pil-quiz" id="st2-quiz" aria-label="اختبار المحطة الثانية"></section>
+          </section>
+
+          <section class="pil-station-panel" id="pil-panel-incline" role="tabpanel" aria-labelledby="pil-tab-incline" tabindex="0" hidden>
+            <div class="pil-station-header">
+              <div>
+                <span class="pil-station-scene-name" id="st3-scene-name">المشهد: متزلج على منحدر</span>
+                <h2 id="st3-title">تحليل القوة إلى مركبتين على سطح مائل</h2>
+                <p>ثقل واحد راسٍ إلى أسفل، نحلله إلى مركبة موازية للسطح وأخرى عمودية عليه. غيّر الزاوية والوزن وراقب القيمتين.</p>
+              </div>
+            </div>
+            <div class="pil-workbench">
+              <figure class="pil-panel pil-scene-panel">
+                <div class="pil-scene-canvas" id="pil-scene-incline" aria-live="polite"></div>
+                <figcaption class="pil-scene-caption">
+                  <span class="pil-scale-note"><span class="pil-scale-dot" aria-hidden="true"></span> مقياس ثابت: 5 N = 1 px داخل هذه المحطة</span>
+                  <span>α زاوية ميل السطح عن الأفق</span>
+                </figcaption>
+              </figure>
+              <div class="pil-controls">
+                <section class="pil-panel pil-control-card" aria-labelledby="st3-controls-title">
+                  <h3 id="st3-controls-title">تحكّم في التجربة</h3>
+                  <p>الزاوية هنا هي زاوية ميل السطح عن الأفق، لا الزاوية بين الثقل والسطح.</p>
+                  <div class="pil-slider is-weight">
+                    <div class="pil-slider-head"><label for="st3-weight">ثقل الجسم w</label><output id="st3-weight-value" for="st3-weight">600 N</output></div>
+                    <input id="st3-weight" type="range" min="200" max="800" step="50" value="600" />
+                  </div>
+                  <div class="pil-slider is-angle">
+                    <div class="pil-slider-head"><label for="st3-angle">زاوية ميل السطح α</label><output id="st3-angle-value" for="st3-angle">30°</output></div>
+                    <input id="st3-angle" type="range" min="0" max="60" step="1" value="30" />
+                  </div>
+                  <div class="pil-toggles">
+                    <button class="pil-btn" id="st3-toggle-reaction" type="button" aria-pressed="false">إظهار رد الفعل العمودي R</button>
+                    <button class="pil-btn is-quiet" id="st3-reset" type="button">أعد التجربة</button>
+                  </div>
+                </section>
+
+                <section class="pil-panel pil-result" aria-labelledby="st3-result-title">
+                  <div class="pil-result-head">
+                    <h3 id="st3-result-title">النتيجة الحيّة</h3>
+                    <span class="pil-result-symbol" id="st3-result-symbol" aria-hidden="true"></span>
+                  </div>
+                  <div class="pil-readouts">
+                    <div class="pil-readout"><span>المركبة الموازية w∥</span><output id="st3-result-parallel">—</output></div>
+                    <div class="pil-readout"><span>المركبة العمودية w⊥</span><output id="st3-result-perpendicular">—</output></div>
+                    <div class="pil-readout"><span>ثقل الجسم w</span><output id="st3-result-weight">—</output></div>
+                    <div class="pil-readout"><span>زاوية الميل α</span><output id="st3-result-angle">—</output></div>
+                  </div>
+                  <div class="pil-equation" id="st3-equation"></div>
+                  <p class="pil-result-note" id="st3-observation" aria-live="polite"></p>
+                </section>
+
+                <div class="pil-explore" id="st3-explore"></div>
+                <div class="pil-notes" id="st3-notes"></div>
+              </div>
+            </div>
+            <section class="pil-panel pil-quiz" id="st3-quiz" aria-label="اختبار المحطة الثالثة"></section>
+          </section>
+        </section>
+
+        <section class="pil-panel pil-predict" id="pil-predict" aria-labelledby="pil-predict-title">
+          <div class="pil-panel-heading">
+            <div>
+              <p class="pil-kicker">نمط تعليمي: توقّع ثم جرّب</p>
+              <h2 id="pil-predict-title">المحصلة مخفية… توقّع مكانها أولاً</h2>
+              <p>لن تظهر المحصلة قبل التحقق. سجّل توقعك، غيّر القيم إن أردت، ثم اضغط «تحقق» لتكشف النتيجة الحقيقية المحسوبة من القيم الحالية.</p>
+            </div>
+            <span class="pil-chip" id="pil-predict-state">لم يُسجّل توقع</span>
+          </div>
+          <div class="pil-predict-grid">
+            <div class="pil-predict-stage" id="pil-predict-scene" aria-live="polite"></div>
+            <div class="pil-predict-side">
+              <div class="pil-predict-values" id="pil-predict-values"></div>
+              <p class="pil-predict-question" id="pil-predict-question">اختر توقعك ثم اضغط تحقق.</p>
+              <div class="pil-choices" id="pil-predict-choices" role="group" aria-label="خيارات التوقع"></div>
+              <div class="pil-slider is-f1">
+                <div class="pil-slider-head"><label for="pil-predict-f1">F₁</label><output id="pil-predict-f1-value" for="pil-predict-f1">80 N</output></div>
+                <input id="pil-predict-f1" type="range" min="10" max="80" step="5" value="80" />
+              </div>
+              <div class="pil-slider is-f2">
+                <div class="pil-slider-head"><label for="pil-predict-f2">F₂</label><output id="pil-predict-f2-value" for="pil-predict-f2">40 N</output></div>
+                <input id="pil-predict-f2" type="range" min="10" max="80" step="5" value="40" />
+              </div>
+              <div class="pil-slider is-angle">
+                <div class="pil-slider-head"><label for="pil-predict-angle">الزاوية θ</label><output id="pil-predict-angle-value" for="pil-predict-angle">70°</output></div>
+                <input id="pil-predict-angle" type="range" min="10" max="170" step="5" value="70" />
+              </div>
+              <div class="pil-actions">
+                <button class="pil-btn is-teal" id="pil-predict-check" type="button" disabled>تحقق واكشف المحصلة</button>
+                <button class="pil-btn is-quiet" id="pil-predict-reset" type="button">أعد المحاولة</button>
+              </div>
+              <div class="pil-feedback is-neutral" id="pil-predict-feedback" role="status" aria-live="polite" hidden></div>
+              <p class="pil-predict-note">المحصلة بعد التحقق تُحسب من القيم الحالية، لا من القيم الافتراضية. إذا غيّرت القيم بعد التحقق، اضغط «أعد المحاولة» لاختبار توقع جديد.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="pil-gallery" id="pil-gallery" aria-labelledby="pil-gallery-title">
+          <div class="pil-gallery-intro">
+            <p class="pil-kicker">الفيزياء حولنا</p>
+            <h2 id="pil-gallery-title">اكتشف القوى في كل مشهد</h2>
+            <p>عشرة مشاهد من الحياة. افتح أي بطاقة، حدّد نقطة التأثير بالنقر على المشهد، وشاهد الأسهم ثم أجب عن سؤال قصير.</p>
+          </div>
+          <div id="pil-gallery-groups"></div>
+          <section class="pil-panel pil-detail" id="pil-gallery-detail" aria-labelledby="pil-gallery-detail-title" hidden></section>
+        </section>
+
+        <section class="pil-panel pil-drawing" id="pil-drawing" aria-labelledby="pil-drawing-title">
+          <div class="pil-panel-heading">
+            <div>
+              <p class="pil-kicker">تحدي الطالب</p>
+              <h2 id="pil-drawing-title">أنت رسّام القوى</h2>
+              <p>حدّد نقطة التأثير، واختر رمز القوة، ثم الاتجاه، ثم صنّف القوى. التقييم يعتمد على المعنى والاتجاه، لا على تطابق النقرة بالبكسل.</p>
+            </div>
+            <span class="pil-chip" id="pil-drawing-index">التحدي ١ من ٣</span>
+          </div>
+          <div class="pil-drawing-grid">
+            <div class="pil-drawing-stage" id="pil-drawing-scene" aria-live="polite"></div>
+            <div class="pil-drawing-controls">
+              <div class="pil-drawing-step" id="pil-drawing-situation"></div>
+              <div class="pil-drawing-step" id="pil-drawing-point-step"></div>
+              <div class="pil-drawing-step" id="pil-drawing-symbol-step"></div>
+              <div class="pil-drawing-step" id="pil-drawing-direction-step"></div>
+              <div class="pil-drawing-step" id="pil-drawing-classification-step"></div>
+              <div class="pil-actions">
+                <button class="pil-btn is-primary" id="pil-drawing-submit" type="button">أرسل رسمي</button>
+                <button class="pil-btn" id="pil-drawing-retry" type="button">أعد المحاولة</button>
+                <button class="pil-btn is-quiet" id="pil-drawing-next" type="button">التحدي التالي ←</button>
+              </div>
+              <div class="pil-drawing-feedback" id="pil-drawing-feedback" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pil-complete" id="pil-complete" aria-labelledby="pil-complete-title">
+          <div>
+            <h2 id="pil-complete-title">أنهيت رحلة القوى المتلاقية</h2>
+            <p>كل ما حسبته هنا انطلق من القيم التي اخترتها. يمكنك العودة إلى أي محطة وتغيير القيم من جديد.</p>
+          </div>
+          <div class="pil-complete-stats">
+            <div class="pil-complete-stat"><b id="pil-complete-experiences">0/15</b><span>تجربة استكشفتها</span></div>
+            <div class="pil-complete-stat"><b id="pil-complete-quiz">0/16</b><span>إجابات صحيحة</span></div>
+            <div class="pil-complete-stat"><b id="pil-complete-examples">0/10</b><span>أمثلة من الحياة</span></div>
+          </div>
+          <div class="pil-actions">
+            <a class="pil-primary-link" href="./physics-in-life.html">العودة إلى القسم</a>
+            <a class="pil-secondary-link" href="#pil-stations" style="color:#e2e8f2">أعد التجربة</a>
+          </div>
+        </section>
+
+        <noscript>
+          <p class="pil-panel" style="padding:18px">يحتاج المختبر إلى JavaScript لتشغيل المحاكاة والأسئلة. الفقرات المكتوبة تبقى قابلة للقراءة.</p>
+        </noscript>
+      </main>
+
+      <footer class="pil-footer">
+        <span dir="ltr">Interactive Physics — Grade 8</span>
+        <span>الفيزياء في حياتنا · الدرس الأول</span>
+        <a href="./physics-in-life-teacher.html">منطقة المعلم</a>
+      </footer>
+    </div>
+    <script type="module" src="./src/physics-in-life-lesson-1.js"></script>
+  </body>
+</html>
