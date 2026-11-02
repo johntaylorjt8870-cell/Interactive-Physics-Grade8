@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { webcrypto } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 import {
   COMPASS_DIRECTIONS,
@@ -64,6 +66,33 @@ const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 const count = (text, needle) => [...text.matchAll(new RegExp(needle, 'g'))].length;
 const texOf = (html) => [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)]
   .map((match) => match[1]);
+
+/* Read the lesson exactly as published on main, before the notebook was added.
+   The current working-tree page is deliberately excluded: including it would
+   let the new notebook text prove its own source. */
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+const MAIN_REFS = Object.freeze([
+  'origin/main',
+  'main',
+  '79a3cb13fcaad998f4c444d2abf5e4757dc21fdd',
+]);
+function readMainLessonFile(path) {
+  for (const ref of MAIN_REFS) {
+    try {
+      return execFileSync('git', ['show', `${ref}:${path}`], {
+        cwd: repositoryRoot,
+        encoding: 'utf8',
+        maxBuffer: 8 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'ignore'],
+      });
+    } catch { /* try the next available main reference */ }
+  }
+  throw new Error(`Cannot read ${path} from main (tried ${MAIN_REFS.join(', ')})`);
+}
+const mainLessonSource = () => [
+  readMainLessonFile('physics-in-life-lesson-1.html'),
+  readMainLessonFile('src/physics-in-life-content.js'),
+].join('\n');
 
 /* ------------------------------------------------------------------ physics */
 
@@ -1043,11 +1072,11 @@ test('the motion layer belongs to Lesson 1 only: the teacher area and section li
 /* ---------------------------------------------------------- student notebook */
 
 test('the student notebook closes the lesson as a normal stepper station', async () => {
-  const [page, script, authored] = await Promise.all([
+  const [page, script] = await Promise.all([
     read('../physics-in-life-lesson-1.html'),
     read('../src/physics-in-life-lesson-1.js'),
-    read('../src/physics-in-life-content.js'),
   ]);
+  const baselineLessonSource = mainLessonSource();
 
   const last = LESSON_STEPS.at(-1);
   assert.deepEqual(
@@ -1082,8 +1111,12 @@ test('the student notebook closes the lesson as a normal stepper station', async
   assert.match(notebookMarkup, /<bdi dir="ltr">N<\/bdi> \(نيوتن\)/);
   assert.match(notebookMarkup, /<bdi dir="ltr">m\/s<\/bdi>/);
 
-  /* Every notebook rule is traceable to the already-authored lesson content. */
-  const lessonSource = `${authored}${page}`;
+  /* The baseline is main only: no working-tree page and no notebook addition. */
+  assert.doesNotMatch(
+    baselineLessonSource,
+    /دفتر الطالب|pil-notebook|NOTEBOOK_FORMULAS/,
+    'main baseline must predate the student notebook',
+  );
   for (const phrase of [
     'القوتان تؤثران في النقطة نفسها O',
     'القطر الخارج من O هو المحصلة',
@@ -1094,7 +1127,7 @@ test('the student notebook closes the lesson as a normal stepper station', async
     'وحدة السرعة m/s، ووحدة القوة N',
     'محصلة كل القوى المؤثرة فيه صفراً',
   ]) {
-    assert.ok(lessonSource.includes(phrase), `notebook phrase is not grounded in the lesson: ${phrase}`);
+    assert.ok(baselineLessonSource.includes(phrase), `notebook phrase is not grounded in main: ${phrase}`);
   }
 
   assert.match(script, /function renderNotebookFormulas\(\)/);
