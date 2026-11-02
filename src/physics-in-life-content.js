@@ -39,10 +39,9 @@ export const SESSION_NOTE = 'تقدمك في هذه الصفحة يبقى في �
 /* --------------------------------------------------------------- lesson path */
 
 /**
- * The thirteen stations the lesson is taught in. The mount renders exactly one
- * at a time and the sidebar is built from this list, so the navigation contract
- * is content, not markup. All stations are open: the lesson defines no lock.
- * The last station is the student's copyable notebook, not a new tab system.
+ * The twelve stations in this separate life-context section. The mount renders
+ * exactly one at a time and builds the sidebar from this list. All stations are
+ * open: the section defines no lock and does not own the student's notebook.
  */
 export const LESSON_STEPS = Object.freeze([
   Object.freeze({ id: 'intro', title: 'مقدمة الدرس والأهداف', navLabel: 'مقدمة وأهداف', kind: 'intro', kindLabel: 'بداية الدرس' }),
