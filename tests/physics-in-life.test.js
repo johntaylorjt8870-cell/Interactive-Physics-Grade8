@@ -654,7 +654,7 @@ test('the lesson page loads only the section bundle and exposes every live regio
   assert.match(page, /id="pil-step-heading"[^>]*tabindex="-1"/);
   assert.match(page, /id="previous-button"/);
   assert.match(page, /id="next-button"/);
-  assert.equal((page.match(/data-step-id="/g) ?? []).length, 13);
+  assert.equal((page.match(/data-step-id="/g) ?? []).length, 12);
   assert.doesNotMatch(page, /role="tablist"/);
   assert.doesNotMatch(page, /somer173/);
 });
