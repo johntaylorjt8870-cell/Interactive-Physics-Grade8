@@ -1429,7 +1429,7 @@
 .student-notebook-kicker { margin: 0 0 .25rem; color: var(--l1-teal); font-size: .78rem; font-weight: 800; }
 .student-notebook-header h2 { margin: .2rem 0 .35rem; color: var(--l1-navy); font-size: 1.4rem; }
 .student-notebook-header p:last-child { margin: 0; color: var(--l1-muted); font-size: .92rem; }
-.student-notebook-sheet { position: relative; padding: 1.25rem 1.5rem 1.5rem 3rem; }
+.student-notebook-sheet { position: relative; padding-block: 1.25rem 1.5rem; padding-inline: 3rem 1.5rem; }
 .student-notebook-sheet::before { content: ''; position: absolute; inset-block: 0; inset-inline-start: 1.6rem; width: 1px; background: #efd9cf; }
 .student-notebook-section + .student-notebook-section { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px dashed #cbd5e1; }
 .student-notebook-section h3 { margin: 0 0 .6rem; color: var(--l1-navy); font-size: 1rem; }
@@ -1450,7 +1450,7 @@
 .student-notebook-symbols li::before { content: '•'; position: absolute; inset-inline-start: 0; color: var(--l1-teal); }
 @media (max-width: 640px) {
  .student-notebook-header { padding: 1rem; }
- .student-notebook-sheet { padding: 1rem 1rem 1.2rem 2rem; }
+ .student-notebook-sheet { padding-block: 1rem 1.2rem; padding-inline: 2rem 1rem; }
  .student-notebook-sheet::before { inset-inline-start: 1rem; }
  .student-notebook-law { grid-template-columns: 1fr; gap: .2rem; }
  .student-notebook-symbols { grid-template-columns: 1fr; }
