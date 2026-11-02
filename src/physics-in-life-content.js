@@ -57,7 +57,6 @@ export const LESSON_STEPS = Object.freeze([
   Object.freeze({ id: 'drawing', title: 'أنت رسّام القوى', navLabel: 'تحدي رسم القوى', kind: 'drawing', kindLabel: 'نشاط تقييم' }),
   Object.freeze({ id: 'predict', title: 'تدرّب وتحقق: توقّع ثم جرّب', navLabel: 'تدرّب وتحقّق', kind: 'practice', kindLabel: 'توقّع وتحقق' }),
   Object.freeze({ id: 'summary', title: 'ملخص الدرس والتحدي النهائي', navLabel: 'الملخص والتحدي', kind: 'summary', kindLabel: 'خلاصة' }),
-  Object.freeze({ id: 'notebook', title: 'دفتر الطالب', navLabel: '📒 دفتر الطالب', kind: 'notebook', kindLabel: 'للكتابة في الدفتر' }),
 ]);
 
 /* --------------------------------------------------------- opening challenge */
@@ -249,16 +248,6 @@ export const STATION_THEORY = Object.freeze({
  * never drift apart; the direction relation is the same one the perpendicular
  * lab displays, without its live numeric substitution.
  */
-export const NOTEBOOK_FORMULAS = Object.freeze({
-  concurrent: STATION_THEORY.concurrent.formula,
-  perpendicular: STATION_THEORY.perpendicular.formula,
-  direction: Object.freeze({
-    tex: '\\theta=\\tan^{-1}\\left(F_{2}/F_{1}\\right)',
-    aria: 'theta, the angle of the resultant with F1, equals inverse tangent of F2 over F1',
-  }),
-  incline: STATION_THEORY.incline.formula,
-});
-
 /* ------------------------------------------------------------ station quizzes */
 
 export const STATION_QUIZZES = Object.freeze({
