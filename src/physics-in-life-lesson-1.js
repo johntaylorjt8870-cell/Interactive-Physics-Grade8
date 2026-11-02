@@ -14,7 +14,6 @@ import {
   GALLERY_GROUPS,
   LESSON_META,
   LESSON_STEPS,
-  NOTEBOOK_FORMULAS,
   OPENING_CHALLENGE,
   PREDICT_SCENARIO,
   SESSION_NOTE,
@@ -1382,14 +1381,6 @@ function mountLesson() {
     });
   }
 
-  /** Render the notebook's copyable relations once, with the shared KaTeX layer. */
-  function renderNotebookFormulas() {
-    Object.entries(NOTEBOOK_FORMULAS).forEach(([key, expression]) => {
-      const node = $(`pil-notebook-formula-${key}`);
-      if (node) node.innerHTML = formula(expression.tex, expression.aria);
-    });
-  }
-
   /* ------------------------------------------------------------- station ui */
 
   function initStations() {
@@ -1588,7 +1579,6 @@ function mountLesson() {
   if (lead) lead.textContent = LESSON_META.intro;
 
   renderTheory();
-  renderNotebookFormulas();
   initSteps();
   initStations();
   initOpening();
