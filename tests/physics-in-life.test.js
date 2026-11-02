@@ -67,14 +67,16 @@ const count = (text, needle) => [...text.matchAll(new RegExp(needle, 'g'))].leng
 const texOf = (html) => [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)]
   .map((match) => match[1]);
 
-/* Read the lesson exactly as published on main, before the notebook was added.
-   The current working-tree page is deliberately excluded: including it would
-   let the new notebook text prove its own source. */
+/* Read the lesson as published on main before the notebook was added.
+   PR #39 is now merged, so the tip of main contains the notebook: the source
+   check must start from the last main commit before that addition. The current
+   working-tree page is deliberately excluded so the notebook cannot prove
+   its own source. */
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const MAIN_REFS = Object.freeze([
+  '79a3cb13fcaad998f4c444d2abf5e4757dc21fdd',
   'origin/main',
   'main',
-  '79a3cb13fcaad998f4c444d2abf5e4757dc21fdd',
 ]);
 function readMainLessonFile(path) {
   for (const ref of MAIN_REFS) {
