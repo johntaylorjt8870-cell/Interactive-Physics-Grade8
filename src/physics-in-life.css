@@ -915,9 +915,10 @@
     radial-gradient(circle at 8% 118%, rgba(22, 112, 107, 0.16), transparent 42%),
     radial-gradient(circle at 94% -12%, rgba(201, 106, 79, 0.14), transparent 42%),
     linear-gradient(112deg, #fbf7ee 0%, #f0f6f2 60%, #e9f1f6 100%);
-  border: 1px solid #d9e5e1;
+  border: 1px solid #cbded8;
+  border-inline-start: 4px solid var(--pil-teal);
   border-radius: 18px;
-  box-shadow: 0 14px 34px rgba(36, 48, 74, 0.06);
+  box-shadow: 0 16px 38px rgba(36, 48, 74, 0.09);
 }
 .pil-home-entry-copy { position: relative; z-index: 1; min-width: 0; }
 .pil-home-entry-kicker { margin: 0 0 4px; color: var(--pil-teal); font-size: 11.5px; font-weight: 700; letter-spacing: 0.015em; }
@@ -945,10 +946,12 @@
   text-decoration: none;
   background: var(--pil-teal);
   border-radius: 11px;
+  min-height: 44px;
   white-space: nowrap;
   transition: background 180ms ease, transform 180ms ease;
 }
 .pil-home-entry-action:hover { background: #0f5450; transform: translateX(-2px); }
+.pil-home-entry-action:focus-visible { outline: 3px solid var(--pil-accent); outline-offset: 3px; }
 
 .pil-home-entry-art {
   position: relative;
@@ -993,12 +996,22 @@
 }
 
 @media (max-width: 980px) {
-  .pil-home-entry { grid-template-columns: minmax(0, 1fr) auto; }
+  .pil-home-entry { grid-template-columns: minmax(0, 1fr) auto; padding: 24px; }
   .pil-home-entry-art { display: none; }
 }
 @media (max-width: 700px) {
-  .pil-home-entry { grid-template-columns: 1fr; gap: 16px; padding: 22px; }
-  .pil-home-entry-action { justify-self: start; }
+  .pil-home-entry { grid-template-columns: 1fr; gap: 14px; margin-top: 20px; padding: 20px 18px; }
+  .pil-home-entry-copy h2 { font-size: 23px; }
+  .pil-home-entry-copy > p:last-of-type { font-size: 12.5px; line-height: 1.75; }
+  .pil-home-entry-action { justify-self: stretch; justify-content: space-between; min-height: 44px; }
+}
+@media (max-width: 430px) {
+  .pil-home-entry { padding: 18px; border-radius: 14px; }
+  .pil-home-entry-kicker { font-size: 10.5px; }
+  .pil-home-entry-meta span { padding: 3px 8px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pil-home-entry-action:hover { transform: none; }
 }
 
 /* Glyphs that the Arabic/Latin text faces do not carry come from KaTeX's
