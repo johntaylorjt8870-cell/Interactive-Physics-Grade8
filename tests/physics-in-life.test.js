@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { webcrypto } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 import {
   COMPASS_DIRECTIONS,
@@ -33,6 +35,7 @@ import {
   EXAMPLES,
   GALLERY_GROUPS,
   LESSON_STEPS,
+  NOTEBOOK_FORMULAS,
   OPENING_CHALLENGE,
   PREDICT_SCENARIO,
   STATIONS,
@@ -41,6 +44,7 @@ import {
   findExample,
 } from '../src/physics-in-life-content.js';
 import { createMotionController } from '../src/physics-in-life-motion.js';
+import { formula } from '../src/math.js';
 import { LessonStepper } from '../src/lesson-steps.js';
 import { PHYSICS_IN_LIFE_LESSONS, SECTION_META } from '../src/physics-in-life-lessons.js';
 import {
@@ -60,6 +64,35 @@ const near = (actual, expected, tolerance = 1e-9) => {
 };
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
 const count = (text, needle) => [...text.matchAll(new RegExp(needle, 'g'))].length;
+const texOf = (html) => [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)]
+  .map((match) => match[1]);
+
+/* Read the lesson exactly as published on main, before the notebook was added.
+   The current working-tree page is deliberately excluded: including it would
+   let the new notebook text prove its own source. */
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+const MAIN_REFS = Object.freeze([
+  'origin/main',
+  'main',
+  '79a3cb13fcaad998f4c444d2abf5e4757dc21fdd',
+]);
+function readMainLessonFile(path) {
+  for (const ref of MAIN_REFS) {
+    try {
+      return execFileSync('git', ['show', `${ref}:${path}`], {
+        cwd: repositoryRoot,
+        encoding: 'utf8',
+        maxBuffer: 8 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'ignore'],
+      });
+    } catch { /* try the next available main reference */ }
+  }
+  throw new Error(`Cannot read ${path} from main (tried ${MAIN_REFS.join(', ')})`);
+}
+const mainLessonSource = () => [
+  readMainLessonFile('physics-in-life-lesson-1.html'),
+  readMainLessonFile('src/physics-in-life-content.js'),
+].join('\n');
 
 /* ------------------------------------------------------------------ physics */
 
@@ -619,7 +652,7 @@ test('the lesson page loads only the section bundle and exposes every live regio
   assert.match(page, /id="pil-step-heading"[^>]*tabindex="-1"/);
   assert.match(page, /id="previous-button"/);
   assert.match(page, /id="next-button"/);
-  assert.equal((page.match(/data-step-id="/g) ?? []).length, 12);
+  assert.equal((page.match(/data-step-id="/g) ?? []).length, 13);
   assert.doesNotMatch(page, /role="tablist"/);
   assert.doesNotMatch(page, /somer173/);
 });
@@ -732,10 +765,13 @@ test('the section stylesheet keeps equations scrollable and never breaks RTL iso
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /\.pil-f1|--pil-f1: #16706b/);
   assert.match(css, /\.pil-workbench \{/);
+  assert.match(css, /\.pil-notebook \{/);
+  assert.match(css, /\.pil-notebook-formula \.katex-display > \.katex \{[\s\S]*?white-space: nowrap;/);
+  assert.match(css, /@media \(max-width: 640px\) \{[\s\S]*?\.pil-notebook-law \{ grid-template-columns: 1fr;/);
 });
 
 /* ============================================================================
-   Pre-merge revision: «حرّك القوى» motion + the twelve-station sidebar stepper.
+   Pre-merge revision: «حرّك القوى» motion + the thirteen-station sidebar stepper.
    The motion clock is DOM-free, so these tests run the real frame loop with an
    injected clock and prove play / pause / replay / reduced-motion behaviour.
    ========================================================================== */
@@ -936,9 +972,9 @@ test('the incline animation draws both weight components exactly, and never turn
   assert.ok(!/رد فعل السطح[\s\S]{0,80}المركبة العمودية/.test(full), 'R keeps its own label and arrow');
 });
 
-test('the lesson defines twelve unique stations that the stepper reaches in both directions', () => {
-  assert.equal(LESSON_STEPS.length, 12);
-  assert.equal(new Set(LESSON_STEPS.map((step) => step.id)).size, 12);
+test('the lesson defines thirteen unique stations that the stepper reaches in both directions', () => {
+  assert.equal(LESSON_STEPS.length, 13);
+  assert.equal(new Set(LESSON_STEPS.map((step) => step.id)).size, 13);
   LESSON_STEPS.forEach((step) => {
     assert.ok(step.title.length > 3, `${step.id} needs a title`);
     assert.ok(step.navLabel.length > 2, `${step.id} needs a sidebar label`);
@@ -960,22 +996,22 @@ test('the lesson defines twelve unique stations that the stepper reaches in both
     assert.equal(stepper.next(), true);
     forward.push(stepper.page.id);
   }
-  assert.equal(forward.length, 12, 'every station is reachable forwards');
-  assert.equal(new Set(forward).size, 12);
+  assert.equal(forward.length, 13, 'every station is reachable forwards');
+  assert.equal(new Set(forward).size, 13);
 
   const backward = [stepper.page.id];
   while (!stepper.isFirst) {
     assert.equal(stepper.previous(), true);
     backward.push(stepper.page.id);
   }
-  assert.equal(backward.length, 12, 'every station is reachable backwards');
+  assert.equal(backward.length, 13, 'every station is reachable backwards');
   assert.deepEqual(backward, [...forward].reverse());
 });
 
 test('every station owns exactly one page section and only the active one is visible', async () => {
   const page = await read('../physics-in-life-lesson-1.html');
   const sections = [...page.matchAll(/<section class="pil-step" id="pil-step-[^"]+" data-step-id="([^"]+)"([^>]*)>/g)];
-  assert.equal(sections.length, 12);
+  assert.equal(sections.length, 13);
   assert.deepEqual(sections.map((match) => match[1]), LESSON_STEPS.map((step) => step.id));
   sections.forEach((match) => {
     const [, id, attributes] = match;
@@ -1031,4 +1067,117 @@ test('the motion layer belongs to Lesson 1 only: the teacher area and section li
   assert.equal((page.match(/<script type="module"/g) ?? []).length, 1, 'one lesson bundle, no new dependency');
   assert.doesNotMatch(page, /cdn\.|unpkg|jsdelivr/);
   assert.equal(Object.values(STATION_QUIZZES).reduce((total, questions) => total + questions.length, 0), 16);
+});
+
+/* ---------------------------------------------------------- student notebook */
+
+test('the student notebook closes the lesson as a normal stepper station', async () => {
+  const [page, script] = await Promise.all([
+    read('../physics-in-life-lesson-1.html'),
+    read('../src/physics-in-life-lesson-1.js'),
+  ]);
+  const baselineLessonSource = mainLessonSource();
+
+  const last = LESSON_STEPS.at(-1);
+  assert.deepEqual(
+    { id: last.id, navLabel: last.navLabel, kind: last.kind },
+    { id: 'notebook', navLabel: '📒 دفتر الطالب', kind: 'notebook' },
+  );
+  const summaryIndex = page.indexOf('id="pil-step-summary"');
+  const notebookIndex = page.indexOf('id="pil-step-notebook"');
+  assert.ok(summaryIndex > 0 && notebookIndex > summaryIndex, 'notebook follows the summary station');
+  assert.match(page, /<section class="pil-step" id="pil-step-notebook" data-step-id="notebook" hidden>/);
+  assert.match(page, /<h2 id="pil-notebook-title">📒 دفتر الطالب<\/h2>/);
+  assert.match(page, /المحطة ١٣ · ما يُنقل إلى الدفتر المدرسي/);
+  assert.match(page, /id="progress-text" class="pil-ltr" dir="ltr">1 \/ 13</);
+  assert.match(page, /aria-valuemax="13"/);
+  assert.match(page, /<div class="pil-stat"><span>المحطات<\/span><b>13<\/b><\/div>/);
+  assert.match(page, /id="control-center">المحطة 1 من 13</);
+  assert.doesNotMatch(page, /role="tablist"|role="tabpanel"/);
+
+  const notebookMarkup = page.slice(notebookIndex, page.indexOf('<noscript>', notebookIndex));
+  for (const heading of [
+    '١. تعريفات أساسية',
+    '٢. قاعدة متوازي الأضلاع',
+    '٣. قوتان متعامدتان',
+    '٤. تحليل الثقل على سطح مائل',
+    '٥. الرموز والوحدات',
+    '٦. ملاحظات تمنع الخلط',
+  ]) {
+    assert.ok(notebookMarkup.includes(heading), `missing notebook section: ${heading}`);
+  }
+  assert.doesNotMatch(notebookMarkup, /<input|data-goto-step|id="st[123]-|role="tab/);
+  assert.doesNotMatch(notebookMarkup, /ملخص|قاطرتان|سفينة|مختبر|التحدي النهائي/, 'notebook is not a lesson recap');
+  assert.match(notebookMarkup, /<bdi dir="ltr">N<\/bdi> \(نيوتن\)/);
+  assert.match(notebookMarkup, /<bdi dir="ltr">m\/s<\/bdi>/);
+
+  /* The baseline is main only: no working-tree page and no notebook addition. */
+  assert.doesNotMatch(
+    baselineLessonSource,
+    /دفتر الطالب|pil-notebook|NOTEBOOK_FORMULAS/,
+    'main baseline must predate the student notebook',
+  );
+  for (const phrase of [
+    'القوتان تؤثران في النقطة نفسها O',
+    'القطر الخارج من O هو المحصلة',
+    'لا نجمع المقادير جمعاً عددياً إلا عند اتحاد الاتجاه',
+    'كلما اتسعت الزاوية قلّ مقدار المحصلة',
+    'الزاوية α هي زاوية ميل السطح عن الأفق',
+    'المركبة العمودية جزء من ثقل الجسم',
+    'وحدة السرعة m/s، ووحدة القوة N',
+    'محصلة كل القوى المؤثرة فيه صفراً',
+  ]) {
+    assert.ok(baselineLessonSource.includes(phrase), `notebook phrase is not grounded in main: ${phrase}`);
+  }
+
+  assert.match(script, /function renderNotebookFormulas\(\)/);
+  assert.match(script, /renderNotebookFormulas\(\);/);
+  assert.match(script, /NOTEBOOK_FORMULAS/);
+  assert.match(script, /LESSON_STEPS\.findIndex\(\(step\) => step\.id === hash\)/);
+  assert.doesNotMatch(script, /location\.href|location\.assign|location\.reload/);
+});
+
+test('notebook formulas reuse the lesson laws and render on one line without KaTeX errors', async () => {
+  const page = await read('../physics-in-life-lesson-1.html');
+  const ids = [...page.matchAll(/id="pil-notebook-formula-([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(ids, Object.keys(NOTEBOOK_FORMULAS));
+  assert.strictEqual(NOTEBOOK_FORMULAS.concurrent, STATION_THEORY.concurrent.formula);
+  assert.strictEqual(NOTEBOOK_FORMULAS.perpendicular, STATION_THEORY.perpendicular.formula);
+  assert.strictEqual(NOTEBOOK_FORMULAS.incline, STATION_THEORY.incline.formula);
+  assert.equal(NOTEBOOK_FORMULAS.incline.tex, 'w_{\\parallel}=w\\sin\\alpha \\qquad w_{\\perp}=w\\cos\\alpha');
+  assert.match(NOTEBOOK_FORMULAS.direction.tex, /\\tan\^\{-1\}/);
+  assert.match(NOTEBOOK_FORMULAS.direction.tex, /F_\{2\}\/F_\{1\}/);
+
+  for (const [key, expression] of Object.entries(NOTEBOOK_FORMULAS)) {
+    const html = formula(expression.tex, expression.aria);
+    assert.doesNotMatch(html, /katex-error|undefined|NaN/, `${key}: KaTeX error`);
+    assert.equal((html.match(/katex-display/g) ?? []).length, 1, `${key}: one display equation`);
+    assert.equal((html.match(/<mtr/g) ?? []).length, 0, `${key}: no stacked rows`);
+    assert.doesNotMatch(html, /linebreak="newline"/, `${key}: no forced line break`);
+    assert.deepEqual(texOf(html), [expression.tex], `${key}: TeX is unchanged`);
+  }
+});
+
+test('the student notebook stays scoped to this lesson only', async () => {
+  const paths = [
+    '../lesson-1.html',
+    '../lesson-2.html',
+    '../unit2-lesson-1.html',
+    '../unit2-lesson-2.html',
+    '../unit2-lesson-3.html',
+    '../unit2-lesson-4.html',
+    '../lesson-test.html',
+    '../teacher.html',
+    '../physics-in-life.html',
+    '../physics-in-life-teacher.html',
+    '../src/lesson-content.js',
+    '../src/lesson-2-content.js',
+    '../src/teacher-content.js',
+    '../src/physics-in-life-teacher-content.js',
+    '../src/physics-in-life-teacher-payload.js',
+  ];
+  const sources = await Promise.all(paths.map(read));
+  sources.forEach((source, index) => {
+    assert.doesNotMatch(source, /دفتر الطالب|pil-notebook|NOTEBOOK_FORMULAS/, paths[index]);
+  });
 });
