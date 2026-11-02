@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1a2438" />
-    <meta name="description" content="الفيزياء في حياتنا — الدرس الأول: القوى المتلاقية وتحليل القوة. اثنتا عشرة محطة: شرح قصير، ثلاثة مختبرات افتراضية، عشرة أمثلة من الحياة وتحدي رسم القوى." />
+    <meta name="description" content="الفيزياء في حياتنا — الدرس الأول: القوى المتلاقية وتحليل القوة. ثلاث عشرة محطة: شرح قصير، ثلاثة مختبرات افتراضية، عشرة أمثلة من الحياة، تحدي رسم القوى، ودفتر الطالب." />
     <title>القوى المتلاقية وتحليل القوة | الفيزياء في حياتنا</title>
     <link rel="stylesheet" href="./src/fonts.css" />
     <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
@@ -40,14 +40,14 @@
           <div class="sidebar-intro">
             <p class="pil-eyebrow" id="pil-lesson-kicker">الفيزياء في حياتنا · الدرس الأول</p>
             <p class="pil-sidebar-title">القوى المتلاقية وتحليل القوة</p>
-            <p>اثنتا عشرة محطة: شرح قصير، ثم مختبر تفاعلي، ثم أمثلة وتحديات. كل المحطات متاحة.</p>
+            <p>ثلاث عشرة محطة: اثنتا عشرة محطة دراسية، ثم «دفتر الطالب». كل المحطات متاحة.</p>
           </div>
           <div class="progress-wrap">
             <div class="progress-label">
               <span>المحطات التي زرتها</span>
-              <span id="progress-text" class="pil-ltr" dir="ltr">1 / 12</span>
+              <span id="progress-text" class="pil-ltr" dir="ltr">1 / 13</span>
             </div>
-            <div class="progress-track" id="progress-track" role="progressbar" aria-label="تقدم المحطات" aria-valuemin="0" aria-valuemax="12" aria-valuenow="1">
+            <div class="progress-track" id="progress-track" role="progressbar" aria-label="تقدم المحطات" aria-valuemin="0" aria-valuemax="13" aria-valuenow="1">
               <span id="progress-fill"></span>
             </div>
           </div>
@@ -61,7 +61,7 @@
         <section class="lesson-main pil-lesson-main" aria-label="محتوى الدرس">
           <div class="lesson-heading-row">
             <div>
-              <p class="section-kicker" id="pil-step-kicker">المحطة 1 من 12</p>
+              <p class="section-kicker" id="pil-step-kicker">المحطة 1 من 13</p>
               <h2 id="pil-step-heading" tabindex="-1">مقدمة الدرس والأهداف</h2>
             </div>
             <div class="page-badge" aria-label="رقم المحطة الحالية">
@@ -80,7 +80,7 @@
                   <p class="pil-hero-lead" id="pil-lesson-lead">ادخل مختبراً افتراضياً: اسحب، غيّر الزوايا، توقّع النتيجة، ثم اكتشف القوانين بنفسك.</p>
                 </div>
                 <div class="pil-hero-side" aria-label="ملخص الدرس والتقدم">
-                  <div class="pil-stat"><span>المحطات</span><b>12</b></div>
+                  <div class="pil-stat"><span>المحطات</span><b>13</b></div>
                   <div class="pil-stat"><span>مختبرات تفاعلية</span><b>3</b></div>
                   <div class="pil-stat"><span>أمثلة من الحياة</span><b>10</b></div>
                   <div class="pil-stat"><span>تقدمك في التجارب</span><b id="pil-progress-percent">0%</b></div>
@@ -597,6 +597,86 @@
               </section>
             </section>
 
+            <section class="pil-step" id="pil-step-notebook" data-step-id="notebook" hidden>
+              <article class="pil-panel pil-notebook" aria-labelledby="pil-notebook-title">
+                <header class="pil-notebook-header">
+                  <p class="pil-kicker">المحطة ١٣ · ما يُنقل إلى الدفتر المدرسي</p>
+                  <h2 id="pil-notebook-title">📒 دفتر الطالب</h2>
+                  <p>اكتب في دفترك التعريفات والقواعد والقوانين والرموز الآتية.</p>
+                </header>
+
+                <div class="pil-notebook-sheet">
+                  <section class="pil-notebook-section" aria-labelledby="pil-notebook-definitions-title">
+                    <h3 id="pil-notebook-definitions-title">١. تعريفات أساسية</h3>
+                    <div class="pil-notebook-definition"><strong>القوى المتلاقية:</strong> قوتان تؤثران في نقطة التأثير نفسها <bdi dir="ltr">O</bdi>، وتُرسمان من هذه النقطة.</div>
+                    <div class="pil-notebook-definition"><strong>المحصلة:</strong> قطر متوازي الأضلاع الخارج من <bdi dir="ltr">O</bdi>، وتمثّل الجمع المتجهي للقوتين.</div>
+                    <div class="pil-notebook-definition"><strong>تحليل القوة على سطح مائل:</strong> تحليل ثقل الجسم إلى مركبتين متعامدتين: موازية للسطح وعمودية عليه.</div>
+                  </section>
+
+                  <section class="pil-notebook-section" aria-labelledby="pil-notebook-resultant-title">
+                    <h3 id="pil-notebook-resultant-title">٢. قاعدة متوازي الأضلاع</h3>
+                    <ol class="pil-notebook-list">
+                      <li>ارسم <bdi dir="ltr">F₁</bdi> و<bdi dir="ltr">F₂</bdi> من <bdi dir="ltr">O</bdi> بمقياس رسم واحد، ثم أكمل متوازي الأضلاع.</li>
+                      <li>القطر الخارج من <bdi dir="ltr">O</bdi> هو المحصلة: <strong>جمع متجهي لا جمع عددي</strong>. الجمع العددي للمقادير لا يصلح إلا عند اتحاد الاتجاه.</li>
+                      <li>تقع المحصلة على منصف الزاوية عند تساوي المقدارين فقط، وتنحرف نحو القوة الأكبر عند اختلافهما.</li>
+                      <li>بثبات المقدارين، يقلّ مقدار المحصلة كلما اتسعت الزاوية؛ وهو أكبر عند <bdi dir="ltr">0°</bdi>، ويصبح صفراً عند <bdi dir="ltr">180°</bdi> إذا تساوى المقداران.</li>
+                    </ol>
+                    <div class="pil-notebook-law">
+                      <span>القانون</span>
+                      <div class="pil-notebook-formula" id="pil-notebook-formula-concurrent"><bdi dir="ltr">F⃗ = F⃗₁ + F⃗₂</bdi></div>
+                    </div>
+                  </section>
+
+                  <section class="pil-notebook-section" aria-labelledby="pil-notebook-perpendicular-title">
+                    <h3 id="pil-notebook-perpendicular-title">٣. قوتان متعامدتان (90°)</h3>
+                    <p>القوتان ضلعا مستطيل، وقطره هو المحصلة؛ مقدارها جذر مجموع مربعي القوتين، وتُحسب زاويتها مع <bdi dir="ltr">F₁</bdi> من ظلّ الزاوية.</p>
+                    <div class="pil-notebook-law">
+                      <span>المقدار</span>
+                      <div class="pil-notebook-formula" id="pil-notebook-formula-perpendicular"><bdi dir="ltr">F = √(F₁² + F₂²)</bdi></div>
+                    </div>
+                    <div class="pil-notebook-law">
+                      <span>الاتجاه</span>
+                      <div class="pil-notebook-formula" id="pil-notebook-formula-direction"><bdi dir="ltr">θ = tan⁻¹(F₂ / F₁)</bdi></div>
+                    </div>
+                    <p class="pil-notebook-note"><strong>انتبه:</strong> <bdi dir="ltr">θ</bdi> هنا زاوية المحصلة مع <bdi dir="ltr">F₁</bdi>، أمّا في قاعدة متوازي الأضلاع فهي الزاوية بين القوتين.</p>
+                  </section>
+
+                  <section class="pil-notebook-section" aria-labelledby="pil-notebook-incline-title">
+                    <h3 id="pil-notebook-incline-title">٤. تحليل الثقل على سطح مائل</h3>
+                    <ol class="pil-notebook-list">
+                      <li><bdi dir="ltr">α</bdi> هي زاوية ميل السطح عن الأفق، لا الزاوية بين الثقل والسطح.</li>
+                      <li>ارسم الثقل <bdi dir="ltr">w</bdi> من مركز ثقل الجسم، ثم حلّله إلى مركبة موازية إلى أسفل المنحدر ومركبة عمودية إلى داخل السطح.</li>
+                      <li>كلما زادت <bdi dir="ltr">α</bdi> من <bdi dir="ltr">0°</bdi> إلى <bdi dir="ltr">90°</bdi>، ازدادت المركبة الموازية وتناقصت العمودية.</li>
+                    </ol>
+                    <div class="pil-notebook-law">
+                      <span>القانون</span>
+                      <div class="pil-notebook-formula" id="pil-notebook-formula-incline"><bdi dir="ltr">w∥ = w sin α , w⊥ = w cos α</bdi></div>
+                    </div>
+                    <p class="pil-notebook-note"><strong>لا تخلط:</strong> المركبة العمودية جزء من ثقل الجسم، أمّا <bdi dir="ltr">R</bdi> فقوة من السطح على الجسم. ولا يُستنتج التسارع من المركبة الموازية وحدها.</p>
+                  </section>
+
+                  <section class="pil-notebook-section" aria-labelledby="pil-notebook-symbols-title">
+                    <h3 id="pil-notebook-symbols-title">٥. الرموز والوحدات</h3>
+                    <ul class="pil-notebook-symbols">
+                      <li><bdi dir="ltr">F₁, F₂</bdi>: مقدارا القوتين · <bdi dir="ltr">F</bdi>: مقدار المحصلة.</li>
+                      <li><bdi dir="ltr">O</bdi>: نقطة التأثير · <bdi dir="ltr">w</bdi>: ثقل الجسم · <bdi dir="ltr">R</bdi>: رد الفعل العمودي.</li>
+                      <li><bdi dir="ltr">w∥</bdi>: المركبة الموازية · <bdi dir="ltr">w⊥</bdi>: المركبة العمودية · <bdi dir="ltr">α</bdi>: زاوية الميل.</li>
+                      <li><bdi dir="ltr">θ</bdi>: الزاوية بين القوتين، أو زاوية المحصلة مع <bdi dir="ltr">F₁</bdi> في حالة التعامد.</li>
+                      <li>وحدة القوة والثقل والمركبات: <bdi dir="ltr">N</bdi> (نيوتن) · وحدة السرعة: <bdi dir="ltr">m/s</bdi>.</li>
+                    </ul>
+                  </section>
+
+                  <section class="pil-notebook-section" aria-labelledby="pil-notebook-cautions-title">
+                    <h3 id="pil-notebook-cautions-title">٦. ملاحظات تمنع الخلط</h3>
+                    <ul class="pil-notebook-list">
+                      <li><strong>المحصلة الصفرية</strong> لقوتين لا تعني بالضرورة اتزان الجسم؛ الاتزان يتطلب أن تكون محصلة كل القوى المؤثرة صفراً.</li>
+                      <li>القوة والسرعة كميتان متجهتان مختلفتان: وحدة القوة <bdi dir="ltr">N</bdi>، ووحدة السرعة <bdi dir="ltr">m/s</bdi>.</li>
+                    </ul>
+                  </section>
+                </div>
+              </article>
+            </section>
+
             <noscript>
               <p class="pil-panel" style="padding:18px">يحتاج المختبر إلى JavaScript لتشغيل المحاكاة والأسئلة. الفقرات المكتوبة تبقى قابلة للقراءة.</p>
             </noscript>
@@ -607,7 +687,7 @@
               <span class="control-arrow" aria-hidden="true">→</span>
               <span><small>السابق</small><strong id="previous-label">بداية الدرس</strong></span>
             </button>
-            <span class="control-center" id="control-center">المحطة 1 من 12</span>
+            <span class="control-center" id="control-center">المحطة 1 من 13</span>
             <button class="control-button next-button" id="next-button" type="button">
               <span><small>التالي</small><strong id="next-label">ما القوى المتلاقية؟</strong></span>
               <span class="control-arrow" aria-hidden="true">←</span>

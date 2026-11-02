@@ -1094,7 +1094,7 @@
 }
 .pil-lesson-sidebar .progress-track span {
   display: block;
-  width: 8.333%;
+  width: 7.692%;
   height: 100%;
   background: var(--pil-accent);
   border-radius: inherit;
@@ -1455,4 +1455,119 @@
 
 @media (max-width: 760px) {
   .pil-lesson-main .pil-controls { grid-template-columns: 1fr; }
+}
+
+/* ------------------------------------------------------ student notebook -- */
+/* A quiet, ruled school-notebook page for the final station. It reuses the
+   lesson's tokens and keeps every KaTeX relation on one scrollable line. */
+.pil-notebook {
+  overflow: hidden;
+  color: var(--pil-ink-soft);
+  background: #fffdf8;
+}
+.pil-notebook-header {
+  padding-block: 22px 15px;
+  padding-inline: 30px;
+  border-bottom: 1px solid var(--pil-rule-soft);
+}
+.pil-notebook-header .pil-kicker { color: var(--pil-gold); font-size: 11px; font-weight: 700; }
+.pil-notebook-header h2 { margin: 3px 0 2px; font-size: 23px; }
+.pil-notebook-header p:last-child { margin: 0; color: var(--pil-muted); font-size: 13px; }
+.pil-notebook-sheet {
+  position: relative;
+  padding-block: 22px 28px;
+  padding-inline: 58px 30px;
+}
+.pil-notebook-sheet::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 32px;
+  width: 1px;
+  background: #efd9cf;
+}
+.pil-notebook-section + .pil-notebook-section {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--pil-rule);
+}
+.pil-notebook-section h3 {
+  margin: 0 0 9px;
+  color: var(--pil-accent-deep);
+  font-size: 15.5px;
+  font-weight: 700;
+}
+.pil-notebook-section > p { margin: 0 0 9px; font-size: 14px; line-height: 1.9; }
+.pil-notebook strong { color: var(--pil-accent-deep); font-weight: 700; }
+.pil-notebook bdi { font-family: var(--pil-font-latin); white-space: nowrap; }
+.pil-notebook-definition {
+  margin: 7px 0;
+  padding: 9px 13px;
+  background: var(--pil-accent-soft);
+  border-inline-start: 3px solid var(--pil-accent);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.pil-notebook-list { margin: 0; padding-inline-start: 22px; font-size: 14px; line-height: 1.95; }
+.pil-notebook-list li + li { margin-top: 4px; }
+.pil-notebook-law {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin: 9px 0;
+  padding: 7px 12px;
+  background: #f7f9fc;
+  border: 1px solid #e2e8f2;
+  border-radius: 10px;
+}
+.pil-notebook-law > span {
+  color: var(--pil-accent-deep);
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.pil-notebook-formula { min-width: 0; overflow-x: auto; overflow-y: hidden; }
+.pil-notebook-formula > bdi { font: 600 15px var(--pil-font-latin); }
+.pil-notebook-formula .katex-display { margin: 0; }
+.pil-notebook-formula .katex-display > .katex {
+  display: inline-block;
+  max-width: none;
+  font-size: clamp(0.9em, 3.2vw, 1.05em);
+  white-space: nowrap;
+}
+.pil-notebook-section > p.pil-notebook-note {
+  margin: 9px 0 0;
+  padding: 8px 12px;
+  background: var(--pil-gold-soft);
+  border-inline-start: 3px solid #e4cc9c;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.85;
+}
+.pil-notebook-symbols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+.pil-notebook-symbols li { position: relative; padding-inline-start: 12px; }
+.pil-notebook-symbols li::before {
+  content: '•';
+  position: absolute;
+  inset-inline-start: 0;
+  color: var(--pil-teal);
+}
+
+@media (max-width: 640px) {
+  .pil-notebook-header { padding-block: 18px 14px; padding-inline: 16px; }
+  .pil-notebook-sheet { padding-block: 18px 22px; padding-inline: 42px 16px; }
+  .pil-notebook-sheet::before { inset-inline-start: 20px; }
+  .pil-notebook-law { grid-template-columns: 1fr; gap: 3px; }
+  .pil-notebook-symbols { grid-template-columns: 1fr; }
 }
