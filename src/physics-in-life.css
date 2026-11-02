@@ -1144,6 +1144,18 @@
 }
 .pil-lesson-sidebar .page-nav-button:hover { background: #f2efe8; }
 .pil-lesson-sidebar .page-nav-button:focus-visible { outline: 3px solid #b9c9e3; outline-offset: -2px; }
+/* A quiet, persistent cue so the final notebook station is easy to spot later. */
+.pil-lesson-sidebar .page-nav-button.is-notebook:not([aria-current='step']) {
+  background: var(--pil-gold-soft);
+  box-shadow: inset 0 0 0 1px #ecdcbe;
+}
+.pil-lesson-sidebar .page-nav-button.is-notebook:not([aria-current='step']) .nav-page-number {
+  color: #fff;
+  background: var(--pil-gold);
+}
+.pil-lesson-sidebar .page-nav-button.is-notebook:not([aria-current='step']) .nav-page-copy strong {
+  color: var(--pil-gold);
+}
 .pil-lesson-sidebar .page-nav-button[aria-current='step'] { background: var(--pil-accent-soft); }
 .pil-lesson-sidebar .nav-page-number {
   width: 28px;
@@ -1577,10 +1589,95 @@
   color: var(--pil-teal);
 }
 
+/* ------------------------------------------- notebook entry card (intro) -- */
+/* A discoverable shortcut on the very first screen; it only points to the
+   existing station 13 and never duplicates the notebook itself. */
+.pil-notebook-entry {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 22px 24px;
+  background:
+    radial-gradient(circle at 92% -20%, rgba(138, 100, 32, 0.12), transparent 45%),
+    linear-gradient(115deg, #fffdf8 0%, var(--pil-gold-soft) 100%);
+  border: 1px solid #ecdcbe;
+  border-inline-start: 4px solid var(--pil-gold);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(36, 48, 74, 0.07);
+}
+.pil-notebook-entry-mark {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font: 700 20px var(--pil-font-latin);
+  background: var(--pil-gold);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+.pil-notebook-entry-copy { min-width: 0; }
+.pil-notebook-entry-copy .pil-kicker {
+  margin: 0 0 3px;
+  color: var(--pil-gold);
+  font-size: 11px;
+  font-weight: 700;
+}
+.pil-notebook-entry-copy h2 {
+  margin: 0 0 5px;
+  color: var(--pil-ink);
+  font-size: 22px;
+  font-weight: 700;
+}
+.pil-notebook-entry-copy p {
+  margin: 0;
+  color: var(--pil-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+.pil-notebook-entry-action { justify-self: end; }
+.pil-notebook-entry-button {
+  min-height: 44px;
+  padding-inline: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 11px;
+}
+.pil-notebook-entry-button:focus-visible {
+  outline: 3px solid var(--pil-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 980px) {
+  .pil-notebook-entry { grid-template-columns: 48px minmax(0, 1fr); gap: 14px; padding: 20px; }
+  .pil-notebook-entry-mark { width: 48px; height: 48px; font-size: 18px; }
+  .pil-notebook-entry-action { grid-column: 2; justify-self: start; }
+  .pil-notebook-entry-button { width: 100%; justify-content: space-between; }
+}
+
 @media (max-width: 640px) {
   .pil-notebook-header { padding-block: 18px 14px; padding-inline: 16px; }
   .pil-notebook-sheet { padding-block: 18px 22px; padding-inline: 42px 16px; }
   .pil-notebook-sheet::before { inset-inline-start: 20px; }
   .pil-notebook-law { grid-template-columns: 1fr; gap: 3px; }
   .pil-notebook-symbols { grid-template-columns: 1fr; }
+  .pil-notebook-entry { grid-template-columns: 1fr; gap: 12px; padding: 18px 16px; border-radius: 14px; }
+  .pil-notebook-entry-mark { width: 42px; height: 42px; font-size: 16px; }
+  .pil-notebook-entry-copy h2 { font-size: 20px; }
+  .pil-notebook-entry-copy p { font-size: 12.5px; line-height: 1.75; }
+  .pil-notebook-entry-action { grid-column: 1; justify-self: stretch; }
+  .pil-notebook-entry-button { min-height: 46px; }
+}
+
+@media (max-width: 430px) {
+  .pil-notebook-entry { padding: 16px 14px; }
+  .pil-notebook-entry-mark { width: 38px; height: 38px; font-size: 15px; }
+  .pil-notebook-entry-copy h2 { font-size: 19px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pil-notebook-entry-button { transition-duration: 0.001ms; }
+  .pil-btn.pil-notebook-entry-button:active:not(:disabled) { transform: none; }
 }

@@ -1452,7 +1452,7 @@ function mountLesson() {
     const nav = $('pil-step-nav');
     if (!nav) return;
     nav.innerHTML = LESSON_STEPS.map((step, index) => `
-      <button class="page-nav-button" type="button" data-step-index="${index}">
+      <button class="page-nav-button${step.id === 'notebook' ? ' is-notebook' : ''}" type="button" data-step-index="${index}" data-step-id="${escapeHtml(step.id)}">
         <span class="nav-page-number" dir="ltr">${index + 1}</span>
         <span class="nav-page-copy"><strong>${escapeHtml(step.navLabel)}</strong><small>${escapeHtml(step.kindLabel)}</small></span>
         <span class="pil-step-state" data-step-state="upcoming">قادمة</span>

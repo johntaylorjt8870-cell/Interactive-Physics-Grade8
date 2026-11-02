@@ -1183,3 +1183,274 @@ test('the student notebook stays scoped to this lesson only', async () => {
     assert.doesNotMatch(source, /دفتر الطالب|pil-notebook|NOTEBOOK_FORMULAS/, paths[index]);
   });
 });
+
+/* ------------------------------------------- notebook entry card (intro) -- */
+/* Helpers below deliberately use only Node built-ins: the project adds no new
+   test dependency. They execute the real source strings so a click is proven,
+   not just described by markup. */
+function extractBetween(source, startMarker, endMarker) {
+  const start = source.indexOf(startMarker);
+  assert.ok(start >= 0, `missing source marker: ${startMarker}`);
+  const bodyStart = start + startMarker.length;
+  const end = source.indexOf(endMarker, bodyStart);
+  assert.ok(end > bodyStart, `missing end marker: ${endMarker}`);
+  const closing = source.lastIndexOf('}', end);
+  assert.ok(closing > bodyStart, `missing closing brace before: ${endMarker}`);
+  return source.slice(bodyStart, closing);
+}
+
+function ruleBody(css, selector) {
+  const start = css.indexOf(selector);
+  assert.ok(start >= 0, `missing CSS rule: ${selector}`);
+  const open = css.indexOf('{', start);
+  let depth = 0;
+  for (let i = open; i < css.length; i += 1) {
+    if (css[i] === '{') depth += 1;
+    else if (css[i] === '}') {
+      depth -= 1;
+      if (depth === 0) return css.slice(open + 1, i);
+    }
+  }
+  return '';
+}
+
+function mediaBlock(css, query) {
+  const needle = `@media ${query}`;
+  let from = 0;
+  while (from < css.length) {
+    const start = css.indexOf(needle, from);
+    if (start < 0) return '';
+    const open = css.indexOf('{', start);
+    let depth = 0;
+    let block = '';
+    for (let i = open; i < css.length; i += 1) {
+      if (css[i] === '{') depth += 1;
+      else if (css[i] === '}') {
+        depth -= 1;
+        if (depth === 0) { block = css.slice(start, i + 1); from = i + 1; break; }
+      }
+    }
+    if (!block) return '';
+    if (block.includes('.pil-notebook-entry')) return block;
+  }
+  return '';
+}
+
+function createShowStepRuntime(script) {
+  const body = extractBetween(
+    script,
+    'function showStep(index, { focusHeading = false, updateHash = true } = {}) {',
+    'function initSteps() {',
+  );
+  const elements = new Map();
+  const makeEl = (id) => ({
+    id,
+    textContent: '',
+    hidden: false,
+    disabled: false,
+    focused: false,
+    dataset: { stepId: id },
+    style: {},
+    attributes: {},
+    setAttribute(name, value) { this.attributes[name] = String(value); },
+    focus() { this.focused = true; },
+  });
+  [
+    'pil-step-heading', 'pil-step-kicker', 'pil-step-badge', 'progress-text',
+    'progress-fill', 'progress-track', 'previous-button', 'next-button',
+    'previous-label', 'next-label', 'control-center',
+  ].forEach((id) => elements.set(id, makeEl(id)));
+  const sections = LESSON_STEPS.map((step) => makeEl(step.id));
+  const $ = (id) => elements.get(id) ?? null;
+  const qsa = (selector) => (selector === '#pil-step-content [data-step-id]' ? sections : []);
+  const stepper = new LessonStepper(LESSON_STEPS);
+  const visitedSteps = new Set(['intro']);
+  const historyCalls = [];
+  const history = { replaceState: (...args) => historyCalls.push(args) };
+  const scrolls = [];
+  const window = { scrollTo: (options) => scrolls.push(options) };
+  const stopInactiveMotions = () => {};
+  const paintStepNav = () => {};
+  const prefersReducedMotion = () => true;
+  const fn = new Function(
+    'index', 'options', 'stepper', 'visitedSteps', 'stopInactiveMotions', 'qsa', '$',
+    'paintStepNav', 'history', 'window', 'prefersReducedMotion',
+    `const { focusHeading = false, updateHash = true } = options;\n${body}`,
+  );
+  const state = { $, sections, historyCalls, scrolls, visitedSteps, stepper, elements };
+  return {
+    state,
+    run(index, options = {}) {
+      fn(
+        index,
+        { focusHeading: false, updateHash: true, ...options },
+        stepper, visitedSteps, stopInactiveMotions, qsa, $,
+        paintStepNav, history, window, prefersReducedMotion,
+      );
+      return state;
+    },
+  };
+}
+
+test('the intro screen surfaces the notebook entry card and its wired button', async () => {
+  const [page, script] = await Promise.all([
+    read('../physics-in-life-lesson-1.html'),
+    read('../src/physics-in-life-lesson-1.js'),
+  ]);
+
+  /* The card lives in the first, initially visible station. */
+  assert.match(page, /<section class="pil-step" id="pil-step-intro" data-step-id="intro">/);
+  const introStart = page.indexOf('id="pil-step-intro"');
+  const introEnd = page.indexOf('id="pil-step-concept"');
+  assert.ok(introStart > 0 && introEnd > introStart);
+  const intro = page.slice(introStart, introEnd);
+  assert.match(intro, /<section class="pil-panel pil-notebook-entry" aria-labelledby="pil-notebook-entry-title">/);
+  assert.match(intro, /<h2 id="pil-notebook-entry-title">📒 دفتر الطالب<\/h2>/);
+  assert.match(intro, /التعريفات/);
+  assert.match(intro, /القوانين/);
+  assert.match(intro, /العلاقات الرياضية/);
+  assert.match(intro, /النقاط التي ينبغي تدوينها في دفتر الطالب/);
+  assert.match(intro, /<button[^>]*data-goto-step="notebook"[^>]*>افتح دفتر الطالب/);
+  assert.match(intro, /aria-describedby="pil-notebook-entry-desc"/);
+  assert.equal(count(page, 'data-goto-step="notebook"'), 1, 'exactly one notebook shortcut');
+  assert.ok(page.indexOf('id="pil-content"') < page.indexOf('data-goto-step="notebook"'), 'button is inside the delegated click scope');
+
+  /* Execute the actual delegated handler: a click must call showStep(12). */
+  const clickBody = extractBetween(
+    script,
+    "$('pil-content')?.addEventListener('click', (event) => {",
+    "document.addEventListener('keydown'",
+  );
+  const clickFn = new Function('event', 'LESSON_STEPS', 'showStep', clickBody);
+  const calls = [];
+  clickFn(
+    { target: { closest: (selector) => (selector === '[data-goto-step]' ? { dataset: { gotoStep: 'notebook' } } : null) } },
+    LESSON_STEPS,
+    (index, options) => calls.push({ index, options }),
+  );
+  assert.deepEqual(calls, [{ index: 12, options: { focusHeading: true } }]);
+  assert.equal(LESSON_STEPS[12].id, 'notebook');
+  assert.equal(LESSON_STEPS.length, 13);
+
+  /* The real DOM-free stepper agrees: 13th station, and «previous» still works. */
+  const stepper = new LessonStepper(LESSON_STEPS);
+  assert.equal(stepper.goTo(12), true);
+  assert.equal(stepper.page.id, 'notebook');
+  assert.equal(stepper.position, 13);
+  assert.equal(stepper.isLast, true);
+  assert.equal(stepper.labelFor('previous'), 'الملخص والتحدي');
+  assert.equal(stepper.previous(), true);
+  assert.equal(stepper.page.id, 'summary');
+  assert.equal(stepper.position, 12);
+});
+
+test('the real showStep runtime reveals the notebook, hides the intro and updates the hash', async () => {
+  const script = await read('../src/physics-in-life-lesson-1.js');
+  const runtime = createShowStepRuntime(script);
+  runtime.run(12, { focusHeading: true });
+  const { $, sections, historyCalls, scrolls } = runtime.state;
+  const byId = (id) => sections.find((section) => section.dataset.stepId === id);
+
+  assert.equal(byId('intro').hidden, true, 'intro is hidden after the jump');
+  assert.equal(byId('notebook').hidden, false, 'notebook station is visible');
+  assert.ok(sections.filter((section) => !['intro', 'notebook'].includes(section.dataset.stepId)).every((section) => section.hidden), 'all other stations stay hidden');
+
+  assert.equal($('pil-step-heading').textContent, 'دفتر الطالب');
+  assert.equal($('pil-step-heading').focused, true);
+  assert.equal($('pil-step-kicker').textContent, 'المحطة 13 من 13');
+  assert.equal($('pil-step-badge').textContent, '13');
+  assert.equal($('control-center').textContent, 'المحطة 13 من 13');
+  assert.match($('progress-text').textContent, /\/ 13$/);
+  assert.equal($('progress-track').attributes['aria-valuemax'], '13');
+  assert.match($('progress-fill').style.width, /%$/);
+  assert.equal($('previous-button').disabled, false);
+  assert.equal($('next-button').disabled, true);
+  assert.equal($('previous-label').textContent, 'الملخص والتحدي');
+  assert.equal($('next-label').textContent, 'نهاية الدرس');
+  assert.deepEqual(historyCalls.at(-1), [null, '', '#notebook']);
+  assert.equal(scrolls.at(-1).behavior, 'auto', 'reduced motion uses auto scrolling');
+
+  /* Back navigation is intact and lands on station 12. */
+  runtime.run(11, { focusHeading: false, updateHash: true });
+  assert.equal(byId('notebook').hidden, true);
+  assert.equal(byId('summary').hidden, false);
+  assert.equal($('pil-step-kicker').textContent, 'المحطة 12 من 13');
+  assert.equal($('control-center').textContent, 'المحطة 12 من 13');
+  assert.equal($('next-button').disabled, false);
+  assert.equal($('next-label').textContent, '📒 دفتر الطالب');
+  assert.deepEqual(historyCalls.at(-1), [null, '', '#summary']);
+});
+
+test('the direct #notebook link still boots into the notebook station', async () => {
+  const script = await read('../src/physics-in-life-lesson-1.js');
+  const bootStart = script.indexOf('const LEGACY_HASHES = {');
+  assert.ok(bootStart >= 0, 'hash boot block is present');
+  const bootCall = 'showStep(start > 0 ? start : 0, { updateHash: true });';
+  const bootEnd = script.indexOf(bootCall, bootStart);
+  assert.ok(bootEnd > bootStart, 'hash boot call is present');
+  const bootBody = script.slice(bootStart, bootEnd + bootCall.length);
+  const bootFn = new Function('window', 'LESSON_STEPS', 'showStep', bootBody);
+  let captured = null;
+  bootFn(
+    { location: { hash: '#notebook' } },
+    LESSON_STEPS,
+    (index, options) => { captured = { index, options }; },
+  );
+  assert.deepEqual(captured, { index: 12, options: { updateHash: true } });
+  assert.match(script, /const rawHash = window\.location\?\.hash\?\.replace\('#', ''\) \?\? ''/);
+  assert.match(script, /const start = LESSON_STEPS\.findIndex\(\(step\) => step\.id === hash\)/);
+});
+
+test('the notebook remains one station with no duplicated content', async () => {
+  const page = await read('../physics-in-life-lesson-1.html');
+  assert.equal(count(page, 'id="pil-step-notebook"'), 1, 'one notebook station element');
+  assert.equal(count(page, 'data-step-id="notebook"'), 1, 'one notebook step id');
+  assert.equal(count(page, 'id="pil-notebook-title"'), 1, 'one notebook heading');
+  assert.equal(count(page, 'class="pil-notebook-sheet"'), 1, 'one notebook sheet');
+  assert.equal(count(page, 'data-goto-step="notebook"'), 1, 'one shortcut, not a second notebook');
+  assert.equal(LESSON_STEPS.length, 13);
+  assert.equal(LESSON_STEPS.at(-1).id, 'notebook');
+
+  const introStart = page.indexOf('id="pil-step-intro"');
+  const introEnd = page.indexOf('id="pil-step-concept"');
+  const intro = page.slice(introStart, introEnd);
+  assert.doesNotMatch(intro, /pil-notebook-sheet|pil-notebook-definition|pil-notebook-law|NOTEBOOK_FORMULAS|id="pil-notebook-title"/);
+
+  const stepTags = [...page.matchAll(/<section class="pil-step" id="pil-step-[^"]+" data-step-id="([^"]+)"[^>]*>/g)];
+  assert.equal(stepTags.length, 13);
+  for (const match of stepTags) {
+    if (match[1] === 'notebook') continue;
+    const start = match.index;
+    const next = page.indexOf('<section class="pil-step"', start + 1);
+    const chunk = page.slice(start, next < 0 ? page.length : next);
+    assert.doesNotMatch(chunk, /pil-notebook-sheet|pil-notebook-definition|id="pil-notebook-title"/, `no notebook body leaked into ${match[1]}`);
+  }
+});
+
+test('the notebook entry card and sidebar cue are responsive, focusable and calm', async () => {
+  const [script, css] = await Promise.all([
+    read('../src/physics-in-life-lesson-1.js'),
+    read('../src/physics-in-life.css'),
+  ]);
+
+  assert.match(script, /step\.id === 'notebook' \? ' is-notebook' : ''/);
+  assert.match(script, /data-step-id="\$\{escapeHtml\(step\.id\)\}"/);
+  assert.match(css, /\.page-nav-button\.is-notebook:not\(\[aria-current='step'\]\)/);
+  assert.match(css, /--pil-gold-soft/);
+
+  assert.match(css, /\.pil-notebook-entry \{/);
+  const buttonRule = ruleBody(css, '.pil-notebook-entry-button');
+  assert.match(buttonRule, /min-height:\s*44px/);
+  assert.match(css, /\.pil-notebook-entry-button:focus-visible \{/);
+
+  const m980 = mediaBlock(css, '(max-width: 980px)');
+  const m640 = mediaBlock(css, '(max-width: 640px)');
+  const m430 = mediaBlock(css, '(max-width: 430px)');
+  const reduced = mediaBlock(css, '(prefers-reduced-motion: reduce)');
+  assert.ok(m980.includes('grid-template-columns: 48px minmax(0, 1fr)'), 'tablet layout');
+  assert.ok(m640.includes('grid-template-columns: 1fr'), 'phone layout');
+  assert.ok(m640.includes('min-height: 46px'), 'phone touch target');
+  assert.ok(m430.includes('.pil-notebook-entry'), 'small-phone layout');
+  assert.ok(reduced.includes('.pil-notebook-entry-button'), 'reduced-motion rule');
+  assert.ok(reduced.includes('transform: none'), 'reduced-motion removes the active shift');
+});
