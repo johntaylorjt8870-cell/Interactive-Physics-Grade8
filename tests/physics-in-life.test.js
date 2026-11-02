@@ -974,9 +974,9 @@ test('the incline animation draws both weight components exactly, and never turn
   assert.ok(!/رد فعل السطح[\s\S]{0,80}المركبة العمودية/.test(full), 'R keeps its own label and arrow');
 });
 
-test('the lesson defines thirteen unique stations that the stepper reaches in both directions', () => {
-  assert.equal(LESSON_STEPS.length, 13);
-  assert.equal(new Set(LESSON_STEPS.map((step) => step.id)).size, 13);
+test('the lesson defines twelve unique stations that the stepper reaches in both directions', () => {
+  assert.equal(LESSON_STEPS.length, 12);
+  assert.equal(new Set(LESSON_STEPS.map((step) => step.id)).size, 12);
   LESSON_STEPS.forEach((step) => {
     assert.ok(step.title.length > 3, `${step.id} needs a title`);
     assert.ok(step.navLabel.length > 2, `${step.id} needs a sidebar label`);
@@ -998,22 +998,22 @@ test('the lesson defines thirteen unique stations that the stepper reaches in bo
     assert.equal(stepper.next(), true);
     forward.push(stepper.page.id);
   }
-  assert.equal(forward.length, 13, 'every station is reachable forwards');
-  assert.equal(new Set(forward).size, 13);
+  assert.equal(forward.length, 12, 'every station is reachable forwards');
+  assert.equal(new Set(forward).size, 12);
 
   const backward = [stepper.page.id];
   while (!stepper.isFirst) {
     assert.equal(stepper.previous(), true);
     backward.push(stepper.page.id);
   }
-  assert.equal(backward.length, 13, 'every station is reachable backwards');
+  assert.equal(backward.length, 12, 'every station is reachable backwards');
   assert.deepEqual(backward, [...forward].reverse());
 });
 
 test('every station owns exactly one page section and only the active one is visible', async () => {
   const page = await read('../physics-in-life-lesson-1.html');
   const sections = [...page.matchAll(/<section class="pil-step" id="pil-step-[^"]+" data-step-id="([^"]+)"([^>]*)>/g)];
-  assert.equal(sections.length, 13);
+  assert.equal(sections.length, 12);
   assert.deepEqual(sections.map((match) => match[1]), LESSON_STEPS.map((step) => step.id));
   sections.forEach((match) => {
     const [, id, attributes] = match;
