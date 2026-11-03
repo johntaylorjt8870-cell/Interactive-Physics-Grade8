@@ -37,7 +37,11 @@ test('source audit and eight textbook scans are archived', async () => {
   assert.match(audit, /70/);
 });
 
-test('Lesson 2 has a stable RTL entry, eight sequential textbook pages, and no future lesson', async () => {
+/* The notebook is the final stage and reuses page 70 as its book reference, so
+   the eight textbook pages 63–70 stay the teaching stages and the ninth entry is
+   the notebook. This guard is what stops the notebook drifting away from the
+   real Lesson 2 page or being duplicated somewhere else. */
+test('Lesson 2 has a stable RTL entry, eight textbook pages plus its final notebook stage, and no future lesson', async () => {
   const [html, main, build] = await Promise.all([
     read('../lesson-2.html'),
     read('../src/lesson-2-main.js'),
@@ -51,7 +55,9 @@ test('Lesson 2 has a stable RTL entry, eight sequential textbook pages, and no f
   assert.match(html, /href="\.\/lesson-2-teacher\.html"/);
   assert.match(html, /href="\.\/unit-1-test\.html"/);
   assert.match(html, /href="\.\/unit-questions\.html">أسئلة الوحدة الأولى/);
-  assert.deepEqual(LESSON_2_PAGES.map((item) => item.page), [63, 64, 65, 66, 67, 68, 69, 70]);
+  const teachingPages = LESSON_2_PAGES.filter((item) => !item.stageTitle.includes('دفتر الطالب'));
+  assert.deepEqual(teachingPages.map((item) => item.page), [63, 64, 65, 66, 67, 68, 69, 70]);
+  assert.equal(LESSON_2_PAGES.length, 9);
   assert.equal(LESSON_2_META.pages, '63–70');
   assert.match(main, /goToPage\(0\)/);
   assert.match(build, /'lesson-2\.html'/);
@@ -60,13 +66,17 @@ test('Lesson 2 has a stable RTL entry, eight sequential textbook pages, and no f
 });
 
 test('each stage is self-contained with title, summary, objectives, and book/platform badges', () => {
-  for (const stage of LESSON_2_PAGES) {
+  for (const stage of LESSON_2_PAGES.filter((item) => !item.stageTitle.includes('دفتر الطالب'))) {
     assert.ok(stage.stageTitle && stage.stageTitle.length > 3, `stageTitle ${stage.page}`);
     assert.ok(stage.summary && stage.summary.length > 20, `summary ${stage.page}`);
     assert.ok(Array.isArray(stage.objectives) && stage.objectives.length >= 3, `objectives ${stage.page}`);
     const joined = stage.blocks.join('\n');
     assert.match(joined, /curriculum-tag-book/, `book badge ${stage.page}`);
   }
+  const notebook = LESSON_2_PAGES.at(-1);
+  assert.equal(notebook.stageTitle, '📒 دفتر الطالب');
+  assert.ok(notebook.summary.length > 20);
+  assert.match(notebook.blocks.join('\n'), /curriculum-tag-book/, 'the notebook states its book scope too');
 });
 
 test('page 63 exposes exact objectives, keyword, and the three inquiry questions', () => {

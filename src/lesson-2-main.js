@@ -7,6 +7,7 @@ import {
   mountWorkedStepper,
 } from './lesson-2-practice.js';
 import { mountLesson2Simulations } from './lesson-2-simulation.js';
+import { railMaxHeight, revealScrollTop } from './sidebar-reveal.js';
 
 let currentIndex = 0;
 
@@ -24,6 +25,64 @@ const nextButton = document.querySelector('#next-button');
 const prevLabel = document.querySelector('#previous-label');
 const nextLabel = document.querySelector('#next-label');
 const controlCenter = document.querySelector('#control-center');
+const sidebar = document.querySelector('.lesson-sidebar');
+
+/* The rail is a sticky column: intro + progress + nine step buttons + the
+   curriculum key. With the notebook as the ninth tab the stack is taller than a
+   1366×768 window, so the stylesheet bounds it to the viewport and only
+   `#page-nav` scrolls (see the short-laptop block in `src/lesson-2.css`).
+   `railMaxHeight()` and `revealScrollTop()` are the shared, unit-tested helpers
+   Lesson 1 already uses; this only wires them to Lesson 2's rail. */
+const shortRailQuery = window.matchMedia?.('(min-width: 821px) and (max-height: 800px)');
+
+function fitRailToViewport() {
+  if (!sidebar) return;
+  if (!shortRailQuery?.matches) {
+    if (sidebar.style.getPropertyValue('--rail-max-height')) sidebar.style.removeProperty('--rail-max-height');
+    return;
+  }
+  const height = railMaxHeight({
+    viewportHeight: window.innerHeight,
+    railTop: sidebar.getBoundingClientRect().top,
+  });
+  if (height === null) {
+    sidebar.style.removeProperty('--rail-max-height');
+    return;
+  }
+  sidebar.style.setProperty('--rail-max-height', `${height}px`);
+}
+
+/** Keeps the active tab visible inside the rail's own scrollport. */
+function revealActiveStep() {
+  if (!pageNav) return;
+  const active = pageNav.querySelector('[aria-current="step"]');
+  if (!active) return;
+  const listBox = pageNav.getBoundingClientRect();
+  const stepBox = active.getBoundingClientRect();
+  pageNav.scrollTop = revealScrollTop({
+    scrollTop: pageNav.scrollTop,
+    scrollHeight: pageNav.scrollHeight,
+    clientHeight: pageNav.clientHeight,
+    listTop: listBox.top,
+    listBottom: listBox.bottom,
+    itemTop: stepBox.top,
+    itemBottom: stepBox.bottom,
+  });
+}
+
+let revealFrame = 0;
+function refreshRail({ reveal = true } = {}) {
+  if (revealFrame) return;
+  revealFrame = window.requestAnimationFrame(() => {
+    revealFrame = 0;
+    fitRailToViewport();
+    if (reveal) revealActiveStep();
+  });
+}
+window.addEventListener('resize', () => refreshRail({ reveal: true }));
+window.addEventListener('scroll', () => refreshRail({ reveal: false }), { passive: true });
+shortRailQuery?.addEventListener?.('change', () => refreshRail({ reveal: true }));
+fitRailToViewport();
 
 function renderNav() {
   if (!pageNav) return;
@@ -97,6 +156,7 @@ function renderCurrentPage() {
   if (controlCenter) controlCenter.textContent = `المرحلة ${stageNum} من ${total} · ص ${page.page}`;
 
   renderNav();
+  refreshRail({ reveal: true });
 }
 
 function goToPage(index, options = {}) {
