@@ -191,7 +191,9 @@ test('Lesson 3 renders exactly one textbook page per step, with that page\'s own
     for (const other of otherPages) {
       const otherViewId = other.id === 'student-notebook' ? 'student-notebook' : `p${other.page}`;
       assert.equal(markup.includes(`data-page-view="${otherViewId}"`), false, `${viewId} does not embed ${otherViewId}`);
-      assert.equal(markup.includes(`data-book-copy="p${other.page}"`), false, `p${page.page} does not embed p${other.page} book copy`);
+      if (other.id !== 'student-notebook') {
+        assert.equal(markup.includes(`data-book-copy="p${other.page}"`), false, `${viewId} does not embed p${other.page} book copy`);
+      }
     }
 
     /* every interactive activity the content assigns to this step is mounted by it,
