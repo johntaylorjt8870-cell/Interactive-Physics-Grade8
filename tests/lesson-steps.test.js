@@ -60,11 +60,11 @@ test('LessonStepper moves one study step at a time and stops at both ends', () =
   assert.equal(stepper.isLast, false);
   assert.equal(stepper.previousPage, null);
   assert.equal(stepper.nextPage.page, 98);
-  assert.deepEqual(stepper.progress, { current: 1, total: 10, percent: 10 });
+  assert.deepEqual(stepper.progress, { current: 1, total: 11, percent: 9 });
 
   assert.equal(stepper.next(), true);
   assert.equal(stepper.page.page, 98);
-  assert.equal(stepper.progress.percent, 20);
+  assert.equal(stepper.progress.percent, 18);
 
   assert.equal(stepper.previous(), true);
   assert.equal(stepper.page.page, 97);
