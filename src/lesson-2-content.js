@@ -12,6 +12,7 @@ import {
 } from './math.js';
 import { lesson2SimulationMarkup } from './lesson-2-simulation.js';
 import { renderChoice, renderPracticeDeck, renderProblemWorkbenches } from './lesson-2-practice.js';
+import { LESSON_2_NOTEBOOK_BLOCK } from './lesson-2-notebook.js';
 
 const UNIT_TITLE = 'الوحدة الأولى: الحركة والقوى';
 const LESSON_TITLE = 'الدرس الثاني: القوى المتوازية';
@@ -625,6 +626,20 @@ export const LESSON_2_PAGES = [
 
       renderPracticeDeck(),
     ],
+  },
+
+  /* =========================================================================
+   * المرحلة 9 — دفتر الطالب: آخر تبويب في الدرس الثاني الحقيقي (الوحدة الأولى)
+   * المحتوى في `src/lesson-2-notebook.js`؛ العنوان ظاهر في الشريط الجانبي.
+   * ========================================================================= */
+  {
+    page: 70,
+    unitTitle: UNIT_TITLE,
+    title: 'دفتر الطالب',
+    stageTitle: '📒 دفتر الطالب',
+    summary: 'المرجع الكامل للدرس الثاني: التعريف والتجارب، وعناصر المحصلة في الحالتين، وسلسلة التناسب، والأمثلة المحلولة بقيم الكتاب، والرموز والوحدات، وقراءة الرسوم، والأخطاء الشائعة.',
+    objectives: [],
+    blocks: [LESSON_2_NOTEBOOK_BLOCK],
   },
 ];
 

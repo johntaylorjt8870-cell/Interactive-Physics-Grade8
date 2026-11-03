@@ -1,0 +1,72 @@
+PASS  1440: nav has 9 tabs  → count=9
+PASS  1440: last tab is the notebook  → 9 📒 دفتر الطالب ص 70
+PASS  1440: heading is دفتر الطالب  → دفتر الطالب
+PASS  1440: exactly one notebook rendered  → count=1
+PASS  1440: progress is 9 / 9  → 9 / 9
+PASS  1440: next is disabled on the final stage
+PASS  1440: previous is enabled on the final stage
+PASS  1440: last nav tab is current  → 9 📒 دفتر الطالب ص 70
+PASS  1440: 14 notebook sections  → count=14
+PASS  1440: no katex errors  → count=0
+PASS  1440: no horizontal page overflow  → delta=0
+PASS  1440: wide equations stay scrollable, never clipped
+PASS  1440: no forced line breaks inside equations  → count=0
+PASS  1440: previous returns to the p70 stage  → أختبر نفسي
+PASS  1440: notebook leaves the DOM when navigating back
+PASS  1440: next returns to the notebook
+PASS  1440: PageUp leaves the notebook
+PASS  1440: PageDown returns to the notebook
+PASS  1440: no console/page errors
+PASS  1366: nav has 9 tabs  → count=9
+PASS  1366: last tab is the notebook  → 9 📒 دفتر الطالب ص 70
+PASS  1366: heading is دفتر الطالب  → دفتر الطالب
+PASS  1366: exactly one notebook rendered  → count=1
+PASS  1366: progress is 9 / 9  → 9 / 9
+PASS  1366: next is disabled on the final stage
+PASS  1366: previous is enabled on the final stage
+PASS  1366: last nav tab is current  → 9 📒 دفتر الطالب ص 70
+PASS  1366: 14 notebook sections  → count=14
+PASS  1366: no katex errors  → count=0
+PASS  1366: no horizontal page overflow  → delta=0
+PASS  1366: wide equations stay scrollable, never clipped
+PASS  1366: no forced line breaks inside equations  → count=0
+PASS  1366: previous returns to the p70 stage  → أختبر نفسي
+PASS  1366: notebook leaves the DOM when navigating back
+PASS  1366: next returns to the notebook
+PASS  1366: PageUp leaves the notebook
+PASS  1366: PageDown returns to the notebook
+PASS  1366: no console/page errors
+PASS  390: nav has 9 tabs  → count=9
+PASS  390: last tab is the notebook  → 9 📒 دفتر الطالب ص 70
+PASS  390: heading is دفتر الطالب  → دفتر الطالب
+PASS  390: exactly one notebook rendered  → count=1
+PASS  390: progress is 9 / 9  → 9 / 9
+PASS  390: next is disabled on the final stage
+PASS  390: previous is enabled on the final stage
+PASS  390: last nav tab is current  → 9 📒 دفتر الطالب ص 70
+PASS  390: 14 notebook sections  → count=14
+PASS  390: no katex errors  → count=0
+PASS  390: no horizontal page overflow  → delta=0
+PASS  390: wide equations stay scrollable, never clipped
+PASS  390: no forced line breaks inside equations  → count=0
+PASS  390: previous returns to the p70 stage  → أختبر نفسي
+PASS  390: notebook leaves the DOM when navigating back
+PASS  390: next returns to the notebook
+PASS  390: PageUp leaves the notebook
+PASS  390: PageDown returns to the notebook
+PASS  390: no console/page errors
+PASS  lesson 1 still has 9 tabs
+PASS  lesson 1 notebook is still its own final stage
+PASS  lesson 1 has no lesson-2 notebook content
+PASS  lesson 1 loads without page errors
+PASS  no notebook rendered on /index.html  → l2=0 l1=0
+PASS  no notebook rendered on /lesson-1.html  → l2=0 l1=0
+PASS  no notebook rendered on /lesson-2-appendix.html  → l2=0 l1=0
+PASS  no notebook rendered on /lesson-2-teacher.html  → l2=0 l1=0
+PASS  no notebook rendered on /lesson-2-test.html  → l2=0 l1=0
+PASS  no notebook rendered on /appendices.html  → l2=0 l1=0
+PASS  no notebook rendered on /physics-in-life-lesson-1.html  → l2=0 l1=0
+PASS  no notebook rendered on /unit-questions.html  → l2=0 l1=0
+PASS  no notebook rendered on /unit-1-test.html  → l2=0 l1=0
+
+70/70 checks passed
