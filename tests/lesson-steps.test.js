@@ -176,18 +176,21 @@ test('Lesson 3 renders exactly one textbook page per step, with that page\'s own
     diagramIdsByPage.get(diagram.page).push(id);
   }
 
-  for (const page of UNIT2L3_PAGES) {
+  for (const [pageIndex, page] of UNIT2L3_PAGES.entries()) {
     const markup = unit2l3StepMarkup(page);
-    const otherPages = UNIT2L3_PAGES.filter((candidate) => candidate.page !== page.page);
+    const isNotebook = page.id === 'student-notebook';
+    const viewId = isNotebook ? 'student-notebook' : `p${page.page}`;
+    const otherPages = UNIT2L3_PAGES.filter((candidate, candidateIndex) => candidateIndex !== pageIndex);
 
     const ownBookBlocks = page.blocks.filter((block) => block.type === 'book').length;
     const renderedBookBlocks = (markup.match(/data-book-copy=/g) ?? []).length;
     assert.equal(renderedBookBlocks, ownBookBlocks, `p${page.page} renders each of its own book blocks once`);
     assert.equal((markup.match(new RegExp(`data-book-copy="p${page.page}"`, 'g')) ?? []).length, ownBookBlocks);
-    assert.ok(markup.includes(`data-page-view="p${page.page}"`), 'the step is tagged with its own page');
+    assert.ok(markup.includes(`data-page-view="${viewId}"`), 'the step is tagged with its own page or notebook reference');
     assert.ok(markup.includes(page.heading.replaceAll('"', '&quot;')) || markup.includes(page.heading), 'the step shows its heading');
     for (const other of otherPages) {
-      assert.equal(markup.includes(`data-page-view="p${other.page}"`), false, `p${page.page} does not embed p${other.page}`);
+      const otherViewId = other.id === 'student-notebook' ? 'student-notebook' : `p${other.page}`;
+      assert.equal(markup.includes(`data-page-view="${otherViewId}"`), false, `${viewId} does not embed ${otherViewId}`);
       assert.equal(markup.includes(`data-book-copy="p${other.page}"`), false, `p${page.page} does not embed p${other.page} book copy`);
     }
 
