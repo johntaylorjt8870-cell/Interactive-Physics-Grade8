@@ -1,4 +1,5 @@
 import { calculation, formula, solutionSteps, tex } from './math.js';
+import { UNIT2_LESSON1_NOTEBOOK_BLOCK, UNIT2_NOTEBOOK_TITLE } from './unit2-lesson1-notebook.js';
 
 const book = (html) => ({ type: 'book', html });
 const diagram = (id) => ({ type: 'diagram', id });
@@ -200,6 +201,21 @@ export const UNIT2_PAGES = [
       diagram('three-charges'),
       book(`<section class="u2-card u2-selfcheck-card"><div class="u2-card-heading"><h3>المطلوب</h3>${tag('جميع الفروع بترتيب الكتاب')}</div><ol class="u2-source-list u2-required-list"><li>احسب شدة القوة المتبادلة بين (${q('q_{1}', 'q1')}) و(${q('q_{2}', 'q2')})؟</li><li>احسب شدة القوة المتبادلة بين (${q('q_{1}', 'q1')}) و(${q('q_{3}', 'q3')})؟</li><li>احسب شدة محصلة القوى التي تخضع لها الشحنة (${q('q_{1}', 'q1')})؟ وحدد جهتها؟ موضحاً ذلك بالرسم؟</li></ol>${practiceSlot('three-charge-problem')}</section>`),
     ],
+  },
+
+  /* =========================================================================
+   * المرحلة 15 — دفتر الطالب: آخر تبويب في الدرس الأول الحقيقي من الوحدة الثانية.
+   * المحتوى في `src/unit2-lesson1-notebook.js`؛ العنوان ظاهر في الشريط الجانبي.
+   * مرجع الصفحة المطبوع في هذه المرحلة هو صفحة الكتاب الأخيرة (86) لأن الدرس
+   * ينتهي عندها، فلا يكسر ذلك ترتيب الصفحات المتزايد 73–86 في بقية المراحل.
+   * ====================================================================== */
+  {
+    page: 86,
+    id: 'student-notebook',
+    navLabel: UNIT2_NOTEBOOK_TITLE,
+    heading: 'دفتر الطالب',
+    summary: 'المرجع الكامل للدرس: التعريفات، والتجارب الأربع وملاحظاتها، وأجزاء الكاشف ومبدأ عمله، وكمّ الشحنة، وقانون كولوم برموزه ووحداته وشروطه، والأمثلة المحلولة، وأجوبة «أختبر نفسي»، وقراءة الرسوم، والأخطاء الشائعة، ومواضع الغموض في المصدر.',
+    blocks: [{ type: 'student-notebook', html: UNIT2_LESSON1_NOTEBOOK_BLOCK }],
   },
 ];
 

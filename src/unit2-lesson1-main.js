@@ -2,6 +2,7 @@ import { UNIT2_PAGES } from './unit2-lesson1-content.js';
 import { UNIT2_DIAGRAMS } from './unit2-lesson1-diagrams.js';
 import { unit2SimulationMarkup, mountUnit2Simulations } from './unit2-lesson1-simulation.js';
 import { mountUnit2Practice } from './unit2-lesson1-practice.js';
+import { railMaxHeight, revealScrollTop } from './sidebar-reveal.js';
 
 const nav = document.querySelector('#page-nav');
 const pageContent = document.querySelector('#page-content');
@@ -26,6 +27,7 @@ const escapeHtml = (value) => String(value)
   .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 
 function renderPlatformBlock(block) {
+  if (block.type === 'student-notebook') return block.html;
   if (block.type === 'simulation') return unit2SimulationMarkup(block.id);
   if (block.type === 'diagram') {
     const diagram = UNIT2_DIAGRAMS[block.id];
@@ -59,6 +61,9 @@ function buildPage(page, index) {
 
 function renderPage(page, index) {
   pageHeading.textContent = page.heading;
+  // The final stage is the student notebook, not a printed textbook page. Its
+  // badge keeps the lesson's last source page (86) as the source reference,
+  // while the tab, the kicker and `#control-center` name it «دفتر الطالب».
   pageNumber.textContent = String(page.page);
   sectionKicker.textContent = `الدرس 1 · الكهرباء الساكنة · ${index + 1} / ${UNIT2_PAGES.length}`;
   if (!pageCache.has(index)) pageCache.set(index, buildPage(page, index));
@@ -76,7 +81,10 @@ function updateProgress(index) {
   progressTrack.setAttribute('aria-valuetext', `${visited.size} مراحل من ${UNIT2_PAGES.length}`);
   progressFill.style.width = `${percentage}%`;
   mobileProgressFill.style.width = `${percentage}%`;
-  controlCenter.textContent = `المرحلة ${index + 1} من ${UNIT2_PAGES.length} · صفحة ${UNIT2_PAGES[index].page}`;
+  const stage = UNIT2_PAGES[index];
+  controlCenter.textContent = stage.id === 'student-notebook'
+    ? `المرحلة ${index + 1} من ${UNIT2_PAGES.length} · دفتر الطالب`
+    : `المرحلة ${index + 1} من ${UNIT2_PAGES.length} · صفحة ${stage.page}`;
 }
 
 function updateControls(index) {
@@ -95,6 +103,62 @@ function updateNavigation(index) {
   });
 }
 
+/* The rail carries fifteen tabs (fourteen book pages + the student notebook), so
+   on a short laptop window it is taller than a sticky rail may be. The rail is
+   bounded to the viewport and only `#page-nav` scrolls; `railMaxHeight()` and
+   `revealScrollTop()` are the shared helpers Lesson 1 and Lesson 2 already use. */
+const sidebar = document.querySelector('.lesson-sidebar');
+const shortRailQuery = window.matchMedia?.('(min-width: 821px) and (max-height: 800px)');
+
+function fitRailToViewport() {
+  if (!sidebar) return;
+  if (!shortRailQuery?.matches) {
+    if (sidebar.style.getPropertyValue('--rail-max-height')) sidebar.style.removeProperty('--rail-max-height');
+    return;
+  }
+  const height = railMaxHeight({
+    viewportHeight: window.innerHeight,
+    railTop: sidebar.getBoundingClientRect().top,
+  });
+  if (height === null) {
+    sidebar.style.removeProperty('--rail-max-height');
+    return;
+  }
+  sidebar.style.setProperty('--rail-max-height', `${height}px`);
+}
+
+/* Keeps the active tab inside the rail's own scrollport, never the window. */
+function revealActiveStep() {
+  if (!nav) return;
+  const active = nav.querySelector('[aria-current="step"]');
+  if (!active) return;
+  const listBox = nav.getBoundingClientRect();
+  const stepBox = active.getBoundingClientRect();
+  nav.scrollTop = revealScrollTop({
+    scrollTop: nav.scrollTop,
+    scrollHeight: nav.scrollHeight,
+    clientHeight: nav.clientHeight,
+    listTop: listBox.top,
+    listBottom: listBox.bottom,
+    itemTop: stepBox.top,
+    itemBottom: stepBox.bottom,
+  });
+}
+
+let revealFrame = 0;
+function refreshRail({ reveal = true } = {}) {
+  if (revealFrame) return;
+  revealFrame = window.requestAnimationFrame(() => {
+    revealFrame = 0;
+    fitRailToViewport();
+    if (reveal) revealActiveStep();
+  });
+}
+window.addEventListener('resize', () => refreshRail({ reveal: true }));
+window.addEventListener('scroll', () => refreshRail({ reveal: false }), { passive: true });
+shortRailQuery?.addEventListener?.('change', () => refreshRail({ reveal: true }));
+fitRailToViewport();
+
 function goToPage(index, moveFocus = false) {
   const bounded = Math.max(0, Math.min(UNIT2_PAGES.length - 1, index));
   if (bounded === activeIndex && pageContent.childElementCount > 0) return;
@@ -102,6 +166,7 @@ function goToPage(index, moveFocus = false) {
   pageContent.setAttribute('aria-busy', 'true');
   renderPage(UNIT2_PAGES[activeIndex], activeIndex);
   pageContent.setAttribute('aria-busy', 'false');
+  refreshRail({ reveal: true });
   if (moveFocus) {
     pageHeading.focus({ preventScroll: true });
     const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -112,8 +177,12 @@ function goToPage(index, moveFocus = false) {
 UNIT2_PAGES.forEach((page, index) => {
   const button = document.createElement('button');
   button.type = 'button'; button.className = 'page-nav-button';
-  button.setAttribute('aria-label', `الصفحة ${page.page}: ${page.navLabel}`);
-  button.innerHTML = `<span class="nav-page-number" dir="ltr">${page.page}</span><span class="nav-page-copy"><strong>${escapeHtml(page.navLabel)}</strong><small>صفحة من الكتاب</small></span><span class="nav-current-mark" aria-hidden="true">↙</span>`;
+  button.setAttribute('aria-label', page.id === 'student-notebook'
+    ? `${page.navLabel} — المرحلة الأخيرة في الدرس`
+    : `الصفحة ${page.page}: ${page.navLabel}`);
+  const isNotebook = page.id === 'student-notebook';
+  button.dataset.stage = isNotebook ? 'student-notebook' : `page-${page.page}`;
+  button.innerHTML = `<span class="nav-page-number" dir="ltr">${page.page}</span><span class="nav-page-copy"><strong>${escapeHtml(page.navLabel)}</strong><small>${isNotebook ? 'مرجع الدرس الكامل' : 'صفحة من الكتاب'}</small></span><span class="nav-current-mark" aria-hidden="true">↙</span>`;
   button.addEventListener('click', () => goToPage(index, true));
   nav.append(button);
 });

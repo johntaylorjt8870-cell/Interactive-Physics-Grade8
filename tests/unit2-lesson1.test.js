@@ -13,12 +13,21 @@ import { validateAnswerKey, startAssessment, createAssessmentState, recordAnswer
 import { renderTeacherContent } from '../src/unit2-lesson1-teacher-content.js';
 
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
+/* The fifteen stages are the fourteen textbook pages 73–86 plus the closing
+   student-notebook reference tab (see tests/unit2-lesson1-student-notebook.test.js).
+   The page-by-page checks below stay anchored to the fourteen book pages. */
+const BOOK_PAGES = UNIT2_PAGES.filter((page) => !page.blocks.some((block) => block.type === 'student-notebook'));
+const NOTEBOOK_STAGE = UNIT2_PAGES.at(-1);
 const source = (n) => UNIT2_PAGES.find((page) => page.page === n)?.blocks.filter((block) => block.type === 'book').map((block) => block.html).join('') ?? '';
 const practiceIds = [...new Set(UNIT2_PAGES.flatMap((page) => page.blocks).filter((block) => block.type === 'book').flatMap((block) => [...block.html.matchAll(/data-u2-practice="([^"]+)"/g)].map((match) => match[1])))];
 const simulationIds = UNIT2_PAGES.flatMap((page) => page.blocks).filter((block) => block.type === 'simulation').map((block) => block.id);
 
 test('pages 73–86 stay ordered, scoped, routed and RTL', async () => {
-  assert.deepEqual(UNIT2_PAGES.map((page) => page.page), [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86]);
+  assert.deepEqual(BOOK_PAGES.map((page) => page.page), [73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86]);
+  assert.equal(UNIT2_PAGES.length, 15);
+  assert.equal(NOTEBOOK_STAGE.id, 'student-notebook');
+  assert.equal(NOTEBOOK_STAGE.blocks[0].type, 'student-notebook');
+  assert.equal(UNIT2_PAGES.filter((page) => page.blocks.some((block) => block.type === 'student-notebook')).length, 1);
   assert.equal(UNIT2_META.pages, '73–86');
   assert.equal(UNIT2_SOURCE_INVENTORY.pages, 14);
   const [html, build, home, main] = await Promise.all([read('../unit2-lesson-1.html'), read('../scripts/build.mjs'), read('../index.html'), read('../src/unit2-lesson1-main.js')]);
@@ -35,7 +44,7 @@ test('pages 73–86 stay ordered, scoped, routed and RTL', async () => {
 });
 
 test('every source page retains its textbook text, small print and question branches', async () => {
-  for (const page of UNIT2_PAGES) {
+  for (const page of BOOK_PAGES) {
     assert.ok(source(page.page).length > 100, `book text p${page.page}`);
     assert.ok(page.blocks.some((block) => block.type === 'book'), `book block p${page.page}`);
   }

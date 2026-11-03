@@ -102,20 +102,47 @@ export class LessonStepper {
  * a heading, a navigation label and real book content, and the steps must follow
  * the book order without gaps or repeats.
  *
+ * A lesson may close with one **reference step** — the student notebook — which
+ * is not a printed textbook page. Such a step declares its content with a
+ * `student-notebook` block instead of `book` blocks (Unit 2's Lesson 4 uses a
+ * different `notebook` block type for in-page answer slots, so the reference-step
+ * type is deliberately distinct); it needs a heading and a navigation
+ * label, must be the *last* step, may repeat the last book page as its printed
+ * reference, and is excluded from the page-by-page comparison so the fourteen
+ * textbook steps still have to match 73–86 one for one.
+ *
  * Returns `{ ok, problems }` instead of throwing so the caller can report all
  * problems at once.
  */
+const isReferenceStep = (page) => (Array.isArray(page?.blocks) ? page.blocks : [])
+  .some((block) => block?.type === 'student-notebook');
+
 export function auditLessonSteps(pages, { sourcePages = [] } = {}) {
   const problems = [];
   if (!Array.isArray(pages) || pages.length === 0) {
     return { ok: false, problems: ['the lesson defines no study steps'] };
   }
-  const numbers = pages.map((page) => page?.page);
+  const referenceIndexes = pages
+    .map((page, index) => (isReferenceStep(page) ? index : -1))
+    .filter((index) => index >= 0);
+  if (referenceIndexes.length > 1) problems.push('the lesson declares more than one student-notebook step');
+  if (referenceIndexes.length === 1 && referenceIndexes[0] !== pages.length - 1) {
+    problems.push('the student-notebook step is not the last step of the lesson');
+  }
+  const bookPages = pages.filter((page) => !isReferenceStep(page));
+  const numbers = bookPages.map((page) => page?.page);
   pages.forEach((page, index) => {
     const label = `step ${index + 1}`;
-    if (!Number.isInteger(page?.page)) problems.push(`${label} has no textbook page number`);
     if (typeof page?.heading !== 'string' || page.heading.trim().length < 4) problems.push(`${label} has no clear heading`);
     if (typeof page?.navLabel !== 'string' || page.navLabel.trim().length < 2) problems.push(`${label} has no navigation label`);
+    if (isReferenceStep(page)) {
+      const blocks = Array.isArray(page?.blocks) ? page.blocks : [];
+      if (!blocks.some((block) => typeof block?.html === 'string' && block.html.trim().length > 200)) {
+        problems.push(`${label} carries no notebook content`);
+      }
+      return;
+    }
+    if (!Number.isInteger(page?.page)) problems.push(`${label} has no textbook page number`);
     const blocks = Array.isArray(page?.blocks) ? page.blocks : [];
     if (!blocks.some((block) => block?.type === 'book')) problems.push(`${label} carries no textbook content`);
   });
@@ -124,8 +151,8 @@ export function auditLessonSteps(pages, { sourcePages = [] } = {}) {
   });
   if (new Set(numbers).size !== numbers.length) problems.push('two steps claim the same textbook page');
   if (sourcePages.length > 0) {
-    if (pages.length !== sourcePages.length) {
-      problems.push(`the lesson has ${pages.length} steps for ${sourcePages.length} textbook pages`);
+    if (bookPages.length !== sourcePages.length) {
+      problems.push(`the lesson has ${bookPages.length} steps for ${sourcePages.length} textbook pages`);
     }
     const mismatch = sourcePages.findIndex((number, index) => numbers[index] !== number);
     if (mismatch >= 0) problems.push(`step ${mismatch + 1} does not match textbook page ${sourcePages[mismatch]}`);
