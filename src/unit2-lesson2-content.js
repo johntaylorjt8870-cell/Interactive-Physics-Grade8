@@ -1,4 +1,5 @@
 import { formula, calculation, tex } from './math.js';
+import { UNIT2L2_NOTEBOOK_BLOCK } from './unit2-lesson2-notebook.js';
 const b = (html) => ({ type: 'book', html });
 const pl = (title, html, kind = 'note') => ({ type: 'platform', title, html, kind });
 const dg = (id) => ({ type: 'diagram', id });
@@ -246,6 +247,17 @@ ${slot('p96-q4')}
 ${slot('p96-q5')}</section>`),
     pl('تلميح دون كشف الناتج', `<p>حوّل الدقائق إلى ثوانٍ <span class="u2l2-keep">(${tex('2\\,\\mathrm{min}=120\\,\\mathrm{s}', '2 min equals 120 s')}،</span> <span class="u2l2-keep">${tex('5\\,\\mathrm{min}=300\\,\\mathrm{s}', '5 min equals 300 s')}).</span> الوحدة المطبوعة ${tex('12\\,\\mathrm{c}', '12 c as printed in the book')} هي كمية الكهرباء بالكولوم كما في اصطلاح الصفحة. لا تخلط بين المولّد الذي يسبب الحركة والمصباح الذي يحوّل الطاقة.</p>`),
   ] },
+  /* المرحلة 11 — دفتر الطالب: آخر تبويب في الدرس الثاني الحقيقي من الوحدة الثانية
+     (التيار الكهربائي المتواصل، ص 87–96). مرحلة مرجعية واحدة داخل مسار الدرس،
+     تحمل رقم آخر صفحة مصدر كمرجع طباعي فقط؛ auditLessonSteps يستثنيها من
+     المقارنة صفحة بصفحة، فيبقى ترتيب الصفحات 87–96 كما هو. */
+  {
+    page: 96,
+    id: 'student-notebook',
+    navLabel: '📒 دفتر الطالب',
+    heading: 'دفتر الطالب',
+    blocks: [{ type: 'student-notebook', html: UNIT2L2_NOTEBOOK_BLOCK }],
+  },
 ];
 
 export const UNIT2L2_META = Object.freeze({
