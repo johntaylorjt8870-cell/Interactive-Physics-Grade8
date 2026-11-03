@@ -16,6 +16,7 @@ if (!nav || !pageContent) throw new Error('Lesson 3 student content root is miss
 
 const pageHeading = document.querySelector('#page-heading');
 const pageNumber = document.querySelector('#page-number');
+const pageBadgeLabel = document.querySelector('#page-badge-label');
 const progressText = document.querySelector('#progress-text');
 const progressTrack = document.querySelector('#progress-track');
 const progressFill = document.querySelector('#progress-fill');
@@ -71,6 +72,7 @@ function updateNav() {
 function renderStep() {
   const page = stepper.page;
   pageHeading.textContent = page.heading;
+  pageBadgeLabel.textContent = page.id === 'student-notebook' ? 'مرجع الكتاب' : 'صفحة الكتاب';
   pageNumber.textContent = String(page.page);
   sectionKicker.textContent = `الدرس 3 · فرق الكمون الكهربائي · ${stepper.position} / ${stepper.total}`;
   pageContent.replaceChildren(buildStep(stepper.index));
