@@ -18,7 +18,10 @@ import {
 } from '../src/unit2-lesson2-physics.js';
 
 const read = (p) => readFile(new URL(p, import.meta.url), 'utf8');
-const source = (n) => UNIT2L2_PAGES.find((p) => p.page === n)?.blocks.filter((b) => b.type === 'book').map((b) => b.html).join('') ?? '';
+/* Eleven stages: the ten textbook pages 87–96 plus the closing student-notebook
+   reference tab. Page-by-page checks stay anchored to the ten book pages. */
+const BOOK_PAGES = UNIT2L2_PAGES.filter((page) => !page.blocks.some((block) => block.type === 'student-notebook'));
+const source = (n) => BOOK_PAGES.find((p) => p.page === n)?.blocks.filter((b) => b.type === 'book').map((b) => b.html).join('') ?? '';
 /* TeX sources that KaTeX embedded in the rendered HTML (MathML annotation). */
 const texOf = (html) => [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)].map((m) => m[1]);
 /* Text a reader sees: drop TeX annotations and tags. */
@@ -69,7 +72,10 @@ const teacherArticle = (html, n) => {
 };
 
 test('pages 87-96 in order, meta, entries, build, completed unit-2 test', async () => {
-  assert.deepEqual(UNIT2L2_PAGES.map((p) => p.page), [87, 88, 89, 90, 91, 92, 93, 94, 95, 96]);
+  assert.deepEqual(BOOK_PAGES.map((p) => p.page), [87, 88, 89, 90, 91, 92, 93, 94, 95, 96]);
+  assert.equal(UNIT2L2_PAGES.length, 11);
+  assert.equal(UNIT2L2_PAGES.at(-1).id, 'student-notebook');
+  assert.equal(UNIT2L2_PAGES.filter((p) => p.blocks.some((b) => b.type === 'student-notebook')).length, 1);
   assert.equal(UNIT2L2_META.pages, '87–96');
   const [html, build, home] = await Promise.all([read('../unit2-lesson-2.html'), read('../scripts/build.mjs'), read('../index.html')]);
   assert.match(html, /<html lang="ar" dir="rtl">/);
