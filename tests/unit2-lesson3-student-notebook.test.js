@@ -23,7 +23,7 @@ test('notebook selects the definitions, units, measurement rules, circuit laws a
   for (const phrase of [
     'فرق الكمون الكهربائي', 'الفولتميتر', 'ثنائي قطب فعّال', 'ثنائي قطب غير فعّال',
     'يوصل على التفرع', 'U=U_{1}+U_{2}', 'U=U_{1}=U_{2}',
-    '1\\\\,\\\\mathrm{kV}', '1\\\\,\\\\mathrm{mV}', '12-5=7', '6\\\\,\\\\mathrm{V}',
+    '1\\,\\mathrm{kV}', '1\\,\\mathrm{mV}', '12-5=7', '6\\,\\mathrm{V}',
     'الناقل المعتدل', 'القوة المحركة الكهربائية', '220 V', '110 V',
   ]) assert.ok(UNIT2L3_NOTEBOOK_BLOCK.includes(phrase), phrase);
   assert.equal((UNIT2L3_NOTEBOOK_BLOCK.match(/class="student-notebook-section"/g) ?? []).length, 9);
