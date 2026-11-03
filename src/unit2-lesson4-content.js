@@ -40,7 +40,7 @@ export const UNIT2L4_META = Object.freeze({
   title: 'المقاومة الكهربائية',
   pages: '107–120',
   sourcePages: Object.freeze(Array.from({ length: 14 }, (_, index) => 107 + index)),
-  steps: 14,
+  steps: 15,
   verifiedSelfCheck: Object.freeze({ multipleChoice: 3, graphParts: 3, matching: 4, explanations: 3, problemParts: 6, totalParts: 19 }),
 });
 

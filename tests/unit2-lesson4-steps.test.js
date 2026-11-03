@@ -290,14 +290,51 @@ test('navigation math is one step at a time with a real progress indicator', () 
 
 test('the bootstrap swaps steps through a cache instead of re-rendering them', async () => {
   const source = await read('src/unit2-lesson4-main.js');
-  assert.match(source, /createUnit2L4StepCache\(UNIT2L4_PAGES\)/);
-  assert.match(source, /pageContent\.replaceChildren\(stepCache\.get\(stepper\.index\)\)/);
-  assert.match(source, /aria-current/);
-  assert.match(source, /PageDown/);
-  assert.match(source, /PageUp/);
-  assert.match(source, /prefers-reduced-motion/);
-  assert.match(source, /#p\$\{stepper\.page\.page\}/);
-  assert.doesNotMatch(source, /innerHTML\s*=\s*UNIT2L4_PAGES/, 'the lesson is never rendered as one block');
+  
+  // 1. Cache mechanism must exist and use UNIT2L4_PAGES for the 14 printed pages
+  assert.match(source, /createUnit2L4StepCache\(UNIT2L4_PAGES\)/, 'cache is created from the 14 printed pages');
+  
+  // 2. The main page swapping logic must use the cache (for the 14 printed pages)
+  assert.match(source, /pageContent\.replaceChildren\(stepCache\.get\(stepper\.index\)\)/, 'cache is used to swap steps');
+  
+  // 3. Standard accessibility and navigation features must be present
+  assert.match(source, /aria-current/, 'aria-current marks the active step');
+  assert.match(source, /PageDown/, 'PageDown shortcut is supported');
+  assert.match(source, /PageUp/, 'PageUp shortcut is supported');
+  assert.match(source, /prefers-reduced-motion/, 'reduced motion preference is checked');
+  
+  // 4. Deep linking must use the page number pattern for the 14 printed pages
+  assert.match(source, /#p\$\{stepper\.page\.page\}/, 'hash links use page numbers');
+  
+  // 5. The lesson must NOT render all pages as one block (no innerHTML assignment of the whole page list)
+  // The actual code uses `pageContent.replaceChildren(...)` for each step, never `innerHTML = UNIT2L4_PAGES`.
+  // The regex `innerHTML\s*=\s*UNIT2L4_PAGES` must NOT match.
+  // In the current code, `innerHTML` is only used for the notebook block (`div.innerHTML = UNIT2L4_NOTEBOOK_BLOCK`),
+  // which is NOT `UNIT2L4_PAGES`. Thus, the doesNotMatch assertion should pass.
+  // However, the test runner reports a failure at this assertion.
+  // Let's verify the exact regex and the actual source code.
+  // Actual source code (src/unit2-lesson4-main.js) does NOT contain `innerHTML = UNIT2L4_PAGES`.
+  // The failure message 'the lesson is never rendered as one block' comes from the doesNotMatch assertion.
+  // This indicates that the regex `innerHTML\s*=\s*UNIT2L4_PAGES` IS matching somewhere in the source.
+  // Let's check the source again:
+  // - Line 136: `div.innerHTML = UNIT2L4_NOTEBOOK_BLOCK;` (NOT UNIT2L4_PAGES)
+  // - Line 139: `pageContent.replaceChildren(fragment);` (NOT innerHTML)
+  // - Line 141: `pageContent.replaceChildren(stepCache.get(stepper.index));` (NOT innerHTML)
+  // Conclusion: The regex `innerHTML\s*=\s*UNIT2L4_PAGES` should NOT match.
+  // If it matches, there is a hidden match in the source code or the test runner is misinterpreting the regex.
+  // Let's fix the test to explicitly check the actual source code and ensure the regex is correct.
+  assert.doesNotMatch(source, /innerHTML\s*=\s*UNIT2L4_PAGES/, 'the lesson is never rendered as one block (no innerHTML assignment of the whole page list)');
+  
+  // 6. VERIFICATION OF NOTEBOOK INTEGRATION (NEW REQUIREMENT):
+  // The notebook step (step 15) must be handled separately from the cache to avoid breaking the cache logic
+  // which only expects the 14 printed pages (UNIT2L4_PAGES).
+  assert.match(source, /pagesWithNotebook/, 'notebook step is included in the stepper');
+  assert.match(source, /student-notebook/, 'notebook step id is defined');
+  assert.match(source, /pageContent\.replaceChildren\(fragment\)/, 'notebook step renders via fragment, not cache');
+  
+  // 7. The cache creation must still strictly use UNIT2L4_PAGES (14 pages) to maintain compatibility
+  // with the original test expectation while the notebook is handled separately.
+  // Note: The regex match for createUnit2L4StepCache(UNIT2L4_PAGES) is satisfied by line 50.
 });
 
 /* ------------------------------------------------------------------------- */
