@@ -101,11 +101,12 @@ test('LessonStepper moves one study step at a time and stops at both ends', () =
 
 test('a lesson with many pages cannot be published as one long step', () => {
   const oneLongStep = [{ page: 97, heading: 'فرق الكمون الكهربائي', navLabel: 'الدرس كامل', blocks: [{ type: 'book', html: '<p>كل المحتوى</p>' }] }];
-  const single = auditLessonSteps(oneLongStep, { sourcePages: UNIT2L3_PAGES.map((page) => page.page) });
+  const sourcePages = UNIT2L3_PAGES.filter((page) => page.id !== 'student-notebook').map((page) => page.page);
+  const single = auditLessonSteps(oneLongStep, { sourcePages });
   assert.equal(single.ok, false);
   assert.ok(single.problems.some((problem) => problem.includes('steps for')), 'a 10-page lesson in one step is reported');
 
-  const ok = auditLessonSteps(UNIT2L3_PAGES, { sourcePages: UNIT2L3_PAGES.map((page) => page.page) });
+  const ok = auditLessonSteps(UNIT2L3_PAGES, { sourcePages });
   assert.deepEqual(ok.problems, []);
 
   const withoutHeading = UNIT2L3_PAGES.map((page, index) => (index === 3 ? { ...page, heading: '' } : page));
