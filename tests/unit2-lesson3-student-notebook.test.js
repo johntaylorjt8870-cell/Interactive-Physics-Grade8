@@ -66,6 +66,8 @@ test('HTML, main navigation and CSS expose an accessible responsive final notebo
   assert.match(html, /١٠ صفحات كتاب \+ دفتر الطالب/);
   assert.match(main, /stepper\.page\.id === 'student-notebook'/);
   assert.match(main, /آخر خطوة · مرجع مراجعة/);
+  assert.match(html, /id="page-badge-label"/);
+  assert.match(main, /مرجع الكتاب/);
   assert.match(css, /\.p3-student-notebook/);
   assert.match(css, /overflow-x: auto/);
   assert.match(css, /@media \(max-width: 600px\)/);
