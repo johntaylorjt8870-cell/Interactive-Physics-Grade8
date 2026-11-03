@@ -72,13 +72,17 @@ test('LessonStepper moves one study step at a time and stops at both ends', () =
   assert.equal(stepper.page.page, 97);
 
   assert.equal(stepper.goTo(9), true);
+  assert.equal(stepper.isLast, false);
+  assert.equal(stepper.page.page, 106);
+  assert.equal(stepper.progress.current, 10);
+  assert.equal(stepper.progress.total, 11);
+  assert.equal(stepper.goTo(10), true);
   assert.equal(stepper.isLast, true);
-  assert.equal(stepper.page.page, 106);
+  assert.equal(stepper.page.id, 'student-notebook');
   assert.equal(stepper.next(), false, 'the last step cannot move further forward');
-  assert.equal(stepper.page.page, 106);
-  assert.deepEqual(stepper.progress, { current: 10, total: 10, percent: 100 });
+  assert.deepEqual(stepper.progress, { current: 11, total: 11, percent: 100 });
 
-  assert.equal(stepper.goTo(9), false, 're-selecting the active step is not a move');
+  assert.equal(stepper.goTo(10), false, 're-selecting the active step is not a move');
   assert.equal(stepper.goTo(4), true);
   assert.equal(stepper.goTo(99), true, 'out-of-range targets clamp to the last step');
   assert.equal(stepper.page.page, 106);
