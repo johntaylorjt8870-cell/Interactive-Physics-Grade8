@@ -41,7 +41,7 @@ export const UNIT2L3_NOTEBOOK_BLOCK = `<article class="student-notebook p3-stude
 
     ${section('u2l3nb-terms', '٢. التعريفات والمصطلحات', `
       ${definition('فرق الكمون U', 'فرق الكمون الكهربائي بين نقطتين، ويرمز له بالحرف U ويقاس بالفولت V.') }
-      ${definition('الفولت V', `وحدة قياس فرق الكمون الكهربائي؛ وعند استعمال تفسير الطاقة لكل شحنة، فإن ${inline('1\\\\,\\\\mathrm{V}=1\\\\,\\\\mathrm{J/C}', 'one volt equals one joule per coulomb')}.`)}
+      ${definition('الفولت V', `وحدة قياس فرق الكمون الكهربائي؛ وعند استعمال تفسير الطاقة لكل شحنة، فإن ${inline('1\\,\\mathrm{V}=1\\,\\mathrm{J/C}', 'one volt equals one joule per coulomb')}.`)}
       ${definition('مقياس الفولت (الفولتميتر)', 'جهاز يقيس فرق الكمون بين نقطتين، ويوصل على التفرع بين هاتين النقطتين.') }
       ${definition('ثنائي قطب فعّال', 'عنصر يسبب مرور التيار في دارة مغلقة ويزود الشحنات بالطاقة؛ مثال الدرس: المولد.') }
       ${definition('ثنائي قطب غير فعّال', 'عنصر لا يسبب مرور التيار بنفسه؛ مثال الدرس: المصباح.') }
@@ -75,14 +75,14 @@ export const UNIT2L3_NOTEBOOK_BLOCK = `<article class="student-notebook p3-stude
 
     ${section('u2l3-units', '٥. التحويل بين وحدات الفولت', `
       ${table(['الوحدة', 'العلاقة بالفولت', 'طريقة التحويل'], [
-        [inline('1\\\\,\\\\mathrm{kV}', '1 kV'), inline('1000\\\\,\\\\mathrm{V}', '1000 V'), 'من kV إلى V: نضرب ×1000'],
-        [inline('1\\\\,\\\\mathrm{V}', '1 V'), inline('1000\\\\,\\\\mathrm{mV}', '1000 mV'), 'من V إلى mV: نضرب ×1000'],
-        [inline('1\\\\,\\\\mathrm{mV}', '1 mV'), inline('0.001\\\\,\\\\mathrm{V}', '0.001 V'), 'من mV إلى V: نقسم ÷1000']
+        [inline('1\\,\\mathrm{kV}', '1 kV'), inline('1000\\,\\mathrm{V}', '1000 V'), 'من kV إلى V: نضرب ×1000'],
+        [inline('1\\,\\mathrm{V}', '1 V'), inline('1000\\,\\mathrm{mV}', '1000 mV'), 'من V إلى mV: نضرب ×1000'],
+        [inline('1\\,\\mathrm{mV}', '1 mV'), inline('0.001\\,\\mathrm{V}', '0.001 V'), 'من mV إلى V: نقسم ÷1000']
       ])}
       ${ordered([
-        `25 kV = ${inline('25\\\\times1000=25000\\\\,\\\\mathrm{V}', '25 times 1000 equals 25000 volts')}.`,
-        `2.4 V = ${inline('2.4\\\\times1000=2400\\\\,\\\\mathrm{mV}', '2.4 times 1000 equals 2400 millivolts')}.`,
-        `250 mV = ${inline('250\\\\div1000=0.25\\\\,\\\\mathrm{V}', '250 divided by 1000 equals 0.25 volts')}.`
+        `25 kV = ${inline('25\\times1000=25000\\,\\mathrm{V}', '25 times 1000 equals 25000 volts')}.`,
+        `2.4 V = ${inline('2.4\\times1000=2400\\,\\mathrm{mV}', '2.4 times 1000 equals 2400 millivolts')}.`,
+        `250 mV = ${inline('250\\div1000=0.25\\,\\mathrm{V}', '250 divided by 1000 equals 0.25 volts')}.`
       ])}
       ${note('احفظ بادئة kilo = 1000 وmilli = 1/1000. انتبه إلى اتجاه التحويل قبل الضرب أو القسمة.', 'exam')}`)}
 
@@ -91,14 +91,14 @@ export const UNIT2L3_NOTEBOOK_BLOCK = `<article class="student-notebook p3-stude
         <h4>نشاط التسلسل · ص102</h4>
         <p><strong>المعطيات:</strong> فرق كمون المولد 12 V، وفرق الكمون على أحد المصباحين 5 V.</p>
         <p><strong>المطلوب:</strong> فرق الكمون على المصباح الآخر.</p>
-        <div class="student-notebook-formula">${formula('U_1=U-U_2=12-5=7\\\\,\\\\mathrm{V}', 'U1 equals 12 minus 5 equals 7 volts')}</div>
+        <div class="student-notebook-formula">${formula('U_1=U-U_2=12-5=7\\,\\mathrm{V}', 'U1 equals 12 minus 5 equals 7 volts')}</div>
         <p><strong>التحقق:</strong> 7 V + 5 V = 12 V، أي إن مجموع الفروق الجزئية يساوي فرق المولد.</p>
       </div>
       <div class="student-notebook-example">
         <h4>نشاط التفرع · ص103</h4>
         <p><strong>المعطيات:</strong> فرق كمون المولد 6 V والمصباحان على التفرع.</p>
         <p><strong>النتيجة:</strong> فرق الكمون على كل فرع يساوي 6 V.</p>
-        <div class="student-notebook-formula">${formula('U=U_1=U_2=6\\\\,\\\\mathrm{V}', 'U equals U1 equals U2 equals 6 volts')}</div>
+        <div class="student-notebook-formula">${formula('U=U_1=U_2=6\\,\\mathrm{V}', 'U equals U1 equals U2 equals 6 volts')}</div>
       </div>
       <div class="student-notebook-example">
         <h4>مثال تحويل · أختبر نفسي ص105</h4>
