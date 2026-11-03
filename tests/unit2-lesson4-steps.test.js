@@ -581,6 +581,17 @@ test('the notebook module evaluates all nine sections with rendered math', async
   assert.equal(html.includes('${'), false, 'template interpolations are evaluated, not shipped as text');
   assert.equal(html.includes('katex-error'), false, 'KaTeX renders every notebook expression');
   assert.ok(html.includes('<annotation encoding="application/x-tex">1\\,\\mathrm A</annotation>'), 'units use one TeX command, not an over-escaped line break');
+  const { default: katex } = await import('../vendor/katex/katex.mjs');
+  const annotations = [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)].map((match) => match[1]);
+  assert.ok(annotations.length >= 80, 'every notebook formula is audited');
+  for (const annotation of annotations) {
+    assert.equal(annotation.includes('\\\\'), false, `over-escaped TeX reaches KaTeX: ${annotation}`);
+    katex.renderToString(annotation, { throwOnError: true, strict: 'ignore', output: 'htmlAndMathml' });
+  }
+  for (const conversion of [
+    '1\\,\\mathrm{cm}^{2}=10^{-4}\\,\\mathrm m^{2}',
+    '30\\,\\mathrm{cm}^{2}=30\\times10^{-4}=0.003\\,\\mathrm m^{2}',
+  ]) assert.ok(annotations.includes(conversion), `area conversion stays single-line: ${conversion}`);
   assert.ok(html.length > 100000, 'the complete review sheet is retained');
 });
 
