@@ -826,3 +826,172 @@ a { color: inherit; }
   .p3p-actions { gap: 7px; }
   .p3p-actions button { flex: 1 1 100%; }
 }
+
+
+/* Student notebook: a compact, selective review sheet, kept inside the final lesson step. */
+.p3-step-view-notebook { gap: 12px; }
+.p3-step-view-notebook > .p3-step-source { background: var(--p3-teal-pale); color: var(--p3-teal); }
+.p3-student-notebook {
+  --nb-ink: #202545;
+  --nb-muted: #68708b;
+  --nb-line: #dce3f0;
+  --nb-paper: #fff;
+  color: var(--nb-ink);
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+.p3-student-notebook .student-notebook-header {
+  padding: clamp(17px, 3vw, 27px);
+  color: #fff;
+  background: linear-gradient(135deg, #20264d, #354a91 72%, #167f79);
+  border-radius: 18px;
+}
+.p3-student-notebook .student-notebook-kicker {
+  margin: 0 0 7px;
+  color: #b8fff0;
+  font-size: 11px;
+  font-weight: 800;
+}
+.p3-student-notebook .student-notebook-header h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(23px, 3vw, 31px);
+  line-height: 1.4;
+}
+.p3-student-notebook .student-notebook-header > p:not(.student-notebook-kicker) {
+  max-width: 760px;
+  margin: 8px 0 13px;
+  color: #e4eaff;
+  font-size: 13px;
+}
+.p3-student-notebook .student-notebook-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.p3-student-notebook .curriculum-tag {
+  display: inline-flex;
+  padding: 4px 9px;
+  color: #eaf7ff;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 99px;
+}
+.p3-student-notebook .student-notebook-sheet { display: grid; gap: 13px; min-width: 0; }
+.p3-student-notebook .student-notebook-section {
+  min-width: 0;
+  padding: clamp(14px, 2.5vw, 21px);
+  background: var(--nb-paper);
+  border: 1px solid var(--nb-line);
+  border-radius: 15px;
+  box-shadow: 0 5px 17px rgba(23,26,61,.035);
+}
+.p3-student-notebook .student-notebook-section > h3 {
+  margin: 0 0 12px;
+  padding-bottom: 9px;
+  color: var(--p3-blue-deep);
+  font-size: 17px;
+  border-bottom: 1px solid var(--nb-line);
+}
+.p3-student-notebook .student-notebook-list { margin: 7px 0; padding-inline-start: 23px; }
+.p3-student-notebook .student-notebook-list li { margin: 7px 0; line-height: 1.9; }
+.p3-student-notebook .student-notebook-definition {
+  margin: 8px 0;
+  padding: 10px 12px;
+  background: #f6f8fd;
+  border-inline-start: 3px solid var(--p3-blue);
+  border-radius: 8px;
+  line-height: 1.9;
+}
+.p3-student-notebook .student-notebook-definition strong { color: var(--p3-ink); }
+.p3-student-notebook .student-notebook-law {
+  display: grid;
+  grid-template-columns: minmax(100px, .28fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin: 9px 0;
+  padding: 11px 13px;
+  background: #f1f5ff;
+  border: 1px solid #d8e1ff;
+  border-radius: 11px;
+}
+.p3-student-notebook .student-notebook-law > span { font-size: 12px; font-weight: 800; color: var(--p3-blue-deep); }
+.p3-student-notebook .student-notebook-formula {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 2px 7px;
+  direction: ltr;
+  text-align: center;
+  scrollbar-width: thin;
+}
+.p3-student-notebook .student-notebook-formula .katex-display { margin: 0; }
+.p3-student-notebook .student-notebook-example {
+  margin: 10px 0;
+  padding: 13px 15px;
+  background: #f8fafc;
+  border: 1px solid var(--nb-line);
+  border-radius: 12px;
+}
+.p3-student-notebook .student-notebook-example h4 { margin: 0 0 7px; color: var(--p3-ink); font-size: 14px; }
+.p3-student-notebook .student-notebook-example p { margin: 6px 0; line-height: 1.85; }
+.p3-student-notebook .student-notebook-note {
+  margin: 10px 0 0;
+  padding: 10px 13px;
+  font-size: 12.5px;
+  line-height: 1.9;
+  background: #f3f7fb;
+  border-inline-start: 3px solid var(--p3-teal);
+  border-radius: 9px;
+}
+.p3-student-notebook .student-notebook-note-platform { background: #eff8f7; }
+.p3-student-notebook .student-notebook-note-exam { background: #fff7e6; border-inline-start-color: #c28b22; }
+.p3-student-notebook .student-notebook-note-safety { background: #fff0e9; border-inline-start-color: var(--p3-coral); }
+.p3-student-notebook .student-notebook-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  margin: 10px 0;
+  overflow-x: auto;
+  border: 1px solid var(--nb-line);
+  border-radius: 11px;
+  scrollbar-width: thin;
+}
+.p3-student-notebook .student-notebook-table {
+  width: 100%;
+  min-width: 420px;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.p3-student-notebook .student-notebook-table caption {
+  padding: 8px 10px;
+  color: var(--nb-muted);
+  text-align: right;
+  font-weight: 700;
+}
+.p3-student-notebook .student-notebook-table th,
+.p3-student-notebook .student-notebook-table td {
+  padding: 9px 11px;
+  text-align: right;
+  vertical-align: top;
+  border-bottom: 1px solid var(--nb-line);
+}
+.p3-student-notebook .student-notebook-table thead th { color: #fff; background: var(--p3-ink); }
+.p3-student-notebook .student-notebook-table tbody tr:last-child td { border-bottom: 0; }
+.p3-student-notebook .student-notebook-checklist {
+  margin-top: 12px;
+  padding: 13px 15px;
+  background: var(--p3-teal-pale);
+  border: 1px solid #c4e9df;
+  border-radius: 12px;
+}
+.p3-student-notebook .student-notebook-checklist > strong { color: var(--p3-teal); }
+.p3-student-notebook .student-notebook-checklist ul { margin: 6px 0 0; padding-inline-start: 22px; }
+.p3-student-notebook .student-notebook-checklist li { margin: 5px 0; }
+.p3-student-notebook .katex { font-size: 1em; }
+@media (max-width: 600px) {
+  .p3-student-notebook .student-notebook-law { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+  .p3-student-notebook .student-notebook-formula { text-align: start; }
+  .p3-student-notebook .student-notebook-table { min-width: 390px; }
+}

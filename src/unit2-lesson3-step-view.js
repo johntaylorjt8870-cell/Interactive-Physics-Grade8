@@ -17,6 +17,7 @@ const escapeHtml = (value) => String(value)
   .replaceAll('>', '&gt;');
 
 function renderBlock(block, page, index) {
+  if (block.type === 'student-notebook') return block.html;
   if (block.type === 'book') {
     return `<div class="p3-book-copy" data-book-copy="p${page.page}"><span class="p3-book-copy-label">من الكتاب</span>${block.html}</div>`;
   }
@@ -40,8 +41,9 @@ export function unit2l3StepMarkup(page) {
   if (!page || !Number.isInteger(page.page) || !Array.isArray(page.blocks)) {
     throw new TypeError('unit2l3StepMarkup needs one lesson page entry.');
   }
-  return `<article class="p3-step-view" data-page-view="p${page.page}" data-source-page="p${page.page}" aria-label="الصفحة ${page.page}: ${escapeHtml(page.heading)}">
-    <p class="p3-step-source" role="note"><span>من الكتاب · الصفحة <bdi dir="ltr">${page.page}</bdi></span><span class="p3-step-source-topic">${escapeHtml(page.heading)}</span></p>
+  const isNotebook = page.blocks.some((block) => block.type === 'student-notebook');
+  return `<article class="p3-step-view${isNotebook ? ' p3-step-view-notebook' : ''}" data-page-view="${isNotebook ? 'student-notebook' : `p${page.page}`}" data-source-page="${isNotebook ? 'student-notebook' : `p${page.page}`}" aria-label="${isNotebook ? 'دفتر الطالب' : `الصفحة ${page.page}: ${escapeHtml(page.heading)}`} ">
+    <p class="p3-step-source" role="note"><span>${isNotebook ? 'مرجع الطالب · بعد صفحات الكتاب' : `من الكتاب · الصفحة <bdi dir="ltr">${page.page}</bdi>`}</span><span class="p3-step-source-topic">${escapeHtml(page.heading)}</span></p>
     ${page.blocks.map((block, index) => renderBlock(block, page, index)).join('')}
   </article>`;
 }

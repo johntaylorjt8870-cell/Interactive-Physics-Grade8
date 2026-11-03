@@ -1,4 +1,5 @@
 import { formula, ltrText, qty, tex } from './math.js';
+import { UNIT2L3_NOTEBOOK_BLOCK } from './unit2-lesson3-notebook.js';
 
 const b = (html) => ({ type: 'book', html });
 const pl = (title, html, kind = 'note') => ({ type: 'platform', title, html, kind });
@@ -214,6 +215,10 @@ ${SERIES_RULE}
     sim('quick-practice'),
     pl('شرح المنصة · تحقق قبل أن تنهي', `<p>ثبّت ثلاث علاقات: الفولتميتر على التفرع، فرق الكمون في التسلسل مجموع الفروق الجزئية، وفرق الكمون في كل فرع متوازٍ متساوٍ. استخدم التدريب التفاعلي التالي للتطبيق على قيم جديدة؛ وهو تدريب من المنصة وليس سؤالاً مطبوعاً في الكتاب.</p>`, 'practice'),
   ] },
+  { page: 106, station: 'review', id: 'student-notebook', navLabel: '📒 دفتر الطالب', heading: 'دفتر الطالب: فرق الكمون الكهربائي', blocks: [
+    { type: 'student-notebook', html: UNIT2L3_NOTEBOOK_BLOCK },
+  ] },
+
 ];
 
 export const UNIT2L3_STATIONS = Object.freeze([

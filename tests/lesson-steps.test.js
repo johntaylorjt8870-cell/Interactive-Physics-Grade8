@@ -60,11 +60,11 @@ test('LessonStepper moves one study step at a time and stops at both ends', () =
   assert.equal(stepper.isLast, false);
   assert.equal(stepper.previousPage, null);
   assert.equal(stepper.nextPage.page, 98);
-  assert.deepEqual(stepper.progress, { current: 1, total: 10, percent: 10 });
+  assert.deepEqual(stepper.progress, { current: 1, total: 11, percent: 9 });
 
   assert.equal(stepper.next(), true);
   assert.equal(stepper.page.page, 98);
-  assert.equal(stepper.progress.percent, 20);
+  assert.equal(stepper.progress.percent, 18);
 
   assert.equal(stepper.previous(), true);
   assert.equal(stepper.page.page, 97);
@@ -72,13 +72,17 @@ test('LessonStepper moves one study step at a time and stops at both ends', () =
   assert.equal(stepper.page.page, 97);
 
   assert.equal(stepper.goTo(9), true);
+  assert.equal(stepper.isLast, false);
+  assert.equal(stepper.page.page, 106);
+  assert.equal(stepper.progress.current, 10);
+  assert.equal(stepper.progress.total, 11);
+  assert.equal(stepper.goTo(10), true);
   assert.equal(stepper.isLast, true);
-  assert.equal(stepper.page.page, 106);
+  assert.equal(stepper.page.id, 'student-notebook');
   assert.equal(stepper.next(), false, 'the last step cannot move further forward');
-  assert.equal(stepper.page.page, 106);
-  assert.deepEqual(stepper.progress, { current: 10, total: 10, percent: 100 });
+  assert.deepEqual(stepper.progress, { current: 11, total: 11, percent: 100 });
 
-  assert.equal(stepper.goTo(9), false, 're-selecting the active step is not a move');
+  assert.equal(stepper.goTo(10), false, 're-selecting the active step is not a move');
   assert.equal(stepper.goTo(4), true);
   assert.equal(stepper.goTo(99), true, 'out-of-range targets clamp to the last step');
   assert.equal(stepper.page.page, 106);
@@ -97,11 +101,12 @@ test('LessonStepper moves one study step at a time and stops at both ends', () =
 
 test('a lesson with many pages cannot be published as one long step', () => {
   const oneLongStep = [{ page: 97, heading: 'فرق الكمون الكهربائي', navLabel: 'الدرس كامل', blocks: [{ type: 'book', html: '<p>كل المحتوى</p>' }] }];
-  const single = auditLessonSteps(oneLongStep, { sourcePages: UNIT2L3_PAGES.map((page) => page.page) });
+  const sourcePages = UNIT2L3_PAGES.filter((page) => page.id !== 'student-notebook').map((page) => page.page);
+  const single = auditLessonSteps(oneLongStep, { sourcePages });
   assert.equal(single.ok, false);
   assert.ok(single.problems.some((problem) => problem.includes('steps for')), 'a 10-page lesson in one step is reported');
 
-  const ok = auditLessonSteps(UNIT2L3_PAGES, { sourcePages: UNIT2L3_PAGES.map((page) => page.page) });
+  const ok = auditLessonSteps(UNIT2L3_PAGES, { sourcePages });
   assert.deepEqual(ok.problems, []);
 
   const withoutHeading = UNIT2L3_PAGES.map((page, index) => (index === 3 ? { ...page, heading: '' } : page));
@@ -171,19 +176,24 @@ test('Lesson 3 renders exactly one textbook page per step, with that page\'s own
     diagramIdsByPage.get(diagram.page).push(id);
   }
 
-  for (const page of UNIT2L3_PAGES) {
+  for (const [pageIndex, page] of UNIT2L3_PAGES.entries()) {
     const markup = unit2l3StepMarkup(page);
-    const otherPages = UNIT2L3_PAGES.filter((candidate) => candidate.page !== page.page);
+    const isNotebook = page.id === 'student-notebook';
+    const viewId = isNotebook ? 'student-notebook' : `p${page.page}`;
+    const otherPages = UNIT2L3_PAGES.filter((candidate, candidateIndex) => candidateIndex !== pageIndex);
 
     const ownBookBlocks = page.blocks.filter((block) => block.type === 'book').length;
     const renderedBookBlocks = (markup.match(/data-book-copy=/g) ?? []).length;
     assert.equal(renderedBookBlocks, ownBookBlocks, `p${page.page} renders each of its own book blocks once`);
     assert.equal((markup.match(new RegExp(`data-book-copy="p${page.page}"`, 'g')) ?? []).length, ownBookBlocks);
-    assert.ok(markup.includes(`data-page-view="p${page.page}"`), 'the step is tagged with its own page');
+    assert.ok(markup.includes(`data-page-view="${viewId}"`), 'the step is tagged with its own page or notebook reference');
     assert.ok(markup.includes(page.heading.replaceAll('"', '&quot;')) || markup.includes(page.heading), 'the step shows its heading');
     for (const other of otherPages) {
-      assert.equal(markup.includes(`data-page-view="p${other.page}"`), false, `p${page.page} does not embed p${other.page}`);
-      assert.equal(markup.includes(`data-book-copy="p${other.page}"`), false, `p${page.page} does not embed p${other.page} book copy`);
+      const otherViewId = other.id === 'student-notebook' ? 'student-notebook' : `p${other.page}`;
+      assert.equal(markup.includes(`data-page-view="${otherViewId}"`), false, `${viewId} does not embed ${otherViewId}`);
+      if (other.id !== 'student-notebook') {
+        assert.equal(markup.includes(`data-book-copy="p${other.page}"`), false, `${viewId} does not embed p${other.page} book copy`);
+      }
     }
 
     /* every interactive activity the content assigns to this step is mounted by it,
