@@ -2,7 +2,8 @@
 
 التاريخ: 2026-11-03  
 الفرع المستخدم في بيئة Arena: `arena/8699bc1b-interactive-physics-grade8`  
-الأساس: `main` عند `df3fbb9001755f7897b7d572144459137bf74361`، وهو merge commit الخاص بـPR #47.
+الأساس: `main` عند `df3fbb9001755f7897b7d572144459137bf74361`، وهو merge commit الخاص بـPR #47.  
+Pull Request الخاص بهذا الإصلاح: https://github.com/johntaylorjt8870-cell/Interactive-Physics-Grade8/pull/48
 
 ## 1. السبب الجذري
 
