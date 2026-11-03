@@ -50,7 +50,10 @@ test('Unit 2 Lesson 3 has audited pp97–106 entries, correct course order, and 
   assert.deepEqual(UNIT2L3_META.sourcePages, [97, 98, 99, 100, 101, 102, 103, 104, 105, 106]);
   assert.equal(UNIT2L3_META.title, 'فرق الكمون الكهربائي');
   assert.equal(UNIT2L3_META.pages, '97–106');
-  assert.deepEqual(UNIT2L3_PAGES.map((page) => page.page), UNIT2L3_META.sourcePages);
+  assert.deepEqual(UNIT2L3_PAGES.filter((page) => page.id !== 'student-notebook').map((page) => page.page), UNIT2L3_META.sourcePages);
+  assert.equal(UNIT2L3_PAGES.length, UNIT2L3_META.sourcePages.length + 1);
+  assert.equal(UNIT2L3_PAGES.at(-1).id, 'student-notebook');
+  assert.equal(UNIT2L3_PAGES.at(-1).page, 106);
   assert.deepEqual(UNIT2L3_STATIONS.flatMap((station) => station.pages), UNIT2L3_META.sourcePages);
 
   const [student, teacher, assessment, home, build, lesson1, lesson2] = await Promise.all([
@@ -119,7 +122,7 @@ test('source content covers each printed page, section, activity, and requested 
   assert.equal(platformBlocks.length, 10);
   assert.ok(platformBlocks.every((block) => block.title && block.html));
   assert.ok(platformBlocks.some((block) => block.title.includes('شرح المنصة')));
-  assert.ok(UNIT2L3_PAGES.every((page) => page.blocks.some((block) => block.type === 'book')));
+  assert.ok(UNIT2L3_PAGES.filter((page) => page.id !== 'student-notebook').every((page) => page.blocks.some((block) => block.type === 'book')));
 });
 
 test('practice layer: one interactive activity per book task, wired in reading order, without shipped answers', async () => {
