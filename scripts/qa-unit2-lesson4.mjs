@@ -2,7 +2,7 @@
  *
  * This lesson is now taught one printed page at a time, so the old station-rail
  * script no longer applied. The script exercises the current build only:
- *   - all fourteen steps at 1366×768, 1440×900 and 390×844, including horizontal
+ *   - fourteen printed steps plus the final notebook at 1366×768, 1440×900 and 390×844, including horizontal
  *     overflow, clipped figures, overlapping SVG labels and progress/nav state;
  *   - forward, backward, sidebar, hash and keyboard navigation, and whether the
  *     answers typed into a step survive stepping away and back;
@@ -35,7 +35,7 @@ const browser = await pw.launch({
   headless: true,
 });
 const base = process.env.QA_BASE_URL || 'http://127.0.0.1:4173';
-const out = new URL('../docs/qa/unit2-lesson4/', import.meta.url);
+const out = new URL(process.env.QA_OUTPUT_DIR || '../docs/qa/unit2-lesson4/', import.meta.url);
 await mkdir(out, { recursive: true });
 const results = [];
 const failures = [];
@@ -203,7 +203,7 @@ try {
     await page.waitForSelector('[data-page-view="p107"]');
     await page.evaluate(() => document.fonts.ready);
     check(await page.locator('[data-page-view]').count() === 1, 'exactly one step is in the document at load');
-    check(await page.locator('#page-nav .r4-nav-button').count() === 14, 'the sidebar lists all fourteen steps');
+    check(await page.locator('#page-nav .r4-nav-button').count() === 15, 'the sidebar lists fourteen printed steps and the final notebook');
 
     /* Forward pass: every step, its own heading/page card and no layout breakage. */
     for (let index = 0; index < UNIT2L4_PAGES.length; index += 1) {
@@ -212,7 +212,7 @@ try {
       check(await page.locator('[data-page-view]').count() === 1, `p${entry.page}: one step at a time`);
       check(await page.locator('[data-page-view]').getAttribute('data-page-view') === `p${entry.page}`, `p${entry.page}: the active step is the expected page`);
       check(text(await page.locator('#page-heading').innerText()) === text(entry.heading), `p${entry.page}: heading matches the content module`);
-      check((await page.locator('#progress-text').innerText()).trim() === `${index + 1} / 14`, `p${entry.page}: progress counter`);
+      check((await page.locator('#progress-text').innerText()).trim() === `${index + 1} / 15`, `p${entry.page}: progress counter`);
       check((await page.locator('#page-nav [aria-current="step"]').getAttribute('data-visited')) === 'true', `p${entry.page}: the current step is marked in the sidebar`);
       await layoutAudit(page, `p${entry.page}@${viewport.width}`);
       if (viewport.width === 1366) {
@@ -236,8 +236,16 @@ try {
         await page.waitForSelector(`[data-page-view="p${UNIT2L4_PAGES[index + 1].page}"]`);
       }
     }
-    check(await page.locator('#next-button').isDisabled(), 'the last step disables «التالي»');
-    check(await page.locator('#previous-button').isEnabled(), 'the last step keeps «السابق» enabled');
+    await page.locator('#next-button').click();
+    await page.waitForSelector('#page-content .r4-student-notebook');
+    check(await page.locator('#page-content .student-notebook-section').count() === 9, 'the final notebook renders all nine sections');
+    check((await page.locator('#progress-text').innerText()).trim() === '15 / 15', 'the notebook is step 15');
+    check((await page.evaluate(() => location.hash)) === '#notebook', 'the notebook has a direct hash');
+    check(await page.locator('#page-nav .r4-nav-button').last().getAttribute('aria-current') === 'step', 'the notebook is the active final tab');
+    await layoutAudit(page, `notebook@${viewport.width}`);
+    if (viewport.width === 1366) await page.screenshot({ path: new URL(`notebook-${viewport.width}.png`, out).pathname });
+    check(await page.locator('#next-button').isDisabled(), 'the notebook disables «التالي»');
+    check(await page.locator('#previous-button').isEnabled(), 'the notebook keeps «السابق» enabled');
 
     /* Backward pass over the sidebar buttons, then the keyboard shortcut. */
     await page.locator('#page-nav .r4-nav-button').nth(9).click();
@@ -297,8 +305,9 @@ try {
     await goToPage(page, 107);
     await page.locator('[data-notebook="p107-devices"] summary').click();
     await page.locator('[data-notebook-input="p107-devices"]').fill(`ملاحظة ${viewport.width}`);
-    await page.reload();
+    await page.reload({ waitUntil: 'networkidle' });
     await page.waitForSelector('[data-notebook="p107-devices"]');
+    await page.evaluate(() => document.fonts.ready);
     await page.locator('[data-notebook="p107-devices"] summary').click();
     check((await page.locator('[data-notebook-input="p107-devices"]').inputValue()) === `ملاحظة ${viewport.width}`, 'notebook text persists across a reload');
 
@@ -330,6 +339,11 @@ try {
       });
       await page.screenshot({ path: new URL(`step-p${number}-390.png`, out).pathname, fullPage: false });
     }
+    await page.locator('#page-nav .r4-nav-button').last().click();
+    await page.waitForSelector('#page-content .r4-student-notebook');
+    check(await page.locator('#page-content .student-notebook-section').count() === 9, '390px: all nine notebook sections are reachable');
+    await layoutAudit(page, 'notebook@390');
+    await page.screenshot({ path: new URL('notebook-390.png', out).pathname, fullPage: false });
     await goToPage(page, 113);
     await page.locator('[data-u2l4-practice="p113-lab"] [data-lab-toggle="close"]').click();
     check((await page.locator('[data-lab-reading="i"]').first().textContent() ?? '').includes('1'), '390px: the recording lab works on a phone');
@@ -347,12 +361,24 @@ try {
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
-    for (const file of ['index.html', 'unit2-lesson-1.html', 'unit2-lesson-2.html', 'unit2-lesson-3.html', 'unit-1-test.html']) {
+    for (const file of ['index.html', 'lesson-1.html', 'lesson-2.html', 'unit2-lesson-1.html', 'unit2-lesson-2.html', 'unit2-lesson-3.html', 'unit-1-test.html']) {
       await page.goto(`${base}/${file}`);
       await page.waitForLoadState('networkidle');
       check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${file}: no horizontal overflow`);
       check(await page.locator('main').count() > 0, `${file}: page still renders`);
+      if (file === 'unit2-lesson-3.html') {
+        check(await page.locator('#page-nav button').count() === 11, 'lesson 3 keeps its eleven tabs');
+        await page.locator('#next-button').click();
+        await page.waitForSelector('[data-page-view="p98"]');
+        await page.locator('#page-nav button').last().click();
+        await page.waitForSelector('#page-content .p3-student-notebook');
+        check(await page.locator('#page-content .p3-student-notebook').count() === 1, 'lesson 3 notebook still opens');
+      }
     }
+    await page.goto(`${base}/index.html`);
+    await page.locator('a[href="./unit2-lesson-4.html"]').click();
+    await page.waitForSelector('[data-page-view="p107"]');
+    check(await page.locator('#page-nav .r4-nav-button').count() === 15, 'the course home still opens the repaired lesson');
     await page.goto(`${base}/unit2-lesson-4-teacher.html`);
     await page.waitForSelector('#teacher-login');
     check(await page.locator('#teacher-workspace').isHidden(), 'teacher area starts locked');
@@ -381,7 +407,7 @@ try {
     await page.waitForSelector('#results-title');
     check((await page.locator('.result-score-main').innerText()).includes('56/56'), 'the Unit 2 test still grades 56/56');
     check(errors.length === 0, `regression console errors: ${errors.join('; ')}`);
-    results.push({ regression: ['index.html', 'unit2-lesson-1.html', 'unit2-lesson-2.html', 'unit2-lesson-3.html', 'unit-1-test.html', 'teacher area', 'unit-2-test.html'], consoleErrors: errors, status: 'passed' });
+    results.push({ regression: ['index.html', 'lesson-1.html', 'lesson-2.html', 'unit2-lesson-1.html', 'unit2-lesson-2.html', 'unit2-lesson-3.html', 'unit-1-test.html', 'teacher area', 'unit-2-test.html'], consoleErrors: errors, status: 'passed' });
     await context.close();
   }
   check(UNIT2L4_PRACTICE_IDS.length === 24, 'all 24 book activities were exercised');

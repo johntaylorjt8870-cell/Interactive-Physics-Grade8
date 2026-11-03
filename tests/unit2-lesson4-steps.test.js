@@ -290,51 +290,21 @@ test('navigation math is one step at a time with a real progress indicator', () 
 
 test('the bootstrap swaps steps through a cache instead of re-rendering them', async () => {
   const source = await read('src/unit2-lesson4-main.js');
-  
-  // 1. Cache mechanism must exist and use UNIT2L4_PAGES for the 14 printed pages
-  assert.match(source, /createUnit2L4StepCache\(UNIT2L4_PAGES\)/, 'cache is created from the 14 printed pages');
-  
-  // 2. The main page swapping logic must use the cache (for the 14 printed pages)
-  assert.match(source, /pageContent\.replaceChildren\(stepCache\.get\(stepper\.index\)\)/, 'cache is used to swap steps');
-  
-  // 3. Standard accessibility and navigation features must be present
-  assert.match(source, /aria-current/, 'aria-current marks the active step');
-  assert.match(source, /PageDown/, 'PageDown shortcut is supported');
-  assert.match(source, /PageUp/, 'PageUp shortcut is supported');
-  assert.match(source, /prefers-reduced-motion/, 'reduced motion preference is checked');
-  
-  // 4. Deep linking must use the page number pattern for the 14 printed pages
-  assert.match(source, /#p\$\{stepper\.page\.page\}/, 'hash links use page numbers');
-  
-  // 5. The lesson must NOT render all pages as one block (no innerHTML assignment of the whole page list)
-  // The actual code uses `pageContent.replaceChildren(...)` for each step, never `innerHTML = UNIT2L4_PAGES`.
-  // The regex `innerHTML\s*=\s*UNIT2L4_PAGES` must NOT match.
-  // In the current code, `innerHTML` is only used for the notebook block (`div.innerHTML = UNIT2L4_NOTEBOOK_BLOCK`),
-  // which is NOT `UNIT2L4_PAGES`. Thus, the doesNotMatch assertion should pass.
-  // However, the test runner reports a failure at this assertion.
-  // Let's verify the exact regex and the actual source code.
-  // Actual source code (src/unit2-lesson4-main.js) does NOT contain `innerHTML = UNIT2L4_PAGES`.
-  // The failure message 'the lesson is never rendered as one block' comes from the doesNotMatch assertion.
-  // This indicates that the regex `innerHTML\s*=\s*UNIT2L4_PAGES` IS matching somewhere in the source.
-  // Let's check the source again:
-  // - Line 136: `div.innerHTML = UNIT2L4_NOTEBOOK_BLOCK;` (NOT UNIT2L4_PAGES)
-  // - Line 139: `pageContent.replaceChildren(fragment);` (NOT innerHTML)
-  // - Line 141: `pageContent.replaceChildren(stepCache.get(stepper.index));` (NOT innerHTML)
-  // Conclusion: The regex `innerHTML\s*=\s*UNIT2L4_PAGES` should NOT match.
-  // If it matches, there is a hidden match in the source code or the test runner is misinterpreting the regex.
-  // Let's fix the test to explicitly check the actual source code and ensure the regex is correct.
-  assert.doesNotMatch(source, /innerHTML\s*=\s*UNIT2L4_PAGES/, 'the lesson is never rendered as one block (no innerHTML assignment of the whole page list)');
-  
-  // 6. VERIFICATION OF NOTEBOOK INTEGRATION (NEW REQUIREMENT):
-  // The notebook step (step 15) must be handled separately from the cache to avoid breaking the cache logic
-  // which only expects the 14 printed pages (UNIT2L4_PAGES).
-  assert.match(source, /pagesWithNotebook/, 'notebook step is included in the stepper');
-  assert.match(source, /student-notebook/, 'notebook step id is defined');
-  assert.match(source, /pageContent\.replaceChildren\(fragment\)/, 'notebook step renders via fragment, not cache');
-  
-  // 7. The cache creation must still strictly use UNIT2L4_PAGES (14 pages) to maintain compatibility
-  // with the original test expectation while the notebook is handled separately.
-  // Note: The regex match for createUnit2L4StepCache(UNIT2L4_PAGES) is satisfied by line 50.
+  // Comments must not satisfy a navigation contract: PR #47 left matching
+  // comments behind after deleting the actual navigation function.
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+  assert.match(code, /createUnit2L4StepCache\(UNIT2L4_PAGES\)/, 'cache is created from the 14 printed pages');
+  assert.match(code, /pageContent\.replaceChildren\(stepCache\.get\(stepper\.index\)\)/, 'printed steps are swapped through the cache');
+  assert.match(code, /function goToStep\(index, moveFocus = false\)/, 'the navigation entry point exists');
+  assert.match(code, /aria-current/);
+  assert.match(code, /PageDown/);
+  assert.match(code, /PageUp/);
+  assert.match(code, /prefers-reduced-motion/);
+  assert.match(code, /#p\$\{page\.page\}/, 'deep links use the active printed page');
+  assert.doesNotMatch(code, /innerHTML\s*=\s*UNIT2L4_PAGES/, 'the lesson is never rendered as one block');
+  assert.match(code, /pagesWithNotebook/, 'the notebook is included in the stepper');
+  assert.match(code, /student-notebook/, 'the notebook has a distinct step id');
+  assert.match(code, /pageContent\.replaceChildren\(fragment\)/, 'the notebook renders through its fragment');
 });
 
 /* ------------------------------------------------------------------------- */
@@ -598,4 +568,125 @@ test('DOM: mounting the same step twice does not duplicate controls or listeners
   click(window, card.querySelector('[data-r4p-action="check"]'));
   await waitFor(() => card.querySelector('[data-r4p-feedback]').textContent.includes('النتيجة') || card.querySelector('[data-r4p-feedback]').textContent.includes('أدخل'), 'single check handler');
   assert.match(card.querySelector('[data-r4p-feedback]').textContent, /أدخل قيمة/, 'one click produced one validation message, not two results');
+});
+
+/* Published-page boot regressions. Source regexes alone could not catch the
+   notebook SyntaxError that stopped every tab, or the deleted goToStep() that
+   stopped navigation after the module graph was repaired. */
+test('the notebook module evaluates all nine sections with rendered math', async () => {
+  const { UNIT2L4_NOTEBOOK_BLOCK: html, UNIT2L4_NOTEBOOK_TITLE: title } = await import('../src/unit2-lesson4-notebook.js');
+  assert.equal(title, '📒 دفتر الطالب');
+  const sections = [...html.matchAll(/<section class="student-notebook-section" aria-labelledby="([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(sections, ['u2l4nb-idea', 'u2l4nb-terms', 'u2l4nb-laws', 'u2l4nb-diagrams', 'u2l4nb-steps', 'u2l4nb-experiments', 'u2l4nb-special', 'u2l4nb-errors', 'u2l4nb-summary']);
+  assert.equal(html.includes('${'), false, 'template interpolations are evaluated, not shipped as text');
+  assert.equal(html.includes('katex-error'), false, 'KaTeX renders every notebook expression');
+  assert.ok(html.includes('<annotation encoding="application/x-tex">1\\,\\mathrm A</annotation>'), 'units use one TeX command, not an over-escaped line break');
+  const { default: katex } = await import('../vendor/katex/katex.mjs');
+  const annotations = [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)].map((match) => match[1]);
+  assert.ok(annotations.length >= 80, 'every notebook formula is audited');
+  for (const annotation of annotations) {
+    assert.equal(annotation.includes('\\\\'), false, `over-escaped TeX reaches KaTeX: ${annotation}`);
+    katex.renderToString(annotation, { throwOnError: true, strict: 'ignore', output: 'htmlAndMathml' });
+  }
+  for (const conversion of [
+    '1\\,\\mathrm{cm}^{2}=10^{-4}\\,\\mathrm m^{2}',
+    '30\\,\\mathrm{cm}^{2}=30\\times10^{-4}=0.003\\,\\mathrm m^{2}',
+  ]) assert.ok(annotations.includes(conversion), `area conversion stays single-line: ${conversion}`);
+  assert.ok(html.length > 100000, 'the complete review sheet is retained');
+});
+
+let bootSequence = 0;
+async function bootPublishedLesson(hash = '') {
+  const { window } = await jsdomModule.JSDOM.fromFile(new URL('../unit2-lesson-4.html', import.meta.url).pathname, {
+    url: `https://example.test/unit2-lesson-4.html${hash}`,
+  });
+  const errors = [];
+  window.addEventListener('error', (event) => errors.push(event.error ?? event.message));
+  window.HTMLElement.prototype.scrollIntoView = () => {};
+  for (const key of ['window', 'document', 'localStorage', 'Event', 'MouseEvent', 'KeyboardEvent', 'Node', 'location', 'history', 'matchMedia']) {
+    globalThis[key] = window[key];
+  }
+  await import(`../src/unit2-lesson4-main.js?published-boot=${bootSequence += 1}`);
+  return { window, document: window.document, errors };
+}
+
+function assertPublishedStep(document, index, page) {
+  const buttons = [...document.querySelectorAll('#page-nav button')];
+  assert.equal(buttons.length, UNIT2L4_META.steps);
+  assert.equal(document.querySelectorAll('#page-nav [aria-current="step"]').length, 1);
+  assert.equal(buttons[index].getAttribute('aria-current'), 'step');
+  assert.equal(document.querySelector('#page-content').children.length, 1);
+  assert.ok(document.querySelector('#page-content').textContent.trim().length > 200);
+  assert.equal(document.querySelector('#page-heading').textContent, page.heading);
+  assert.equal(document.querySelector('#progress-text').textContent, `${index + 1} / ${UNIT2L4_META.steps}`);
+  assert.equal(document.querySelector('#progress-track').getAttribute('aria-valuemax'), String(UNIT2L4_META.steps));
+  assert.equal(document.querySelector('#page-content').getAttribute('aria-busy'), 'false');
+  if (page.id === 'student-notebook') {
+    assert.equal(document.querySelectorAll('#page-content .student-notebook-section').length, 9);
+    assert.equal(document.querySelector('#page-badge-label').textContent, 'مرجع الكتاب');
+    assert.equal(document.querySelector('#page-number').textContent, '107–120');
+    assert.equal(document.querySelector('#next-button').disabled, true);
+  } else {
+    assert.equal(document.querySelector('[data-page-view]').dataset.pageView, `p${page.page}`);
+    assert.equal(document.querySelector('#page-badge-label').textContent, 'صفحة الكتاب');
+    assert.equal(document.querySelector('#page-number').textContent, String(page.page));
+  }
+}
+
+test('DOM: the published lesson boots 15 tabs and navigates forward, backward and through the notebook', { skip: jsdomModule ? false : NO_JSDOM }, async () => {
+  const { window, document, errors } = await bootPublishedLesson();
+  const pages = [...UNIT2L4_PAGES, { id: 'student-notebook', heading: 'دفتر الطالب: المقاومة الكهربائية' }];
+  const buttons = [...document.querySelectorAll('#page-nav button')];
+  assert.deepEqual(buttons.map((button) => button.querySelector('strong').textContent), [...UNIT2L4_PAGES.map((page) => page.navLabel), '📒 دفتر الطالب']);
+  assertPublishedStep(document, 0, pages[0]);
+  assert.equal(document.querySelector('#previous-button').disabled, true);
+  for (let index = 1; index < pages.length; index += 1) {
+    click(window, document.querySelector('#next-button'));
+    assertPublishedStep(document, index, pages[index]);
+  }
+  for (let index = pages.length - 2; index >= 0; index -= 1) {
+    click(window, document.querySelector('#previous-button'));
+    assertPublishedStep(document, index, pages[index]);
+  }
+  for (const index of [14, 0, 14, 6, 14, 0]) {
+    click(window, buttons[index]);
+    assertPublishedStep(document, index, pages[index]);
+  }
+  click(window, buttons[12]);
+  const choice = document.querySelector('[data-u2l4-practice="p119-mcq"] input[name="r4p-p119-mcq-q1a"][value="b"]');
+  choice.checked = true;
+  click(window, buttons[14]);
+  click(window, buttons[12]);
+  assert.equal(choice.checked, true, 'a printed-page answer survives visits to the notebook');
+  assert.deepEqual(errors, []);
+  window.close();
+});
+
+test('DOM: the published lesson supports direct notebook links, keyboard, start and hash navigation', { skip: jsdomModule ? false : NO_JSDOM }, async () => {
+  const { window, document, errors } = await bootPublishedLesson('#notebook');
+  const notebook = { id: 'student-notebook', heading: 'دفتر الطالب: المقاومة الكهربائية' };
+  assertPublishedStep(document, 14, notebook);
+  assert.equal(window.location.hash, '#notebook');
+  click(window, document.querySelector('#previous-button'));
+  assertPublishedStep(document, 13, UNIT2L4_PAGES[13]);
+  const key = (value) => document.body.dispatchEvent(new window.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
+  key('PageUp');
+  assertPublishedStep(document, 12, UNIT2L4_PAGES[12]);
+  key('PageDown');
+  assertPublishedStep(document, 13, UNIT2L4_PAGES[13]);
+  window.location.hash = '#p113';
+  await waitFor(() => document.querySelector('[data-page-view="p113"]'), 'hash navigation to p113');
+  assertPublishedStep(document, 6, UNIT2L4_PAGES[6]);
+  click(window, document.querySelector('#start-lesson'));
+  assertPublishedStep(document, 0, UNIT2L4_PAGES[0]);
+  assert.deepEqual(errors, []);
+  window.close();
+});
+
+test('DOM: a printed-page deep link boots without visiting another lesson first', { skip: jsdomModule ? false : NO_JSDOM }, async () => {
+  const { window, document, errors } = await bootPublishedLesson('#p113');
+  assertPublishedStep(document, 6, UNIT2L4_PAGES[6]);
+  assert.equal(window.location.hash, '#p113');
+  assert.deepEqual(errors, []);
+  window.close();
 });
