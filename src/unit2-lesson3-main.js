@@ -49,7 +49,9 @@ function updateProgress() {
   progressTrack.setAttribute('aria-valuemax', String(total));
   progressFill.style.width = `${percent}%`;
   mobileProgressFill.style.width = `${percent}%`;
-  controlCenter.textContent = `الخطوة ${current} من ${total} · صفحة ${stepper.page.page}`;
+  controlCenter.textContent = stepper.page.id === 'student-notebook'
+    ? `الخطوة ${current} من ${total} · دفتر الطالب`
+    : `الخطوة ${current} من ${total} · صفحة ${stepper.page.page}`;
 }
 
 function updateControls() {
@@ -96,8 +98,11 @@ UNIT2L3_PAGES.forEach((page, index) => {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'page-nav-button';
-  button.setAttribute('aria-label', `الخطوة ${index + 1}، الصفحة ${page.page}: ${page.navLabel}`);
-  button.innerHTML = `<span class="nav-page-number" dir="ltr">${page.page}</span><span class="nav-page-copy"><strong>${escapeHtml(page.navLabel)}</strong><small>خطوة من الكتاب</small></span><span class="nav-current-mark" aria-hidden="true">↙</span>`;
+  const isNotebook = page.id === 'student-notebook';
+  button.setAttribute('aria-label', isNotebook
+    ? `الخطوة ${index + 1}: دفتر الطالب`
+    : `الخطوة ${index + 1}، الصفحة ${page.page}: ${page.navLabel}`);
+  button.innerHTML = `<span class="nav-page-number" dir="ltr">${isNotebook ? '📒' : page.page}</span><span class="nav-page-copy"><strong>${escapeHtml(page.navLabel)}</strong><small>${isNotebook ? 'آخر خطوة · مرجع مراجعة' : 'خطوة من الكتاب'}</small></span><span class="nav-current-mark" aria-hidden="true">↙</span>`;
   button.addEventListener('click', () => goToStep(index, true));
   nav.append(button);
 });
