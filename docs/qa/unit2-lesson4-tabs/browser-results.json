@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-03",
+  "browser": "153.0.8010.0",
+  "lesson": "الوحدة الثانية · الدرس 4 · المقاومة الكهربائية · ص107–120",
+  "checks": 642,
+  "results": [
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "checks": 294,
+      "consoleErrors": [],
+      "requests": 63,
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "checks": 588,
+      "consoleErrors": [],
+      "requests": 63,
+      "status": "passed"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "consoleErrors": [],
+      "status": "passed"
+    },
+    {
+      "regression": [
+        "index.html",
+        "lesson-1.html",
+        "lesson-2.html",
+        "unit2-lesson-1.html",
+        "unit2-lesson-2.html",
+        "unit2-lesson-3.html",
+        "unit-1-test.html",
+        "teacher area",
+        "unit-2-test.html"
+      ],
+      "consoleErrors": [],
+      "status": "passed"
+    }
+  ],
+  "failures": []
+}

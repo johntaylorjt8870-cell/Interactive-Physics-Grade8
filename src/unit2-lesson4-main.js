@@ -31,6 +31,7 @@ if (!nav || !pageContent) throw new Error('Lesson 4 student content root is miss
 
 const pageHeading = document.querySelector('#page-heading');
 const pageNumber = document.querySelector('#page-number');
+const pageBadgeLabel = document.querySelector('#page-badge-label');
 const progressText = document.querySelector('#progress-text');
 const progressTrack = document.querySelector('#progress-track');
 const progressFill = document.querySelector('#progress-fill');
@@ -73,6 +74,7 @@ function updateProgress() {
     ? `الخطوة ${current} من ${total} · ${UNIT2L4_NOTEBOOK_TITLE}`
     : `الخطوة ${current} من ${total} · صفحة ${stepper.page.page}`;
   
+  progressTrack.setAttribute('aria-valuetext', controlCenter.textContent);
   if (visitedText) visitedText.textContent = `${visited.size} / ${total}`;
 }
 
@@ -106,7 +108,9 @@ function renderStep() {
   const phase = phases.get(page.phase);
   visited.add(page.id === 'student-notebook' ? 0 : page.page);
   pageHeading.textContent = page.heading;
-  pageNumber.textContent = page.id === 'student-notebook' ? 'مرجع الكتاب' : String(page.page);
+  const isNotebook = page.id === 'student-notebook';
+  pageBadgeLabel.textContent = isNotebook ? 'مرجع الكتاب' : 'صفحة الكتاب';
+  pageNumber.textContent = isNotebook ? '107–120' : String(page.page);
   sectionKicker.textContent = `الدرس 4 · المقاومة الكهربائية · ${stepper.position} / ${stepper.total}`;
   if (phaseName) phaseName.textContent = page.id === 'student-notebook'
     ? 'المرحلة ١٥ · دفتر الطالب'
@@ -129,6 +133,21 @@ function renderStep() {
   updateControls();
   updateNav();
   syncHash();
+}
+
+function goToStep(index, moveFocus = false) {
+  pageContent.setAttribute('aria-busy', 'true');
+  const changed = stepper.goTo(index);
+  if (!changed && pageContent.childElementCount > 0) {
+    pageContent.setAttribute('aria-busy', 'false');
+    return;
+  }
+  renderStep();
+  pageContent.setAttribute('aria-busy', 'false');
+  if (moveFocus) {
+    pageHeading.focus({ preventScroll: true });
+    pageHeading.scrollIntoView({ block: 'start', behavior: reduceMotion() ? 'auto' : 'smooth' });
+  }
 }
 
 pagesWithNotebook.forEach((page, index) => {
@@ -173,15 +192,3 @@ window.addEventListener('hashchange', () => {
   const index = stepIndexFromHash();
   if (index >= 0 && index !== stepper.index) goToStep(index, true);
 });
-
-/* Test compatibility: keep the exact string patterns expected by tests/unit2-lesson4-steps.test.js */
-// createUnit2L4StepCache(UNIT2L4_PAGES)
-// pageContent.replaceChildren(stepCache.get(stepper.index))
-// aria-current
-// PageDown
-// PageUp
-// prefers-reduced-motion
-// #p${stepper.page.page}
-
-// the lesson is never rendered as one block
-
