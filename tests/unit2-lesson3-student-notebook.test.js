@@ -29,7 +29,7 @@ test('notebook selects the definitions, units, measurement rules, circuit laws a
   assert.equal((UNIT2L3_NOTEBOOK_BLOCK.match(/class="student-notebook-section"/g) ?? []).length, 9);
   assert.doesNotMatch(UNIT2L3_NOTEBOOK_BLOCK, /<form|data-p3p-action|data-correct|data-answer/);
   assert.doesNotMatch(UNIT2L3_NOTEBOOK_BLOCK, /begin\{aligned\}|begin\{array\}/);
-  assert.ok(UNIT2L3_NOTEBOOK_BLOCK.includes('شرح المنصة'));
+  assert.ok(UNIT2L3_NOTEBOOK_BLOCK.includes('إضافات المنصة'));
   assert.ok(UNIT2L3_NOTEBOOK_BLOCK.includes('لا تجرّب جهد المنزل'));
 });
 
@@ -38,7 +38,7 @@ test('notebook reference renders directly without being wrapped as textbook copy
   const markup = unit2l3StepMarkup(page);
   assert.match(markup, /data-page-view="student-notebook"/);
   assert.match(markup, /دفتر الطالب/);
-  assert.match(markup, /student-notebook u2l3/);
+  assert.match(markup, /student-notebook p3-student-notebook/);
   assert.doesNotMatch(markup, /p3-book-copy|p3-platform-card/);
 });
 
