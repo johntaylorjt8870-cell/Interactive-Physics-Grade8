@@ -54,15 +54,22 @@ test('both tabs ship designed, intentional empty states and no fake tests, quest
   assert.match(page, /id="it-solutions-empty"/);
   // No sample/fabricated test content anywhere in the page markup.
   assert.doesNotMatch(page, /اختبار تجريبي|سؤال تجريبي|سؤال 1|سؤال ١|placeholder/i);
-  assert.equal(INDEPENDENT_TESTS.length, 0, 'stage 1 registry must stay empty');
-  assert.deepEqual(Object.keys(INDEPENDENT_TEST_SOLUTIONS), [], 'stage 1 solutions registry must stay empty');
+  // Stage 1 shipped empty states; the zone is now populated by real tests.
+  // The empty states must stay in the markup as the fallback for a future
+  // registry with no entries — they are toggled by `hidden`, never deleted.
+  assert.ok(INDEPENDENT_TESTS.length >= 1, 'the registry must carry the published test');
+  for (const test of INDEPENDENT_TESTS) {
+    assert.doesNotThrow(() => validateTestEntry(test));
+  }
 });
 
 test('the registry links every test to its solution by a stable id, never by order or title', () => {
   assert.equal(getTestById('anything'), undefined);
   assert.equal(getSolutionForTest('anything'), undefined);
   assert.equal(hasSolutionForTest('anything'), false);
-  assert.deepEqual(testIdsWithoutSolution(), []);
+  assert.deepEqual(testIdsWithoutSolution(), INDEPENDENT_TESTS
+    .map((test) => test.id)
+    .filter((id) => !hasSolutionForTest(id)));
 
   assert.throws(() => validateTestEntry(null), TypeError);
   assert.throws(() => validateTestEntry({ number: 1, title: 'x' }), /missing required field "id"/);

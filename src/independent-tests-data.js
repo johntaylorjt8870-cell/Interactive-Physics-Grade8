@@ -1,9 +1,11 @@
 /* ============================================================================
    Independent Tests («اختبارات مستقلة») — content registry and pure logic.
    ----------------------------------------------------------------------------
-   Stage 1 ships the structure only: both registries below are intentionally
-   EMPTY and no placeholder or sample content is ever rendered from them.
-   Later tasks append real entries here.
+   The zone is populated from real sources, one test at a time. Test 1
+   (القوى المتلاقية والمتوازية) is registered below; its questions live in
+   `it1-problems.js` and its answer key + worked solutions live in
+   `it1-solutions.js`, which is loaded only after submission. Nothing in THIS
+   module may import an answer key.
 
    Entry contract for INDEPENDENT_TESTS (one object per independent test):
      {
@@ -21,10 +23,33 @@
    title text.
    ========================================================================== */
 
-export const INDEPENDENT_TESTS = Object.freeze([]);
+export const INDEPENDENT_TESTS = Object.freeze([
+  Object.freeze({
+    id: 'test-01',
+    number: 1,
+    title: 'القوى المتلاقية والقوى المتوازية',
+    subject: 'الوحدة الأولى · الحركة والقوى',
+    source: 'أوراق مسائل محسوبة · 3 صفحات · 14 مسألة',
+    questionCount: 40,
+    problemCount: 14,
+    totalMarks: 40,
+    href: './independent-test-1.html',
+  }),
+]);
 
-/** Worked solutions keyed by the stable test id. Empty in stage 1. */
-export const INDEPENDENT_TEST_SOLUTIONS = Object.freeze({});
+/**
+ * Worked solutions keyed by the stable test id.
+ * An entry here means "a solution exists and is reachable after submission";
+ * it deliberately carries no answer content, because this registry is public.
+ */
+export const INDEPENDENT_TEST_SOLUTIONS = Object.freeze({
+  'test-01': Object.freeze({
+    testId: 'test-01',
+    title: 'حلول الاختبار الأول — القوى المتلاقية والقوى المتوازية',
+    href: './independent-test-1.html',
+    gated: true,
+  }),
+});
 
 const REQUIRED_TEST_FIELDS = ['id', 'number', 'title'];
 

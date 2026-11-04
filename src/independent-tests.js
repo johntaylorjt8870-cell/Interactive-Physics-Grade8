@@ -95,7 +95,7 @@ function testCardMarkup(test) {
       ${metaMarkup}
       <div class="it-card-footer">
         ${countMarkup}
-        <a class="it-card-action" href="#test-${test.id}" aria-describedby="it-test-${test.id}-title">فتح الاختبار <span aria-hidden="true">←</span></a>
+        <a class="it-card-action" href="${typeof test.href === 'string' && test.href ? test.href : `#test-${test.id}`}" aria-describedby="it-test-${test.id}-title">فتح الاختبار <span aria-hidden="true">←</span></a>
       </div>
     </div>`;
 }
@@ -129,7 +129,7 @@ function solutionRowMarkup(testId) {
     </div>
     ${pending
       ? '<span class="it-solution-chip it-solution-chip-pending">بانتظار الحل</span>'
-      : `<a class="it-solution-link" href="#solution-${testId}">عرض الحل <span aria-hidden="true">←</span></a>`}`;
+      : `<a class="it-solution-link" href="${solution.gated && solution.href ? solution.href : `#solution-${testId}`}">${solution.gated ? 'الحل داخل الاختبار بعد التسليم' : 'عرض الحل'} <span aria-hidden="true">←</span></a>`}`;
 }
 
 function renderSolutions() {
