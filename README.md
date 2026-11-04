@@ -120,6 +120,9 @@ src/
   unit-questions.js         Student Area mount for the standalone review
   unit-questions-teacher.js Password-gated Teacher Area mount
   unit-questions.css        Responsive Unit Questions student-page styles
+  independent-tests-data.js Empty stage-1 registry: stable test ids linked to solutions by id only
+  independent-tests.js      Tab wiring (ARIA, keyboard, hash) and card rendering for the independent-tests area
+  independent-tests.css     Responsive styles for the independent-tests area
   unit-questions-teacher.css Isolated teacher-diagram styles
   unit2-lesson3-content.js Source text, page map, practice wiring and labelled platform explanations for pp97–106
   unit2-lesson3-diagrams.js Accessible SVG reconstructions for water, charge and circuit figures
