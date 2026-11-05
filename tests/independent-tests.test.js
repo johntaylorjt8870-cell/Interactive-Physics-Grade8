@@ -26,32 +26,28 @@ test('Course Home exposes a clear «اختبارات مستقلة» entry inside
   }
 });
 
-test('the independent-tests page is a standalone RTL page with two accessible internal tabs and return navigation', async () => {
+test('the independent-tests page is the single central RTL page and opens test content in place', async () => {
   assert.equal(existsSync(new URL('../independent-tests.html', import.meta.url)), true);
   const page = await read('../independent-tests.html');
   assert.match(page, /<html lang="ar" dir="rtl">/);
   assert.match(page, /<title>اختبارات مستقلة \| Interactive Physics — Grade 8<\/title>/);
   assert.match(page, /href="\.\/src\/independent-tests\.css"/);
   assert.match(page, /src="\.\/src\/independent-tests\.js"/);
-  assert.match(page, /role="tablist"/);
-  assert.equal((page.match(/role="tab"/g) ?? []).length, 2);
-  assert.match(page, /aria-controls="it-panel-tests"[^>]*>\s*.*الاختبارات المستقلة/s);
-  assert.match(page, /الاختبارات المستقلة/);
-  assert.match(page, /حلول الاختبارات/);
-  assert.equal((page.match(/role="tabpanel"/g) ?? []).length, 2);
-  assert.match(page, /id="it-panel-solutions"[^>]*hidden/);
+  assert.match(page, /id="it-tests-grid"/);
+  assert.match(page, /id="it-test-view"[^>]*hidden/);
+  assert.match(page, /id="it1-assessment"/);
+  assert.doesNotMatch(page, /role="tab"/, 'no catalog/solution tabs are nested around the 14 problem tabs');
+  assert.equal(existsSync(new URL('../independent-test-1.html', import.meta.url)), false);
   assert.match(page, /href="\.\/"/);
   assert.match(page, /href="\.\/#available-tests"/);
 });
 
-test('both tabs ship designed, intentional empty states and no fake tests, questions, or solutions', async () => {
+test('the central catalog lists the registered test without fake or duplicate entries', async () => {
   const page = await read('../independent-tests.html');
-  assert.match(page, /ستُضاف الاختبارات المستقلة هنا/);
-  assert.match(page, /ستظهر حلول الاختبارات هنا/);
-  assert.match(page, /لا توجد اختبارات تجريبية الآن/);
-  assert.match(page, /لا توجد حلول تجريبية الآن/);
   assert.match(page, /id="it-tests-empty"/);
-  assert.match(page, /id="it-solutions-empty"/);
+  assert.match(page, /لا توجد اختبارات مستقلة منشورة حالياً/);
+  assert.match(page, /id="it-test-view"/);
+  assert.match(page, /data-it-back/);
   // No sample/fabricated test content anywhere in the page markup.
   assert.doesNotMatch(page, /اختبار تجريبي|سؤال تجريبي|سؤال 1|سؤال ١|placeholder/i);
   // Stage 1 shipped empty states; the zone is now populated by real tests.
@@ -80,38 +76,72 @@ test('the registry links every test to its solution by a stable id, never by ord
   assert.equal(entry.id, 'test-01');
 });
 
-test('tab behaviour module wires ARIA tabs with keyboard support and hash deep-links', async () => {
-  const script = await read('../src/independent-tests.js');
-  assert.match(script, /role|data-it-tablist/);
+test('the test view provides 14 accessible problem tabs and the catalog deep-links by stable id', async () => {
+  const script = await read('../src/it1-assessment.js');
+  const hub = await read('../src/independent-tests.js');
+  assert.match(script, /role="tablist"/);
+  assert.match(script, /role="tab"/);
+  assert.match(script, /role="tabpanel"/);
   assert.match(script, /ArrowLeft/);
   assert.match(script, /ArrowRight/);
   assert.match(script, /Home/);
   assert.match(script, /End/);
   assert.match(script, /aria-selected/);
   assert.match(script, /tabIndex = active \? 0 : -1/);
-  assert.match(script, /'#tests'/);
-  assert.match(script, /'#solutions'/);
-  assert.match(script, /hashchange/);
-  assert.match(script, /dataset\.testId = test\.id/);
+  assert.match(script, /data-problem-tab/);
+  assert.match(hub, /window\.location\.hash/);
+  assert.match(hub, /hashchange/);
+  assert.match(hub, /dataset\.testId/);
 });
-
 test('styles keep keyboard focus visible, stay responsive, and respect reduced motion', async () => {
   const css = await read('../src/independent-tests.css');
   assert.match(css, /:focus-visible/);
-  assert.match(css, /@media \(max-width: 880px\)/);
   assert.match(css, /@media \(max-width: 640px\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(css, /\.it-tab\[aria-selected='true'\]/);
+  assert.match(css, /\.it1-problem-tab\[aria-selected=\"true\"\]/);
   assert.match(css, /\.it-tests-grid/);
   assert.match(css, /\.it-empty/);
+  assert.match(css, /overflow-x: auto/);
+  assert.match(css, /unicode-bidi: isolate/);
 });
 
-test('static build copies the new area page and keeps every existing entry page', async () => {
+test('static build copies one central independent-tests page and keeps every existing entry page', async () => {
   const build = await read('../scripts/build.mjs');
   assert.ok(build.includes("resolve(projectDirectory, 'independent-tests.html')"), 'build must copy independent-tests.html');
+  assert.doesNotMatch(build, /independent-test-1\.html/, 'test 1 must not ship as a separate HTML page');
   for (const page of ['index.html', 'lesson-1.html', 'appendices.html', 'unit-questions.html', 'lesson-test.html', 'unit-1-test.html', 'teacher.html']) {
     assert.ok(build.includes(`resolve(projectDirectory, '${page}')`), `build must keep ${page}`);
   }
   assert.ok(build.includes("'unit-2-test.html'"), 'build must keep unit-2-test.html (batch-copied entry)');
   assert.match(build, /resolve\(projectDirectory, 'src'\)/);
+});
+
+
+test('the catalog keeps the original stable registration and reports 14 problems', () => {
+  const test1 = getTestById('test-01');
+  assert.ok(test1);
+  assert.equal(test1.href, './independent-tests.html#test-01');
+  assert.equal(test1.problemCount, 14);
+  assert.equal(test1.questionCount, 39);
+  assert.equal(getSolutionForTest('test-01').testId, 'test-01');
+});
+
+test('only the active assessment owns the 14 tab controls', async () => {
+  const page = await read('../independent-tests.html');
+  const assessment = await read('../src/it1-assessment.js');
+  assert.doesNotMatch(page, /role="tab"/);
+  assert.match(assessment, /IT1_PROBLEMS\.map\(\(_, index\) => tabMarkup\(index\)\)/);
+  assert.match(assessment, /IT1_PROBLEMS\.length/);
+  assert.match(assessment, /المسألة \$\{ORDINALS\[index\]\}/);
+});
+
+test('the shared test suite keeps previous assessment entries while the independent test uses no extra route', async () => {
+  const home = await read('../index.html');
+  const build = await read('../scripts/build.mjs');
+  assert.ok(home.includes('href="./independent-tests.html">افتح منطقة الاختبارات المستقلة'));
+  assert.ok(build.includes('independent-tests.html'));
+  assert.doesNotMatch(home, /independent-test-1\\.html/);
+  for (const existing of ['lesson-test.html', 'lesson-2-test.html', 'unit-1-test.html', 'unit-2-test.html']) {
+    assert.ok(home.includes(existing), `existing test entry ${existing} must stay`);
+  }
 });

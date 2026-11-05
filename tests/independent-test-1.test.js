@@ -60,9 +60,9 @@ const fullAnswers = () => Object.fromEntries(IT1_QUESTIONS.map((question) => {
 
 /* -------------------------------------------------------------- 1. exists -- */
 
-test('the test registers 14 problems and 40 graded items against the existing zone contract', () => {
+test('the test registers 14 problems and 39 graded items against the existing zone contract', () => {
   assert.equal(IT1_PROBLEMS.length, 14);
-  assert.equal(IT1_QUESTIONS.length, 40);
+  assert.equal(IT1_QUESTIONS.length, 39);
   assert.equal(IT1_TEST.id, 'test-01');
   assert.equal(IT1_TEST.number, 1);
 
@@ -72,13 +72,12 @@ test('the test registers 14 problems and 40 graded items against the existing zo
   assert.equal(registered.questionCount, IT1_QUESTIONS.length);
   assert.equal(registered.problemCount, IT1_PROBLEMS.length);
   assert.equal(registered.totalMarks, IT1_TOTAL_MARKS);
-  assert.equal(registered.href, './independent-test-1.html');
+  assert.equal(registered.href, './independent-tests.html#test-01');
 
-  // Stable slug ids, in worksheet order, one page per group of problems.
+  // Stable ids map one-to-one to the fourteen attached images, in order.
   assert.deepEqual(IT1_PROBLEMS.map((item) => item.number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
-  assert.equal(IT1_PROBLEMS.filter((item) => item.page === 1).length, 5);
-  assert.equal(IT1_PROBLEMS.filter((item) => item.page === 2).length, 5);
-  assert.equal(IT1_PROBLEMS.filter((item) => item.page === 3).length, 4);
+  assert.deepEqual(IT1_PROBLEMS.map((item) => item.sourceImage), Array.from({ length: 14 }, (_, index) => index + 1));
+  assert.equal(new Set(IT1_PROBLEMS.map((item) => item.sourceImage)).size, 14);
 });
 
 /* ------------------------------------------------------- 2. source givens -- */
@@ -95,7 +94,7 @@ const SOURCE = Object.freeze({
   8: { givens: ['16 N', '12 N'], asks: 2, family: 'concurrent' },
   9: { givens: ['6 N', '6 N'], asks: 3, family: 'concurrent' },
   10: { givens: ['20 N', '20 N'], asks: 2, family: 'concurrent' },
-  11: { givens: ['10 N', '15 N', '45'], asks: 3, family: 'concurrent' },
+  11: { givens: ['10 N', '15 N', '45'], asks: 2, family: 'concurrent' },
   12: { givens: ['30 N', '50 N'], asks: 2, family: 'concurrent' },
   13: { givens: ['50 N', '50 N', '60'], asks: 2, family: 'concurrent' },
   14: { givens: ['80 N', '80 N', '60'], asks: 3, family: 'concurrent' },
@@ -107,8 +106,8 @@ test('every problem carries exactly the givens and the number of asks printed in
     assert.ok(expected, `problem ${problem.number} must exist in the source table`);
     for (const given of expected.givens) {
       assert.ok(
-        problem.intro.includes(given),
-        `problem ${problem.number} must state ${given} — got: ${problem.intro}`,
+        problem.givens.join(' ').includes(given),
+        `problem ${problem.number} must state ${given} in its structured givens — got: ${problem.givens.join(', ')}`,
       );
     }
     assert.equal(problem.asks.length, expected.asks, `problem ${problem.number} must have ${expected.asks} asks`);
@@ -117,13 +116,13 @@ test('every problem carries exactly the givens and the number of asks printed in
 
 test('no problem silently changes a source value into a different one', () => {
   // The three audited corruptions and their neighbours must never reappear.
-  const intro = (n) => IT1_PROBLEMS.find((item) => item.number === n).intro;
-  assert.ok(!intro(6).includes('0.2'), 'problem 6 must not use d₁ = 0.2 m');
-  assert.ok(intro(6).includes('2 m'), 'problem 6 must use d₁ = 2 m');
+  const intro = (n) => { const { givens, intro } = IT1_PROBLEMS.find((item) => item.number === n); return JSON.stringify({ givens, intro }); };
+  assert.ok(!intro(6).includes('d₁ = 0.2 m'), 'problem 6 must not use d₁ = 0.2 m');
+  assert.ok(intro(6).includes('d₁ = 2 m'), 'problem 6 must use d₁ = 2 m');
   assert.ok(!intro(7).includes('7 N'), 'problem 7 must not use F₂ = 7 N');
-  assert.ok(intro(7).includes('4 N'), 'problem 7 must use F₂ = 4 N');
+  assert.ok(intro(7).includes('F₂ = 4 N'), 'problem 7 must use F₂ = 4 N');
   assert.ok(!intro(9).includes('12 N'), 'problem 9 must not use F₁ = F₂ = 12 N');
-  assert.ok(intro(9).includes('6 N'), 'problem 9 must use F₁ = F₂ = 6 N');
+  assert.ok(intro(9).includes('F₁ = F₂ = 6 N'), 'problem 9 must use F₁ = F₂ = 6 N');
   // And the corrected values must be used consistently across the whole test.
   const everything = JSON.stringify(IT1_PROBLEMS);
   assert.ok(!everything.includes('F_2=7'), 'the 7 N corruption must not survive in any TeX');
@@ -167,7 +166,6 @@ const recomputed = Object.freeze({
 
   'it1p10-magnitude': +(20 * Math.SQRT2).toFixed(3),
 
-  'it1p11-magnitude': +Math.sqrt(10 ** 2 + 15 ** 2 + 2 * 10 * 15 * Math.cos(Math.PI / 4)).toFixed(2),
 
   'it1p13-magnitude': +(2 * 50 * Math.cos(Math.PI / 6)).toFixed(2),
 
@@ -300,11 +298,19 @@ test('problems 9 and 10 never describe a "larger force" — the two forces are e
 
 test('problem 13 stays consistent: equal 50 N forces at 60° → 86.6 N on the bisector', () => {
   const problem = IT1_PROBLEMS.find((item) => item.number === 13);
-  assert.ok(problem.intro.includes('50 N'));
+  assert.ok(problem.givens.includes('F₁ = F₂ = 50 N'));
   assert.ok(problem.intro.includes('60'));
   assert.equal(ANSWER_KEY['it1p13-magnitude'].value, 86.6);
   assert.equal(ANSWER_KEY['it1p13-elements'], 'bisector');
   assert.match(it1SolvedDiagram('it1p13'), /86\.6/);
+});
+
+test('problem 13 uses isolated typeset math and a valid equilateral-triangle median argument', () => {
+  const html = workedSolutionHtml('it1p13');
+  assert.doesNotMatch(html, /\$\\[A-Za-z]/, 'solution must not leak raw TeX delimiters');
+  assert.match(html, /the median is 50 square root of 3 over 2 newtons/);
+  assert.match(html, /class="math math-inline" dir="ltr" role="math"/);
+  assert.match(html, /50\\sqrt\{3\}/, 'the typeset math source must contain the derived radical');
 });
 
 /* ------------------------------------------- 6/11/12. the engine really works */
@@ -598,64 +604,46 @@ test('no figure label is cropped by the drawing box or struck by an arrow', () =
 test('the zone links the test card to the test page and the solution row to the same gated page', async () => {
   const data = await read('../src/independent-tests-data.js');
   assert.match(data, /id: 'test-01'/);
-  assert.match(data, /href: '\.\/independent-test-1\.html'/);
+  assert.match(data, /href: '\.\/independent-tests\.html#test-01'/);
   assert.match(data, /gated: true/);
-  // The registry must stay free of answers: no key, no solution bodies.
   assert.doesNotMatch(data, /ANSWER_KEY|answerKey|explanationHtml|tolerance/);
   const page = await read('../independent-tests.html');
-  assert.match(page, /الاختبارات المستقلة/);
   assert.match(page, /id="it-tests-grid"/);
+  assert.match(page, /id="it-test-view"[^>]*hidden/);
+  assert.doesNotMatch(page, /independent-test-1\.html/);
 });
 
-/* ------------------------------------------------ 9/10. answer-key leakage -- */
-
 test('the answer key is not reachable from any pre-submission module', async () => {
-  // Static import graph walk from the page entry point.
   const entry = srcUrl('it1-assessment.js');
   const graph = new Set();
   const queue = [entry];
-  while (queue.length > 0) {
+  while (queue.length) {
     const url = queue.pop();
-    const href = url.href;
-    if (graph.has(href)) continue;
-    graph.add(href);
+    if (graph.has(url.href)) continue;
+    graph.add(url.href);
     const source = await readFile(url, 'utf8');
     for (const match of source.matchAll(/^\s*import\s[^;]*?from\s+'([^']+)'/gm)) {
-      if (!match[1].startsWith('.')) continue;
-      queue.push(new URL(match[1], url));
+      if (match[1].startsWith('.')) queue.push(new URL(match[1], url));
     }
   }
-  const names = [...graph].map((href) => href.split('/').pop());
-  assert.ok(names.includes('it1-assessment.js'));
+  const names = [...graph].map((url) => url.split('/').pop());
   assert.ok(names.includes('it1-problems.js'));
-  assert.ok(!names.includes('it1-solutions.js'), 'the key module must not be statically imported');
-  assert.ok(!names.includes('lesson-test-solutions.js'));
-  assert.ok(!names.includes('unit-1-test-solutions.js'));
-
-  // The only reference to the key module is the dynamic import passed to the runtime.
+  assert.ok(names.includes('lesson-test-engine.js'));
+  assert.ok(!names.includes('it1-solutions.js'));
+  assert.ok(!names.includes('it1-diagrams.js'));
   const assessment = await read('../src/it1-assessment.js');
-  const dynamic = [...assessment.matchAll(/import\('([^']+)'\)/g)].map((match) => match[1]);
-  assert.deepEqual([...new Set(dynamic)], ['./it1-solutions.js']);
-  assert.match(assessment, /loadSolutions: \(\) => import\('\.\/it1-solutions\.js'\)/);
-
-  // The runtime awaits loadSolutions only inside the confirm-submit handler.
-  const runtime = await read('../src/assessment-runtime.js');
-  const finalizeStart = runtime.indexOf('async function finalizeSubmission');
-  const finalizeEnd = runtime.indexOf('function beginNewAttempt');
-  const finalizeBody = runtime.slice(finalizeStart, finalizeEnd);
-  assert.ok(finalizeBody.includes('await loadSolutions()'), 'the key must be awaited inside finalizeSubmission');
-  assert.equal(
-    (runtime.match(/await loadSolutions\(\)/g) ?? []).length,
-    1,
-    'the key must be loaded exactly once, at submission time',
-  );
+  assert.deepEqual([...assessment.matchAll(/import\('([^']+)'\)/g)].map((match) => match[1]), ['./it1-solutions.js']);
+  assert.match(assessment, /async function submit\(/);
+  assert.ok(assessment.indexOf("import('./it1-solutions.js')") > assessment.indexOf('async function submit'));
+  assert.match(assessment, /submitAssessment\(state, IT1_QUESTIONS, solutionModule\.ANSWER_KEY\)/);
 });
 
 test('the shipped page never embeds an answer key in its markup', async () => {
-  const page = await read('../independent-test-1.html');
+  const page = await read('../independent-tests.html');
   assert.doesNotMatch(page, /ANSWER_KEY|answerKey|tolerance|explanationHtml/);
-  assert.match(page, /<script type="module" src="\.\/src\/it1-assessment\.js"><\/script>/);
-  assert.match(page, /id="assessment-root"/);
+  assert.match(page, /src="\.\/src\/independent-tests\.js"/);
+  assert.match(page, /id="it1-assessment"/);
+  assert.doesNotMatch(page, /role="tab"/, 'the tablist is generated only after opening the active test');
 });
 
 test('the worked solutions exist for all 14 problems and are only rendered by the review', async () => {
@@ -663,30 +651,23 @@ test('the worked solutions exist for all 14 problems and are only rendered by th
   for (const problem of IT1_PROBLEMS) {
     const html = workedSolutionHtml(problem.id);
     assert.ok(html.length > 400, `problem ${problem.number} must have a worked solution`);
-    assert.ok(html.includes('it1-solution'), 'the solution must be rendered as a solution block');
-    assert.ok(html.includes('solution-steps'), 'the solution must carry labelled steps');
+    assert.ok(html.includes('it1-solution'));
+    assert.ok(html.includes('solution-steps'));
+    assert.equal((html.match(/<figure class="it1-figure-inner"/g) ?? []).length, 1);
   }
-  // The review panel is hidden until the runtime reports a submission.
-  const page = await read('../independent-test-1.html');
-  assert.match(page, /id="it1-solutions"[^>]*hidden/);
-  // Grouping must satisfy the runtime's integrity check exactly:
-  // ceil(questions / size) groups, each with min(size, remaining) items whose
-  // questionIds follow question order.
+  const assessment = await read('../src/it1-assessment.js');
+  assert.match(assessment, /data-solution-slot/);
+  assert.match(assessment, /slot\.hidden = false/);
+  assert.ok(assessment.indexOf('slot.hidden = false') > assessment.indexOf("import('./it1-solutions.js')"));
   const size = 5;
   const groups = buildSolutionGroups(IT1_QUESTIONS, size);
   assert.equal(groups.length, Math.ceil(IT1_QUESTIONS.length / size));
   groups.forEach((group, index) => {
     assert.equal(group.items.length, Math.min(size, IT1_QUESTIONS.length - index * size));
     assert.deepEqual(group.questionIds, IT1_QUESTIONS.slice(index * size, index * size + size).map((q) => q.id));
-    for (const item of group.items) assert.ok(item?.explanationHtml, 'every item needs an explanation');
+    for (const item of group.items) assert.ok(item?.explanationHtml);
   });
-  // The page must declare the same group size it hands to the runtime.
-  const assessment = await read('../src/it1-assessment.js');
-  assert.match(assessment, /solutionGroupSize: SOLUTION_GROUP_SIZE/);
-  assert.match(assessment, /const SOLUTION_GROUP_SIZE = 5;/);
 });
-
-/* ------------------------------------------------------------- 13. marks -- */
 
 test('the marks add up, match the graded fields, and are visible to the student', () => {
   const gradedPoints = IT1_QUESTIONS.map((question) => question.points);
@@ -696,45 +677,46 @@ test('the marks add up, match the graded fields, and are visible to the student'
   assert.equal(IT1_MARKS.reduce((total, row) => total + row.marks, 0), IT1_TOTAL_MARKS);
   assert.equal(IT1_TOTAL_MARKS, (IT1_QUESTIONS.length), 'one mark per graded field in this test');
   // Per-page totals printed in the review group titles must be true.
-  const pageMarks = (page) => IT1_MARKS
-    .filter((row) => IT1_PROBLEMS.find((item) => item.id === row.problemId).page === page)
+  const rangeMarks = (first, last) => IT1_MARKS
+    .filter((row) => row.number >= first && row.number <= last)
     .reduce((total, row) => total + row.marks, 0);
-  assert.equal(pageMarks(1), 17);
-  assert.equal(pageMarks(2), 13);
-  assert.equal(pageMarks(3), 10);
+  assert.equal(rangeMarks(1, 5), 17);
+  assert.equal(rangeMarks(6, 10), 13);
+  assert.equal(rangeMarks(11, 14), 9);
   const titles = buildSolutionGroups(IT1_QUESTIONS, 5).map((group) => group.title);
   assert.ok(titles[0].includes('17'));
   assert.ok(titles[1].includes('13'));
-  assert.ok(titles[2].includes('10'));
+  assert.ok(titles[2].includes('9'));
 });
 
 /* ------------------------------------------------------- build + wiring ---- */
 
 test('the static build ships the test page and its modules', async () => {
   const buildScript = await read('../scripts/build.mjs');
-  assert.ok(buildScript.includes("resolve(projectDirectory, 'independent-test-1.html')"));
+  assert.ok(buildScript.includes("resolve(projectDirectory, 'independent-tests.html')"));
+  assert.doesNotMatch(buildScript, /independent-test-1\.html/);
   const modules = await readdir(new URL('../src/', import.meta.url));
   for (const name of ['it1-problems.js', 'it1-solutions.js', 'it1-diagrams.js', 'it1-assessment.js', 'it1.css']) {
-    assert.ok(modules.includes(name), `${name} must exist in src/`);
+    assert.ok(modules.includes(name));
   }
 });
 
 test('the page loads the platform stylesheet chain it depends on', async () => {
-  const page = await read('../independent-test-1.html');
+  const page = await read('../independent-tests.html');
   assert.match(page, /href="\.\/src\/fonts\.css"/);
   assert.match(page, /href="\.\/vendor\/katex\/katex\.min\.css"/);
-  assert.match(page, /href="\.\/src\/lesson-test\.css"/, 'the shared assessment styles');
-  assert.match(page, /href="\.\/src\/it1\.css"/, 'the test-specific styles');
+  assert.match(page, /href="\.\/src\/home\.css"/);
+  assert.match(page, /href="\.\/src\/it1\.css"/);
   assert.match(page, /<html lang="ar" dir="rtl">/);
-  assert.match(page, /href="\.\/independent-tests\.html"/, 'return navigation to the zone');
 });
 
 test('the engine module stays in the pre-submission graph and is the only grader', async () => {
   const assessment = await read('../src/it1-assessment.js');
-  assert.match(assessment, /from '\.\/assessment-runtime\.js'/);
-  assert.match(assessment, /mountAssessment\(/);
-  assert.doesNotMatch(assessment, /function answerIsCorrect|submitAssessment\(/);
-  // The shared engine validates every key shape it is given.
+  assert.match(assessment, /from '\.\/lesson-test-engine\.js'/);
+  assert.match(assessment, /questionIsAnswered/);
+  assert.match(assessment, /recordAnswer/);
+  assert.match(assessment, /submitAssessment\(/);
+  assert.doesNotMatch(assessment, /function answerIsCorrect/);
   for (const question of IT1_QUESTIONS) {
     assert.equal(validateAnswerKey(question, ANSWER_KEY[question.id]), true, `${question.id} key must be valid`);
   }
@@ -750,4 +732,30 @@ test('every import specifier in the new modules points at a file that exists', a
       assert.ok(present.has(specifier), `${name} imports missing module ${specifier}`);
     }
   }
+});
+
+
+test('the 14 supplied image files are mapped one-to-one in image order', async () => {
+  const audit = await read('../docs/qa/independent-test-1/SOURCE-AUDIT.md');
+  assert.match(audit, /الصور الأصلية تطبع الرمز `R`/);
+  assert.match(audit, /بناءً على تعليمات صاحب المشروع/);
+  assert.deepEqual(IT1_PROBLEMS.map((problem) => problem.sourceImage), Array.from({ length: 14 }, (_, i) => i + 1));
+  for (let number = 1; number <= 14; number += 1) {
+    const source = new URL(`../docs/source-images/independent-test-1/problem-${number}.png`, import.meta.url);
+    assert.ok((await readFile(source)).length > 10_000);
+  }
+});
+
+test('problem eleven retains its two printed tasks and no extra numeric grade item', () => {
+  const problem = IT1_PROBLEMS.find((entry) => entry.number === 11);
+  assert.deepEqual(problem.asks.map((ask) => ask.id), ['construction', 'elements']);
+  assert.equal(ANSWER_KEY['it1p11-magnitude'], undefined);
+});
+
+test('the resultant notation normalization is explicit and does not alter source images', async () => {
+  const audit = await read('../docs/qa/independent-test-1/SOURCE-AUDIT.md');
+  const problems = await read('../src/it1-problems.js');
+  assert.match(audit, /تطبع الرمز `R` لشدة محصلة القوى/);
+  assert.match(audit, /يعتمد التنفيذ `F` للمحصلة/);
+  assert.match(problems, /NOTATION RULE: the magnitude of the resultant is always written `F`/);
 });

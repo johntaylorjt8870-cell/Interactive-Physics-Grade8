@@ -1,162 +1,107 @@
-/* ============================================================================
-   Independent Tests («اختبارات مستقلة») — page behaviour.
-   Wires the two internal tabs (tests / solutions) with full keyboard support
-   (roving tabindex, arrow keys, Home/End), hash deep-links (#tests /
-   #solutions), and renders cards from the registry in
-   independent-tests-data.js. Stage 1: the registry is empty, so the designed
-   empty states stay visible and no sample content is ever shown.
-   ========================================================================== */
+/* Central entry for the existing Independent Tests area.
+ * Tests stay in the stable registry and open in this document; they do not
+ * create per-test HTML pages or a parallel assessment area.
+ */
+import { INDEPENDENT_TESTS } from './independent-tests-data.js';
 
-import {
-  INDEPENDENT_TESTS,
-  INDEPENDENT_TEST_SOLUTIONS,
-  getSolutionForTest,
-  hasSolutionForTest,
-  testIdsWithoutSolution,
-} from './independent-tests-data.js';
+const grid = document.getElementById('it-tests-grid');
+const catalog = document.getElementById('it-catalog');
+const view = document.getElementById('it-test-view');
+const viewTitle = document.getElementById('it-test-view-title');
+const stableId = document.getElementById('it-test-stable-id');
+const assessmentHost = document.getElementById('it1-assessment');
+let activeTestId = null;
+let assessmentModulePromise = null;
 
-const TABS = Object.freeze([
-  { id: 'tests', hash: '#tests', label: 'الاختبارات المستقلة' },
-  { id: 'solutions', hash: '#solutions', label: 'حلول الاختبارات' },
-]);
+function renderTestCard(test) {
+  const article = document.createElement('article');
+  article.className = 'it-card';
+  article.dataset.testId = test.id;
 
-const FIRST_TAB = TABS[0].id;
+  const number = document.createElement('span');
+  number.className = 'it-card-number';
+  number.dir = 'ltr';
+  number.textContent = String(test.number).padStart(2, '0');
+  number.setAttribute('aria-hidden', 'true');
 
-function tabFromHash(hash) {
-  const found = TABS.find((tab) => tab.hash === hash);
-  return found === undefined ? FIRST_TAB : found.id;
+  const body = document.createElement('div');
+  body.className = 'it-card-body';
+  const title = document.createElement('h3');
+  title.className = 'it-card-title';
+  title.textContent = test.title;
+  const meta = document.createElement('p');
+  meta.className = 'it-card-meta';
+  meta.textContent = [test.subject, test.source].filter(Boolean).join(' · ');
+  const action = document.createElement('a');
+  action.className = 'it-card-action';
+  action.href = `#${test.id}`;
+  action.textContent = `ابدأ الاختبار · ${test.problemCount ?? test.questionCount} مسألة`;
+  action.setAttribute('aria-label', `فتح ${test.title}`);
+
+  body.append(title, meta, action);
+  article.append(number, body);
+  return article;
 }
 
-function activateTab(tabId, { updateHash = true, focus = false } = {}) {
-  const tab = TABS.find((candidate) => candidate.id === tabId);
-  if (tab === undefined) return;
-  for (const candidate of TABS) {
-    const button = document.querySelector(`[data-it-tab="${candidate.id}"]`);
-    const panel = document.getElementById(`it-panel-${candidate.id}`);
-    if (button === null || panel === null) continue;
-    const active = candidate.id === tab.id;
-    button.setAttribute('aria-selected', active ? 'true' : 'false');
-    button.tabIndex = active ? 0 : -1;
-    panel.hidden = !active;
-    if (active && focus) button.focus();
-  }
-  if (updateHash && window.location.hash !== tab.hash) {
-    window.history.replaceState(null, '', tab.hash);
-  }
-}
-
-function moveFocus(currentTabId, delta) {
-  const index = TABS.findIndex((tab) => tab.id === currentTabId);
-  const nextIndex = (index + delta + TABS.length) % TABS.length;
-  activateTab(TABS[nextIndex].id, { focus: true });
-}
-
-function wireTabs() {
-  const tablist = document.querySelector('[data-it-tablist]');
-  if (tablist === null) return;
-  tablist.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-it-tab]');
-    if (button !== null) activateTab(button.dataset.itTab);
-  });
-  tablist.addEventListener('keydown', (event) => {
-    const button = event.target.closest('[data-it-tab]');
-    if (button === null) return;
-    const current = button.dataset.itTab;
-    // RTL tablist: ArrowLeft moves to the next tab, ArrowRight to the previous.
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      moveFocus(current, +1);
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      moveFocus(current, -1);
-    } else if (event.key === 'Home') {
-      event.preventDefault();
-      activateTab(TABS[0].id, { focus: true });
-    } else if (event.key === 'End') {
-      event.preventDefault();
-      activateTab(TABS[TABS.length - 1].id, { focus: true });
-    }
-  });
-  window.addEventListener('hashchange', () => activateTab(tabFromHash(window.location.hash)));
-}
-
-function testCardMarkup(test) {
-  const meta = [test.subject, test.source].filter((value) => typeof value === 'string' && value.trim() !== '');
-  const metaMarkup = meta.length > 0
-    ? `<ul class="it-card-meta">${meta.map((value) => `<li>${value}</li>`).join('')}</ul>`
-    : '';
-  const countMarkup = Number.isInteger(test.questionCount) && test.questionCount > 0
-    ? `<span class="it-card-chip">${test.questionCount} سؤالاً</span>`
-    : '<span class="it-card-chip it-card-chip-muted">الأسئلة قيد الإعداد</span>';
-  return `
-    <span class="it-card-number" aria-hidden="true" dir="ltr">${String(test.number).padStart(2, '0')}</span>
-    <div class="it-card-body">
-      <h3 class="it-card-title" id="it-test-${test.id}-title">${test.title}</h3>
-      ${metaMarkup}
-      <div class="it-card-footer">
-        ${countMarkup}
-        <a class="it-card-action" href="${typeof test.href === 'string' && test.href ? test.href : `#test-${test.id}`}" aria-describedby="it-test-${test.id}-title">فتح الاختبار <span aria-hidden="true">←</span></a>
-      </div>
-    </div>`;
-}
-
-function renderTests() {
-  const grid = document.getElementById('it-tests-grid');
+function renderCatalog() {
+  if (!grid) return;
+  grid.replaceChildren(...INDEPENDENT_TESTS.map(renderTestCard));
+  const count = document.getElementById('it-tests-count');
+  if (count) count.textContent = String(INDEPENDENT_TESTS.length);
   const empty = document.getElementById('it-tests-empty');
-  if (grid === null || empty === null) return;
-  grid.replaceChildren(...INDEPENDENT_TESTS.map((test) => {
-    const card = document.createElement('article');
-    card.className = 'it-card';
-    card.dataset.testId = test.id;
-    card.innerHTML = testCardMarkup(test);
-    return card;
-  }));
-  empty.hidden = INDEPENDENT_TESTS.length > 0;
-  const counter = document.getElementById('it-tests-count');
-  if (counter !== null) counter.textContent = String(INDEPENDENT_TESTS.length);
+  if (empty) empty.hidden = INDEPENDENT_TESTS.length !== 0;
 }
 
-function solutionRowMarkup(testId) {
-  const solution = getSolutionForTest(testId);
-  const test = INDEPENDENT_TESTS.find((candidate) => candidate.id === testId);
-  const pending = solution === undefined;
-  const title = test !== undefined ? test.title : testId;
-  return `
-    <span class="it-solution-index" aria-hidden="true" dir="ltr">${testId}</span>
-    <div class="it-solution-body">
-      <h3 class="it-solution-title">حل اختبار: ${title}</h3>
-      <p class="it-solution-note">${pending ? 'الحل التفصيلي سيُضاف بعد اعتماد الاختبار.' : 'الحل التفصيلي خطوة بخطوة، مرتبط بمعرّف هذا الاختبار.'}</p>
-    </div>
-    ${pending
-      ? '<span class="it-solution-chip it-solution-chip-pending">بانتظار الحل</span>'
-      : `<a class="it-solution-link" href="${solution.gated && solution.href ? solution.href : `#solution-${testId}`}">${solution.gated ? 'الحل داخل الاختبار بعد التسليم' : 'عرض الحل'} <span aria-hidden="true">←</span></a>`}`;
+function testIdFromHash() {
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  return INDEPENDENT_TESTS.some((test) => test.id === id) ? id : null;
 }
 
-function renderSolutions() {
-  const list = document.getElementById('it-solutions-list');
-  const empty = document.getElementById('it-solutions-empty');
-  if (list === null || empty === null) return;
-  const linkedIds = INDEPENDENT_TESTS.map((test) => test.id).filter((id) => hasSolutionForTest(id));
-  const missing = testIdsWithoutSolution();
-  const rows = [...linkedIds, ...missing].map((testId) => {
-    const row = document.createElement('article');
-    row.className = 'it-solution-row';
-    row.dataset.testId = testId;
-    row.innerHTML = solutionRowMarkup(testId);
-    return row;
-  });
-  list.replaceChildren(...rows);
-  // The solutions empty state is shown only when there is nothing at all to list.
-  empty.hidden = linkedIds.length > 0 || missing.length > 0;
-  const counter = document.getElementById('it-solutions-count');
-  if (counter !== null) counter.textContent = String(linkedIds.length);
+async function openTest(testId, { updateHash = true } = {}) {
+  const test = INDEPENDENT_TESTS.find((entry) => entry.id === testId);
+  if (!test || !catalog || !view || !assessmentHost) return;
+  activeTestId = test.id;
+  catalog.hidden = true;
+  view.hidden = false;
+  viewTitle.textContent = test.title;
+  stableId.textContent = test.id;
+  if (updateHash && window.location.hash !== `#${test.id}`) {
+    window.history.pushState({ independentTest: test.id }, '', `#${test.id}`);
+  }
+
+  assessmentModulePromise ??= import('./it1-assessment.js');
+  const module = await assessmentModulePromise;
+  if (activeTestId !== test.id) return;
+  module.mountIndependentTest1(assessmentHost);
+  view.scrollIntoView({ block: 'start' });
 }
 
-function init() {
-  wireTabs();
-  renderTests();
-  renderSolutions();
-  activateTab(tabFromHash(window.location.hash), { updateHash: false });
+function showCatalog({ updateHash = true, focus = false } = {}) {
+  activeTestId = null;
+  if (view) view.hidden = true;
+  if (catalog) catalog.hidden = false;
+  if (updateHash && window.location.hash) window.history.pushState(null, '', window.location.pathname + window.location.search);
+  if (focus) document.getElementById('it-catalog-title')?.focus();
 }
 
-init();
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('.it-card-action');
+  if (link) {
+    const card = link.closest('[data-test-id]');
+    if (card) {
+      event.preventDefault();
+      void openTest(card.dataset.testId);
+    }
+  }
+  if (event.target.closest('[data-it-back]')) showCatalog({ focus: true });
+});
+
+window.addEventListener('hashchange', () => {
+  const testId = testIdFromHash();
+  if (testId) void openTest(testId, { updateHash: false });
+  else if (activeTestId) showCatalog({ updateHash: false });
+});
+
+renderCatalog();
+const initialTestId = testIdFromHash();
+if (initialTestId) void openTest(initialTestId, { updateHash: false });

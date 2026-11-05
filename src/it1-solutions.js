@@ -67,8 +67,8 @@ export const IT1_SOLUTIONS = Object.freeze([
   solution('it1p03', 3, [
     step('المعطى', `${S_F1} = ${N(100)}، ${S_F2} = ${N(300)}، ${S_D1} = ${M('0.75')}، والجهتان واحدة.`),
     step('الشدة', eq('F=100+300=400~\\mathrm{N}', 'F equals 100 plus 300 equals 400 newtons')),
-    step('القانون المعطى', eq('\\dfrac{d_{1}}{d_{2}}=\\dfrac{F_{2}}{F_{1}} \\Rightarrow \\dfrac{0.75}{d_{2}}=\\dfrac{300}{100}=3', 'zero point seven five over d two equals 300 over 100 equals 3')),
-    step('البعد الثاني', eq('d_{2}=\\dfrac{0.75}{3}=0.25~\\mathrm{m}', 'd two equals 0.75 over 3 equals 0.25 metres')),
+    step('القانون المعطى', eq('\\dfrac{F_{1}}{F_{2}}=\\dfrac{d_{2}}{d_{1}} \\Rightarrow \\dfrac{100}{300}=\\dfrac{d_{2}}{0.75}', 'F one over F two equals d two over d one, then 100 over 300 equals d two over 0.75')),
+    step('البعد الثاني', eq('d_{2}=0.25~\\mathrm{m}', 'd two equals 0.25 metres')),
     step('الطول الكلي', eq('d=d_{1}+d_{2}=0.75+0.25=1~\\mathrm{m}', 'd equals 0.75 plus 0.25 equals 1 metre')),
   ], answerHtml(`${S_F} = ${N(400)}، ${S_D2} = ${M('0.25')}، ${S_D} = ${M(1)}.`)),
 
@@ -152,7 +152,7 @@ export const IT1_SOLUTIONS = Object.freeze([
   /* --------------------------------------------------------------- 13 ---- */
   solution('it1p13', 13, [
     step('المعطى', `${tex('F_{1}=F_{2}=50~\\mathrm{N}', 'F one equals F two equals 50 newtons')}، والزاوية بينهما ${tex('60^{\\circ}', '60 degrees')}.`),
-    step('الفكرة الهندسية', `لأن القوتين متساويتان، يكون مثلث القوى الناتج عن الإنشاء متساوي الأضلاع، فيساوي القطر طول الضلع ${N(50)} مضروباً في $\\sqrt{3}$.`),
+    step('الفكرة الهندسية', `المثلث المساعد ذو ضلعي القوتين والضلع الواصل بين رأسيهما متساوي الأضلاع. متوسطه طوله ${tex('\\frac{50\\sqrt{3}}{2}~\\mathrm{N}', 'the median is 50 square root of 3 over 2 newtons')}; والمحصلة، قطر متوازي الأضلاع، تساوي ضعفي المتوسط.`),
     step('الشدة', eq('F=2\\times50\\times\\cos30^{\\circ}=50\\sqrt{3}\\approx 86.6~\\mathrm{N}', 'F equals 2 times 50 times cosine 30 degrees equals 50 root 3 which is about 86.6 newtons')),
     step('العناصر', `حامل المحصلة منصّف الزاوية ${tex('60^{\\circ}', '60 degrees')}، أي يصنع ${tex('30^{\\circ}', '30 degrees')} مع حامل كل قوة، ونقطة تأثيرها ${tex('O', 'point O')}.`),
   ], answerHtml(`${S_F} \\approx ${N('86.6')}، وحاملها منصّف الزاوية بين القوتين المتساويتين.`)),
@@ -215,7 +215,6 @@ export const ANSWER_KEY = Object.freeze({
 
   'it1p11-construction': 'complete',
   'it1p11-elements': 'full',
-  'it1p11-magnitude': { value: 23.2, tolerance: 0.2, unit: 'N' },
 
   'it1p12-elements': 'inside',
   'it1p12-angle-effect': 'inverse',
@@ -282,8 +281,7 @@ export const ANSWER_PROSE = Object.freeze({
   'it1p10-shape': 'الشكل مربع، والمحصلة قطره الخارج من O وحاملها منصّف الزاوية القائمة.',
 
   'it1p11-construction': 'رسم الشعاعين من O، ثم إكمال متوازي الأضلاع، فالمحصلة هي القطر الخارج من O إلى الرأس المقابل.',
-  'it1p11-elements': 'نقطة التأثير O، والحامل القطر داخل الزاوية، والجهة نحو الرأس المقابل، والشدة من مقياس الرسم.',
-  'it1p11-magnitude': 'F ≈ 23.2 N',
+  'it1p11-elements': 'نقطة التأثير O، والحامل القطر داخل الزاوية، والجهة نحو الرأس المقابل، والشدة تُبيّن بطول قطر متوازي الأضلاع وفق مقياس الرسم.',
 
   'it1p12-elements': 'نقطة التأثير O، والحامل داخل الزاوية الحادة، والشدة بين فرق الشدتين ومجموعهما.',
   'it1p12-angle-effect': 'زيادة الزاوية تُنقص الشدة، ونقصانها يزيد الشدة حتى تبلغ المجموع عند انعدام الزاوية.',
@@ -304,9 +302,9 @@ export const ANSWER_PROSE = Object.freeze({
  */
 export function buildSolutionGroups(questions, groupSize = 5) {
   const titles = [
-    'المسائل 1–5 · القوى المتوازية (الصفحة 1) · 17 علامة',
-    'المسائل 6–10 · الصفحة 2 · 13 علامة',
-    'المسائل 11–14 · الصفحة 3 · 10 علامات',
+    'المسائل 1–5 · القوى المتوازية · 17 علامة',
+    'المسائل 6–10 · 13 علامة',
+    'المسائل 11–14 · 9 علامات',
     'الحلول التكميلية',
   ];
   const groups = [];
@@ -331,7 +329,7 @@ export function buildSolutionGroups(questions, groupSize = 5) {
 /* Compact per-question explanation: the correct answer plus the worked steps
    of its problem (KaTeX only). The illustrated version — with the solved
    figure — is rendered once per problem in the page's solutions panel, so the
-   40 review cards do not each carry a duplicate SVG. */
+   39 answer fields do not each carry a duplicate SVG. */
 const stepsHtmlByProblem = new Map(IT1_SOLUTIONS.map((entry) => [entry.problemId, solutionSteps(entry.steps)]));
 
 export const SOLUTIONS = Object.freeze(Object.fromEntries(IT1_QUESTIONS.map((question) => {
