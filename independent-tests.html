@@ -4,11 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1a2438" />
-    <meta name="description" content="منطقة «اختبارات مستقلة» في منصة فيزياء الصف الثامن: اختبارات مستقلة وحلولها التفصيلية في تبويبين منفصلين." />
+    <meta name="description" content="منطقة الاختبارات المستقلة لفيزياء الصف الثامن. ابدأ اختباراً وتابع مسائلَه في واجهة واحدة." />
     <title>اختبارات مستقلة | Interactive Physics — Grade 8</title>
     <link rel="stylesheet" href="./src/fonts.css" />
+    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
     <link rel="stylesheet" href="./src/home.css" />
     <link rel="stylesheet" href="./src/independent-tests.css" />
+    <link rel="stylesheet" href="./src/it1.css" />
   </head>
   <body class="course-home independent-tests-page">
     <a class="home-skip-link" href="#independent-tests-main">انتقل إلى منطقة الاختبارات المستقلة</a>
@@ -27,90 +29,41 @@
           <a href="./#available-tests" aria-current="page">الاختبارات</a>
           <a href="./appendices.html">ملحقات الدروس</a>
         </nav>
-        <span class="home-status"><span aria-hidden="true"></span> منطقة مستقلة جديدة</span>
+        <span class="home-status"><span aria-hidden="true"></span> اختبارات مستقلة</span>
       </header>
 
       <main id="independent-tests-main">
         <section class="it-hero" aria-labelledby="it-page-title">
           <div class="it-hero-copy">
-            <p class="home-eyebrow">منطقة مستقلة · Independent Tests</p>
+            <p class="home-eyebrow">منطقة الاختبارات المستقلة</p>
             <h1 id="it-page-title">اختبارات مستقلة</h1>
-            <p>منطقة مخصصة للاختبارات المستقلة وحلولها التفصيلية، في تبويبين: تبويب الاختبارات وتبويب الحلول. كل اختبار سيرتبط بحله عبر معرّف ثابت لا يتغير.</p>
-            <div class="it-hero-meta">
-              <span><b aria-hidden="true">▤</b> تبويبان: الاختبارات والحلول</span>
-              <span><b aria-hidden="true">#</b> ربط stable id بين كل اختبار وحله</span>
-              <span><b aria-hidden="true">◇</b> اختبار واحد متاح الآن · 14 مسألة</span>
-            </div>
-          </div>
-          <div class="it-hero-art" aria-hidden="true">
-            <span class="it-orbit it-orbit-a"></span>
-            <span class="it-orbit it-orbit-b"></span>
-            <span class="it-sheet"><i></i><i></i><i></i></span>
-            <span class="it-check">✓</span>
+            <p>تُعرض الاختبارات المتاحة هنا، وتُفتح المسائل داخل المنطقة نفسها دون إنشاء صفحة مستقلة لكل اختبار.</p>
           </div>
         </section>
 
-        <div class="it-note" role="note">
-          <span class="it-note-mark" aria-hidden="true">i</span>
-          <p>الاختبار الأول جاهز الآن: <strong>القوى المتلاقية والقوى المتوازية</strong> من 14 مسألة. تُحمَّل إجاباته الصحيحة وحلوله التفصيلية بعد التسليم فقط. أما اختبارات الدروس واختبارات الوحدتين الموجودة في <a href="./#available-tests">منطقة الاختبارات</a> فتبقى في مكانها دون أي تغيير.</p>
-        </div>
+        <section class="it-catalog" id="it-catalog" aria-labelledby="it-catalog-title">
+          <header class="it-section-heading">
+            <div>
+              <p class="home-eyebrow">المتاح الآن</p>
+              <h2 id="it-catalog-title" tabindex="-1">الاختبارات</h2>
+            </div>
+            <span class="it-catalog-count"><bdi dir="ltr" id="it-tests-count">0</bdi> اختبار متاح</span>
+          </header>
+          <div class="it-tests-grid" id="it-tests-grid"></div>
+          <p class="it-empty" id="it-tests-empty" hidden>لا توجد اختبارات مستقلة منشورة حالياً.</p>
+        </section>
 
-        <section class="it-zone" aria-label="محتوى منطقة الاختبارات المستقلة">
-          <div class="it-tablist" role="tablist" aria-label="تبويبات منطقة الاختبارات المستقلة" data-it-tablist>
-            <button type="button" class="it-tab" role="tab" id="it-tab-tests" data-it-tab="tests"
-                    aria-selected="true" aria-controls="it-panel-tests">
-              <span class="it-tab-icon" aria-hidden="true">▤</span>
-              الاختبارات المستقلة
-              <span class="it-tab-count" dir="ltr"><span id="it-tests-count">0</span></span>
-            </button>
-            <button type="button" class="it-tab" role="tab" id="it-tab-solutions" data-it-tab="solutions"
-                    aria-selected="false" aria-controls="it-panel-solutions" tabindex="-1">
-              <span class="it-tab-icon" aria-hidden="true">✓</span>
-              حلول الاختبارات
-              <span class="it-tab-count" dir="ltr"><span id="it-solutions-count">0</span></span>
-            </button>
-          </div>
-
-          <div class="it-panel" role="tabpanel" id="it-panel-tests" aria-labelledby="it-tab-tests">
-            <div class="it-panel-heading">
-              <h2>الاختبارات المستقلة</h2>
-              <p>بطاقات منظمة لكل اختبار: رقمه واسمه وأي بيانات تعريفية متوفرة. تُضاف الاختبارات هنا من صور الاختبارات في مراحل لاحقة.</p>
-            </div>
-            <div class="it-tests-grid" id="it-tests-grid"></div>
-            <div class="it-empty" id="it-tests-empty">
-              <span class="it-empty-icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M10 6h20l8 8v28H10z" />
-                  <path d="M30 6v8h8" />
-                  <path d="M16 24h16M16 30h16M16 36h10" />
-                </svg>
-              </span>
-              <h3>ستُضاف الاختبارات المستقلة هنا</h3>
-              <p>هذه المنطقة جاهزة لاستقبال الاختبارات من الصور في مهمة لاحقة، وستظهر كل اختبار كبطاقة مستقلة برقمه واسمه. لا توجد اختبارات تجريبية الآن.</p>
-            </div>
-          </div>
-
-          <div class="it-panel" role="tabpanel" id="it-panel-solutions" aria-labelledby="it-tab-solutions" hidden>
-            <div class="it-panel-heading">
-              <h2>حلول الاختبارات</h2>
-              <p>حل تفصيلي لكل اختبار، مرتبط بمعرّف الاختبار الثابت (وليس بترتيب البطاقات أو الأسماء).</p>
-            </div>
-            <div class="it-solutions-list" id="it-solutions-list"></div>
-            <div class="it-empty" id="it-solutions-empty">
-              <span class="it-empty-icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="24" cy="24" r="17" />
-                  <path d="M16 24.5l5.5 5.5L33 18" />
-                </svg>
-              </span>
-              <h3>ستظهر حلول الاختبارات هنا</h3>
-              <p>بعد إضافة كل اختبار وحله التفصيلي، سيظهر الحل في هذا التبويب مرتبطاً بنفس معرّف الاختبار. لا توجد حلول تجريبية الآن.</p>
-            </div>
-          </div>
+        <section class="it-test-view" id="it-test-view" aria-labelledby="it-test-view-title" hidden>
+          <header class="it-test-view-heading">
+            <button class="it-back-button" type="button" data-it-back>العودة إلى قائمة الاختبارات</button>
+            <p class="home-eyebrow">اختبار مستقل · <bdi dir="ltr" id="it-test-stable-id"></bdi></p>
+            <h2 id="it-test-view-title"></h2>
+          </header>
+          <div id="it1-assessment"></div>
         </section>
 
         <nav class="it-bottom-nav" aria-label="العودة إلى المنصة">
-          <a href="./#available-tests"><span aria-hidden="true">→</span> منطقة الاختبارات في الصفحة الرئيسية</a>
+          <a href="./#available-tests">منطقة الاختبارات في الصفحة الرئيسية</a>
           <a href="./">العودة إلى الصفحة الرئيسية</a>
         </nav>
       </main>
@@ -120,7 +73,7 @@
         <a href="./">العودة إلى الرئيسية</a>
       </footer>
     </div>
-    <noscript><p class="it-noscript">يعمل التبديل بين التبويبين عبر JavaScript، لكن محتوى المنطقة يبقى مقروءاً في الشيفرة المصدرية للصفحة.</p></noscript>
+    <noscript><p class="it-noscript">يلزم تفعيل JavaScript لعرض الاختبارات والتفاعل معها.</p></noscript>
     <script type="module" src="./src/independent-tests.js"></script>
   </body>
 </html>

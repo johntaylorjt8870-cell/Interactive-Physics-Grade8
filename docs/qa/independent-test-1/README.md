@@ -1,70 +1,55 @@
-# الاختبار الأول — القوى المتلاقية والقوى المتوازية (14 مسألة)
+# QA للاختبار الأول المستقل
 
-منطقة «اختبارات مستقلة» · معرّف ثابت: `test-01`
+يوجد الاختبار داخل صفحة منطقة الاختبارات المستقلة المركزية (`independent-tests.html`) تحت المعرّف الثابت `test-01`. لا توجد صفحة HTML مستقلة لكل اختبار أو مسألة.
 
-## الملفات
+## مرجع المصدر
 
-| ملف | الدور |
-|---|---|
-| `independent-test-1.html` | صفحة الاختبار (RTL، تعيد استخدام هيكل اختبارات المنصة) |
-| `src/it1-problems.js` | بيانات المسائل الأربع عشرة: المعطيات والمطلوبات والخيارات — **بلا إجابات** |
-| `src/it1-diagrams.js` | الرسوم: `it1GivenDiagram` (قبل التسليم، بلا محصلة) و`it1SolvedDiagram` (بعد التسليم فقط) |
-| `src/it1-solutions.js` | مفتاح الإجابات + خطوات الحل + العناصر الصحيحة + الرسوم المحلولة — **يُحمَّل ديناميكياً بعد التسليم** |
-| `src/it1-assessment.js` | نقطة الدخول: `mountAssessment` من `assessment-runtime.js` + لوحة الحلول بعد التسليم |
-| `src/it1.css` | تنسيقات الصفحة فقط |
-| `src/independent-tests-data.js` | تسجيل `test-01` في السجلّ وبطاقته |
-| `tests/independent-test-1.test.js` | 32 اختباراً آلياً سلوكياً (منها 5 تتحقّق من **هندسة** الرسوم لا من نصوصها) |
-| `scripts/qa-independent-test-1.mjs` | 37 فحصاً في متصفح حقيقي |
-| `scripts/qa-independent-test-1-security.mjs` | 19 فحصاً للحماية ومسار التسليم |
-| `scripts/qa-shots-independent-test-1.mjs` | يعيد توليد اللقطات الأربع من البناء الحالي |
+- `SOURCE-AUDIT.md`: مطابقة الصور الأربع عشرة، المعطيات والمطلوبات والحلول المحسوبة، وملاحظة الرمز.
+- الصور المرفقة المحفوظة في `docs/source-images/independent-test-1/problem-1.png` إلى `problem-14.png` (ترقيم الملف يطابق رقم الصورة).
+- الصور المصدرية تستخدم `R` للمحصلة؛ تطبيع التنفيذ إلى `F` قرار صريح لصاحب المشروع، كما يوثق سجل المطابقة.
 
-## البنية الأمنية
+## بنية التنفيذ
 
-- السجلّ العام (`independent-tests-data.js`) لا يستورد مفتاح الإجابات.
-- `it1-solutions.js` لا يظهر في الرسم البياني للاستيراد الساكن من `it1-assessment.js`
-  (يتحقّق من ذلك اختبار آلي)، ويُطلب فقط عبر
-  `loadSolutions: () => import('./it1-solutions.js')`، وهو ما ينفّذه
-  `assessment-runtime.js` داخل `finalizeSubmission()` بعد تأكيد التسليم.
-- لا يوجد في الصفحة أي عنصر يحتوي إجابة قبل التسليم؛ الرسوم قبل التسليم لا ترسم المحصلة.
+- `independent-tests.html`: الصفحة المركزية الوحيدة لمنطقة الاختبارات؛ تعرض السجل وتفتح الاختبار في الصفحة نفسها.
+- `src/independent-tests-data.js`: سجل الاختبارات الحالي؛ `test-01` ثابت ومربوط بسجل الحلول نفسه.
+- `src/it1-problems.js`: 14 مسألة، مع نص المسألة والمعطيات والمطلوبات والحقول المصححة. يحتوي أسئلة الصورة 11 على مطلبين فقط، بلا طلب حساب زائد.
+- `src/it1-assessment.js`: يعرض 14 تبويب ARIA، تبويباً واحداً لكل مسألة، ويجمع مطالب المسألة في لوحة واحدة.
+- `src/it1-solutions.js`: مفتاح التصحيح والحلول؛ يُستورد ديناميكياً عند تسليم الطالب.
+- `src/it1-diagrams.js`: هندسة الرسوم التعليمية. يستدعيها مسار الحل فقط، وتظهر رسمة واحدة في قسم الحل المقابل بعد التسليم.
+- `src/lesson-test-engine.js`: محرك التقييم المشترك؛ لم تتغير آلية التقييم الأساسية.
+- `src/independent-tests.css` و`src/it1.css`: واجهة المنطقة ومسائل الاختبار ورسوم الحل.
+- `tests/independent-test-1.test.js` و`tests/independent-tests.test.js`: الاختبارات الأصلية محفوظة وموسعة دون إنشاء مجموعة موازية أو حذف اختبارات سابقة.
 
-## الرموز
+## نتائج التحقق الحالية — 5 نوفمبر 2026
 
-شدة المحصلة تُكتب **`F`** لا `R` في نص المطلوب والرسوم وخطوات الحل والإجابة النهائية والتغذية الراجعة.
-(ملاحظة: في كود المصدر تظهر `R` فقط داخل `F₂` لرمز القوة الثانية، وليس رمزاً للمحصلة.)
+- `npm run build`: ناجح؛ أُنشئ البناء الثابت في `dist/`.
+- الاختبارات المستهدفة (`node --test tests/independent-test-1.test.js tests/independent-tests.test.js`): **46/46 ناجحة**.
+- `qa-independent-test-1.mjs`: **201/201** فحص متصفح ناجح.
+- `qa-independent-test-1-security.mjs`: **13/13** فحص أمني ناجح.
+- `qa-shots-independent-test-1.mjs`: اكتمل؛ أُعيد إنشاء لقطات 1440 و1366 و390 بكسل أدناه من البناء الحالي.
+- `npm test`: **434 ناجحاً، 6 إخفاقات، 13 متخطاة من 453**. الإخفاقات الستة تقع في اختبارات قديمة خارج نطاق هذا التغيير (اختبار إعادة ضبط max-width للدرس 1، توقعات مراحل/صفحات الدرس 1، وملفات physics-in-life ودفاتر Unit 2 Lesson 1 وLesson 3)؛ خط الأساس السابق كان يسجل الإخفاقات الستة نفسها. لا تُعرض نتيجة المجموعة الكاملة على أنها خضراء.
 
-## التشغيل والتحقق
+تفاصيل الفحوص والأوامر موثقة في `QA-REPORT.md`.
+
+## فحوص المتصفح
+
+بعد البناء وخدمة جذر المشروع على المنفذ 4173:
 
 ```bash
-npm test                                     # 446 اختباراً (6 إخفاقات خط أساس موثّقة + 13 تخطياً)
-npm run build                                # dist/
-QA_MODULE_DIR=/tmp/qa/node_modules \
-  LD_LIBRARY_PATH=/tmp/nss/lib node scripts/qa-independent-test-1.mjs
-QA_MODULE_DIR=/tmp/qa/node_modules \
-  LD_LIBRARY_PATH=/tmp/nss/lib node scripts/qa-independent-test-1-security.mjs
+npm run build
+QA_MODULE_DIR=/tmp/qa/node_modules QA_CHROMIUM=/tmp/chromium node scripts/qa-independent-test-1.mjs
+QA_MODULE_DIR=/tmp/qa/node_modules QA_CHROMIUM=/tmp/chromium node scripts/qa-independent-test-1-security.mjs
+QA_MODULE_DIR=/tmp/qa/node_modules CHROMIUM_PATH=/tmp/chromium node scripts/qa-shots-independent-test-1.mjs
 ```
 
-`playwright-core` و`@sparticuz/chromium` ليستا اعتماديات للمشروع (كما في بقية سكربتات QA)؛
-تُثبَّتان خارج المستودع ويُشار إليهما عبر `QA_MODULE_DIR`.
+اللقطات المُولّدة من البناء الحالي:
 
-## الرسوم: كيف تُبنى
+- `problem-01-question-1440.png` … `problem-14-question-1440.png`: زيارة كل تبويب؛ السؤال والمعطيات بلا رسم.
+- `problem-01-solution-1440.png` و`problem-11-solution-1440.png` و`problem-13-solution-1440.png`: حلول بعد التسليم مع رسوم المسائل؛ لقطة 13 تشمل المعادلة الهندسية المصححة.
+- `tabs-and-question-1440.png`: التبويبات على سطح المكتب.
+- `equations-and-symbols-1440.png`: رموز ومعادلات المسألة 7.
+- `laptop-1366.png`: عرض 1366 بكسل.
+- `mobile-390.png`: عرض الهاتف وشريط التبويبات القابل للتمرير داخلياً.
+- `catalog-1440.png`: قائمة الاختبارات المركزية.
 
-الرسوم الستة للقوى المتوازية **تُحسب من المعطيات** لا تُرسم يدوياً
-(`buildParallel` في `src/it1-diagrams.js`): الموضع يأتي من `d₁/d₂ = F₂/F₁`،
-والجهة من قاعدة «خارج القطعة من جهة القوة الكبرى» عند التعاكس، وطول كل سهم من
-مقياس `px/N` واحد لكل شكل. لذلك لا يمكن أن يخالف الرسمُ حسابه.
-
-- المجهول لا يُطبع قبل التسليم: `F₂` في المسألة 5 يُرسم **متقطّعاً بعلامة «؟»**،
-  و`d` في المسائل 3 و5 و6 يُكتب `d = ?`.
-- تسمية الزاوية في الرسوم المتلاقية تُبحث عن موضع خالٍ من كل الأسهم
-  (`angleArc` + `boxHitsShafts`)، فلا تلامس أي سهم.
-- ارتفاع `viewBox` يُحسب لكل شكل على حدة، فلا يُقصّ أي تسمية.
-
-## لقطات مرجعية
-
-تُولَّد كلها بالأمر:
-`QA_MODULE_DIR=/tmp/qa/node_modules LD_LIBRARY_PATH=/tmp/nss/lib node scripts/qa-shots-independent-test-1.mjs`
-
-- `figures-givens.png` — الرسوم قبل التسليم (14 مسألة).
-- `figures-solved.png` — الرسوم المحلولة (المحصلة `F` بموضعها واتجاهها).
-- `solution-problem-1.png` — حل المسألة 1 كاملاً بعد التسليم.
-- `mobile-390.png` — العرض على هاتف 390px أثناء الاختبار.
+يجب إعادة تشغيل سكربت اللقطات بعد أي تعديل بصري. اللقطات الإضافية القديمة `figures-givens.png` و`figures-solved.png` و`solution-problem-1.png` محفوظة من جولة سابقة ولا تدخل ضمن تقرير اللقطات الحالية.

@@ -29,11 +29,11 @@ export const INDEPENDENT_TESTS = Object.freeze([
     number: 1,
     title: 'القوى المتلاقية والقوى المتوازية',
     subject: 'الوحدة الأولى · الحركة والقوى',
-    source: 'أوراق مسائل محسوبة · 3 صفحات · 14 مسألة',
-    questionCount: 40,
+    source: '14 صورة مرجعية · 14 مسألة',
+    questionCount: 39,
     problemCount: 14,
-    totalMarks: 40,
-    href: './independent-test-1.html',
+    totalMarks: 39,
+    href: './independent-tests.html#test-01',
   }),
 ]);
 
@@ -46,7 +46,7 @@ export const INDEPENDENT_TEST_SOLUTIONS = Object.freeze({
   'test-01': Object.freeze({
     testId: 'test-01',
     title: 'حلول الاختبار الأول — القوى المتلاقية والقوى المتوازية',
-    href: './independent-test-1.html',
+    href: './independent-tests.html#test-01',
     gated: true,
   }),
 });
@@ -95,8 +95,7 @@ export function hasSolutionForTest(testId) {
 }
 
 /**
- * Ids of tests that currently have no registered solution — used by the
- * solutions tab to stay consistent with the tests tab. Order-independent:
+ * Ids of tests that currently have no registered solution. Order-independent:
  * everything is derived from the stable ids, never from array positions.
  */
 export function testIdsWithoutSolution() {
