@@ -1,0 +1,50 @@
+1366x768: document is 24074px tall, sheet 976px wide
+1440x900: document is 23858px tall, sheet 1030px wide
+Lesson 1 student notebook — browser QA (2026-11-21T20:55:05.981Z)
+Viewports: 1366x768 and 1440x900 (laptop scope).
+Checks: 44/44 passed.
+
+PASS  1366x768: nav has 9 tabs  —  count=9
+PASS  1366x768: last tab is the notebook  —  9 📒 دفتر الطالب ص 62
+PASS  1366x768: heading is دفتر الطالب  —  دفتر الطالب
+PASS  1366x768: progress is 9 / 9  —  9 / 9
+PASS  1366x768: page badge still points at the book page  —  62
+PASS  1366x768: exactly one notebook rendered  —  count=1
+PASS  1366x768: 17 notebook sections  —  count=17
+PASS  1366x768: 12 reference tables  —  count=12
+PASS  1366x768: 10 diagrams and scale drawings  —  count=10
+PASS  1366x768: every table is captioned  —  count=12
+PASS  1366x768: KaTeX typeset every formula  —  katex=136 errors=0
+PASS  1366x768: no display equation is clipped
+PASS  1366x768: no horizontal page scroll  —  1366 <= 1366
+PASS  1366x768: no section block escapes the sheet
+PASS  1366x768: notebook prose respects the reading measure  —  paragraph=640px cap=640px
+PASS  1366x768: tables use the full reference width  —  table=904px
+PASS  1366x768: 17 working contents links  —  count=17 broken=
+PASS  1366x768: a contents link scrolls to its section  —  top=13px
+PASS  1366x768: every bdi is dir=ltr  —  undirected=0
+PASS  1366x768: no Arabic prose is wrapped in an LTR isolation  —  arabic=0
+PASS  1366x768: still one notebook after leaving and returning  —  count=1
+PASS  1366x768: no console or page errors
+PASS  1440x900: nav has 9 tabs  —  count=9
+PASS  1440x900: last tab is the notebook  —  9 📒 دفتر الطالب ص 62
+PASS  1440x900: heading is دفتر الطالب  —  دفتر الطالب
+PASS  1440x900: progress is 9 / 9  —  9 / 9
+PASS  1440x900: page badge still points at the book page  —  62
+PASS  1440x900: exactly one notebook rendered  —  count=1
+PASS  1440x900: 17 notebook sections  —  count=17
+PASS  1440x900: 12 reference tables  —  count=12
+PASS  1440x900: 10 diagrams and scale drawings  —  count=10
+PASS  1440x900: every table is captioned  —  count=12
+PASS  1440x900: KaTeX typeset every formula  —  katex=136 errors=0
+PASS  1440x900: no display equation is clipped
+PASS  1440x900: no horizontal page scroll  —  1440 <= 1440
+PASS  1440x900: no section block escapes the sheet
+PASS  1440x900: notebook prose respects the reading measure  —  paragraph=640px cap=640px
+PASS  1440x900: tables use the full reference width  —  table=958px
+PASS  1440x900: 17 working contents links  —  count=17 broken=
+PASS  1440x900: a contents link scrolls to its section  —  top=13px
+PASS  1440x900: every bdi is dir=ltr  —  undirected=0
+PASS  1440x900: no Arabic prose is wrapped in an LTR isolation  —  arabic=0
+PASS  1440x900: still one notebook after leaving and returning  —  count=1
+PASS  1440x900: no console or page errors

@@ -1438,16 +1438,68 @@
 .student-notebook bdi { white-space: nowrap; }
 .student-notebook-definition { margin: .45rem 0; padding: .6rem .8rem; background: #eff6ff; border-inline-start: 3px solid var(--l1-blue); border-radius: 8px; font-size: .92rem; line-height: 1.8; }
 .student-notebook-list { margin: 0; padding-inline-start: 1.4rem; font-size: .92rem; line-height: 1.9; }
+.student-notebook ol { list-style-type: arabic-indic; }
 .student-notebook-list li + li { margin-top: .25rem; }
 .student-notebook-law { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: .75rem; margin: .6rem 0; padding: .55rem .8rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; }
 .student-notebook-law > span { color: var(--l1-teal); font-size: .78rem; font-weight: 800; white-space: nowrap; }
 .student-notebook-formula { min-width: 0; overflow-x: auto; overflow-y: hidden; }
 .student-notebook-formula .katex-display { margin: 0; text-align: center; }
-.student-notebook-formula .katex-display > .katex { display: inline-block; max-width: none; font-size: clamp(.9em, 3.2vw, 1.05em); white-space: nowrap; }
+.student-notebook-formula .katex-display > .katex { display: inline-block; max-width: max-content; font-size: clamp(.9em, 3.2vw, 1.05em); white-space: nowrap; }
 .student-notebook-note { margin-top: .6rem !important; padding: .55rem .8rem; background: #fffbeb; border-inline-start: 3px solid var(--l1-amber); border-radius: 8px; font-size: .86rem !important; }
 .student-notebook-symbols { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .3rem 1.25rem; margin: 0; padding: 0; list-style: none; font-size: .88rem; line-height: 1.85; }
 .student-notebook-symbols li { position: relative; padding-inline-start: .75rem; }
 .student-notebook-symbols li::before { content: '•'; position: absolute; inset-inline-start: 0; color: var(--l1-teal); }
+
+/* --- Complete reference notebook (pages 55–62) -----------------------------
+   The notebook is a study document, not a stage: table of contents, sub-heads,
+   comparison tables, worked-question blocks and diagrams. Every widened block
+   is horizontally scrollable so a long formula or a six-column table can never
+   push the lesson column wider than the 1366px/1440px laptop layout. */
+.student-notebook-toc { scroll-margin-top: .8rem; margin: .9rem 0 0; padding: .75rem 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+.student-notebook-toc ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .2rem 1.5rem; margin: 0; padding-inline-start: 1.15rem; font-size: .86rem; line-height: 1.7; }
+.student-notebook-toc a { color: var(--l1-blue); text-decoration: none; border-bottom: 1px dotted #93c5fd; }
+.student-notebook-toc a:hover { border-bottom-style: solid; }
+.student-notebook-toc a:focus-visible { outline: 2px solid var(--l1-blue); outline-offset: 2px; border-radius: 3px; }
+.student-notebook-section { scroll-margin-top: 1rem; }
+.student-notebook h3 { scroll-margin-top: .8rem; }
+.student-notebook h4 { color: var(--l1-navy); }
+.student-notebook-subhead { margin: 1.05rem 0 .45rem; color: var(--l1-teal); font-size: .95rem; font-weight: 800; }
+.student-notebook-tag { display: inline-block; margin-inline-start: .3rem; padding: .05rem .45rem; color: var(--l1-plum); background: var(--l1-plum-soft); border-radius: 999px; font-size: .7rem; font-weight: 800; white-space: nowrap; vertical-align: middle; }
+.student-notebook-problem { margin: .6rem 0 .7rem; padding: .6rem .8rem; background: #f8fafc; border-inline-start: 3px solid var(--l1-teal); border-radius: 8px; font-size: .9rem; line-height: 1.85; }
+.student-notebook-question { margin: .6rem 0 .8rem; }
+.student-notebook-table-wrap { margin: .7rem 0; overflow-x: auto; }
+.student-notebook-table { width: 100%; min-width: 30rem; border-collapse: collapse; background: #fff; font-size: .85rem; line-height: 1.7; }
+.student-notebook-table caption { padding: .3rem .1rem .5rem; color: var(--l1-muted); font-size: .8rem; font-weight: 700; text-align: start; }
+.student-notebook-table th, .student-notebook-table td { padding: .45rem .6rem; border: 1px solid #e2e8f0; text-align: start; vertical-align: top; }
+.student-notebook-table thead th { background: #f1f5f9; color: var(--l1-navy); font-size: .8rem; }
+.student-notebook-table tbody th { background: #f8fafc; color: var(--l1-navy); font-weight: 800; }
+.student-notebook-table tbody tr:nth-child(even) td { background: #fcfdff; }
+.student-notebook bdi { white-space: nowrap; }
+.student-notebook-figure { margin: .8rem 0; }
+.student-notebook-figure figcaption { font-size: .84rem; }
+.student-notebook-mathnote { margin: .7rem 0; }
+.student-notebook-mathnote h4 { margin: 0 0 .4rem; font-size: .92rem; }
+.student-notebook-conclusion h4 { margin: 0 0 .4rem; font-size: .95rem; }
+.student-notebook-conclusion { margin: .7rem 0; }
+.student-notebook-qa { margin: .7rem 0; padding: .7rem .9rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; }
+.student-notebook-qa-q { margin: 0 0 .45rem; font-size: .9rem; line-height: 1.85; }
+.student-notebook-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .15rem 1rem; margin: 0 0 .5rem; padding: 0; list-style: none; font-size: .86rem; }
+.student-notebook-options li { padding: .15rem .5rem; background: #f8fafc; border-radius: 6px; }
+.student-notebook-qa-a { margin: 0; padding: .5rem .65rem; background: var(--l1-teal-soft); border-radius: 8px; font-size: .86rem; line-height: 1.8; }
+.student-notebook-checklist { margin: 0; padding: 0; list-style: none; font-size: .9rem; line-height: 1.8; }
+.student-notebook-checklist li { position: relative; margin-bottom: .3rem; padding-inline-start: 1.6rem; }
+.student-notebook-checklist li::before { content: '☐'; position: absolute; inset-inline-start: 0; color: var(--l1-teal); font-size: 1rem; }
+.student-notebook-list ul { margin-top: .3rem; }
+
+@media (max-width: 900px) {
+  .student-notebook-toc ol { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .student-notebook-options { grid-template-columns: 1fr; }
+  .student-notebook-tag { display: block; margin: .2rem 0 0; width: fit-content; }
+}
+
 @media (max-width: 640px) {
  .student-notebook-header { padding: 1rem; }
  .student-notebook-sheet { padding-block: 1rem 1.2rem; padding-inline: 2rem 1rem; }

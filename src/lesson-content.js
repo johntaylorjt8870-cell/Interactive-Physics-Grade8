@@ -21,6 +21,7 @@ import {
 import { simulationMarkup } from './simulations.js';
 import { renderPracticeDeck, renderProblemWorkbench } from './lesson-1-practice.js';
 import { TEXTBOOK_PROBLEMS } from './lesson-1-practice-data.js';
+import { LESSON_1_NOTEBOOK_BLOCK } from './lesson-1-notebook.js';
 
 const UNIT_TITLE = 'الوحدة الأولى: الحركة والقوى';
 const LESSON_TITLE = 'الدرس الأول: القوى المتلاقية';
@@ -77,65 +78,9 @@ const choiceOption = (code, labelHtml, dir = 'rtl') => `
   </div>`;
 
 
-const studentNotebookBlock = `<article class="student-notebook" aria-labelledby="student-notebook-title">
-  <header class="student-notebook-header">
-    <p class="student-notebook-kicker">المرحلة ٩ · خلاصة الدرس</p>
-    <h2 id="student-notebook-title">📒 دفتر الطالب</h2>
-    <p>اكتب في دفترك التعريفات والقواعد والقوانين والرموز الآتية للرجوع إليها عند المراجعة.</p>
-  </header>
-  <div class="student-notebook-sheet">
-    <section class="student-notebook-section" aria-labelledby="student-notebook-definitions">
-      <h3 id="student-notebook-definitions">١. تعريفات أساسية</h3>
-      <div class="student-notebook-definition"><strong>القوى المتلاقية:</strong> قوتان تؤثران في نقطة التأثير نفسها <bdi dir="ltr">O</bdi>، وتُرسمان من هذه النقطة.</div>
-      <div class="student-notebook-definition"><strong>المحصلة:</strong> قطر متوازي الأضلاع الخارج من <bdi dir="ltr">O</bdi>، وتمثّل الجمع المتجهي للقوتين.</div>
-      <div class="student-notebook-definition"><strong>تحليل القوة على سطح مائل:</strong> تحليل ثقل الجسم إلى مركبتين متعامدتين: موازية للسطح وعمودية عليه.</div>
-    </section>
-    <section class="student-notebook-section" aria-labelledby="student-notebook-resultant">
-      <h3 id="student-notebook-resultant">٢. قاعدة متوازي الأضلاع</h3>
-      <ol class="student-notebook-list">
-        <li>ارسم <bdi dir="ltr">F₁</bdi> و<bdi dir="ltr">F₂</bdi> من <bdi dir="ltr">O</bdi> بمقياس رسم واحد، ثم أكمل متوازي الأضلاع.</li>
-        <li>القطر الخارج من <bdi dir="ltr">O</bdi> هو المحصلة: <strong>جمع متجهي لا جمع عددي</strong>. الجمع العددي للمقادير لا يصلح إلا عند اتحاد الاتجاه.</li>
-        <li>تقع المحصلة على منصف الزاوية عند تساوي المقدارين فقط، وتنحرف نحو القوة الأكبر عند اختلافهما.</li>
-        <li>بثبات المقدارين، يقلّ مقدار المحصلة كلما اتسعت الزاوية؛ وهو أكبر عند <bdi dir="ltr">0°</bdi>، ويصبح صفراً عند <bdi dir="ltr">180°</bdi> إذا تساوى المقداران.</li>
-      </ol>
-      <div class="student-notebook-law"><span>القانون</span><div class="student-notebook-formula">${formula('\\vec{F}=\\vec{F}_{1}+\\vec{F}_{2}', 'the resultant vector is the vector sum of the two forces')}</div></div>
-    </section>
-    <section class="student-notebook-section" aria-labelledby="student-notebook-perpendicular">
-      <h3 id="student-notebook-perpendicular">٣. قوتان متعامدتان (90°)</h3>
-      <p>القوتان ضلعا مستطيل، وقطره هو المحصلة؛ مقدارها جذر مجموع مربعي القوتين، وتُحسب زاويتها مع <bdi dir="ltr">F₁</bdi> من ظلّ الزاوية.</p>
-      <div class="student-notebook-law"><span>المقدار</span><div class="student-notebook-formula">${formula('F=\\sqrt{F_{1}^{2}+F_{2}^{2}}', 'F equals the square root of F one squared plus F two squared')}</div></div>
-      <div class="student-notebook-law"><span>الاتجاه</span><div class="student-notebook-formula">${formula('\\theta=\\tan^{-1}\\left(F_{2}/F_{1}\\right)', 'theta equals inverse tangent of F two over F one')}</div></div>
-      <p class="student-notebook-note"><strong>انتبه:</strong> <bdi dir="ltr">θ</bdi> هنا زاوية المحصلة مع <bdi dir="ltr">F₁</bdi>، أمّا في قاعدة متوازي الأضلاع فهي الزاوية بين القوتين.</p>
-    </section>
-    <section class="student-notebook-section" aria-labelledby="student-notebook-incline">
-      <h3 id="student-notebook-incline">٤. تحليل الثقل على سطح مائل</h3>
-      <ol class="student-notebook-list">
-        <li><bdi dir="ltr">α</bdi> هي زاوية ميل السطح عن الأفق، لا الزاوية بين الثقل والسطح.</li>
-        <li>ارسم الثقل <bdi dir="ltr">w</bdi> من مركز ثقل الجسم، ثم حلّله إلى مركبة موازية إلى أسفل المنحدر ومركبة عمودية إلى داخل السطح.</li>
-        <li>كلما زادت <bdi dir="ltr">α</bdi> من <bdi dir="ltr">0°</bdi> إلى <bdi dir="ltr">90°</bdi>، ازدادت المركبة الموازية وتناقصت العمودية.</li>
-      </ol>
-      <div class="student-notebook-law"><span>القانون</span><div class="student-notebook-formula">${formula('w_{\\parallel}=w\\sin\\alpha \\qquad w_{\\perp}=w\\cos\\alpha', 'weight parallel equals weight sine alpha; weight perpendicular equals weight cosine alpha')}</div></div>
-      <p class="student-notebook-note"><strong>لا تخلط:</strong> المركبة العمودية جزء من ثقل الجسم، أمّا <bdi dir="ltr">R</bdi> فقوة من السطح على الجسم. ولا يُستنتج التسارع من المركبة الموازية وحدها.</p>
-    </section>
-    <section class="student-notebook-section" aria-labelledby="student-notebook-symbols">
-      <h3 id="student-notebook-symbols">٥. الرموز والوحدات</h3>
-      <ul class="student-notebook-symbols">
-        <li><bdi dir="ltr">F₁, F₂</bdi>: مقدارا القوتين · <bdi dir="ltr">F</bdi>: مقدار المحصلة.</li>
-        <li><bdi dir="ltr">O</bdi>: نقطة التأثير · <bdi dir="ltr">w</bdi>: ثقل الجسم · <bdi dir="ltr">R</bdi>: رد الفعل العمودي.</li>
-        <li><bdi dir="ltr">w∥</bdi>: المركبة الموازية · <bdi dir="ltr">w⊥</bdi>: المركبة العمودية · <bdi dir="ltr">α</bdi>: زاوية الميل.</li>
-        <li><bdi dir="ltr">θ</bdi>: الزاوية بين القوتين، أو زاوية المحصلة مع <bdi dir="ltr">F₁</bdi> في حالة التعامد.</li>
-        <li>وحدة القوة والثقل والمركبات: <bdi dir="ltr">N</bdi> (نيوتن) · وحدة السرعة: <bdi dir="ltr">m/s</bdi>.</li>
-      </ul>
-    </section>
-    <section class="student-notebook-section" aria-labelledby="student-notebook-cautions">
-      <h3 id="student-notebook-cautions">٦. ملاحظات تمنع الخلط</h3>
-      <ul class="student-notebook-list">
-        <li><strong>المحصلة الصفرية</strong> لقوتين لا تعني بالضرورة اتزان الجسم؛ الاتزان يتطلب أن تكون محصلة كل القوى المؤثرة فيه صفراً.</li>
-        <li>القوة والسرعة كميتان متجهتان مختلفتان: وحدة القوة <bdi dir="ltr">N</bdi>، ووحدة السرعة <bdi dir="ltr">m/s</bdi>.</li>
-      </ul>
-    </section>
-  </div>
-</article>`;
+/* The notebook is authored in its own module (see src/lesson-1-notebook.js);
+   this stage only places it as the ninth, reference-only tab. */
+const studentNotebookBlock = LESSON_1_NOTEBOOK_BLOCK;
 
 export const LESSON_PAGES = [
   /* =========================================================================
@@ -883,8 +828,13 @@ export const LESSON_PAGES = [
     unitTitle: UNIT_TITLE,
     title: 'دفتر الطالب',
     stageTitle: '📒 دفتر الطالب',
-    summary: 'الخلاصة التي تجمع التعريفات والقواعد والقوانين والرموز الأساسية للدرس الأول.',
-    objectives: [],
+    summary: 'مرجع مراجعة كامل للدرس الأول: تعريفات الدرس ومصطلحاته، وتجربة لوح الربائع، وقاعدة متوازي الأضلاع وفيثاغورث، وتحليل القوة على محورين وعلى مستوٍ مائل، والتطبيقان المحلولان، وأسئلة «أختبر نفسي» ومسألتا ص ٦٢ بحلولهما، والرموز والوحدات وشروط القوانين.',
+    objectives: [
+      'يجد في مكان واحد كلّ تعريف وقانون ورمز ورد في صفحات الكتاب ٥٥–٦٢.',
+      'يراجع خطوات تجربة لوح الربائع وخطوات إنشاء متوازي الأضلاع وتحليل القوة.',
+      'يتابع حلّ التطبيقين المحلولين ومسألتَي ص ٦٢ خطوةً بخطوة.',
+      'يتحقّق من فهمه بأسئلة «أختبر نفسي» وقائمة التحقّق قبل الاختبار.',
+    ],
     blocks: [studentNotebookBlock],
   },
 ];
