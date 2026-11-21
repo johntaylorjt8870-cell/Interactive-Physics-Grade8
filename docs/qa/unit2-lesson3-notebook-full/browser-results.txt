@@ -1,0 +1,56 @@
+Unit 2 Lesson 3 student notebook (full reference) — browser QA (2026-11-21T22:04:16.467Z)
+Viewports: 1366x768 and 1440x900 (laptop scope only).
+Checks: 52/52 passed.
+
+PASS  1366x768: nav has 11 tabs  —  count=11
+PASS  1366x768: last tab is the notebook  —  📒 📒 دفتر الطالب آخر خطوة · مرجع مراجعة
+PASS  1366x768: heading is دفتر الطالب: فرق الكمون الكهربائي  —  دفتر الطالب: فرق الكمون الكهربائي
+PASS  1366x768: progress is 11 / 11  —  11 / 11
+PASS  1366x768: page badge references final book page 106  —  106
+PASS  1366x768: exactly one notebook rendered  —  count=1
+PASS  1366x768: 18 notebook sections  —  count=18
+PASS  1366x768: 14 reference tables  —  count=14
+PASS  1366x768: every table is captioned  —  count=14
+PASS  1366x768: 9 visible SVG diagrams from UNIT2L3_DIAGRAMS  —  total=9 broken=0
+PASS  1366x768: KaTeX typeset every formula with zero errors  —  katex=127 errors=0
+PASS  1366x768: no display equation is clipped
+PASS  1366x768: no horizontal page scroll  —  1366 <= 1366
+PASS  1366x768: no section block escapes the sheet
+PASS  1366x768: every table sits in its own wrapper  —  tables=14 wraps=14 unclassified=0 
+PASS  1366x768: every table fits or scrolls inside a scrollable wrapper  —  fits=14 scrolls=0
+PASS  1366x768: no table widens the page  —  overflow=0px
+PASS  1366x768: 18 working TOC links  —  count=18 broken=
+PASS  1366x768: TOC link jumps to #nb3-s04 (القوة المحركة الكهربائية)  —  top=314px
+PASS  1366x768: every bdi is dir=ltr  —  count=221 undirected=0
+PASS  1366x768: no Arabic prose inside LTR bdi  —  arabic=0
+PASS  1366x768: no overlapping sibling blocks
+PASS  1366x768: no bare value+unit in RTL prose
+PASS  1366x768: still one notebook after leaving and returning  —  count=1
+PASS  1366x768: zero console or page errors
+PASS  1366x768: zero failed network requests
+PASS  1440x900: nav has 11 tabs  —  count=11
+PASS  1440x900: last tab is the notebook  —  📒 📒 دفتر الطالب آخر خطوة · مرجع مراجعة
+PASS  1440x900: heading is دفتر الطالب: فرق الكمون الكهربائي  —  دفتر الطالب: فرق الكمون الكهربائي
+PASS  1440x900: progress is 11 / 11  —  11 / 11
+PASS  1440x900: page badge references final book page 106  —  106
+PASS  1440x900: exactly one notebook rendered  —  count=1
+PASS  1440x900: 18 notebook sections  —  count=18
+PASS  1440x900: 14 reference tables  —  count=14
+PASS  1440x900: every table is captioned  —  count=14
+PASS  1440x900: 9 visible SVG diagrams from UNIT2L3_DIAGRAMS  —  total=9 broken=0
+PASS  1440x900: KaTeX typeset every formula with zero errors  —  katex=127 errors=0
+PASS  1440x900: no display equation is clipped
+PASS  1440x900: no horizontal page scroll  —  1440 <= 1440
+PASS  1440x900: no section block escapes the sheet
+PASS  1440x900: every table sits in its own wrapper  —  tables=14 wraps=14 unclassified=0 
+PASS  1440x900: every table fits or scrolls inside a scrollable wrapper  —  fits=14 scrolls=0
+PASS  1440x900: no table widens the page  —  overflow=0px
+PASS  1440x900: 18 working TOC links  —  count=18 broken=
+PASS  1440x900: TOC link jumps to #nb3-s04 (القوة المحركة الكهربائية)  —  top=314px
+PASS  1440x900: every bdi is dir=ltr  —  count=221 undirected=0
+PASS  1440x900: no Arabic prose inside LTR bdi  —  arabic=0
+PASS  1440x900: no overlapping sibling blocks
+PASS  1440x900: no bare value+unit in RTL prose
+PASS  1440x900: still one notebook after leaving and returning  —  count=1
+PASS  1440x900: zero console or page errors
+PASS  1440x900: zero failed network requests

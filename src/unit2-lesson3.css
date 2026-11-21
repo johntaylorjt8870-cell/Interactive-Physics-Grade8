@@ -393,7 +393,8 @@ a { color: inherit; }
   .p3-hero-visual figcaption { font-size: 9px; }
   .p3-hero-side-note { gap: 10px; margin-top: 6px; }
   .p3-hero-side-note span { font-size: 10px; }
-  .p3-book-copy { position: relative; padding: 18px 20px; color: #2e3150; background: #fffaf0; border-inline-start: 4px solid #d39a33; border-radius: 5px 14px 14px 5px; }
+}
+.p3-book-copy { position: relative; padding: 18px 20px; color: #2e3150; background: #fffaf0; border-inline-start: 4px solid #d39a33; border-radius: 5px 14px 14px 5px; }
 .p3-book-copy-label { display: inline-flex; align-items: center; margin: 0 0 12px; padding: 3px 9px; color: #684400; font-size: 10px; font-weight: 800; background: #f9eac4; border-radius: 99px; }
 .p3-book-copy h3, .p3-book-copy h4, .p3-book-copy h5 { margin-top: 8px; color: #272a49; line-height: 1.6; }
 .p3-book-copy h3 { margin-bottom: 8px; font-size: 19px; }
@@ -828,14 +829,20 @@ a { color: inherit; }
 }
 
 
-/* Student notebook: a compact, selective review sheet, kept inside the final lesson step. */
+/* Student notebook: complete page-by-page learning reference, kept inside the final lesson step. */
 .p3-step-view-notebook { gap: 12px; }
 .p3-step-view-notebook > .p3-step-source { background: var(--p3-teal-pale); color: var(--p3-teal); }
 .p3-student-notebook {
   --nb-ink: #202545;
-  --nb-muted: #68708b;
+  --nb-muted: #5b6480;
   --nb-line: #dce3f0;
   --nb-paper: #fff;
+  --nb-gold: #7a5400;
+  --nb-gold-soft: #fdf5e1;
+  --nb-enrich: #4c3582;
+  --nb-enrich-soft: #f2edfb;
+  --nb-infer: #1e4d7b;
+  --nb-infer-soft: #eaf2fb;
   color: var(--nb-ink);
   display: grid;
   gap: 16px;
@@ -843,7 +850,7 @@ a { color: inherit; }
   min-width: 0;
 }
 .p3-student-notebook .student-notebook-header {
-  padding: clamp(17px, 3vw, 27px);
+  padding: clamp(18px, 3vw, 28px);
   color: #fff;
   background: linear-gradient(135deg, #20264d, #354a91 72%, #167f79);
   border-radius: 18px;
@@ -851,7 +858,7 @@ a { color: inherit; }
 .p3-student-notebook .student-notebook-kicker {
   margin: 0 0 7px;
   color: #b8fff0;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
 }
 .p3-student-notebook .student-notebook-header h2 {
@@ -861,61 +868,174 @@ a { color: inherit; }
   line-height: 1.4;
 }
 .p3-student-notebook .student-notebook-header > p:not(.student-notebook-kicker) {
-  max-width: 760px;
+  max-width: 780px;
   margin: 8px 0 13px;
-  color: #e4eaff;
-  font-size: 13px;
+  color: #e7ecff;
+  font-size: 13.5px;
+  line-height: 1.85;
 }
 .p3-student-notebook .student-notebook-tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .p3-student-notebook .curriculum-tag {
   display: inline-flex;
-  padding: 4px 9px;
-  color: #eaf7ff;
-  font-size: 10px;
+  align-items: center;
+  padding: 4px 10px;
+  color: #eef9ff;
+  font-size: 11px;
   font-weight: 800;
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.24);
   border-radius: 99px;
 }
-.p3-student-notebook .student-notebook-sheet { display: grid; gap: 13px; min-width: 0; }
+.p3-student-notebook .student-notebook-toc {
+  margin: 16px 0 0;
+  padding: 13px 16px;
+  background: rgba(255,255,255,.96);
+  color: var(--nb-ink);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 13px;
+}
+.p3-student-notebook .student-notebook-toc-title {
+  margin: 0 0 9px;
+  color: var(--p3-blue-deep);
+  font-size: 13px;
+  font-weight: 800;
+}
+.p3-student-notebook .student-notebook-toc ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+  line-height: 1.75;
+}
+.p3-student-notebook .student-notebook-toc a {
+  color: var(--p3-blue-deep);
+  text-decoration: none;
+  border-bottom: 1px dotted #97b0de;
+}
+.p3-student-notebook .student-notebook-toc a:hover { border-bottom-style: solid; color: var(--p3-teal); }
+.p3-student-notebook .student-notebook-toc a:focus-visible { outline: 2px solid var(--p3-blue); outline-offset: 2px; border-radius: 3px; }
+.p3-student-notebook .student-notebook-sheet { display: grid; gap: 14px; min-width: 0; }
 .p3-student-notebook .student-notebook-section {
   min-width: 0;
-  padding: clamp(14px, 2.5vw, 21px);
+  padding: clamp(15px, 2.5vw, 22px);
   background: var(--nb-paper);
   border: 1px solid var(--nb-line);
   border-radius: 15px;
   box-shadow: 0 5px 17px rgba(23,26,61,.035);
+  scroll-margin-top: 16px;
 }
 .p3-student-notebook .student-notebook-section > h3 {
-  margin: 0 0 12px;
+  margin: 0 0 13px;
   padding-bottom: 9px;
   color: var(--p3-blue-deep);
   font-size: 17px;
+  line-height: 1.55;
   border-bottom: 1px solid var(--nb-line);
+  scroll-margin-top: 14px;
 }
-.p3-student-notebook .student-notebook-list { margin: 7px 0; padding-inline-start: 23px; }
-.p3-student-notebook .student-notebook-list li { margin: 7px 0; line-height: 1.9; }
+.p3-student-notebook .student-notebook-section > p { margin: 8px 0; line-height: 1.9; font-size: 14px; }
+.p3-student-notebook .student-notebook-subhead {
+  margin: 16px 0 8px;
+  color: var(--p3-teal);
+  font-size: 14.5px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+.p3-student-notebook .student-notebook-tag {
+  display: inline-block;
+  margin-inline-start: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.5;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.p3-student-notebook .student-notebook-tag-book { color: var(--nb-gold); background: var(--nb-gold-soft); border: 1px solid #ead7a7; }
+.p3-student-notebook .student-notebook-tag-enrich { color: var(--nb-enrich); background: var(--nb-enrich-soft); border: 1px solid #d7c7f0; }
+.p3-student-notebook .student-notebook-tag-infer { color: var(--nb-infer); background: var(--nb-infer-soft); border: 1px solid #c4daf2; }
+.p3-student-notebook .student-notebook-list { margin: 7px 0; padding-inline-start: 23px; font-size: 14px; }
+.p3-student-notebook .student-notebook-list li { margin: 6px 0; line-height: 1.9; }
+.p3-student-notebook .student-notebook-steps { list-style-type: arabic-indic; }
+.p3-student-notebook .student-notebook-problem {
+  margin: 10px 0 12px;
+  padding: 11px 14px;
+  background: #f8fafd;
+  border: 1px solid #dfe6f2;
+  border-inline-start: 3.5px solid var(--p3-teal);
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.p3-student-notebook .student-notebook-problem p { margin: 5px 0; }
+.p3-student-notebook .student-notebook-problem ul,
+.p3-student-notebook .student-notebook-problem ol { margin: 6px 0; padding-inline-start: 22px; }
+.p3-student-notebook .student-notebook-problem li { margin: 4px 0; }
+.p3-student-notebook .student-notebook-conclusion {
+  margin: 12px 0;
+  padding: 12px 15px;
+  background: #eef9f6;
+  border: 1px solid #c5e6dc;
+  border-radius: 12px;
+}
+.p3-student-notebook .student-notebook-conclusion h4 { margin: 0 0 7px; color: var(--p3-teal); font-size: 14.5px; }
+.p3-student-notebook .student-notebook-conclusion p { margin: 6px 0; font-size: 14px; line-height: 1.9; }
+.p3-student-notebook .student-notebook-conclusion .student-notebook-list { margin: 4px 0 0; }
+.p3-student-notebook .student-notebook-bio {
+  margin: 12px 0;
+  padding: 11px 14px;
+  background: #fdfaf2;
+  border: 1px solid #eadcb6;
+  border-inline-start: 3.5px solid #c28b22;
+  border-radius: 11px;
+  font-size: 13.5px;
+  line-height: 1.85;
+}
+.p3-student-notebook .student-notebook-bio-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 5px;
+  color: var(--nb-gold);
+}
+.p3-student-notebook .student-notebook-bio p { margin: 0; }
 .p3-student-notebook .student-notebook-definition {
   margin: 8px 0;
-  padding: 10px 12px;
+  padding: 10px 13px;
   background: #f6f8fd;
   border-inline-start: 3px solid var(--p3-blue);
-  border-radius: 8px;
+  border-radius: 9px;
+  font-size: 14px;
   line-height: 1.9;
 }
 .p3-student-notebook .student-notebook-definition strong { color: var(--p3-ink); }
 .p3-student-notebook .student-notebook-law {
   display: grid;
-  grid-template-columns: minmax(100px, .28fr) minmax(0, 1fr);
+  grid-template-columns: minmax(120px, .32fr) minmax(0, 1fr);
   align-items: center;
-  gap: 10px;
-  margin: 9px 0;
-  padding: 11px 13px;
+  gap: 8px 12px;
+  margin: 10px 0;
+  padding: 11px 14px;
   background: #f1f5ff;
-  border: 1px solid #d8e1ff;
+  border: 1px solid #d5e0ff;
   border-radius: 11px;
 }
-.p3-student-notebook .student-notebook-law > span { font-size: 12px; font-weight: 800; color: var(--p3-blue-deep); }
+.p3-student-notebook .student-notebook-law > span { font-size: 12.5px; font-weight: 800; color: var(--p3-blue-deep); }
+.p3-student-notebook .student-notebook-law-cond {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  padding-top: 6px;
+  border-top: 1px dashed #cdd9f8;
+  color: var(--nb-muted);
+  font-size: 12.5px;
+  line-height: 1.75;
+}
 .p3-student-notebook .student-notebook-formula {
   min-width: 0;
   max-width: 100%;
@@ -928,30 +1048,106 @@ a { color: inherit; }
 }
 .p3-student-notebook .student-notebook-formula .katex-display { margin: 0; }
 .p3-student-notebook .student-notebook-example {
-  margin: 10px 0;
+  margin: 11px 0;
   padding: 13px 15px;
   background: #f8fafc;
   border: 1px solid var(--nb-line);
   border-radius: 12px;
 }
-.p3-student-notebook .student-notebook-example h4 { margin: 0 0 7px; color: var(--p3-ink); font-size: 14px; }
-.p3-student-notebook .student-notebook-example p { margin: 6px 0; line-height: 1.85; }
+.p3-student-notebook .student-notebook-example h4 { margin: 0 0 9px; color: var(--p3-ink); font-size: 14.5px; }
+.p3-student-notebook .student-notebook-example p { margin: 5px 0; line-height: 1.85; font-size: 13.5px; }
+.p3-student-notebook .student-notebook-step {
+  display: grid;
+  grid-template-columns: minmax(105px, auto) minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin: 7px 0;
+  padding: 8px 11px;
+  background: #fff;
+  border: 1px solid #e2e8f2;
+  border-radius: 9px;
+}
+.p3-student-notebook .student-notebook-step > span { padding-top: 2px; color: var(--p3-teal); font-size: 12.5px; font-weight: 800; }
+.p3-student-notebook .student-notebook-step > div { min-width: 0; overflow-x: auto; overflow-y: hidden; }
+.p3-student-notebook .student-notebook-example-step { margin: 4px 0 0; color: var(--nb-muted); font-size: 13px; line-height: 1.8; }
+.p3-student-notebook .student-notebook-qa {
+  margin: 10px 0;
+  padding: 11px 14px;
+  background: #fff;
+  border: 1px solid var(--nb-line);
+  border-radius: 11px;
+}
+.p3-student-notebook .student-notebook-qa-q { margin: 0 0 7px; font-size: 14px; line-height: 1.85; }
+.p3-student-notebook .student-notebook-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px 18px;
+  margin: 0 0 9px;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  line-height: 1.8;
+}
+.p3-student-notebook .student-notebook-opt-key { font-weight: 800; color: var(--p3-blue-deep); margin-inline-end: 4px; }
+.p3-student-notebook .student-notebook-qa-a {
+  padding: 8px 11px;
+  background: #eef8f5;
+  border-inline-start: 3px solid var(--p3-teal);
+  border-radius: 8px;
+  font-size: 13.5px;
+  line-height: 1.85;
+}
+.p3-student-notebook .student-notebook-qa-a p { margin: 0; }
+.p3-student-notebook .student-notebook-figure {
+  margin: 13px 0;
+  background: #f9fafd;
+  border: 1px solid var(--nb-line);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.p3-student-notebook .student-notebook-figure-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fff;
+  border-bottom: 1px solid #e7ebf3;
+  font-size: 13.5px;
+  color: var(--p3-ink);
+}
+.p3-student-notebook .student-notebook-figure-badges { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.p3-student-notebook .student-notebook-figure-page { color: var(--nb-muted); font-size: 11.5px; font-weight: 700; }
+.p3-student-notebook .student-notebook-figure .p3-figure-visual { padding: 12px; }
+.p3-student-notebook .student-notebook-figure .p3-svg { max-width: 680px; margin: 0 auto; }
+.p3-student-notebook .p3-svg .p3-vessel path:first-child,
+.p3-student-notebook .p3-svg .p3-vessel path:nth-child(2) { fill: #fff; stroke: #97a3bb; stroke-width: 4; }
+.p3-student-notebook .student-notebook-figure figcaption {
+  display: block;
+  padding: 9px 14px 11px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--nb-muted);
+  background: #fff;
+  border-top: 1px solid #e7ebf3;
+}
 .p3-student-notebook .student-notebook-note {
   margin: 10px 0 0;
   padding: 10px 13px;
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.9;
   background: #f3f7fb;
   border-inline-start: 3px solid var(--p3-teal);
   border-radius: 9px;
 }
-.p3-student-notebook .student-notebook-note-platform { background: #eff8f7; }
-.p3-student-notebook .student-notebook-note-exam { background: #fff7e6; border-inline-start-color: #c28b22; }
+.p3-student-notebook .student-notebook-note-platform { background: #f3effb; border-inline-start-color: var(--nb-enrich); }
+.p3-student-notebook .student-notebook-note-exam { background: #fff8e8; border-inline-start-color: #c28b22; }
 .p3-student-notebook .student-notebook-note-safety { background: #fff0e9; border-inline-start-color: var(--p3-coral); }
 .p3-student-notebook .student-notebook-table-wrap {
   width: 100%;
   max-width: 100%;
-  margin: 10px 0;
+  margin: 11px 0;
   overflow-x: auto;
   border: 1px solid var(--nb-line);
   border-radius: 11px;
@@ -959,39 +1155,51 @@ a { color: inherit; }
 }
 .p3-student-notebook .student-notebook-table {
   width: 100%;
-  min-width: 420px;
+  min-width: 480px;
   border-collapse: collapse;
-  font-size: 12px;
-  line-height: 1.8;
+  font-size: 13px;
+  line-height: 1.85;
 }
 .p3-student-notebook .student-notebook-table caption {
-  padding: 8px 10px;
+  padding: 8px 12px;
   color: var(--nb-muted);
-  text-align: right;
-  font-weight: 700;
+  background: #f8fafd;
+  border-bottom: 1px solid var(--nb-line);
+  text-align: start;
+  font-size: 12px;
+  font-weight: 800;
 }
 .p3-student-notebook .student-notebook-table th,
 .p3-student-notebook .student-notebook-table td {
   padding: 9px 11px;
-  text-align: right;
+  text-align: start;
   vertical-align: top;
   border-bottom: 1px solid var(--nb-line);
 }
-.p3-student-notebook .student-notebook-table thead th { color: #fff; background: var(--p3-ink); }
+.p3-student-notebook .student-notebook-table thead th { color: #fff; background: var(--p3-ink); font-weight: 800; }
+.p3-student-notebook .student-notebook-table tbody th { color: var(--p3-ink); background: #f6f8fc; font-weight: 800; width: 24%; }
+.p3-student-notebook .student-notebook-table tbody tr:nth-child(even) td { background: #fbfcfe; }
+.p3-student-notebook .student-notebook-table tbody tr:last-child th,
 .p3-student-notebook .student-notebook-table tbody tr:last-child td { border-bottom: 0; }
 .p3-student-notebook .student-notebook-checklist {
-  margin-top: 12px;
-  padding: 13px 15px;
+  margin-top: 13px;
+  padding: 13px 16px;
   background: var(--p3-teal-pale);
   border: 1px solid #c4e9df;
   border-radius: 12px;
 }
-.p3-student-notebook .student-notebook-checklist > strong { color: var(--p3-teal); }
-.p3-student-notebook .student-notebook-checklist ul { margin: 6px 0 0; padding-inline-start: 22px; }
-.p3-student-notebook .student-notebook-checklist li { margin: 5px 0; }
+.p3-student-notebook .student-notebook-checklist > strong { color: var(--p3-teal); font-size: 14px; }
+.p3-student-notebook .student-notebook-checklist ul { margin: 8px 0 0; padding: 0; list-style: none; font-size: 13.5px; }
+.p3-student-notebook .student-notebook-checklist li { position: relative; margin: 6px 0; padding-inline-start: 24px; line-height: 1.85; }
+.p3-student-notebook .student-notebook-checklist li::before { content: '☐'; position: absolute; inset-inline-start: 0; color: var(--p3-teal); font-size: 15px; }
 .p3-student-notebook .katex { font-size: 1em; }
+@media (max-width: 900px) {
+  .p3-student-notebook .student-notebook-toc ol { grid-template-columns: 1fr; }
+}
 @media (max-width: 600px) {
   .p3-student-notebook .student-notebook-law { grid-template-columns: minmax(0, 1fr); gap: 5px; }
   .p3-student-notebook .student-notebook-formula { text-align: start; }
+  .p3-student-notebook .student-notebook-step { grid-template-columns: 1fr; gap: 4px; }
+  .p3-student-notebook .student-notebook-options { grid-template-columns: 1fr; }
   .p3-student-notebook .student-notebook-table { min-width: 390px; }
 }
