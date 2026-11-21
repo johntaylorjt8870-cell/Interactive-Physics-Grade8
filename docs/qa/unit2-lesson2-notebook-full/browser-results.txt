@@ -1,0 +1,52 @@
+Unit 2 Lesson 2 student notebook (full reference) — browser QA (2026-11-21T21:31:12.828Z)
+Viewports: 1366x768 and 1440x900 (laptop scope).
+Checks: 48/48 passed.
+
+PASS  1366x768: nav has 11 tabs  —  count=11
+PASS  1366x768: last tab is the notebook  —  96 📒 دفتر الطالب مرجع الدرس الكامل
+PASS  1366x768: heading is دفتر الطالب  —  دفتر الطالب
+PASS  1366x768: progress is 11 / 11  —  11 / 11
+PASS  1366x768: page badge still points at the book page  —  96
+PASS  1366x768: exactly one notebook rendered  —  count=1
+PASS  1366x768: 18 notebook sections  —  count=18
+PASS  1366x768: 24 reference tables  —  count=24
+PASS  1366x768: 7 diagrams (the lesson's own SVGs)  —  count=7
+PASS  1366x768: every table is captioned  —  count=24
+PASS  1366x768: labelled calculation rows render  —  count=5
+PASS  1366x768: KaTeX typeset every formula  —  katex=237 errors=0
+PASS  1366x768: no display equation is clipped
+PASS  1366x768: no horizontal page scroll  —  1366 <= 1366
+PASS  1366x768: no section block escapes the sheet
+PASS  1366x768: every table fits or scrolls in its wrapper  —  overflowing=0
+PASS  1366x768: 18 working contents links  —  count=18 broken=
+PASS  1366x768: a contents link scrolls to its section  —  top=12px
+PASS  1366x768: every bdi is dir=ltr  —  undirected=0
+PASS  1366x768: no Arabic prose is wrapped in an LTR isolation  —  arabic=0
+PASS  1366x768: no overlapping Arabic/Latin blocks
+PASS  1366x768: no bare value+unit left in RTL prose
+PASS  1366x768: still one notebook after leaving and returning  —  count=1
+PASS  1366x768: no console or page errors
+PASS  1440x900: nav has 11 tabs  —  count=11
+PASS  1440x900: last tab is the notebook  —  96 📒 دفتر الطالب مرجع الدرس الكامل
+PASS  1440x900: heading is دفتر الطالب  —  دفتر الطالب
+PASS  1440x900: progress is 11 / 11  —  11 / 11
+PASS  1440x900: page badge still points at the book page  —  96
+PASS  1440x900: exactly one notebook rendered  —  count=1
+PASS  1440x900: 18 notebook sections  —  count=18
+PASS  1440x900: 24 reference tables  —  count=24
+PASS  1440x900: 7 diagrams (the lesson's own SVGs)  —  count=7
+PASS  1440x900: every table is captioned  —  count=24
+PASS  1440x900: labelled calculation rows render  —  count=5
+PASS  1440x900: KaTeX typeset every formula  —  katex=237 errors=0
+PASS  1440x900: no display equation is clipped
+PASS  1440x900: no horizontal page scroll  —  1440 <= 1440
+PASS  1440x900: no section block escapes the sheet
+PASS  1440x900: every table fits or scrolls in its wrapper  —  overflowing=0
+PASS  1440x900: 18 working contents links  —  count=18 broken=
+PASS  1440x900: a contents link scrolls to its section  —  top=12px
+PASS  1440x900: every bdi is dir=ltr  —  undirected=0
+PASS  1440x900: no Arabic prose is wrapped in an LTR isolation  —  arabic=0
+PASS  1440x900: no overlapping Arabic/Latin blocks
+PASS  1440x900: no bare value+unit left in RTL prose
+PASS  1440x900: still one notebook after leaving and returning  —  count=1
+PASS  1440x900: no console or page errors
