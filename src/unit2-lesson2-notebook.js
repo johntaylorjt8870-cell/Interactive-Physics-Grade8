@@ -1,167 +1,914 @@
 /* دفتر الطالب — الوحدة الثانية، الدرس الثاني: التيار الكهربائي المتواصل (ص 87–96).
  *
- * هذا الدفتر هو *المرحلة الحادية عشرة والأخيرة* في مسار `UNIT2L2_PAGES`
- * (`src/unit2-lesson2-content.js`)، وليس صفحة مستقلة ولا تبويباً في الملحق أو
- * منطقة المعلم أو «الفيزياء في حياتنا». يتبع عقد الوسوم نفسه في دفاتر الدروس
- * السابقة (`student-notebook*`، معادلات KaTeX عبر `src/math.js`، كل معادلة في
- * سطر واحد)، لكنه يحمل مادة هذا الدرس وحدها.
+ * مرجع مراجعة كامل، لا ملخّص انتقائي. يغطّي صفحات الكتاب العشر صفحةً بصفحة:
+ * الأهداف والكلمات المفتاحية وأسئلة «ألاحظ وأستنتج» (ص 87)، وتجربة الأنبوب
+ * بخطواتها الخمس واستنتاجاتها الثلاثة (ص 88)، واصطلاح أمبير وإثراء المولّدات
+ * (ص 89)، وجدول ص 90 وخطّها البياني كاملَين كما طُبعا وكما يكتملان، واستنتاجات
+ * ص 91 وتعريف الأمبير ومضاعفاته وأجزائه والتطبيق المحلول، وتجربة التسلسل
+ * (ص 92)، ومولدات التسلسل وتجربة التفرّع (ص 93)، واستنتاجات التفرّع و«تعلّمتُ»
+ * (ص 94)، وأسئلة «أختبر نفسي» كلها بمفاتيحها (ص 95–96).
  *
- * قاعدة الانتقاء: يُكتب هنا ما يحتاج الطالب إلى حفظه أو استخدامه في مسألة أو
- * تمييزه في سؤال امتحاني — الفكرة، التعريفات، القوانين بشروطها ووحداتها، قراءة
- * الرسوم، خطوة الحل، خلاصة التجارب، الأخطاء الشائعة، والخلاصة. أُهمل الشرح
- * المطوّل، ووصف التجارب خطوة بخطوة، ونصوص «ألاحظ وأستنتج»، والصور الفوتوغرافية،
- * وأمثلة الجهود التي ليست قانوناً لشدة التيار.
+ * المصدر الوحيد للمحتوى: `src/unit2-lesson2-content.js` (نصّ الكتاب ص 87–96)،
+ * و`src/unit2-lesson2-answers.js` (مفاتيح الأنشطة)، و
+ * `src/unit2-lesson2-teacher-content.js` (الحلول النموذجية)، و
+ * `src/unit2-lesson2-diagrams.js` (الرسوم)، و
+ * `src/unit2-lesson2-physics.js` (القيم المحسوبة)، و
+ * `docs/unit-2-lesson-2-source-audit.md` (قيود المصدر).
  *
- * المصدر: `src/unit2-lesson2-content.js` (نص الكتاب ص 87–96 وشروح المنصة)،
- * `src/unit2-lesson2-diagrams.js`، `src/unit2-lesson2-answers.js`،
- * `src/unit2-lesson2-teacher-content.js`،
- * و`docs/unit-2-lesson-2-source-audit.md`. كل رقم ووحدة وقانون هنا موجود في
- * درس الصفحة؛ وما جاء من شرح المنصة مُوسوم بذلك ولا يُنسب إلى الكتاب.
+ * فصل المصادر مُعلَن في كل موضع:
+ *   - نصّ الكتاب المنقول حرفياً يُوسم «من الكتاب»؛
+ *   - ما تضيفه المنصة (النموذج التعليمي، لماذا نوصل الأمبير على التسلسل، قراءة
+ *     الميل، التحقّق بالتناسب) يُوسم «إثراء من المنصة»؛
+ *   - الإجابات التي لا يطبعها الكتاب (أسئلة ص 87 الإرشادية، ملاحظات التجارب،
+ *     مفاتيح «أختبر نفسي») تُوسم «استنتاج تعليمي» ولا تُنسب إلى الطبعة.
+ * لا يُضاف رقم ولا نتيجة تجربة ولا وحدة من خارج الدرس.
+ *
+ * الانضباط الاتجاهي: كل رمز لاتيني ووحدة وقراءة مقياس داخل `<bdi dir="ltr">`،
+ * وكل معادلة يركّبها `src/math.js` (KaTeX) في عزل LTR، وكل معادلة في سطر واحد.
  */
 
-import { formula, tex } from './math.js';
+import { alignedSteps, formula, tex } from './math.js';
+import { UNIT2L2_DIAGRAMS } from './unit2-lesson2-diagrams.js';
 
-const law = (label, source, reading) => `<div class="student-notebook-law"><span>${label}</span><div class="student-notebook-formula">${formula(source, reading)}</div></div>`;
-const step = (label, source, reading) => `<div class="student-notebook-step"><span>${label}</span><div>${formula(source, reading)}</div></div>`;
-const inline = (source, reading) => tex(source, reading);
-const definition = (term, text) => `<div class="student-notebook-definition"><strong>${term}:</strong> ${text}</div>`;
-const note = (text) => `<p class="student-notebook-note">${text}</p>`;
-const line = (text) => `<p class="student-notebook-example-step">${text}</p>`;
-const sub = (text) => `<h4 class="student-notebook-example-title">${text}</h4>`;
-const list = (items) => `<ul class="student-notebook-list">${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
-const numbered = (items) => `<ol class="student-notebook-list">${items.map((item) => `<li>${item}</li>`).join('')}</ol>`;
-const symbols = (items) => `<ul class="student-notebook-symbols">${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
-const table = (head, rows, caption) => `<div class="student-notebook-table-wrap"><table class="student-notebook-table">${caption ? `<caption>${caption}</caption>` : ''}<thead><tr>${head.map((cell) => `<th scope="col">${cell}</th>`).join('')}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-const section = (id, title, body) => `<section class="student-notebook-section" aria-labelledby="${id}"><h3 id="${id}">${title}</h3>${body}</section>`;
+/** Latin token (symbol, unit, reading) isolated inside RTL prose. */
+const ltr = (text) => `<bdi dir="ltr">${text}</bdi>`;
 
-/* written once, reused in the law cards and in the worked examples */
+/** Provenance labels: never let an addition pass for printed textbook text. */
+const BOOK = '<span class="student-notebook-tag student-notebook-tag-book">من الكتاب</span>';
+const ENRICH = '<span class="student-notebook-tag">إثراء من المنصة</span>';
+const INFER = '<span class="student-notebook-tag student-notebook-tag-infer">استنتاج تعليمي — الكتاب لا يطبعه</span>';
+
+const definition = (term, body) => `\n  <div class="student-notebook-definition"><strong>${term}:</strong> ${body}</div>`;
+
+const subhead = (id, text) => `<h4 class="student-notebook-subhead" id="${id}">${text}</h4>`;
+
+const law = (label, body) => `\n  <div class="student-notebook-law"><span>${label}</span><div class="student-notebook-formula">${body}</div></div>`;
+
+const note = (body) => `\n  <p class="student-notebook-note">${body}</p>`;
+
+const list = (items, cls = 'student-notebook-list') => `<ul class="${cls}">${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
+
+const steps = (items) => `<ol class="student-notebook-list student-notebook-steps">${items.map((item) => `<li>${item}</li>`).join('')}</ol>`;
+
+const conclusion = (title, body) => `\n  <div class="conclusion-box student-notebook-conclusion"><h4>${title}</h4>${body}</div>`;
+
+const problem = (body) => `\n  <p class="student-notebook-problem">${body}</p>`;
+
+const table = ({ caption, head, rows, rowHead = false }) => `\n  <div class="student-notebook-table-wrap">
+    <table class="student-notebook-table">
+      <caption>${caption}</caption>
+      <thead><tr>${head.map((cell) => `<th scope="col">${cell}</th>`).join('')}</tr></thead>
+      <tbody>${rows
+        .map((row) => `<tr>${row
+          .map((cell, index) => (rowHead && index === 0
+            ? `<th scope="row">${cell}</th>`
+            : `<td>${cell}</td>`))
+          .join('')}</tr>`)
+        .join('')}</tbody>
+    </table>
+  </div>`;
+
+/** A real diagram from the lesson's SVG module — same source, never redrawn. */
+const figure = (key, caption) => {
+  const entry = UNIT2L2_DIAGRAMS[key];
+  const legend = entry.legend?.length
+    ? `<ul class="diagram-legend" aria-label="مفتاح الرموز">${entry.legend
+      .map((item) => `<li><span class="legend-swatch ${item.color}" aria-hidden="true"></span>${item.symbol}</li>`)
+      .join('')}</ul>`
+    : '';
+  return `
+  <figure class="diagram-card student-notebook-figure">
+    <div class="diagram-card-head"><strong>${entry.title}</strong><div class="diagram-card-badge">${ENRICH}</div></div>
+    <div class="diagram-svg-wrap">${entry.svg}</div>
+    ${legend}
+    <figcaption>${caption}</figcaption>
+  </figure>`;
+};
+
+/** One labelled calculation row: the label column keeps the step name out of the math. */
+const example = (label, body, text) => `\n  <div class="student-notebook-step"><span>${label}</span><div>${body}${text ? `<p class="student-notebook-example-step">${text}</p>` : ''}</div></div>`;
+
+/** A self-check item: the question (or the judgement) above, the answer below.
+ *  `letter` is the chosen option and `verdict` the true/false judgement; both are
+ *  Latin tokens, so they are isolated. The word «الإجابة» is printed once only. */
+const qa = ({ number, prompt, answer }) => {
+  const label = answer.verdict
+    ? `الإجابة: ${answer.verdict}`
+    : answer.letter ? `الإجابة: ${ltr(`${answer.letter}`)}` : 'الإجابة';
+  return `
+  <div class="student-notebook-qa">
+    <p class="student-notebook-qa-q"><strong>${number}</strong> ${prompt}</p>
+    <p class="student-notebook-qa-a"><strong>${label}</strong> ${answer.text}</p>
+  </div>`;
+};
+
+/* --- the exact TeX of every law, written once ------------------------------ */
+
 const CURRENT = 'I=\\dfrac{q}{t}';
 const CHARGE = 'q=I\\,t';
 const TIME = 't=\\dfrac{q}{I}';
-const RATIO = '\\dfrac{q}{t}=\\mathrm{const}\\;\\Rightarrow\\;q\\propto t';
+const RATIO = '\\dfrac{q}{t}=\\mathrm{const}';
 const SERIES = 'I=\\mathrm{Const}';
 const PARALLEL = 'I=I_{1}+I_{2}';
+const AMPERE_DEF = '1\\,\\mathrm{A}=\\dfrac{1\\,\\mathrm{C}}{1\\,\\mathrm{s}}';
+const AMPERE_UNIT = '\\mathrm{A}=\\dfrac{\\mathrm{C}}{\\mathrm{s}}';
+const KILO = '1\\,\\mathrm{kA}=10^{3}\\,\\mathrm{A}';
+const MILLI = '1\\,\\mathrm{mA}=10^{-3}\\,\\mathrm{A}';
+const MICRO = '1\\,\\mu\\mathrm{A}=10^{-6}\\,\\mathrm{A}';
+const TWO_MIN = '2\\,\\mathrm{min}=120\\,\\mathrm{s}';
+const FIVE_MIN = '5\\,\\mathrm{min}=300\\,\\mathrm{s}';
+const THREE_MIN = '3\\,\\mathrm{min}=180\\,\\mathrm{s}';
+const ONE_MIN = '1\\,\\mathrm{min}=60\\,\\mathrm{s}';
+const MA_TO_A = '200\\,\\mathrm{mA}=0.2\\,\\mathrm{A}';
+const A_TO_MA = '0.1\\,\\mathrm{A}=100\\,\\mathrm{mA}';
+const SLOPE = '\\dfrac{q}{t}=4\\,\\mathrm{A}';
+const PRINTED_12C = '12\\,\\mathrm{c}';
+const VOLT_6 = '6\\,\\mathrm{V}';
+const VOLT_15 = '1.5\\,\\mathrm{V}';
+
+const PROPORTION = formula(
+  'q\\propto t\\;\\;\\text{(when }I\\text{ is constant)}',
+  'q is proportional to t when the current is constant',
+);
+const PROPORTION_NOTE = formula(
+  '\\dfrac{60}{30}=\\dfrac{120}{60}=\\dfrac{180}{90}=2\\,\\mathrm{A}',
+  'sixty over thirty equals one hundred twenty over sixty equals one hundred eighty over ninety equals two amperes',
+);
+
+/* --- 1. the lesson at a glance (p 87) ------------------------------------- */
+
+const sectionOverview = `
+<section class="student-notebook-section" aria-labelledby="nb-s01">
+  <h3 id="nb-s01">١. الدرس في سطور: العنوان والأهداف والكلمات المفتاحية وأسئلة الافتتاح (ص ٨٧)</h3>
+  <p><strong>عنوان الدرس في الكتاب:</strong> «التيّار الكهربائيّ المُتواصِل»، مرقّم <strong>٢</strong> في رأس الصفحة ٨٧، ويقع في الوحدة الثانية (الكهرباء) من كتاب الفيزياء للصف الثامن، صفحات <strong>٨٧–٩٦</strong>. ${BOOK}</p>
+  ${subhead('nb-s01-goals', 'أهداف الدرس الثلاثة كما وردت في الكتاب')}
+  <p>يتوقّع من المتعلّم أن:</p>
+  ${list([
+    'يتعرّف التيّار الكهربائيّ المُتواصِل.',
+    'يحدّد جهة التيّار الكهربائيّ المُتواصِل.',
+    'يستنتج العلاقة بين شِدّة التيّار وكميّة الكهرباء وزمن مرورها.',
+  ])}
+  <p><strong>الكلمات المفتاحية:</strong> الإلكترونات الحرّة – شِدّة التيّار – كميّة الكهرباء.</p>
+  ${subhead('nb-s01-questions', '«ألاحظ وأستنتج»: أسئلة الافتتاح الثلاثة وإجاباتها')}
+  <p>${BOOK} يفتح الكتاب الدرس بمشهدين مصوّرين — صفّ دومينو يتساقط قطعةً تلو الأخرى، ودارة كهربائية فيها مصباحان وبطاريتان ومفتاح — ثم يطرح ثلاثة أسئلة:</p>
+  ${steps([
+    '<strong>من أين نحصل على الطاقة الكهربائية؟</strong> من المولّد الموجود في الدارة (البطاريتان في الصورة)؛ فالمولّد يحوّل طاقة كيميائية إلى طاقة كهربائية تنتقل في الأسلاك.',
+    '<strong>ما دور المولّد في الدّارة السّابقة؟</strong> يسبّب حركة الإلكترونات الحرّة في الناقل ويحافظ على فرق بين قطبية طرفيه؛ ولا يخلق إلكترونات جديدة.',
+    '<strong>كيف انتقلت الطّاقة الكهربائية من المولّد إلى المصباح؟</strong> عبر الأسلاك المغلقة حال إغلاق المفتاح: المفتاح المغلق يُكمل الدارة، فيمرّ التيار في الأسلاك ويصل إلى المصباح فيضيء.',
+  ])}
+  ${note(`${INFER} الكتاب يطرح الأسئلة الثلاثة دون إجابات مطبوعة؛ الإجابات أعلاه مستنتجة من ص ٨٨ (استنتاجات تجربة الأنبوب) ومن ص ٩٤ («المولّد لا يُنتِج إلكترونات ولكن يُسبّب حركة الإلكترونات في الدّارة»)، ولا تضيف أيّ قيمة عددية.`)}
+  <p><strong>دلالة مشهد الدومينو:</strong> الدومينو صفّ ممتلئ سلفاً، ودفعة واحدة تُسقط القطع بالتتابع؛ وهذا تشبيه لانتقال الأثر في صفٍّ من الإلكترونات الحرّة موجودة في الناقل أصلاً — وهو ما تختبره تجربة ص ٨٨. ${ENRICH}</p>
+  ${figure('intro-scenes', 'مشهدا الافتتاح في ص ٨٧: صفّ دومينو يسقط بالتتابع، ودارة كهربائية مغلقة فيها مولّد ومصباحان ومفتاح. الصور الفوتوغرافية لا تُعاد طباعتها؛ الرسم إعادة بناء تخطيطية من المنصة للمشهد نفسه.')}
+  ${note('<strong>حدود الوحدة:</strong> الدرس يعالج التيار المتواصل (المستمر) فقط، أي التيار الذي يبقى اتجاهه ثابتاً. التيار المتناوب والمقاومة الكهربائية موضوعان في الدروس اللاحقة من الوحدة نفسها، ولا يُستشهد بهما هنا.')}
+</section>`;
+
+/* --- 2. the tube experiment (p 88) --------------------------------------- */
+
+const sectionTube = `
+<section class="student-notebook-section" aria-labelledby="nb-s02">
+  <h3 id="nb-s02">٢. «أجرب وأستنتج»: تجربة الأنبوب والكرات — الإلكترونات الحرّة (ص ٨٨)</h3>
+  <p><strong>هدف التجربة:</strong> محاكاة حركة الإلكترونات الحرّة داخل السلك الناقل بحركة كرات داخل أنبوب ممتلئ، ثم استنتاج تعريف التيار المتواصل وجهته. ${ENRICH}</p>
+  ${subhead('nb-s02-tools', 'أدوات التجربة (نصّ الكتاب)')}
+  <p>${BOOK} «أنبوب بلاستيكي شفّاف - كرات بلاستيكيّة أو زجاجيّة.»</p>
+  ${subhead('nb-s02-steps', 'خطوات تنفيذ التجربة الخمس وأسئلتها')}
+  ${steps([
+    '<strong>الخطوة ١:</strong> أضعُ الأنبوب الشفّاف على سطح أفقيّ. — <em>الملاحظة:</em> أنبوب أفقي شفّاف يُرى ما بداخله.',
+    '<strong>الخطوة ٢:</strong> أملأُ الأنبوب بالكرات البلاستيكية. — <em>الملاحظة:</em> يصبح الأنبوب ممتلئاً بالكرات قبل أيّ دفع، فلا مكان فارغاً فيه.',
+    '<strong>الخطوة ٣:</strong> أدفعُ كرة جديدة من أحد طرفي الأنبوب، ماذا ألاحظ؟ — <em>الملاحظة:</em> تخرج كرة من الطرف الآخر فوراً تقريباً، مع أنّ الكرة المدفوعة لم تقطع الأنبوب.',
+    '<strong>الخطوة ٤:</strong> أدفعُ عدداً من الكرات الجديدة من طرف الأنبوب ذاته، وألاحظُ ما يحدث للكرات ضمن الأنبوب. — <em>الملاحظة:</em> يتحرّك الصفّ كلّه في الاتجاه نفسه، وتخرج من الطرف الآخر الكمية نفسها التي دُفعت.',
+    '<strong>الخطوة ٥:</strong> أتساءلُ هل حركة الكرات في الأنبوب تشابه حركة الإلكترونات الحرّة في السّلك النّاقل؟ — <em>الجواب:</em> نعم؛ فما ينتقل فوراً هو <strong>أثر الدفع</strong> لا الكرة نفسها، وكذلك الإلكترونات الحرّة موجودة سلفاً في الناقل، والتيار هو تنظيم حركتها في اتجاه واحد.',
+  ])}
+  <p>${BOOK} «يمكن تشبيه حركة الكرات داخل الأنبوب بحركة الإلكترونات الحرّة في السّلك النّاقل.»</p>
+  ${subhead('nb-s02-conclusion', '«أستنتج» كما طُبع في الكتاب (ثلاثة بنود)')}
+  ${conclusion('الاستنتاجات الثلاثة — نصّ الكتاب ص ٨٨', list([
+    'أنّ التيّار الكهربائيّ المُتواصِل (المستمر) هو <strong>انتقال مستمرٌّ للإلكترونات الحرّة باتجاهٍ واحد</strong> في النّاقل الذي يمرّ فيه التيّار.',
+    'جهة حركة الإلكترونات <strong>خارج المولّد</strong> من القطب السّالب إلى القطب الموجب للمولّد.',
+    'يُسبّب <strong>المولّد</strong> الحركة السّابقة للإلكترونات.',
+  ]))}
+  ${subhead('nb-s02-model', 'النموذج التعليمي: ماذا يشرح وماذا لا يشرح؟')}
+  ${list([
+    '<strong>الكرات لا تُخلق عند أحد الطرفين:</strong> الأنبوب ممتلئ سلفاً، فدفع كرة يُخرج كرة من الطرف الآخر. كذلك الإلكترونات الحرّة موجودة سلفاً في الناقل؛ والمولّد ينظّم حركتها في اتجاه واحد. ' + ENRICH,
+    '<strong>حدود التشبيه:</strong> الكرات أكبر بكثير من الإلكترونات، والتشبيه لا يمثّل تصادمات الشبكة البلورية ولا سرعة الانجراف ولا المقاومة؛ فهو يشرح <strong>انتقال التأثير</strong> في الدارة لا غير. ' + ENRICH,
+    '<strong>خطأ شائع:</strong> ظنّ أنّ الإلكترون نفسه يسافر من البطارية إلى المصباح بسرعة الضوء. الذي ينتشر بسرعة الضوء تقريباً هو تأثير الحقل الكهربائي؛ أمّا الإلكترون فيزحف ببطء. ' + ENRICH,
+  ])}
+  ${table({
+    caption: 'ما يقابله كل عنصر في التشبيه (النموذج التعليمي)',
+    head: ['عنصر التشبيه', 'ما يقابله في الدارة', 'حدّ التشبيه'],
+    rowHead: true,
+    rows: [
+      ['الأنبوب الشفّاف الممتلئ بالكرات', 'السلك الناقل الممتلئ بالإلكترونات الحرّة قبل مرور التيار.', 'الأبعاد والسرعات مختلفة تماماً.'],
+      ['دفع كرة جديدة من طرف', 'تشغيل المولّد وإغلاق الدارة بمفتاح، فيبدأ التيار.', 'الدفع لحظي، أما التيار فيستمر ما دامت الدارة مغلقة والمولّد موجوداً.'],
+      ['كرة تخرج من الطرف الآخر فوراً', 'إضاءة المصباح فوراً عند إغلاق المفتاح.', 'الإلكترون نفسه لا يقطع الأنبوب/السلك في هذه اللحظة.'],
+      ['عدد الكرات الداخلة = عدد الخارج', 'الشحنة لا تتجمّع ولا تتناقص: المقدار نفسه يعبر كل مقطع.', 'لا يوجد في النموذج تسرّب أو تخزين.'],
+    ],
+  })}
+</section>`;
+
+/* --- 3. Ampere's convention (p 89) --------------------------------------- */
+
+const sectionConvention = `
+<section class="student-notebook-section" aria-labelledby="nb-s03">
+  <h3 id="nb-s03">٣. اصطلاح جهة التيار: لماذا جهتان متعاكستان؟ (ص ٨٩)</h3>
+  <p>${BOOK} «اصطلح العالم أمبير أن جهـة التيّار الكهربائيّ <strong>خارج المولّد من القطب الموجب إلى القطب السّالب</strong> وذلك <strong>عكس جهـة حركة الإلكترونات</strong>.»</p>
+  ${table({
+    caption: 'الجهتان في الدارة: اصطلاح أمبير مقابل حركة الإلكترونات',
+    head: ['البند', 'جهة التيار الاصطلاحية', 'جهة حركة الإلكترونات'],
+    rowHead: true,
+    rows: [
+      ['داخل المولّد', `من القطب السالب إلى القطب الموجب (داخل المولّد وحده). ${ENRICH}`, 'من القطب الموجب إلى السالب داخل المولّد. ' + ENRICH],
+      ['خارج المولّد (في الأسلاك والمصباح)', 'من القطب الموجب إلى القطب السالب — وهو نصّ اصطلاح أمبير.', 'من القطب السالب إلى القطب الموجب — وهو نصّ استنتاج ص ٨٨.'],
+      ['لماذا اعتمدت؟', 'اصطلحها أمبير قبل معرفة الإلكترون؛ وهي لا تغيّر حسابات شدة التيار في هذا المستوى.', 'هل هي الجهة الفيزيائية لحركة حاملات الشحنة في المعادن؟ نعم.'],
+      ['الرسم', 'أسهم صفراء على الدارة في الشكل.', 'أسهم حمراء مكتوب عليها ' + tex('e^{-}', 'electron') + ' في الاتجاه المعاكس.'],
+    ],
+  })}
+  ${figure('current-direction', 'شكل ص ٨٩: المولّد في الأعلى (الموجب يساراً والسالب يميناً)، والمصباح (الجهاز الكهربائي المستهلك) يساراً، والقاطعة (المفتاح) يميناً. الأسهم الصفراء لجهة التيار الاصطلاحية I، والأسهم الحمراء لحركة الإلكترونات e⁻ في الاتجاه المعاكس خارج المولّد.')}
+  ${subhead('nb-s03-parts', 'أجزاء الدارة كما تسمّيها الصفحة')}
+  ${list([
+    '<strong>مصدر الطاقة الكهربائية (المولّد):</strong> يدفع الإلكترونات ويحافظ على فرق القطبية.',
+    '<strong>الموصل الكهربائي (الأسلاك):</strong> مسار الإلكترونات الحرّة بين أجزاء الدارة.',
+    '<strong>جهاز كهربائي (المصباح):</strong> يستهلك الطاقة الكهربائية ويحوّلها.',
+    '<strong>مفتاح (القاطعة):</strong> يفتح الدارة ويغلقها؛ فبدونه أو وهو مفتوح لا يمرّ تيار.',
+  ])}
+  ${subhead('nb-s03-enrich', 'إثراء الكتاب: مولّدات التيار المستمر')}
+  <p>${BOOK} «بعض مولّدات التيّار الكهربائيّ المستمرّ: <strong>الخلايا الكهربائيّة البسيطة والخلايا الضوئيّة</strong>.»</p>
+  ${list([
+    '<strong>الخلية الكهربائية البسيطة</strong> (كبطارية الدرس) تحوّل طاقة كيميائية إلى طاقة كهربائية، وتبقي فرقاً ثابت الاتجاه بين قطبيها. ' + ENRICH,
+    '<strong>الخلية الضوئية</strong> (اللوح الشمسي) تحوّل طاقة الإشعاع الشمسي إلى طاقة كهربائية، وتعمل مولّداً للتيار المستمر. ' + ENRICH,
+    'الصور الفوتوغرافية (بطارية ومجموعة ألواح شمسية) لا تُعاد طباعتها؛ والنصّ أعلاه هو ما يثبته الكتاب تحت الصور.',
+  ])}
+  ${subhead('nb-s03-ampere', 'هامش الكتاب: من هو أمبير؟')}
+  <p>${BOOK} «أمبير: عالم فيزيائي ورياضي فرنسي، نُسب إليه اصطلاح جهة التيار الكهربائي، وحملت وحدة شدة التيار اسمه (الأمبير).»</p>
+  ${note('<strong>لماذا بقيت الجهتان؟</strong> لأنّ الاصطلاح أقدم من اكتشاف الإلكترونالسالب، ولأنّ اتجاه الاصطلاح لا يغيّر مقدار الشدة ولا الحسابات في هذا المستوى؛ لكنّه يغيّر رسم الأسهم وحكم أسئلة «صح/خطأ»، فاحفظ القيد: <strong>خارج المولّد</strong>. ' + ENRICH)}
+</section>`;
+
+/* --- 4. current intensity, the table and the graph (p 90) ---------------- */
+
+const sectionIntensity = `
+<section class="student-notebook-section" aria-labelledby="nb-s04">
+  <h3 id="nb-s04">٤. شِدّة التيار: مقطع الدارة ووحدة الزمن والجدول والخط البياني (ص ٩٠)</h3>
+  <p>${BOOK} «لمعرفة غزارة نهر ما تقاس كميّة الماء المارّة عبر مقطع النّهر خلال وحدة الزّمن.»</p>
+  <p><strong>وجه المقارنة:</strong> كمية الماء العابرة لمقطع النهر في الثانية تقيس «غزارة» النهر؛ وكمية الكهرباء العابرة لمقطع الدارة في الثانية تقيس «شدة التيار». والكمية وحدها لا تكفي: فمقدار كبير في زمن طويل قد يعطي شدة صغيرة. ${ENRICH}</p>
+  ${subhead('nb-s04-ask', '«أُساءَل» كما في الكتاب')}
+  <p>${BOOK} «كيف يُمكن معرفة كميّة الكهرباء المارّة عبْر مقطع دارة كهربائيّة ما خلال واحدة الزّمن؟»</p>
+  <p><strong>الجواب الإجرائي:</strong> نقيس كمية الكهرباء ${tex('q', 'q')} المارّة عبر المقطع، ونقيس الزمن ${tex('t', 't')} الذي استغرقته، ثم نقسم الأولى على الثانية. والمقصود «مقطع الدارة» أي سطح وهمي يقطع الناقل عرضياً في نقطة واحدة. ${INFER}</p>
+  ${subhead('nb-s04-table', 'جدول ص ٩٠ كما طُبع في الكتاب')}
+  <p>${BOOK} «أُتمِّمُ الجدول الآتي وأقارن النتائج:»</p>
+  ${table({
+    caption: 'جدول ص ٩٠ كما طُبع: الخلايا الفارغة مطبوعة فارغة في الكتاب',
+    head: [`كميّة الكهرباء ${tex('q\\,(\\mathrm{c})', 'q in coulombs')}`, '20', '40', '60', '80', '100'],
+    rowHead: true,
+    rows: [
+      [`الزّمن ${tex('t\\,(\\mathrm{s})', 't in seconds')}`, '5', '10', '(فارغة)', '20', '(فارغة)'],
+      [tex('\\dfrac{q}{t}', 'q over t'), '4', '(فارغة)', '4', '(فارغة)', '(فارغة)'],
+    ],
+  })}
+  ${subhead('nb-s04-complete', 'الجدول مكتملاً والقيم المستنتجة')}
+  ${table({
+    caption: 'الجدول بعد الإتمام: القيم ١٥ و٢٥ والنسب الأربع مستنتجة من ثبات النسبة ومن نقاط الرسم',
+    head: [`كميّة الكهرباء ${tex('q\\,(\\mathrm{C})', 'q in coulombs')}`, '20', '40', '60', '80', '100'],
+    rowHead: true,
+    rows: [
+      [`الزّمن ${tex('t\\,(\\mathrm{s})', 't in seconds')}`, '5', '10', '15', '20', '25'],
+      [tex('\\dfrac{q}{t}\\,(\\mathrm{A})', 'q over t in amperes'), '4', '4', '4', '4', '4'],
+    ],
+  })}
+  ${law('النسبة في كل عمود', formula('\\dfrac{20}{5}=\\dfrac{40}{10}=\\dfrac{60}{15}=\\dfrac{80}{20}=\\dfrac{100}{25}=4\\,\\mathrm{A}', 'every column of the table gives the same ratio, four amperes'))}
+  ${note(`<strong>قيد مصدر:</strong> الكتاب يطبع الخليتين الفارغتين في صفّ الزمن (عند ${ltr('q = 60')} و${ltr('q = 100')}) والخلايا الثلاث الفارغة في صفّ ${tex('\\dfrac{q}{t}', 'q over t')}. القيم ١٥ و٢٥ وثبات النسبة ٤ مستنتجة من النسبة المطبوعة في العمود الأول ومن نقاط الرسم المطبوعة على الصفحة نفسها (٥،٢٠) (١٠،٤٠) (١٥،٦٠) (٢٠،٨٠) (٢٥،١٠٠)؛ ولم يُضف رقم من خارج الصفحة.`)}
+  ${subhead('nb-s04-graph', 'الخط البياني لكمية الكهرباء بدلالة الزمن')}
+  <p>${BOOK} «أرسمُ الخطّ البيانيّ الممثّل لقيم ${tex('q', 'q')} بدلالة ${tex('t', 't')}. … ألاحظ شكل الخط البيانيّ الناتج.»</p>
+  ${list([
+    `المحور الأفقي: الزمن ${ltr('t')} بالثانية، مدرّج من ٠ إلى ٣٥.`,
+    `المحور العمودي: كمية الكهرباء ${ltr('q')} بالكولوم، مدرّج من ٠ إلى ١٢٠.`,
+    `النقاط المطبوعة: ${ltr('(5, 20)')} و${ltr('(10, 40)')} و${ltr('(15, 60)')} و${ltr('(20, 80)')} و${ltr('(25, 100)')}.`,
+  ])}
+  ${figure('qt-graph', 'شبكة ص ٩٠ بنقاطها المطبوعة: خط مستقيم يمرّ بالمبدأ؛ فكمية الكهرباء تتناسب طرداً مع الزمن، وميل الخط هو شدة التيار ' + ltr('4 A') + '.')}
+  ${subhead('nb-s04-read', 'كيف نقرأ الخط؟ ثلاث نتائج')}
+  ${list([
+    '<strong>الخط مستقيم:</strong> معدّل تغيّر الكمية ثابت مع الزمن، أي أنّ الشدة ثابتة — وهذا معنى «التيار المتواصل».',
+    `<strong>الخط يمرّ بالمبدأ:</strong> عند ${ltr('t = 0')} تكون ${ltr('q = 0')}؛ فلا كمية كهرباء تعبر المقطع في زمن صفري.`,
+    `<strong>الميل هو الشدة:</strong> ${tex(SLOPE, 'q over t equals four amperes')}؛ فأيّ نقطة على الخط تعطي النسبة نفسها.`,
+  ])}
+  ${law('التناسب الطردي عند ثبات الشدة', PROPORTION)}
+  ${example('التحقق من نقطتين على الخط', PROPORTION_NOTE, 'كل نقطة من نقاط الكتاب تعطي الشدة نفسها؛ وهذا هو معنى ثبات النسبة في الجدول.')}
+</section>`;
+
+/* --- 5. the conclusions of p91 and the units ------------------------------ */
+
+const sectionConcepts = `
+<section class="student-notebook-section" aria-labelledby="nb-s05">
+  <h3 id="nb-s05">٥. استنتاجات ص ٩١: تعريف شدة التيار والأمبير ومضاعفاته وأجزائه</h3>
+  <p>${BOOK} بنود «أستنتج» في الكتاب ص ٩١ تسعةً، وهذه نصوصها كاملة:</p>
+  ${list([
+    `النّسبة ${tex('\\dfrac{q}{t}=\\mathrm{const}', 'q over t is constant')} وهي تُعبّر عن شِدّة التيّار الكهربائيّ ${tex('I', 'I')}.`,
+    `شِدّة التيّار الكهربائيّ (${tex('I', 'I')}) : هي كميّة الكهرباء (${tex('q', 'q')}) المارّة عبر مقطع دارة كهربائيّة خلال واحدة الزّمن.`,
+    `تُحسَب شِدّة التيّار الكهربائيّ من العلاقة: ${tex(CURRENT, 'I equals q over t')}`,
+    `${tex('q', 'q')} : كميّة الكهرباء المارّة عبر مقطع النّاقل وتقدر بالكولوم ${tex('\\mathrm{C}', 'C')}.`,
+    `${tex('t', 't')} : الزّمن يقدر بالثانية ${tex('\\mathrm{s}', 's')}.`,
+    `${tex('I', 'I')} : شَدّة التيّار تقدر بالأمبير ${tex('\\mathrm{A}', 'A')}.`,
+    `الأمبير: شِدّة تيّار كهربائيّ ناتج عن مرور كميّة من الكهرباء قدرها ${tex('1\\,\\mathrm{C}', '1 C')} خلال ${tex('1\\,\\mathrm{s}', '1 s')} عبر مقطع الدّارة.`,
+    `مضاعفات الأمبير: كيلو أمبير ${tex(KILO, '1 kA equals 10 to 3 A')}.`,
+    `أجزاء الأمبير: ميلي أمبير ${tex(MILLI, '1 mA equals 10 to minus 3 A')} ، ميكرو أمبير ${tex(MICRO, '1 microampere equals 10 to minus 6 A')}.`,
+  ])}
+  ${law('قانون شدة التيار', formula(CURRENT, 'I equals q over t'))}
+  ${law('تعريف الأمبير بالوحدات الأساسية', formula(AMPERE_DEF, 'one ampere equals one coulomb per one second'))}
+  ${law('صيغة الوحدة', formula(AMPERE_UNIT, 'ampere equals coulomb over second'))}
+  ${definition('شِدّة التيّار الكهربائيّ', `كميّة الكهرباء (${tex('q', 'q')}) المارّة عبر مقطع دارة كهربائيّة خلال واحدة الزّمن. (تعريف الكتاب، ص ٩١)`)}
+  ${definition('الأمبير', `شِدّة تيّار كهربائيّ ناتج عن مرور كميّة من الكهرباء قدرها ${tex('1\\,\\mathrm{C}', '1 C')} خلال ${tex('1\\,\\mathrm{s}', '1 s')} عبر مقطع الدّارة. (تعريف الكتاب، ص ٩١)`)}
+  ${subhead('nb-s05-units', 'المضاعفات والأجزاء والتحويلات التي يحتاجها الحل')}
+  ${table({
+    caption: 'مضاعفات الأمبير وأجزاؤه ومعاملات التحويل',
+    head: ['الوحدة', 'الرمز', 'قيمتها بالأمبير', 'متى تظهر؟'],
+    rowHead: true,
+    rows: [
+      ['كيلو أمبير', ltr('kA'), tex('1\\,\\mathrm{kA}=10^{3}\\,\\mathrm{A}', 'one kiloampere'), 'تيارات كبيرة، مثل خطوط الشبكة.'],
+      ['أمبير', ltr('A'), 'الوحدة الأساسية', 'كل حسابات الدرس والقراءات العادية.'],
+      ['ميلي أمبير', ltr('mA'), tex('1\\,\\mathrm{mA}=10^{-3}\\,\\mathrm{A}', 'one milliampere'), 'قراءة مقياس التسلسل في ص ٩٢: ' + ltr('200 mA') + '.'],
+      ['ميكرو أمبير', ltr('µA'), tex('1\\,\\mu\\mathrm{A}=10^{-6}\\,\\mathrm{A}', 'one microampere'), 'تيارات دقيقة جداً.'],
+    ],
+  })}
+  ${table({
+    caption: 'تحويلات الزمن والكهرباء الواردة في الدرس',
+    head: ['التحويل', 'القيمة', 'الصفحة / موضع الاستخدام'],
+    rowHead: true,
+    rows: [
+      ['الدقيقة إلى الثانية', tex(ONE_MIN, 'one minute equals sixty seconds'), 'أساس كل تحويل زمني.'],
+      ['دقيقتان', tex(TWO_MIN, 'two minutes equals one hundred twenty seconds'), 'السؤال الخامس ص ٩٦.'],
+      ['ثلاث دقائق', tex(THREE_MIN, 'three minutes equals one hundred eighty seconds'), 'التطبيق المحلول ص ٩١.'],
+      ['خمس دقائق', tex(FIVE_MIN, 'five minutes equals three hundred seconds'), 'السؤال الخامس ص ٩٦، الشقّ الثاني.'],
+      ['ميلي أمبير إلى أمبير', tex(MA_TO_A, 'two hundred milliamperes equal zero point two amperes'), 'قراءة مقياس التسلسل ص ٩٢.'],
+      ['أمبير إلى ميلي أمبير', tex(A_TO_MA, 'zero point one ampere equals one hundred milliamperes'), 'نتيجة السؤال الخامس ص ٩٦.'],
+    ],
+  })}
+  ${subhead('nb-s05-milli', 'تدريب على التحويل قبل الحساب')}
+  ${table({
+    caption: 'أمثلة تحويل من الميلي أمبير إلى الأمبير (تدريب)' ,
+    head: ['المعطى', 'التحويل', 'الشدة بالأمبير'],
+    rowHead: true,
+    rows: [
+      [ltr('200 mA'), tex('200\\times10^{-3}\\,\\mathrm{A}', 'two hundred times ten to minus three'), tex('0.2\\,\\mathrm{A}', 'zero point two amperes')],
+      [ltr('2 mA'), tex('2\\times10^{-3}\\,\\mathrm{A}', 'two times ten to minus three'), tex('0.002\\,\\mathrm{A}', 'zero point zero zero two amperes')],
+      [ltr('100 mA'), tex('100\\times10^{-3}\\,\\\mathrm{A}', 'one hundred times ten to minus three'), tex('0.1\\,\\mathrm{A}', 'zero point one ampere')],
+    ],
+  })}
+  ${note(`<strong>لماذا التحويل قبل التعويض؟</strong> القانون ${tex(CURRENT, 'I equals q over t')} مشروط بأن يكون ${tex('t', 't')} بالثانية و${tex('q', 'q')} بالكولوم. مثال على الخطأ: في السؤال الخامس (ص ٩٦) كمية الكهرباء 12 كولوم والزمن 120 ثانية، فالشدة ${tex('\\dfrac{12}{120}=0.1\\,\\mathrm{A}', 'twelve over one hundred twenty equals zero point one ampere')}. أما إدخال الزمن بالدقائق (دقيقتين) فيعطي ${tex('\\dfrac{12}{2}=6', 'twelve over two equals six')}، وهذا عدد لا معنى له كشدة تيار لأن الوحدة غير متوافقة. ${ENRICH}`)}
+</section>`;
+
+/* --- 6. the worked example of p91 ---------------------------------------- */
+
+const sectionWorked = `
+<section class="student-notebook-section" aria-labelledby="nb-s06">
+  <h3 id="nb-s06">٦. التطبيق المحلول في ص ٩١: الحلّ الكامل خطوةً بخطوة</h3>
+  ${problem(`<strong>نصّ الكتاب (ص ٩١):</strong> «دارة تيّار كهربائيّ مُتواصِل يمرُّ عبر مقطعها كميّة من الكهرباء قدرها ${tex('60\\,\\mathrm{C}', 'sixty coulombs')} خلال ${tex('30\\,\\mathrm{s}', 'thirty seconds')}. المطلوب حساب: (١) قيمة شِدّة التيّار المارّ في الدّارة. (٢) كميّة الكهرباء المارّة عبر مقطع الدّارة خلال ثلاث دقائق.»`)}
+  ${subhead('nb-s06-givens', 'المعطيات والمطلوب')}
+  ${table({
+    caption: 'تنظيم المسألة: المعطيات والمطلوب والوحدة',
+    head: ['البند', 'الرمز', 'القيمة والوحدة'],
+    rowHead: true,
+    rows: [
+      ['المعطى الأول', tex('q', 'q'), tex('q=60\\,\\mathrm{C}', 'q equals sixty coulombs')],
+      ['المعطى الثاني', tex('t', 't'), tex('t=30\\,\\mathrm{s}', 't equals thirty seconds')],
+      ['المطلوب الأول', tex('I', 'I'), tex('I=?', 'I is required') + ' بالأمبير'],
+      ['المطلوب الثاني', tex('q', 'q'), 'كمية الكهرباء خلال ثلاث دقائق، بالكولوم'],
+    ],
+  })}
+  ${subhead('nb-s06-part1', 'المطلوب الأول: شدة التيار')}
+  ${law('القانون المستخدم', formula(CURRENT, 'I equals q over t'))}
+  ${steps([
+    `نكتب القانون: ${tex(CURRENT, 'I equals q over t')} — لأنّ التيار متواصل وثابت، والكمية معطاة عبر مقطع واحد في زمن معلوم.`,
+    `نعوّض بالقيم كما هي، دون تحويل، لأنّ ${tex('q', 'q')} بالكولوم و${tex('t', 't')} بالثانية: ${tex('I=\\dfrac{60}{30}', 'I equals sixty over thirty')}.`,
+    `نحسب: ${tex('I=2\\,\\mathrm{A}', 'I equals two amperes')} — وهي الشدة نفسها في كل أجزاء الدارة المتصلة على التسلسل.`,
+  ])}
+  ${example('التعويض والحساب', formula('I=\\dfrac{60}{30}=2\\,\\mathrm{A}', 'I equals sixty over thirty equals two amperes'), 'هكذا يكتبها الكتاب في سطر واحد: القانون ثم التعويض ثم النتيجة بالوحدة.')}
+  ${subhead('nb-s06-part2', 'المطلوب الثاني: كمية الكهرباء خلال ثلاث دقائق')}
+  ${steps([
+    `نحوّل الزمن إلى ثوانٍ أولاً: ${tex('3\\,\\mathrm{min}=180\\,\\mathrm{s}', 'three minutes equals one hundred eighty seconds')}؛ لأنّ ثلاث دقائق هي ${ltr('3 × 60')}.`,
+    `نكتب الصيغة المشتقة من القانون نفسه بحلّه بالنسبة إلى ${tex('q', 'q')}: ${tex('q=I\\,t', 'q equals I t')}.`,
+    `نعوّض: ${tex('q=2\\times180', 'q equals two times one hundred eighty')}، فنحصل على الكمية بالكولوم.`,
+  ])}
+  ${example('التعويض والحساب', formula('q=2\\times(3\\times60)=360\\,\\mathrm{C}', 'q equals two times three times sixty equals three hundred sixty coulombs'), 'الكتاب يكتبها ٢ × (٣ × ٦٠)، أي إنه يحوّل الدقائق إلى ثوانٍ داخل السطر.')}
+  ${subhead('nb-s06-check', 'التحقّق من معقولية النتيجة')}
+  ${list([
+    `<strong>بالتناسب:</strong> زمن ثلاث دقائق ${tex('180\\,\\mathrm{s}', 'one hundred eighty seconds')} يساوي ستة أمثال الزمن الأصلي ${tex('30\\,\\mathrm{s}', 'thirty seconds')}، لأنّ ${tex('\\dfrac{180}{30}=6', 'one hundred eighty over thirty equals six')}؛ فكمية الكهرباء تساوي ستة أمثال ${tex('60\\,\\mathrm{C}', 'sixty coulombs')} أي ${tex('360\\,\\mathrm{C}', 'three hundred sixty coulombs')}.`,
+    `<strong>بالقانون من جديد:</strong> ${tex('q=I\\,t=2\\times180=360\\,\\mathrm{C}', 'q equals two times one hundred eighty equals three hundred sixty coulombs')}؛ النتيجتان متطابقتان.`,
+    `<strong>بالوحدات:</strong> ${tex('\\mathrm{A}\\times\\mathrm{s}=\\dfrac{\\mathrm{C}}{\\mathrm{s}}\\times\\mathrm{s}=\\mathrm{C}', 'ampere times second equals coulomb')}؛ فالوحدة الناتجة كولوم كما يجب.`,
+  ])}
+  ${note(`<strong>خطأ شائع:</strong> ضرب ${tex('2\\times3=6', 'two times three equals six')} دون تحويل الدقائق إلى ثوانٍ، فيُكتب ${tex('6\\,\\mathrm{C}', 'six coulombs')} بدل ${tex('360\\,\\mathrm{C}', 'three hundred sixty coulombs')}. القاعدة: <strong>حوّل الوحدات قبل التعويض دائماً</strong>. ${ENRICH}`)}
+</section>`;
+
+/* --- 7. measuring current, series connection (p 92) ---------------------- */
+
+const sectionSeries = `
+<section class="student-notebook-section" aria-labelledby="nb-s07">
+  <h3 id="nb-s07">٧. قياس شدة التيار والوصل على التَّسلسُل (ص ٩٢)</h3>
+  <p>${BOOK} «تقاس شِدّة التيّار الكهربائيّ عمليّاً باستخدام <strong>مقياس الأمبير</strong> الذي يُوصل على <strong>التَّسلسُل</strong> في الدّارة الكهربائيّة.»</p>
+  ${definition('مقياس الأمبير (الأميتر)', `جهاز يقيس شدة التيار عملياً، ويوصل في الدارة على التسلسل حتى يمرّ فيه التيار المراد قياسه. له قطبان (أحمر وأسود) ومدرّج للقراءة.`)}
+  ${list([
+    '<strong>لماذا على التسلسل؟</strong> لكي يمرّ في الجهاز التيار نفسه المراد قياسه؛ فالمسار واحد ولا يتفرّع عنه شيء. وصله على التفرّع يجعله مساراً جانبياً فيفسد القياس وقد يتلف الجهاز. ' + ENRICH,
+    `<strong>قيمتا الشكل:</strong> يقرأ المقياسان ${tex('200\\,\\mathrm{mA}', 'two hundred milliamperes')} في الجزأين؛ أي ${tex(MA_TO_A, 'two hundred milliamperes equal zero point two amperes')}.`,
+    '<strong>ترتيب الأقطاب:</strong> في الاصطلاح المدرسي يُوصل القطب الأحمر ناحية الموجب؛ وعكس الأقطاب يعطي انحرافاً في الاتجاه المعاكس في المقاييس التناظرية. ' + ENRICH,
+  ])}
+  ${subhead('nb-s07-tools', 'أدوات تجربة التسلسل (نصّ الكتاب)')}
+  <p>${BOOK} «مولّد تيار مستمر - مصباحان ${tex('L_{1},L_{2}', 'L one L two')} - مقياسا أمبير ${tex('A_{1},A_{2}', 'A one A two')} - أسلاك توصيل.»</p>
+  ${subhead('nb-s07-steps', 'خطوات التجربة وسؤالاها')}
+  ${steps([
+    `<strong>الخطوة ١:</strong> أركّبُ الدّارة كما هو موضّح في الشّكل ونلاحظ قراءة كلٍّ من مقياسي الأمبير. ماذا أستنتجُ؟ — <em>الملاحظة:</em> القراءتان متساويتان، كلٌّ منهما ${tex('200\\,\\mathrm{mA}', 'two hundred milliamperes')}.`,
+    '<strong>الخطوة ٢:</strong> أنزِعُ أحد المصباحين مع المحافظة على ترتيب الدّارة. ماذا ألاحظ؟ — <em>الملاحظة:</em> ينطفئ المصباح الآخر أيضاً، وينقطع التيار عن الدارة كلها لأنّ المسار الوحيد صار مفتوحاً.',
+  ])}
+  ${figure('series-circuit', `شكل ص ٩٢: مسار واحد مغلق من المولّد إلى A₁ ثم المصباحين L₁ و L₂ ثم A₂ والعودة إلى المولّد. التيار نفسه ${tex('200\\,\\mathrm{mA}', 'two hundred milliamperes')} في كل أجزاء الدارة، ونزع أيّ جزء يفتح المسار كلّه.`)}
+  ${subhead('nb-s07-conclusion', '«أستنتج» كما طُبع (بندان)')}
+  ${conclusion('الاستنتاجان — نصّ الكتاب ص ٩٢', list([
+    `شِدّة التيّار <strong>ثابتة في كل أجزاء الدّارة</strong>. ${tex(SERIES, 'I is constant')}.`,
+    'عند نزع أحد أجزاء الدّارة ينقطع التيّار عن الدّارة الكهربائيّة.',
+  ]))}
+  ${law('شدة التيار على التسلسل', formula(SERIES, 'I is constant in every part of a series circuit'))}
+  ${table({
+    caption: 'أثر نزع جزء من دارة التسلسل على القراءات',
+    head: ['الحالة', 'المسار', 'قراءة A₁ و A₂', 'إضاءة المصابيح'],
+    rowHead: true,
+    rows: [
+      ['الدارة كاملة', 'مسار واحد مغلق', `${tex('200\\,\\mathrm{mA}', 'two hundred milliamperes')} في الاثنين`, 'المصباحان مضيئان'],
+      ['نزع أحد المصباحين', 'المسار مفتوح', 'صفر (لا تيار)', 'ينطفئ المصباح الباقي أيضاً'],
+    ],
+  })}
+  ${note(`<strong>قاعدة عملية:</strong> على التسلسل لا تُجمع الشدّات، لأنّ الشحنة التي تعبر مقطعاً تعبر كل مقاطع المسار الواحد في الزمن نفسه؛ فلا تتجمّع ولا تتناقص. ${ENRICH}`)}
+</section>`;
+
+/* --- 8. batteries in series, the 6 V example (p 93) ---------------------- */
+
+const sectionBatterySeries = `
+<section class="student-notebook-section" aria-labelledby="nb-s08">
+  <h3 id="nb-s08">٨. مثال الجهود: وصل مولّدات متماثلة على التَّسلسُل (ص ٩٣)</h3>
+  <p>${BOOK} «مثال: وصل مجموعة مولّدات متماثلة على التَّسلسُل. نقوم بوصل عدة مولّدات بحيث يُوصل القطب الموجب للمولّد إلى القطب السّالب في المولّد الذي يليه.»</p>
+  ${figure('batteries-series', 'شكل ص ٩٣: أربع خلايا متماثلة على التسلسل، موجب كل خلية إلى سالب التي تليها، والمجموع المطبوع في الكتاب ' + ltr('6 Volts') + ' بين طرفي السلسلة.')}
+  ${table({
+    caption: 'قراءة مثال الجهود على التسلسل كما في الكتاب',
+    head: ['البند', 'القيمة', 'ملاحظة'],
+    rowHead: true,
+    rows: [
+      ['عدد المولّدات', 'أربعة مولّدات متماثلة', 'الكتاب يرسمها على التسلسل.'],
+      ['طريقة الوصل', 'موجب كل مولّد ← سالب الذي يليه', 'هذا هو شرط جمع الجهود على التسلسل.'],
+      ['الجهد المطبوع', tex(VOLT_6, 'six volts'), 'نصّ الشكل في الكتاب.'],
+      ['علاقته بالقانون', 'مثال على <strong>جمع الجهود</strong> في التسلسل', 'ليس قانوناً لشدة التيار، ولا يُدخل في حساب I.'],
+    ],
+  })}
+  ${note(`<strong>تنبيه مهم:</strong> ${ltr('6 V')} في هذا الشكل مثال على <strong>الجهد الكهربائي</strong> الناتج عن وصل أربع خلايا على التسلسل، وليس قانوناً لشدة التيار. لا تُدخل قيمته في حساب ${tex('I', 'I')} الخاص بالدرس؛ فالشدة تُحسب من ${tex(CURRENT, 'I equals q over t')}. ${ENRICH}`)}
+  ${list([
+    '<strong>لماذا تُجمع الجهود على التسلسل؟</strong> لأنّ الخلايا تُرتّب على مسار واحد بالاتجاه نفسه، فيضاف دفع كل خلية إلى دفع التي تليها؛ فالنتيجة أكبر من جهد خلية واحدة. ' + ENRICH,
+    '<strong>ماذا يبقى ثابتاً؟</strong> التيار في المسار الواحد نفسه (المسار على التسلسل مسار واحد) — وهذا هو معنى الدرس لهذه الحالة. ' + ENRICH,
+  ])}
+</section>`;
+
+/* --- 9. parallel connection (pp 93–94), the 1.5 V example ---------------- */
+
+const sectionParallel = `
+<section class="student-notebook-section" aria-labelledby="nb-s09">
+  <h3 id="nb-s09">٩. الوصل على التفرُّع: التجربة والاستنتاج ومثال الجهود (ص ٩٣–٩٤)</h3>
+  ${subhead('nb-s09-tools', 'أدوات تجربة التفرّع (نصّ الكتاب)')}
+  <p>${BOOK} «مولّد تيار مُتواصِل - مصباحان مختلفان ${tex('L_{1},L_{2}', 'L one L two')} - ثلاثة مقاييس أمبير ${tex('A_{1},A_{2},A_{3}', 'A one A two A three')} - أسلاك توصيل.»</p>
+  ${subhead('nb-s09-steps', 'خطوات التجربة الثلاث وأسئلتها')}
+  ${steps([
+    '<strong>الخطوة ١:</strong> أركّبُ الدّارة الموضّحة بالشّكل وألاحظُ قراءة مقاييس الأمبير، ما دلالة كل من المقاييس؟ ماذا أستنتجُ؟ — <em>الملاحظة:</em> المقياس <strong>A</strong> في الخط الأصلي يقيس تيار الدارة كلها، والمقياسان A₁ و A₂ يقيسان تيار كل فرع على حدة؛ والتيار يصل إلى نقطة التفرّع ثم يتوزّع على الفرعين.',
+    '<strong>الخطوة ٢:</strong> أقارنُ قراءة مقياس الأمبير (A) مع كل من قراءاتي المقياسين (A₁) و (A₂)، ماذا أستنتج؟ — <em>الملاحظة:</em> قراءة الأصل تساوي مجموع قراءتي الفرعين، ولا تساوي إحداهما وحدها.',
+    '<strong>الخطوة ٣:</strong> أنزِعُ أحد المصابيح مع المحافظة على ترتيب الدّارة، ماذا ألاحظ؟ — <em>الملاحظة:</em> ينطفئ مصباح الفرع المنزوع وحده، ويبقى التيار في الفرع الآخر، فيبقى المصباح الثاني مضيئاً.',
+  ])}
+  ${figure('parallel-circuit', 'شكل ص ٩٣: المقياس A في الخط الأصلي، ثم فرعان متوازيان: A₁ مع المصباح L₁ في الأعلى، وA₂ مع مصباح مطبوع عليه L₁ في المصدر فرعاً سفلياً. التيار الأصلي هو مجموع تياري الفرعين.')}
+  ${note(`<strong>قيد مصدر:</strong> المصباح السفلي في رسم ص ٩٣ مطبوع عليه ${tex('L_{1}', 'L one')} كالعُلوي، مع أنّ الأدوات تذكر «مصباحان مختلفان ${tex('L_{1},L_{2}', 'L one L two')}». يُنقل الرمز كما هو في المصدر ولا يُصحَّح من عندنا؛ والمهمّ في الرسم أنّ الفرعين مختلفان وشدّتاهما مختلفتان.`)}
+  ${subhead('nb-s09-conclusion', '«أستنتج» كما طُبع (ثلاثة بنود، ص ٩٤)')}
+  ${conclusion('الاستنتاجات الثلاثة — نصّ الكتاب ص ٩٤', list([
+    'في الوصل على التفرّع تكون شِدّات التيّار <strong>مختلفة</strong>.',
+    `شِدّة التيّار في الدّارة الأصلية <strong>تساوي مجموع</strong> شِدّات التيّارات في فروع الدّارة المختلفة ${tex(PARALLEL, 'I equals I one plus I two')}.`,
+    'عند نزع أحد أجهزة الدّارة التفرّعية يبقى التيّار الكهربائيّ في بقية الفروع.',
+  ]))}
+  ${law('شدة التيار على التفرّع', formula(PARALLEL, 'I equals I one plus I two'))}
+  ${law('صيغة ثلاثة فروع (تعميم على مقاييس التجربة)', formula('I=I_{1}+I_{2}+I_{3}', 'I equals I one plus I two plus I three'))}
+  ${subhead('nb-s09-battery', 'مثال الجهود الثاني: مولّدات متماثلة على التفرّع (ص ٩٤)')}
+  <p>${BOOK} «مثال: وصل عدّة مولّدات متماثلة على التفرّع.»</p>
+  ${figure('batteries-parallel', 'شكل ص ٩٤: أربع خلايا متماثلة على التفرّع، جميع الأقطاب الموجبة على خط ناقل واحد وجميع السالبة على خط آخر، والجهد المطبوع ' + ltr('1.5 Volts') + ' — أي جهد خلية واحدة.')}
+  ${table({
+    caption: 'مقارنة مثالَي الجهود في الدرس (ص ٩٣ وص ٩٤)',
+    head: ['البند', 'أربع خلايا على التسلسل (ص ٩٣)', 'أربع خلايا على التفرّع (ص ٩٤)'],
+    rowHead: true,
+    rows: [
+      ['طريقة الوصل', 'موجب كل خلية إلى سالب التي تليها.', 'جميع الموجبات على خط واحد وجميع السوالب على خط واحد.'],
+      ['الجهد المطبوع', tex(VOLT_6, 'six volts'), tex(VOLT_15, 'one point five volts')],
+      ['ماذا يعني؟', 'الجهود تُجمع لأنّ الخلايا على مسار واحد بالاتجاه نفسه.', 'يبقى الجهد جهد خلية واحدة، لأنّ كل خلية موصولة بين النقطتين نفسيهما.'],
+      ['هل هو قانون لشدة التيار؟', '<strong>لا.</strong> مثال جهد فقط.', '<strong>لا.</strong> مثال جهد فقط.'],
+    ],
+  })}
+  ${note(`<strong>العلاقة بين المثالين (إثراء حسابي):</strong> أربع خلايا متماثلة تعطي ${tex('1.5\\,\\mathrm{V}', 'one point five volts')} لكل خلية على التفرّع، وتعطي ${tex('6\\,\\mathrm{V}', 'six volts')} على التسلسل؛ والعدد نفسه يظهر في القسمة ${tex('\\dfrac{6}{4}=1.5\\,\\mathrm{V}', 'six divided by four equals one point five volts')}. هذا تحقّق من اتساق الشكلين في الكتاب، ولا يضيف قانوناً جديداً ولا يُستعمل في حساب شدة التيار. ${ENRICH}`)}
+  ${note(`<strong>تحذير:</strong> ${ltr('6 V')} و${ltr('1.5 V')} قيمتا <strong>جهد</strong> مطبوعتان في شكلَي المولّدات. لا تُستعملان في قانون شدة التيار ${tex(CURRENT, 'I equals q over t')}، ولا تُضاف إليهما أيّ قيمة أخرى من خارج الدرس. ${ENRICH}`)}
+</section>`;
+
+/* --- 10. the textbook summary «تعلّمتُ» (p 94) --------------------------- */
+
+const sectionSummary = `
+<section class="student-notebook-section" aria-labelledby="nb-s10">
+  <h3 id="nb-s10">١٠. خلاصة «تعلّمتُ» كما وردت في الكتاب (ص ٩٤)</h3>
+  <p>${BOOK} بنود «تعلّمتُ» سبعة، وهذه نصوصها كاملة:</p>
+  ${list([
+    'التيّار الكهربائيّ المُتواصِل (المستمر) هو انتقال مستمرٌّ للإلكترونات الحرّة باتجاهٍ واحد في النّاقل الذي يمرّ فيه التيّار.',
+    `حتى يمر تيار في دارة ما يجب أن تحتوي على <strong>مولّد</strong> وأن تكون الدّارة <strong>مغلقة</strong>.`,
+    `شِدّة التيّار تعطى بالعلاقة ${tex(CURRENT, 'I equals q over t')}.`,
+    'جهة التيّار من القطب الموجب للمولّد إلى القطب السّالب خارج المولّد.',
+    'المولّد لا يُنتِج إلكترونات ولكن يُسبّب حركة الإلكترونات في الدّارة.',
+    'تكون شِدّة التيّار ثابتة في جميع أجزاء الدّارة الموصولة على التَّسلسُل.',
+    'تكون شِدّة التيّار مختلفة في جميع أجزاء الدّارة الموصولة على التفرّع.',
+  ])}
+  ${subhead('nb-s10-map', 'خريطة الدرس في خمس محطات (تنظيم المنصة)')}
+  ${steps([
+    'التيار المتواصل: إلكترونات حرّة موجودة سلفاً، تتحرك باتجاه واحد في الناقل.',
+    `الجهة الاصطلاحية: من الموجب إلى السالب خارج المولّد؛ والإلكترونات بالعكس. ${tex('I', 'I')}`,
+    `${tex(CURRENT, 'I equals q over t')} بوحدة الأمبير؛ ${tex('q', 'q')} بالكولوم و${tex('t', 't')} بالثانية.`,
+    `التسلسل: ${tex(SERIES, 'I is constant')} في كل الأجزاء؛ وفتح أيّ جزء يقطع الكل.`,
+    `التفرّع: ${tex(PARALLEL, 'I equals I one plus I two')}؛ ونزع فرع لا يطفئ بقية الفروع.`,
+  ])}
+</section>`;
+
+/* --- 11. «أختبر نفسي» p95: terms, true/false, the I–t curves ------------- */
+
+const sectionCheckOne = `
+<section class="student-notebook-section" aria-labelledby="nb-s11">
+  <h3 id="nb-s11">١١. «أختبر نفسي» ص ٩٥: المصطلحات وصح/خطأ ومنحنى التيار المتواصل</h3>
+  ${subhead('nb-s11-q1', 'السؤال الأول: اكتب المصطلح العلمي المناسب لكلٍّ من العبارات')}
+  <p>${BOOK} «اكتب المصطلح العلمي المناسب لكلٍّ من العبارات:» وتحت كل عبارة سطر منقّط للكتابة في الدفتر.</p>
+  ${table({
+    caption: 'السؤال الأول: العبارات الأربع كما طُبعت، ومصطلح كلٍّ منها',
+    head: ['#', 'العبارة المطبوعة', 'المصطلح العلمي', 'مرجع التعريف'],
+    rowHead: true,
+    rows: [
+      ['١', 'كميّة الشّحنة التي تجتاز مقطع النّاقل في الثّانية الواحدة.', '<strong>شِدّة التيّار الكهربائيّ</strong>', 'ص ٩١: كمية الكهرباء المارّة عبر مقطع خلال واحدة الزمن.'],
+      ['٢', 'شحنة قدرها كولوم واحد تجتاز مقطع النّاقل في ثانية واحدة.', '<strong>الأمبير</strong>', 'ص ٩١: تعريف وحدة الشدة، ورمزها ' + ltr('A') + '.'],
+      ['٣', 'جهاز يستخدم لقياس شِدّة التيّار و يُوصَل في الدّارة على التَّسلسُل.', '<strong>مقياس الأمبير</strong> (الأميتر)', 'ص ٩٢: يوصل على التسلسل ليمرّ فيه التيار نفسه.'],
+      ['٤', 'حركة مستمرة ومباشرة للإلكترونات في دارة كهربائية مغلقة من القطب السّالب إلى الموجب.', '<strong>التيّار الكهربائيّ المُتواصِل (المستمر)</strong>', 'ص ٨٨: انتقال مستمر للإلكترونات الحرّة باتجاه واحد.'],
+    ],
+  })}
+  ${qa({
+    number: 'تحقّق سريع:',
+    prompt: 'ما الفرق بين المصطلح الأول والثاني؟ كلاهما «تيار».',
+    answer: {
+      text: `الأول ${tex('I', 'I')} هو <strong>اسم الكمية المقيسة</strong>، والثاني ${tex('\\mathrm{A}', 'ampere')} هو <strong>اسم وحدتها</strong>: الكمية تقاس بوحدة، والوحدة تُكتب بعد الرقم ${tex('I=2\\,\\mathrm{A}', 'I equals two amperes')}؛ ولا يصحّ القول «شدة التيار تساوي أمبيرين» بلا تمييز بينهما. ${ENRICH}`,
+    },
+  })}
+  ${subhead('nb-s11-q2', 'السؤال الثاني: ضع إشارة صح أو خطأ')}
+  ${table({
+    caption: 'السؤال الثاني: العبارتان كما طُبعتا، والحكم والتصحيح',
+    head: ['#', 'العبارة المطبوعة', 'الحكم', 'التصحيح والتعليل'],
+    rowHead: true,
+    rows: [
+      ['١', 'جهة التيّار في الدّارة المغلقة من القطب السّالب إلى الموجب.', '<strong>خطأ</strong>', 'اصطلاح أمبير (ص ٨٩): جهة التيار <strong>خارج المولّد</strong> من الموجب إلى السالب. العبارة تصف جهة حركة الإلكترونات لا جهة التيار.'],
+      ['٢', 'يُوصَل مقياس أمبير في الدّارة على التَّسلسُل.', '<strong>صح</strong>', 'نصّ ص ٩٢: «يُوصل على التَّسلسُل في الدّارة الكهربائيّة» حتى يمرّ فيه التيار نفسه.'],
+    ],
+  })}
+  ${qa({
+    number: 'الحكم:',
+    prompt: 'العبارتان أعلاه، وما يثبته اصطلاح أمبير ونصّ ص ٩٢.',
+    answer: {
+      verdict: `${ltr('1')} خطأ · ${ltr('2')} صح`,
+      text: 'الأولى تخالف اصطلاح أمبير (الموجب إلى السالب خارج المولّد)، والثانية مطابقة لنصّ ص ٩٢ في وصل مقياس الأمبير على التسلسل. ' + INFER,
+    },
+  })}
+  ${note('<strong>لا تحذف العبارة الخاطئة:</strong> التصحيح يبدّل الجهة ويضيف القيد «خارج المولّد»، فيصبح: «جهة التيار في الدارة المغلقة من القطب الموجب إلى القطب السالب خارج المولّد». ' + INFER)}
+  ${subhead('nb-s11-q3', 'السؤال الثالث (١): المنحنى المُعبّر عن تغيّرات شدة التيار مع الزمن')}
+  ${problem(`<strong>نصّ الكتاب (ص ٩٥):</strong> «المنحني المُعبّر عن تغيُّرات شِدّة التيّار مع الزّمن في التيار المُتواصِل.» والمطلوب اختيار واحد من أربعة منحنيات مطبوعة في الشكل: ${ltr('a')} و${ltr('b')} و${ltr('c')} و${ltr('d')}.`)}
+  ${table({
+    caption: 'المنحنيات الأربعة في ص ٩٥: وصف كل منحنى ودلالته',
+    head: ['المنحنى', 'شكله', 'دلالته على شدة التيار'],
+    rowHead: true,
+    rows: [
+      [ltr('a'), 'منحنى تناقصي (تناقص أسّي) يبدأ عالياً ويقترب من الصفر.', 'شدة تتناقص مع الزمن — تيار غير متواصل.'],
+      [ltr('b'), 'موجة متغيرة الاتجاه صعوداً وهبوطاً.', 'شدة تتغير قيمتها واتجاهها دورياً — ليست تياراً متواصلاً.'],
+      [ltr('c'), 'درجات (خطوات) متقطعة صاعدة.', 'شدة تتغيّر قفزاتٍ متقطعة — ليست ثابتة.'],
+      [ltr('d'), 'خط أفقي مستقيم موازٍ لمحور الزمن.', 'شدة <strong>ثابتة</strong> مع الزمن — وهذا هو التيار المتواصل.'],
+    ],
+  })}
+  ${qa({
+    number: 'أيّ المنحنيات يمثّل التيار المتواصل؟',
+    prompt: 'قارن بين الأربعة، ثم تحقّق من إجابتك.',
+    answer: {
+      letter: 'd',
+      text: `خط أفقي ثابت يعني أنّ ${tex('I', 'I')} لا تتغيّر مهما تقدّم الزمن. والمنحنيات ${ltr('a')} و${ltr('b')} و${ltr('c')} كلها تصف شدة متغيّرة، فلا تمثّل تياراً متواصلاً. ${INFER}`,
+    },
+  })}
+</section>`;
+
+/* --- 12. «أختبر نفسي» p96: cause, explanations, the numeric question ----- */
+
+const sectionCheckTwo = `
+<section class="student-notebook-section" aria-labelledby="nb-s12">
+  <h3 id="nb-s12">١٢. «أختبر نفسي» ص ٩٦: المسبّب والتفسيرات والسؤال الحسابي</h3>
+  ${subhead('nb-s12-q3', 'السؤال الثالث (٢): المُسبّب لحركة الإلكترونات في الدّارة')}
+  ${problem('<strong>نصّ الكتاب (ص ٩٦):</strong> «٢. المُسبّب لحركة الإلكترونات في الدّارة هو:» ثم أربعة بدائل: a. المصباح الكهربائيّ. · b. المولّد الكهربائيّ. · c. القاطعة. · d. مقياس أمبير.')}
+  ${table({
+    caption: 'البدائل الأربعة وحكم كل منها',
+    head: ['البديل', 'نصّه', 'الحكم'],
+    rowHead: true,
+    rows: [
+      [ltr('a'), 'المصباح الكهربائيّ.', 'لا: المصباح يستهلك الطاقة الكهربائية ويحوّلها، ولا يسبّب حركة الإلكترونات.'],
+      [ltr('b'), 'المولّد الكهربائيّ.', '<strong>هو المسبّب</strong>: نصّ استنتاج ص ٨٨ و«تعلّمتُ» ص ٩٤.'],
+      [ltr('c'), 'القاطعة.', 'لا: القاطعة تفتح الدارة وتغلقها؛ فهي شرط مرور أو توقّف، لا مصدر الحركة.'],
+      [ltr('d'), 'مقياس أمبير.', 'لا: المقياس يقيس التيار، ولا يولّده.'],
+    ],
+  })}
+  ${qa({
+    number: 'أيّ البدائل يسبّب حركة الإلكترونات؟',
+    prompt: 'حدّد المسبّب، ثم تحقّق من إجابتك.',
+    answer: {
+      letter: 'b',
+      text: 'المولّد يحافظ على فرق بين قطبية طرفيه فيدفع الإلكترونات الحرّة في الناقل باتجاه واحد؛ وهذا نصّ الاستنتاج الثالث في ص ٨٨: «يُسبّب المولّد الحركة السّابقة للإلكترونات». ' + INFER,
+    },
+  })}
+  ${subhead('nb-s12-q4', 'السؤال الرابع: أعطِ تفسيراً علمياً لما يأتي')}
+  ${problem('<strong>نصّ الكتاب (ص ٩٦):</strong> «أعطِ تفسيراً علمياً لما يأتي: (١) وجود قاصمة منصهرة في معظم الأجهزة الكهربائيّة. (٢) سبب ناقلية المعادن للتيّار وعدم ناقلية العوازل.»')}
+  ${table({
+    caption: 'السؤال الرابع: معايير الإجابة النموذجية لكل فقرة',
+    head: ['الفقرة', 'الإجابة النموذجية', 'معايير التقييم'],
+    rowHead: true,
+    rows: [
+      ['١. القاصمة المنصهرة', 'القاصمة المنصهرة سلك رقيق يوضع على التسلسل في الدارة؛ فإذا زادت شدة التيار عن حدّ معين ارتفعت حرارته فانصهر فقطع الدارة، فيحمي الأجهزة من التلف ويقي من الحريق.', 'تذكر أنّها تقطع التيار عند ارتفاع الشدة، وتربط القطع بحماية الجهاز أو الحريق.'],
+      ['٢. ناقلية المعادن والعوازل', 'المعادن ناقلة لأنّ ذراتها تحتوي إلكترونات حرّة كثيرة تتحرّك في الشبكة فتُكوّن التيار عند وجود مولّد ودارة مغلقة؛ أمّا العوازل فإلكتروناتها مرتبطة بذراتها ولا تتحرّك بحرية، فلا تمرّر التيار الكهربائي.', 'تذكر وجود الإلكترونات الحرّة في المعادن، وافتقار العوازل إليها أو ارتباط إلكتروناتها الشديد.'],
+    ],
+  })}
+  ${note(`${INFER} الكتاب يطلب التفسير ولا يطبعه؛ الصياغة أعلاه هي الإجابة النموذجية المعتمدة في منطقة المعلم، وهي مبنية على مفردات ص ٨٨ (الإلكترونات الحرّة) وص ٩٢ (الوصل على التسلسل) ولا تضيف أيّ قيمة عددية. وهذا السؤال لا يُصحَّح آلياً؛ قارن تفسيرك بالمعايير وقيّم بنفسك أيّها تحقّق.`)}
+  ${subhead('nb-s12-q5', 'السؤال الخامس: الحساب بالوحدات — الحلّ الكامل')}
+  ${problem(`<strong>نصّ الكتاب (ص ٩٦):</strong> «نغذّي دارة كهربائيّة بمنبع تيار متواصل فتمرُّ كميّة من الكهرباء قدرُها ${tex(PRINTED_12C, 'twelve c as printed')} خلال ${tex('2\\,\\mathrm{min}', 'two minutes')}. المطلوب حساب: (١) شِدّة التيّار المارّة في الدّارة. (٢) كميّة الكهرباء المارّة في الدّارة خلال ${tex('5\\,\\mathrm{min}', 'five minutes')}.»`)}
+  ${note(`<strong>قيد مصدر:</strong> الكتاب يطبع الوحدة ${tex(PRINTED_12C, 'twelve c as printed')} بحرف لاتيني صغير ${ltr('c')}، والمقصود بها كولوم ${ltr('C')} كما في اصطلاح الصفحات السابقة. تُحفظ الكتابة كما في المصدر وتُفسَّر في الشرح؛ ولا تُقرأ وحدة أخرى.`)}
+  ${table({
+    caption: 'تنظيم السؤال الخامس: المعطيات والمطلوب',
+    head: ['البند', 'الرمز', 'القيمة والوحدة'],
+    rowHead: true,
+    rows: [
+      ['المعطى الأول', tex('q', 'q'), `${tex('12\\,\\mathrm{C}', 'twelve coulombs')} — مطبوعة ${tex(PRINTED_12C, 'twelve c as printed')}`],
+      ['المعطى الثاني', tex('t', 't'), `${tex('2\\,\\mathrm{min}', 'two minutes')} = ${tex('120\\,\\mathrm{s}', 'one hundred twenty seconds')}`],
+      ['المطلوب الأول', tex('I', 'I'), 'شدة التيار المارّة، بالأمبير'],
+      ['المطلوب الثاني', tex('q', 'q'), `${tex('5\\,\\mathrm{min}', 'five minutes')} = ${tex('300\\,\\mathrm{s}', 'three hundred seconds')}، بالكولوم`],
+    ],
+  })}
+  ${steps([
+    `نحوّل الزمنين أولاً: ${tex(TWO_MIN, 'two minutes equals one hundred twenty seconds')} و${tex(FIVE_MIN, 'five minutes equals three hundred seconds')}.`,
+    `نطبّق القانون ${tex(CURRENT, 'I equals q over t')} على المعطى الأول.`,
+    `نستعمل ${tex(CHARGE, 'q equals I t')} مع الشدة الثابتة والزمن الجديد للمطلوب الثاني.`,
+    'نتحقّق بالتناسب بين الزمنين وبالوحدات.',
+  ])}
+  ${example('المطلوب الأول: شدة التيار', formula('I=\\dfrac{q}{t}=\\dfrac{12}{120}=0.1\\,\\mathrm{A}', 'I equals twelve over one hundred twenty equals zero point one ampere'), `وهي ${tex('0.1\\,\\mathrm{A}=100\\,\\mathrm{mA}', 'zero point one ampere equals one hundred milliamperes')} — الشدّتان متكافئتان.`)}
+  ${example('المطلوب الثاني: كمية الكهرباء خلال خمس دقائق', formula('q=I\\,t=0.1\\times300=30\\,\\mathrm{C}', 'q equals zero point one times three hundred equals thirty coulombs'), 'الشدة ثابتة لأنّ التيار متواصل، فلا يتغيّر المعامل أثناء الحساب.')}
+  ${subhead('nb-s12-check', 'التحقّق من السؤال الخامس')}
+  ${list([
+    `<strong>بالتناسب:</strong> ${tex('\\dfrac{5}{2}=2.5', 'five over two equals two point five')}؛ فكمية الكهرباء ${tex('12\\times2.5=30\\,\\mathrm{C}', 'twelve times two point five equals thirty coulombs')} — وهذا يوافق النتيجة.`,
+    `<strong>بالوحدات:</strong> ${tex('\\mathrm{A}\\times\\mathrm{s}=\\mathrm{C}', 'ampere times second equals coulomb')}.`,
+    `<strong>خطأ شائع:</strong> القسمة على ٢ بدل ١٢٠ تعطي ${tex('6\\,\\mathrm{A}', 'six amperes')}، وهي شدة تخالف معطيات الصفحة وتجعل الشقّ الثاني بلا معنى. ${ENRICH}`,
+  ])}
+  ${table({
+    caption: 'ثلاثة أخطاء متوقّعة في السؤال الخامس وكيف تُتجنّب',
+    head: ['الخطأ', 'ما ينتج عنه', 'التصحيح'],
+    rowHead: true,
+    rows: [
+      ['القسمة على عدد الدقائق لا على الثواني', `${tex('I=\\dfrac{12}{2}=6\\,\\mathrm{A}', 'twelve over two equals six amperes')} — خطأ`, `حوّل أولاً: ${tex('2\\,\\mathrm{min}=120\\,\\mathrm{s}', 'two minutes equals one hundred twenty seconds')}.`],
+      ['نسيان تحويل ٥ دقائق في الشقّ الثاني', 'ضرب ٠٫١ في ٥ فيعطي ٠٫٥ بدل ٣٠', `استخدم ${tex('5\\,\\mathrm{min}=300\\,\\mathrm{s}', 'five minutes equals three hundred seconds')}.`],
+      [`قراءة ${tex('12\\,\\mathrm{c}', 'twelve c as printed')} وحدة أخرى`, 'وحدة لا معنى لها في هذا الدرس', 'اقرأها كولوم بحسب اصطلاح الصفحة ووثّق الخطأ المطبعي.'],
+    ],
+  })}
+</section>`;
+
+/* --- 13. symbols, units and the voltages of the lesson ------------------- */
+
+const sectionSymbols = `
+<section class="student-notebook-section" aria-labelledby="nb-s13">
+  <h3 id="nb-s13">١٣. الرموز والوحدات وأمثلة الجهود الواردة في الدرس</h3>
+  ${table({
+    caption: 'رموز الدرس ودلالاتها ووحداتها',
+    head: ['الرمز', 'الدلالة', 'الوحدة'],
+    rowHead: true,
+    rows: [
+      [tex('I', 'I'), 'شِدّة التيّار الكهربائيّ', tex('\\mathrm{A}', 'ampere') + ' (أمبير)'],
+      [tex('q', 'q'), 'كميّة الكهرباء المارّة عبر مقطع الناقل', tex('\\mathrm{C}', 'coulomb') + ' (كولوم)'],
+      [tex('t', 't'), 'الزمن الذي تعبر فيه الكمية المقطع', tex('\\mathrm{s}', 'second') + ' (ثانية)'],
+      [tex('e^{-}', 'electron'), 'الإلكترون الحرّ، وحامل الشحنة السالبة في الناقل المعدني', '— (جسيم)'],
+      [tex('I_{1},I_{2},I_{3}', 'branch currents'), 'شدّات تيار فروع الدارة على التفرّع', tex('\\mathrm{A}', 'ampere')],
+      [tex('A,A_{1},A_{2},A_{3}', 'ammeters'), 'مواضع مقاييس الأمبير في الدارتين', 'أجهزة قياس'],
+      [tex('L_{1},L_{2}', 'lamps'), 'المصباحان في الدارتين', 'أجهزة مستهلكة'],
+      ['Const', 'ثابت لا يتغيّر مع الزمن (Constant) — وصف الشدة على التسلسل', '— (صفة)'],
+      [`${tex('\\mathrm{kA}', 'kilolampere')} · ${tex('\\mathrm{mA}', 'milliampere')} · ${tex('\\mu\\mathrm{A}', 'microampere')}`, 'مضاعفات الأمبير وأجزاؤه', 'أمبير بعد التحويل'],
+      [tex('\\mathrm{V}', 'volt'), 'وحدة الجهد الكهربائي المستعملة في شكلَي المولّدات', 'فولت'],
+    ],
+  })}
+  ${subhead('nb-s13-volts', 'أمثلة الجهود في الدرس: ٦ فولت و١٫٥ فولت')}
+  ${table({
+    caption: 'كل قيمة جهد وردت في الدرس، ومصدرها، وكيف تُستعمل',
+    head: ['القيمة', 'الموضع', 'ماذا تمثّل', 'كيف تُستعمل'],
+    rowHead: true,
+    rows: [
+      [tex('6\\,\\mathrm{V}', 'six volts'), 'شكل ص ٩٣', 'مجموع جهود أربع خلايا متماثلة موصولة على التسلسل.', 'مثال على جمع الجهود؛ لا يُدخل في حساب شدة التيار.'],
+      [tex('1.5\\,\\mathrm{V}', 'one point five volts'), 'شكل ص ٩٤', 'جهد أربع خلايا متماثلة موصولة على التفرّع، وهو جهد خلية واحدة.', 'مثال على ثبات الجهد في التفرّع؛ لا يُدخل في حساب شدة التيار.'],
+      [tex('200\\,\\mathrm{mA}', 'two hundred milliamperes'), 'شكل ص ٩٢', 'قراءة مقياسَي الأمبير على التسلسل — الشدة نفسها في الجزأين.', `تُقرأ كشدة: ${tex(MA_TO_A, 'two hundred milliamperes equal zero point two amperes')}.`],
+    ],
+  })}
+  ${list([
+    `الوحدة الأساسية للشدة هي الأمبير ${tex('\\mathrm{A}', 'ampere')}؛ وتُكتب الشدة دائماً مع وحدتها: كتابة ${tex('I=2', 'I equals two')} بلا ${tex('\\mathrm{A}', 'ampere')} كتابة ناقصة.`,
+    `الشدة والجهد كمّيتان مختلفتان: ${tex('I', 'I')} بالأمبير، و${tex('V', 'V')} بالفولت؛ ولا يجوز جمع قراءتين بوحدتين مختلفتين. ${ENRICH}`,
+    `أيّ قراءة بميلي أمبير أو ميكرو أمبير تُحوَّل إلى أمبير قبل أيّ حساب بالقانون ${tex(CURRENT, 'I equals q over t')}.`,
+  ])}
+</section>`;
+
+/* --- 14. laws, their symbols and their conditions ------------------------ */
+
+const sectionLaws = `
+<section class="student-notebook-section" aria-labelledby="nb-s14">
+  <h3 id="nb-s14">١٤. القوانين والعلاقات: الرموز والوحدات وشروط التطبيق</h3>
+  ${table({
+    caption: 'القوانين الستة في الدرس: رموزها ووحداتها وشروط استعمالها',
+    head: ['القانون أو العلاقة', 'صيغته', 'الرموز والوحدات', 'شرط التطبيق'],
+    rowHead: true,
+    rows: [
+      ['قانون شدة التيار', tex(CURRENT, 'I equals q over t'), `${tex('I', 'I')} بالأمبير، ${tex('q', 'q')} بالكولوم، ${tex('t', 't')} بالثانية`, `تيار متواصل، وكمية ${tex('q', 'q')} تعبر مقطعاً واحداً خلال ${tex('t', 't')}، و${tex('t>0', 't positive')}.`],
+      ['كمية الكهرباء (مشتقة)', tex(CHARGE, 'q equals I t'), 'الوحدات نفسها', 'حلّ القانون بالنسبة إلى الكمية، عند ثبات الشدة.'],
+      ['الزمن (مشتقة)', tex(TIME, 't equals q over I'), 'الوحدات نفسها', `حلّ القانون بالنسبة إلى الزمن، بشرط ${tex('I\\neq 0', 'I not zero')}.`],
+      ['ثبات النسبة', tex(RATIO, 'q over t is constant'), 'النسبة بوحدة الأمبير', 'تيار متواصل ثابت الشدة في الدارة.'],
+      ['التناسب الطردي', tex('q\\propto t', 'q proportional to t'), '—', 'عند ثبات الشدة وحدها؛ مضاعفة الزمن تُضاعف الكمية.'],
+      ['الوصل على التسلسل', tex(SERIES, 'I is constant'), 'أمبير', 'مسار واحد مغلق بلا تفرّع.'],
+      ['الوصل على التفرّع', tex(PARALLEL, 'I equals I one plus I two'), 'أمبير', 'فرعان (أو أكثر) تتجمّع في الخط الأصلي.'],
+    ],
+  })}
+  ${law('القانون الأساسي', formula(CURRENT, 'I equals q over t'))}
+  ${law('كمية الكهرباء', formula(CHARGE, 'q equals I times t'))}
+  ${law('الزمن (مشتقة)', formula(TIME, 't equals q over I'))}
+  ${law('التناسب الطردي', formula('\\dfrac{q}{t}=\\mathrm{const}\\;\\Rightarrow\\;q\\propto t', 'q over t is constant so q is proportional to t'))}
+  ${law('على التسلسل', formula(SERIES, 'I is constant in a series circuit'))}
+  ${law('على التفرّع', formula(PARALLEL, 'I equals I one plus I two'))}
+  ${subhead('nb-s14-which', 'أيّ قانون أستخدم؟')}
+  ${table({
+    caption: 'شجرة القرار عند الحل',
+    head: ['ما أعرفه', 'ما أطلبه', 'ما أستخدمه'],
+    rowHead: true,
+    rows: [
+      [`${tex('q', 'q')} و${tex('t', 't')}`, tex('I', 'I'), tex(CURRENT, 'I equals q over t')],
+      [`${tex('I', 'I')} و${tex('t', 't')}`, tex('q', 'q'), tex(CHARGE, 'q equals I t')],
+      [`${tex('q', 'q')} و${tex('I', 'I')}`, tex('t', 't'), tex(TIME, 't equals q over I')],
+      ['تيار الخط الأصلي وشدّات الفروع', 'تحقق من التفرّع', tex(PARALLEL, 'I equals I one plus I two')],
+      ['موضعان في دارة بلا تفرّع', 'مقارنة القراءتين', tex(SERIES, 'I is constant')],
+    ],
+  })}
+  ${subhead('nb-s14-symbols', 'قائمة الرموز في سطر واحد')}
+  <ul class="student-notebook-symbols">
+    <li>${tex('q', 'q')} : كمية الكهرباء عبر مقطع الناقل، بالكولوم ${tex('\\mathrm{C}', 'coulomb')}.</li>
+    <li>${tex('t', 't')} : زمن المرور، بالثانية ${tex('\\mathrm{s}', 'second')}، ولا يكون صفراً.</li>
+    <li>${tex('I', 'I')} : شدة التيار، بالأمبير ${tex('\\mathrm{A}', 'ampere')}.</li>
+    <li>${tex('I_{1},I_{2}', 'I one and I two')} : شدة تيار الفرعين، بالأمبير أيضاً.</li>
+  </ul>
+  ${note(`<strong>ترتيب الحل:</strong> حدّد المعطيات والمطلوب ← حوّل الوحدات (الدقائق إلى ثوانٍ، والـ${ltr('mA')} إلى ${ltr('A')}) ← اختر القانون ← عوّض في سطر واحد ← اكتب النتيجة بالوحدة ← تحقّق بالتناسب. ${ENRICH}`)}
+</section>`;
+
+/* --- 15. common errors --------------------------------------------------- */
+
+const sectionMisconceptions = `
+<section class="student-notebook-section" aria-labelledby="nb-s15">
+  <h3 id="nb-s15">١٥. الأخطاء الشائعة والتصحيح العلمي</h3>
+  ${table({
+    caption: 'التصوّر الخاطئ مقابل التصحيح',
+    head: ['التصوّر الخاطئ', 'التصحيح'],
+    rows: [
+      ['«جهة التيار من السالب إلى الموجب» مطلقاً.', `هذه جهة <strong>حركة الإلكترونات</strong>. أمّا جهة التيار الاصطلاحية فهي من الموجب إلى السالب <strong>خارج المولّد</strong> (ص ٨٩).`],
+      ['الخلط بين شدة التيار والأمبير.', 'شدة التيار <strong>كمية</strong> تُقاس، والأمبير <strong>وحدة</strong> تُكتب بعد الرقم، ومقياس الأمبير <strong>جهاز</strong> على التسلسل.'],
+      ['القسمة على عدد الدقائق مباشرةً.', `يجب التحويل أولاً: ${tex('2\\,\\mathrm{min}=120\\,\\mathrm{s}', 'two minutes equals one hundred twenty seconds')}؛ القسمة على ٢ تعطي ${tex('6\\,\\mathrm{A}', 'six amperes')} خطأً.`],
+      [`قراءة ${tex('12\\,\\mathrm{c}', 'twelve c as printed')} وحدة أخرى غير الكولوم.`, 'هي كمية الكهرباء بالكولوم، والخطأ المطبعي موثَّق في الدفتر؛ لا تُخترع وحدة جديدة.'],
+      ['ظنّ أنّ المولّد ينتج الإلكترونات.', 'المولّد <strong>يسبّب</strong> حركة الإلكترونات الحرّة الموجودة سلفاً في الناقل، ولا يخلقها (ص ٨٨، ص ٩٤).'],
+      ['وصل مقياس الأمبير على التفرّع.', 'يُوصل على التسلسل ليمرّ فيه التيار نفسه؛ وصله على التفرّع يجعل مساراً جانبياً فيفسد القياس (ص ٩٢).'],
+      ['جمع شدّات التيار على التسلسل.', `على التسلسل ${tex(SERIES, 'I is constant')} فلا تُجمع الشدات؛ الجمع يخصّ فروع التفرّع ${tex(PARALLEL, 'I equals I one plus I two')}.`],
+      ['اعتبار أنّ نزع مصباح يطفئ فرعه فقط في كل الدارات.', 'في التسلسل نزع جزء يقطع الدارة كلها؛ وفي التفرّع يبقى التيار في بقية الفروع (ص ٩٢، ص ٩٤).'],
+      [`اعتبار ${tex('6\\,\\mathrm{V}', 'six volts')} و${tex('1.5\\,\\mathrm{V}', 'one point five volts')} قيمتين في قانون شدة التيار.`, 'هما مثالان على <strong>الجهد</strong> في شكلَي المولّدات، ولا تُستعملان في حساب I.'],
+      ['اعتبار المنحنى b أو c ممثّلاً للتيار المتواصل.', 'التيار المتواصل ثابت الشدة، فيمثّله الخط الأفقي d وحده (ص ٩٥).'],
+      ['تجاهل شرط الدارة المغلقة.', 'لا يمرّ تيار إلا بمولّد ودارة مغلقة؛ المفتاح المفتوح يقطع المسار (ص ٩٤).'],
+      ['الظنّ أنّ الإلكترون يقطع السلك بسرعة الضوء.', 'الذي ينتشر بسرعة الضوء تقريباً هو أثر الحقل الكهربائي؛ الإلكترون نفسه يزحف ببطء. ' + ENRICH],
+    ],
+  })}
+</section>`;
+
+/* --- 16. exam notes ------------------------------------------------------ */
+
+const sectionExam = `
+<section class="student-notebook-section" aria-labelledby="nb-s16">
+  <h3 id="nb-s16">١٦. ملاحظات امتحانية وتسلسل الإجابة</h3>
+  ${subhead('nb-s16-traps', 'عشر نقاط تُسقط الدرجات')}
+  ${steps([
+    '<strong>القيد الاتجاهي:</strong> عند وصف جهة التيار اكتب دائماً «خارج المولّد»؛ فداخل المولّد تنعكس المقارنة.',
+    '<strong>التمييز الثلاثي:</strong> كمية (شدة التيار) / وحدة (الأمبير) / جهاز (مقياس الأمبير على التسلسل) — وهو بالضبط ما يقيسه السؤال الأول في ص ٩٥.',
+    '<strong>التحويل قبل التعويض:</strong> ص ٩١ وص ٩٦ كلتاهما تطلبان الثواني أولاً.',
+    `<strong>الرموز المطبعية:</strong> ${tex(PRINTED_12C, 'twelve c as printed')} في ص ٩٦ و${ltr('L')}${ltr('1')} المكرّر في ص ٩٣؛ احفظهما كما هما مع تفسيرهما.`,
+    '<strong>الوحدات:</strong> الكولوم للكمية، والثانية للزمن، والأمبير للشدة؛ والميلي والميكرو تُحوَّل قبل الحساب.',
+    '<strong>الوصل:</strong> لا تعكس حالتي التسلسل والتفرّع عند سؤال نزع مصباح.',
+    '<strong>المنحنى:</strong> ابحث عن القيمة التي لا تتغيّر مع الزمن؛ الخط الأفقي d.',
+    '<strong>شرط التيار:</strong> مولّد + دارة مغلقة؛ والمسبّب هو المولّد (الخيار b في ص ٩٦).',
+    '<strong>سؤال التفسير:</strong> لكل فقرة سببان: سبب فيزيائي (ماذا يحدث) وأثر عملي (لماذا يهمّنا).',
+    `<strong>الجهد ليس شدة:</strong> ${tex('6\\,\\mathrm{V}', 'six volts')} و${tex('1.5\\,\\mathrm{V}', 'one point five volts')} مثالان على الجهد، ولا تظهران في حساب ${tex('I', 'I')}.`,
+  ])}
+  ${subhead('nb-s16-plan', 'خطة إجابة سؤال حسابي في أربع خطوات')}
+  ${steps([
+    'اكتب المعطيات برموزها ووحداتها، ثم المطلوب.',
+    'حوّل كل وحدة إلى الوحدة الأساسية (الدقائق ← ثوانٍ، الميلي أمبير ← أمبير).',
+    'اكتب القانون رمزاً، ثم عوّض في سطر واحد، ثم اكتب النتيجة بالوحدة.',
+    'تحقّق: بالتناسب (ضاعف الزمن واضاعف الكمية) وبالوحدات (أمبير × ثانية = كولوم).',
+  ])}
+  ${note(`<strong>قاعدة الوحدات:</strong> لا تُكتب نتيجة عددية بلا وحدة، ولا تُقارن قيمتان بوحدتين مختلفتين قبل التحويل. ${ENRICH}`)}
+</section>`;
+
+/* --- 17. source caveats -------------------------------------------------- */
+
+const sectionCaveats = `
+<section class="student-notebook-section" aria-labelledby="nb-s17">
+  <h3 id="nb-s17">١٧. قيود المصدر وما بقي غامضاً (موثَّق لا مخمَّن)</h3>
+  ${table({
+    caption: 'مواضع الغموض في صفحات ٨٧–٩٦ وكيف عولجت',
+    head: ['الموضع', 'ما يظهر في المصدر', 'المعالجة في الدفتر'],
+    rowHead: true,
+    rows: [
+      ['ص ٩٠ — خلايا الجدول', 'خليتان فارغتان في صفّ الزمن وثلاث في صفّ النسبة.', `أُبقيت مطبوعة فارغة في جدول «كما طُبع»، وأُكملت في جدول ثانٍ بالقيم ${ltr('15')} و${ltr('25')} وبثبات النسبة ${ltr('4')}، مع توثيق أنّها مستنتجة من نقاط الرسم.`],
+      ['ص ٩٣ — تسمية المصباح', `المصباح السفلي مطبوع عليه ${ltr('L1')} كالعُلوي، مع أنّ الأدوات تذكر «مصباحان مختلفان».`, 'نُقل الرمز كما هو، وذُكر القيد صريحاً في موضعه؛ ولم يُصحَّح من عندنا.'],
+      ['ص ٩٦ — وحدة الكمية', `«${ltr('12 c')}» بحرف لاتيني صغير.`, 'حُفظت الكتابة كما في المصدر وفُسِّرت أنها كولوم؛ ولا تُقرأ وحدة أخرى.'],
+      ['ص ٨٧ — أسئلة الافتتاح', 'ثلاثة أسئلة بلا إجابات مطبوعة.', 'الإجابات مستنتجة من ص ٨٨ وص ٩٤ وموسومة «استنتاج تعليمي».'],
+      ['ص ٨٨ — نتائج التجربة', 'التجربة نوعية: لا شدّات ولا زوايا مطبوعة.', 'لم تُضف أيّة قيمة عددية؛ الملاحظات موصوفة بلا أرقام.'],
+      ['ص ٩٢ وص ٩٣ — قراءات المقاييس', 'الشكل يطبع قراءتين متساويتين في التسلسل، ولا يطبع قيماً عددية في التفرّع.', `اكتُفي بـ${tex('200\\,\\mathrm{mA}', 'two hundred milliamperes')} المطبوعة، ووُصف التفرّع بـ«قراءة الأصل تساوي مجموع الفرعين» دون اختراع أرقام.`],
+      ['ص ٨٩ — الصور الفوتوغرافية', 'صورة أمبير، وبطارية، وألواح شمسية.', 'لا تُعاد طباعتها؛ تُستبدل برسوم تخطيطية مع مرجع الصفحة، والنصّ المطبوع تحتها منقول.'],
+    ],
+  })}
+  ${note('<strong>قاعدة العمل:</strong> كل ما في هذا الدفتر إمّا نصّ مطبوع في صفحات ٨٧–٩٦، أو حلّ نموذجي معتمد في منطقة المعلم، أو إضافة موسومة «إثراء من المنصة» أو «استنتاج تعليمي». ولا يوجد رقم واحد من خارج الدرس.')}
+</section>`;
+
+/* --- 18. revision checklist --------------------------------------------- */
+
+const sectionChecklist = `
+<section class="student-notebook-section" aria-labelledby="nb-s18">
+  <h3 id="nb-s18">١٨. قائمة تحقّق قبل اختبار الدرس</h3>
+  <ul class="student-notebook-checklist">
+    <li>أستطيع أن أُعرّف التيار المتواصل بدقّة، وأن أذكر شرطيه: مولّد ودارة مغلقة.</li>
+    <li>أستطيع أن أشرح تجربة الأنبوب وخطواتها الخمس، وأن أقول ما ينتقل فوراً وما لا ينتقل.</li>
+    <li>أستطيع أن أُحدّد جهة التيار الاصطلاحية وجهة حركة الإلكترونات خارج المولّد، بلا عكس.</li>
+    <li>أستطيع أن أذكر تعريف شدة التيار وتعريف الأمبير ووحدات <span dir="ltr">q</span> و<span dir="ltr">t</span> و<span dir="ltr">I</span>.</li>
+    <li>أستطيع أن أُكمل جدول ص ٩٠ من ثبات النسبة، وأن أقرأ ميل الخط البياني.</li>
+    <li>أستطيع أن أحلّ التطبيق المحلول ص ٩١ والسؤال الخامس ص ٩٦ خطوةً بخطوة مع التحويل.</li>
+    <li>أستطيع أن أشرح لماذا يوصل مقياس الأمبير على التسلسل.</li>
+    <li>أستطيع أن أصف تجربتي التسلسل والتفرّع: الأدوات، والخطوات، والملاحظة، والاستنتاج.</li>
+    <li>أستطيع أن أفرّق بين أثر نزع مصباح في التسلسل وأثره في التفرّع.</li>
+    <li>أستطيع أن أذكر السبعة بنود في «تعلّمتُ» ص ٩٤.</li>
+    <li>أستطيع أن أجيب أسئلة «أختبر نفسي» الخمسة: المصطلحات، وصح/خطأ، والمنحنى، والمسبّب، والتفسيرين.</li>
+    <li>أستطيع أن أشرح معنى ٦ فولت و١٫٥ فولت، وأن أقول لماذا ليستا قانوناً لشدة التيار.</li>
+  </ul>
+</section>`;
+
+/* --- assembled notebook -------------------------------------------------- */
+
+const tocEntries = [
+  ['nb-s01', 'الدرس في سطور (ص ٨٧)'],
+  ['nb-s02', 'تجربة الأنبوب (ص ٨٨)'],
+  ['nb-s03', 'اصطلاح جهة التيار (ص ٨٩)'],
+  ['nb-s04', 'شدة التيار والجدول والخط البياني (ص ٩٠)'],
+  ['nb-s05', 'استنتاجات ص ٩١ والأمبير ووحداته'],
+  ['nb-s06', 'التطبيق المحلول (ص ٩١)'],
+  ['nb-s07', 'قياس التيار والتسلسل (ص ٩٢)'],
+  ['nb-s08', 'مولدات على التسلسل — ٦ فولت (ص ٩٣)'],
+  ['nb-s09', 'الوصل على التفرّع — ١٫٥ فولت (ص ٩٣–٩٤)'],
+  ['nb-s10', 'خلاصة «تعلّمتُ» (ص ٩٤)'],
+  ['nb-s11', 'أختبر نفسي — المصطلحات والمنحنى (ص ٩٥)'],
+  ['nb-s12', 'أختبر نفسي — التفسير والحساب (ص ٩٦)'],
+  ['nb-s13', 'الرموز والوحدات وأمثلة الجهود'],
+  ['nb-s14', 'القوانين وشروط تطبيقها'],
+  ['nb-s15', 'الأخطاء الشائعة'],
+  ['nb-s16', 'ملاحظات امتحانية'],
+  ['nb-s17', 'قيود المصدر والغموض الموثَّق'],
+  ['nb-s18', 'قائمة تحقّق قبل الاختبار'],
+];
 
 export const UNIT2L2_NOTEBOOK_TITLE = '📒 دفتر الطالب';
 
 export const UNIT2L2_NOTEBOOK_BLOCK = `<article class="student-notebook u2l2-student-notebook" aria-labelledby="student-notebook-title">
   <header class="student-notebook-header">
-    <p class="student-notebook-kicker">المرحلة ١١ · خلاصة انتقائية للدرس الثاني (ص 87–96)</p>
+    <p class="student-notebook-kicker">المرحلة ١١ · مرجع المراجعة الكامل للدرس الثاني (ص ٨٧–٩٦)</p>
     <h2 id="student-notebook-title">${UNIT2L2_NOTEBOOK_TITLE}</h2>
-    <p>ما يحتاج الطالب إلى حفظه واستخدامه في المسائل والامتحان من درس «التيار الكهربائي المتواصل»، مرتباً للمراجعة السريعة. الشرح المطوّل والمختبرات وأنشطة الكتاب تبقى في مراحل الدرس نفسها.</p>
+    <p>مرجع كامل لدرس «التيار الكهربائي المتواصل» يغطّي صفحات الكتاب العشر صفحةً بصفحة: الأهداف وأسئلة الافتتاح، وتجربة الأنبوب بخطواتها واستنتاجاتها، واصطلاح أمبير وجهتيه، وجدول ص ٩٠ وخطّه البياني، وتعريف شدة التيار والأمبير ومضاعفاته، والتطبيق المحلول، وتجربتي التسلسل والتفرّع بخطواتهما وملاحظاتهما، ومثالَي الجهود ٦ فولت و١٫٥ فولت، و«تعلّمتُ» السبعة، وأسئلة «أختبر نفسي» الخمسة بمفاتيحها، مع الرموز والوحدات وشروط القوانين والأخطاء الشائعة. ويُفصل في كل موضع بين نصّ الكتاب وشرح المنصة: فكلّ نصّ مطبوع موسوم «من الكتاب»، وكلّ إضافة موسومة «إثراء من المنصة» أو «استنتاج تعليمي».</p>
     <div class="student-notebook-tags">
-      <span class="curriculum-tag curriculum-tag-book">من الكتاب · ص 87–96</span>
+      <span class="curriculum-tag curriculum-tag-book">من الكتاب · ص ٨٧–٩٦</span>
       <span class="curriculum-tag curriculum-tag-enrich">تنظيم وشرح من المنصة</span>
     </div>
+    <nav class="student-notebook-toc" id="student-notebook-contents" aria-label="فهرس دفتر الطالب">
+      <ol>${tocEntries.map(([id, label]) => `<li><a href="#${id}">${label}</a></li>`).join('')}</ol>
+    </nav>
   </header>
   <div class="student-notebook-sheet">
-
-${section('u2l2nb-idea', '١. الفكرة الأساسية', `
-${list([
-  '<strong>الموضوع:</strong> التيار الكهربائي المتواصل (المستمر) = انتقال مستمر للإلكترونات الحرّة باتجاه واحد في الناقل (ص 88).',
-  '<strong>شرطاه:</strong> مولّد + دارة مغلقة. المولّد يُسبّب حركة الإلكترونات ولا يُنتجها (ص 94).',
-  `<strong>أهم نتيجة:</strong> شدة التيار هي كمية الكهرباء التي تعبر مقطع الدارة في واحدة الزمن، ${inline(CURRENT, 'I equals q over t')}، والنسبة ${inline('\\dfrac{q}{t}', 'q over t')} ثابتة في هذا الدرس (ص 90–91).`,
-])}
-${note('<strong>الجهتان:</strong> جهة التيار الاصطلاحية خارج المولّد من الموجب إلى السالب، وجهة حركة الإلكترونات من السالب إلى الموجب. هما متعاكستان دائماً (ص 88–89).')}`)}
-
-${section('u2l2nb-terms', '٢. تعريفات ومصطلحات لا تُنسى', `
-${definition('التيار الكهربائي المتواصل (ص 88)', 'انتقال مستمر للإلكترونات الحرّة باتجاه واحد في الناقل الذي يمرّ فيه التيار.')}
-${definition('شدة التيار I (ص 91)', 'كمية الكهرباء q المارّة عبر مقطع دارة كهربائية خلال واحدة الزمن؛ تُقاس بالأمبير A.')}
-${definition('الأمبير A (ص 91)', `شدة تيار يمرّ فيه ${inline('1\\,\\mathrm{C}', 'one coulomb')} خلال ${inline('1\\,\\mathrm{s}', 'one second')} عبر مقطع الدارة؛ أي ${inline('1\\,\\mathrm{A}=\\dfrac{1\\,\\mathrm{C}}{1\\,\\mathrm{s}}', 'one ampere equals one coulomb per second')}.`)}
-${definition('مقياس الأمبير (ص 92)', 'جهاز يقيس شدة التيار عملياً، ويُوصل في الدارة على التسلسل حتى يمرّ فيه التيار المراد قياسه.')}
-${table(['لا تخلط بين', 'و', 'الفرق الحاسم'], [
-  ['شدة التيار (كمية)', 'الأمبير (وحدة)', 'الكمية تُقاس، والوحدة تُكتب بجانب الرقم؛ ومقياس الأمبير هو الجهاز لا أيٌّ منهما.'],
-  ['جهة التيار الاصطلاحية', 'جهة حركة الإلكترونات', 'الأولى من + إلى − خارج المولّد (اصطلاح أمبير)، والثانية بالعكس (ص 89).'],
-  ['الوصل على التسلسل', 'الوصل على التفرّع', 'مسار واحد بتيار ثابت، مقابل فروع تتجمع شداتها في الخط الأصلي (ص 92–94).'],
-  ['المولّد', 'المصباح / القاطعة / المقياس', 'المولّد يُسبّب الحركة؛ المصباح يستهلك، والقاطعة تفتح وتغلق، والمقياس يقيس (ص 96).'],
-], 'فروق يكثر السؤال عنها')}
-${line('<strong>مولّدات تيار مستمر وردت في الدرس (ص 89):</strong> الخلايا الكهربائية البسيطة والخلايا الضوئية.')}`)}
-
-${section('u2l2nb-laws', '٣. القوانين والعلاقات: الرموز والوحدات والشروط', `
-${law('القانون الأساسي', CURRENT, 'I equals q over t')}
-${law('كمية الكهرباء', CHARGE, 'q equals I times t')}
-${law('الزمن (مشتقة)', TIME, 't equals q over I')}
-${law('التناسب الطردي', RATIO, 'q over t is constant, so q is proportional to t')}
-${law('على التسلسل', SERIES, 'I is constant in a series circuit')}
-${law('على التفرّع', PARALLEL, 'I equals I one plus I two')}
-${symbols([
-  `${inline('q', 'q')} : كمية الكهرباء عبر مقطع الناقل، بالكولوم ${inline('\\mathrm{C}', 'coulomb')}.`,
-  `${inline('t', 't')} : زمن المرور، بالثانية ${inline('\\mathrm{s}', 'second')}، ولا يكون صفراً.`,
-  `${inline('I', 'I')} : شدة التيار، بالأمبير ${inline('\\mathrm{A}', 'ampere')}.`,
-  `${inline('I_{1},I_{2}', 'I one and I two')} : شدة تيار الفرعين، بالأمبير أيضاً.`,
-])}
-${table(['التحويل', 'القيمة', 'متى أحتاجه'], [
-  ['مضاعفات وأجزاء الأمبير (ص 91)', `${inline('1\\,\\mathrm{kA}=10^{3}\\,\\mathrm{A}', 'one kiloampere')} · ${inline('1\\,\\mathrm{mA}=10^{-3}\\,\\mathrm{A}', 'one milliampere')} · ${inline('1\\,\\mu\\mathrm{A}=10^{-6}\\,\\mathrm{A}', 'one microampere')}`, 'عند قراءة تدريج أو كتابة النتيجة بوحدة مكافئة.'],
-  ['الدقائق إلى ثوانٍ (ص 91، 96)', `${inline('1\\,\\mathrm{min}=60\\,\\mathrm{s}', 'one minute equals sixty seconds')} · ${inline('2\\,\\mathrm{min}=120\\,\\mathrm{s}', 'two minutes')} · ${inline('3\\,\\mathrm{min}=180\\,\\mathrm{s}', 'three minutes')} · ${inline('5\\,\\mathrm{min}=300\\,\\mathrm{s}', 'five minutes')}`, 'قبل كل تعويض في قانون الشدة.'],
-  ['قيمتا الدرس (ص 92، 96)', `${inline('200\\,\\mathrm{mA}=0.2\\,\\mathrm{A}', 'two hundred milliamperes equals zero point two amperes')} · ${inline('0.1\\,\\mathrm{A}=100\\,\\mathrm{mA}', 'zero point one ampere equals one hundred milliamperes')}`, 'قراءة مقياس التسلسل، ونتيجة السؤال الخامس.'],
-], 'تحويلات لا تسقط في المسألة')}
-${note(`<strong>شروط التطبيق:</strong> الدرس يطبّق ${inline(CURRENT, 'I equals q over t')} على تيار متواصل ثابت في دارة مغلقة، و${inline('q', 'q')} عبر مقطع واحد خلال ${inline('t', 't')} بالثانية. الصيغتان ${inline(CHARGE, 'q equals I t')} و${inline(TIME, 't equals q over I')} مشتقتان من القانون نفسه (تنظيم المنصة). في التفرّع يُجمع تيارا الفرعين في الخط الأصلي، وعلى التسلسل لا تُجمع الشدات لأنها واحدة في كل نقطة.`)}
-${line(`<strong>أي قانون متى؟</strong> عرفت ${inline('q,t', 'q and t')} فاحسب ${inline(CURRENT, 'I equals q over t')}؛ عرفت ${inline('I,t', 'I and t')} فاحسب ${inline(CHARGE, 'q equals I t')}؛ في التفرّع استخدم ${inline(PARALLEL, 'I equals I one plus I two')}؛ وعلى التسلسل استخدم ${inline(SERIES, 'I is constant')}.`)}`)}
-
-${section('u2l2nb-figures', '٤. ما أرسمه وما أقرأه في الرسوم', `
-${table(['الرسم (الصفحة)', 'ما أرسمه / أنتبه إليه', 'القراءة العلمية'], [
-  ['دارة مغلقة (ص 89)', `مولّد بطرفيه ${inline('+,-', 'plus and minus')}، مفتاح، مصباح، أسلاك. سهم أصفر للتيار من + إلى − <strong>خارج المولّد</strong>، وسهم أحمر لـ ${inline('e^{-}', 'electrons')} بالعكس.`, 'الجهتان متعاكستان؛ لا ترسم سهم الإلكترونات داخل المولّد.'],
-  ['خط q مقابل t (ص 90)', `المحور الأفقي ${inline('t\\,(\\mathrm{s})', 't in seconds')} والرأسي ${inline('q\\,(\\mathrm{C})', 'q in coulombs')}؛ نقاط (5,20) و(10,40) و(15,60) و(20,80) و(25,100).`, `خط مستقيم من المبدأ = تناسب طردي، وميله ${inline('\\dfrac{q}{t}=4\\,\\mathrm{A}', 'q over t equals four amperes')} هو شدة التيار.`],
-  ['دارة التسلسل (ص 92)', `مسار واحد: مولّد ← ${inline('A_{1}', 'A one')} ← مصباحان ← ${inline('A_{2}', 'A two')}.`, `قراءتان متساويتان ${inline('200\\,\\mathrm{mA}', 'two hundred milliamperes')}؛ نزع مصباح يفتح المسار كله.`],
-  ['دارة التفرّع (ص 93–94)', `فرعان بين نقطتين؛ ${inline('A', 'A')} في الخط الأصلي و${inline('A_{1},A_{2}', 'A one and A two')} في الفرعين.`, `${inline(PARALLEL, 'I equals I one plus I two')}؛ نزع فرع لا يوقف الفرع الآخر.`],
-  ['منحنيات I–t (ص 95)', 'أربعة منحنيات: a تناقص، b موجة، c درجات، d خط أفقي.', 'التيار المتواصل ثابت الشدة ⇒ المنحنى d فقط.'],
-], 'خمسة رسوم تكفي؛ لا تُنسخ صور الكتاب الأخرى')}
-${note('<strong>حذارٍ من شكلي المولّدات (ص 93–94):</strong> أربع خلايا على التسلسل تعطي 6 V، وعلى التفرّع 1.5 V. هما مثالان على الجهد، <strong>وليسا قانوناً لشدة التيار</strong>؛ لا تُدخل قيمتهما في حساب I.')}`)}
-
-${section('u2l2nb-solving', '٥. خطوات الحل ونمطان مهمان', `
-${numbered([
-  'حدّد المعطيات والمطلوب، واكتب رمز كل كمية.',
-  `حوّل الوحدات أولاً: الدقائق إلى ثوانٍ، و${inline('\\mathrm{mA}', 'milliampere')} إلى ${inline('\\mathrm{A}', 'ampere')} عند الحاجة.`,
-  `اختر القانون: ${inline(CURRENT, 'I equals q over t')} أو ${inline(CHARGE, 'q equals I t')} أو علاقة الوصل.`,
-  'عوّض في سطر واحد، ثم اكتب النتيجة بالوحدة الصحيحة.',
-  'تحقّق بالتناسب: عند ثبات I، مضاعفة الزمن تضاعف كمية الكهرباء.',
-])}
-${sub('نمط 1 · التطبيق المحلول ص 91')}
-${line(`المعطيات: ${inline('q=60\\,\\mathrm{C}', 'sixty coulombs')} في ${inline('t=30\\,\\mathrm{s}', 'thirty seconds')}. المطلوب: الشدة، ثم كمية الكهرباء في ثلاث دقائق.`)}
-${step('القانون', CURRENT, 'I equals q over t')}
-${step('التعويض 1', 'I=\\dfrac{60}{30}=2\\,\\mathrm{A}', 'I equals sixty over thirty equals two amperes')}
-${step('التحويل', '3\\,\\mathrm{min}=180\\,\\mathrm{s}', 'three minutes equals one hundred eighty seconds')}
-${step('التعويض 2', 'q=2\\times180=360\\,\\mathrm{C}', 'q equals two times one hundred eighty equals three hundred sixty coulombs')}
-${sub('نمط 2 · السؤال الخامس ص 96 (تحويل الوحدات)')}
-${line(`المعطيات: ${inline('12\\,\\mathrm{c}', 'twelve coulombs as printed')} في دقيقتين؛ المطلوب الشدة ثم الكمية في خمس دقائق.`)}
-${step('التحويل', '2\\,\\mathrm{min}=120\\,\\mathrm{s}\\;,\\quad5\\,\\mathrm{min}=300\\,\\mathrm{s}', 'two minutes is one hundred twenty seconds and five minutes is three hundred seconds')}
-${step('الشدة', 'I=\\dfrac{12}{120}=0.1\\,\\mathrm{A}=100\\,\\mathrm{mA}', 'I equals twelve over one hundred twenty equals zero point one ampere')}
-${step('الكمية', 'q=0.1\\times300=30\\,\\mathrm{C}', 'q equals zero point one times three hundred equals thirty coulombs')}
-${note(`<strong>لماذا هذان المثالان فقط؟</strong> الأول يثبّت القانون وتحويل الدقائق، والثاني يثبّت النمط الامتحاني الأخطر: القسمة على 120 لا على 2. الحل ${inline('I=2\\,\\mathrm{A}', 'two amperes')} و${inline('360\\,\\mathrm{C}', 'three hundred sixty coulombs')} ثم ${inline('0.1\\,\\mathrm{A}', 'zero point one ampere')} و${inline('30\\,\\mathrm{C}', 'thirty coulombs')}؛ لا حاجة لنسخ بقية التمارين.`)}`)}
-
-${section('u2l2nb-experiments', '٦. التجارب: الهدف، الأدوات، النتيجة', `
-${table(['التجربة (الصفحة)', 'الأدوات والخطوة الجوهرية', 'الملاحظة ← الاستنتاج'], [
-  ['الأنبوب (ص 88)', 'أنبوب شفاف أفقي مملوء بكرات؛ أدفع كرة ثم عدة كرات من الطرف نفسه.', 'يخرج العدد نفسه من الطرف الآخر فوراً ← الإلكترونات الحرّة موجودة سلفاً في الناقل، والمولّد يدفعها باتجاه واحد. الذي ينتقل فوراً هو أثر الدفع لا الإلكترون نفسه (شرح المنصة).'],
-  ['التسلسل (ص 92)', `مولّد تيار مستمر، مصباحان ${inline('L_{1},L_{2}', 'L one and L two')}، مقياسا أمبير ${inline('A_{1},A_{2}', 'A one and A two')}، أسلاك؛ أقرأ ثم أنزع مصباحاً.`, `${inline('A_{1}=A_{2}=200\\,\\mathrm{mA}', 'both ammeters read two hundred milliamperes')}، ونزع مصباح يقطع التيار كله ← ${inline(SERIES, 'I is constant')} في كل الأجزاء، والمسار واحد.`],
-  ['التفرّع (ص 93–94)', 'مولّد، مصباحان مختلفان، ثلاثة مقاييس أمبير، أسلاك؛ أقارن قراءة الأصل بقراءتي الفرعين ثم أنزع مصباحاً.', `التيار يبقى في بقية الفروع ← ${inline(PARALLEL, 'I equals I one plus I two')}، وشدات التيار تختلف بين الفروع لا داخل الفرع الواحد.`],
-], 'ثلاث تجارب: أحتفظ بالهدف والنتيجة لا بسرد الخطوات')}
-${note('<strong>قاعدة مشتركة:</strong> مقياس الأمبير في الدارتين يُوصل على التسلسل؛ وصله على التفرّع يجعله مساراً جانبياً فيفسد القياس (شرح المنصة ص 92).')}`)}
-
-${section('u2l2nb-exam', '٧. ملاحظات امتحانية وأخطاء شائعة', `
-${numbered([
-  '<strong>الجهة:</strong> «من السالب إلى الموجب» تصف حركة الإلكترونات لا جهة التيار؛ عبارة «صح/خطأ» في ص 95 خاطئة وتُصحَّح بتبديل الجهة، مع قيد «خارج المولّد».',
-  `<strong>التمييز الثلاثي:</strong> شدة التيار كمية، والأمبير وحدة، ومقياس الأمبير جهاز على التسلسل. المصطلحات الأربعة في ص 95 تقيس هذا بالضبط.`,
-  '<strong>التحويل قبل التعويض:</strong> القسمة على 2 بدل 120 تعطي 6 A خطأ؛ ص 91 وص 96 كلتاهما تطلبان الثواني أولاً.',
-  `<strong>رمز مطبعي:</strong> ص 96 تكتب ${inline('12\\,\\mathrm{c}', 'twelve c as printed')} بحرف لاتيني صغير والمقصود 12 كولوم؛ لا تقرأها وحدة أخرى.`,
-  `<strong>الوحدات:</strong> ${inline('q', 'q')} بالكولوم و${inline('t', 't')} بالثانية و${inline('I', 'I')} بالأمبير؛ ${inline('200\\,\\mathrm{mA}=0.2\\,\\mathrm{A}', 'two hundred milliamperes')} و${inline('0.1\\,\\mathrm{A}=100\\,\\mathrm{mA}', 'one tenth ampere')} مكافئتان.`,
-  '<strong>الوصل:</strong> على التسلسل I ثابت ونزع أي جزء يقطع الكل؛ على التفرّع تجمع الفروع ونزع فرع لا يطفئ الباقي. لا تعكس الحالتين.',
-  '<strong>المنحنى:</strong> التيار المتواصل يمثّله الخط الأفقي d؛ a وb وc تصف شدّة متغيّرة مع الزمن (ص 95).',
-  '<strong>شرط التيار:</strong> مولّد + دارة مغلقة؛ المسبّب لحركة الإلكترونات هو المولّد (الخيار b في ص 96)، لا المصباح ولا القاطعة ولا المقياس.',
-  '<strong>سؤال التفسير ص 96:</strong> القاصمة المنصهرة تقطع الدارة عند زيادة الشدة فتحمي الجهاز؛ والمعادن توصل لكثرة إلكتروناتها الحرّة بينما إلكترونات العوازل مرتبطة. الصياغة هنا «حل نموذجي من المنصة»؛ الكتاب يطلب التفسير ولا يطبعه.',
-  '<strong>ليست قانوناً لشدة التيار:</strong> 6 V و1.5 V في شكلي المولّدات مثالان على الجهد، لا تُستخدمان في حساب I.',
-])}
-${note('<strong>قيد مصدر:</strong> خلايا الجدول الفارغة في ص 90 لم تُطبع قيمها في الكتاب؛ استُنتجت من ثبات النسبة 4 ومن نقاط الرسم المطبوعة على الصفحة نفسها. لا تُضف أرقاماً من خارج الدرس.')}`)}
-
-${section('u2l2nb-summary', '٨. خلاصة الدرس للمراجعة السريعة', `
-${list([
-  `${inline(CURRENT, 'I equals q over t')} و${inline(CHARGE, 'q equals I t')} بوحدات ${inline('\\mathrm{C},\\mathrm{s},\\mathrm{A}', 'coulomb, second, ampere')}، مع تحويل الدقائق إلى ثوانٍ.`,
-  `${inline('\\dfrac{q}{t}', 'q over t')} ثابتة ⇒ خط ${inline('q', 'q')} مقابل ${inline('t', 't')} مستقيم من المبدأ، وميله هو ${inline('I', 'I')}.`,
-  'التيار الاصطلاحي من + إلى − خارج المولّد؛ الإلكترونات بالعكس؛ والمولّد يُسبّب الحركة ولا يخلقها.',
-  `التسلسل: ${inline(SERIES, 'I is constant')}، وفتح أي جزء يقطع الدارة كلها.`,
-  `التفرّع: ${inline(PARALLEL, 'I equals I one plus I two')}، ونزع فرع لا يوقف بقية الفروع.`,
-  'مقياس الأمبير على التسلسل، والمنحنى الأفقي هو التيار المتواصل، وشرط المرور مولّد ودارة مغلقة.',
-])}
-${line('<strong>ترتيب المراجعة قبل الامتحان:</strong> التعريفات ← القانون ووحداته ← الرسم والجهتان ← خطوة التحويل ← التسلسل والتفرّع ← الأخطاء الشائعة.')}`)}
-
+    ${sectionOverview}
+    ${sectionTube}
+    ${sectionConvention}
+    ${sectionIntensity}
+    ${sectionConcepts}
+    ${sectionWorked}
+    ${sectionSeries}
+    ${sectionBatterySeries}
+    ${sectionParallel}
+    ${sectionSummary}
+    ${sectionCheckOne}
+    ${sectionCheckTwo}
+    ${sectionSymbols}
+    ${sectionLaws}
+    ${sectionMisconceptions}
+    ${sectionExam}
+    ${sectionCaveats}
+    ${sectionChecklist}
   </div>
 </article>`;

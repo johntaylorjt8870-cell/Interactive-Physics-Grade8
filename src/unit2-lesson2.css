@@ -410,6 +410,57 @@
 .u2l2-page .student-notebook-table td { padding: 8px 10px; border: 1px solid var(--u2l2-nb-rule); text-align: start; vertical-align: top; }
 .u2l2-page .student-notebook-table thead th { color: var(--u2l2-nb-navy); background: var(--u2l2-nb-blue-soft); font-weight: 800; }
 .u2l2-page .student-notebook-table tbody tr:nth-child(even) td { background: #fcfbf7; }
+.u2l2-page .student-notebook-table tbody th { color: var(--u2l2-nb-navy); background: #f6f7fb; font-weight: 800; }
+
+/* فهرس الدفتر: مرجع طويل (١٨ قسمًا)، فالفهرس شبكة عمودين على الحاسوب وعمود واحد
+   على الشاشات الضيقة، وكل رابط يقفز إلى قسمه مع احترام هوامش التمرير. */
+.u2l2-page .student-notebook-toc { margin: 14px 0 0; padding: 11px 14px; background: var(--u2l2-nb-blue-soft); border: 1px solid #dbe3f1; border-radius: 11px; }
+.u2l2-page .student-notebook-toc ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 22px; margin: 0; padding-inline-start: 18px; font-size: 13px; line-height: 1.75; }
+.u2l2-page .student-notebook-toc a { color: var(--u2l2-nb-blue); text-decoration: none; border-bottom: 1px dotted #93b4e0; }
+.u2l2-page .student-notebook-toc a:hover { border-bottom-style: solid; }
+.u2l2-page .student-notebook-toc a:focus-visible { outline: 2px solid var(--u2l2-nb-blue); outline-offset: 2px; border-radius: 3px; }
+.u2l2-page .student-notebook-section { scroll-margin-top: 14px; }
+.u2l2-page .student-notebook h3 { scroll-margin-top: 12px; }
+
+/* وسوم المصدر: «من الكتاب» و«إثراء من المنصة» و«استنتاج تعليمي». التمييز مطلوب
+   حتى لا يُنسب إلى الطبعة ما أضافته المنصة. */
+.u2l2-page .student-notebook-tag { display: inline-block; margin-inline-start: 5px; padding: 1px 7px; color: #5b3f8f; background: #f1ecfa; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; vertical-align: middle; }
+.u2l2-page .student-notebook-tag-book { color: #6b4e00; background: var(--u2l2-nb-gold-soft); }
+.u2l2-page .student-notebook-tag-infer { color: var(--u2l2-nb-blue); background: var(--u2l2-nb-blue-soft); }
+
+/* العنوان الفرعي داخل القسم، وجملة السؤال المطبوعة، وصندوق الاستنتاج. */
+.u2l2-page .student-notebook-subhead { margin: 15px 0 6px; color: var(--u2l2-nb-teal); font-size: 14.5px; font-weight: 800; }
+.u2l2-page .student-notebook-problem { margin: 10px 0 12px; padding: 9px 12px; background: #f8fafc; border-inline-start: 3px solid var(--u2l2-nb-teal); border-radius: 8px; font-size: 14px; line-height: 1.9; }
+.u2l2-page .student-notebook-conclusion { margin: 11px 0; padding: 11px 14px; background: var(--u2l2-nb-teal-soft); border: 1px solid #d5e2df; border-radius: 11px; }
+.u2l2-page .student-notebook-conclusion h4 { margin: 0 0 6px; color: var(--u2l2-nb-teal); font-size: 14.5px; }
+.u2l2-page .student-notebook-conclusion .student-notebook-list { margin: 0; }
+
+/* خطوات مرقّمة بالأرقام العربية-الهندية كما في بقية دفاتر المشروع. */
+.u2l2-page .student-notebook-steps { list-style-type: arabic-indic; }
+
+/* خطوة حسابية موسومة: العمود الأيسر اسم الخطوة، واليمين المعادلة والنصّ. */
+.u2l2-page .student-notebook-step { display: grid; grid-template-columns: minmax(84px, auto) minmax(0, 1fr); align-items: start; gap: 10px; margin: 7px 0; padding: 7px 11px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 9px; }
+.u2l2-page .student-notebook-step > span { padding-top: 3px; }
+.u2l2-page .student-notebook-step .student-notebook-example-step { margin: 4px 0 0; }
+
+/* الأسئلة المفتوحة: سؤال ثم إجابة، بلا أي حقل إدخال. */
+.u2l2-page .student-notebook-qa { margin: 10px 0; padding: 10px 13px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; }
+.u2l2-page .student-notebook-qa-q { margin: 0 0 6px; font-size: 14px; line-height: 1.9; }
+.u2l2-page .student-notebook-qa-a { margin: 0; padding: 7px 10px; color: var(--u2l2-nb-ink); background: var(--u2l2-nb-teal-soft); border-radius: 8px; font-size: 13.5px; line-height: 1.85; }
+
+/* الأشكال: نفس SVG المستعمل في مراحل الدرس، لا يُعاد رسمه، والغلاف يمرّر أفقياً. */
+.u2l2-page .student-notebook-figure { margin: 13px 0; padding: 11px 12px; background: #fff; border: 1px solid var(--u2l2-nb-rule); border-radius: 12px; }
+.u2l2-page .student-notebook-figure .diagram-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.u2l2-page .student-notebook-figure .diagram-svg-wrap { width: 100%; overflow-x: auto; }
+.u2l2-page .student-notebook-figure .diagram-svg-wrap svg { display: block; width: 100%; max-width: 660px; height: auto; margin: 0 auto; }
+.u2l2-page .student-notebook-figure .diagram-legend { margin: 8px 0 4px; padding: 0; display: flex; flex-wrap: wrap; gap: 7px 16px; list-style: none; font-size: 12.5px; line-height: 1.8; }
+.u2l2-page .student-notebook-figure .diagram-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.u2l2-page .student-notebook-figure figcaption { margin-top: 5px; color: var(--u2l2-nb-muted); font-size: 12.5px; line-height: 1.85; }
+
+/* قائمة التحقّق: مربّع فارغ لكل بند. */
+.u2l2-page .student-notebook-checklist { margin: 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.9; }
+.u2l2-page .student-notebook-checklist li { position: relative; margin-bottom: 5px; padding-inline-start: 25px; }
+.u2l2-page .student-notebook-checklist li::before { content: '☐'; position: absolute; inset-inline-start: 0; color: var(--u2l2-nb-teal); font-size: 15px; }
 
 /* شريط المراحل: أحد عشر تبويباً أطول من نافذة الحاسوب القصيرة، فيُقيَّد الشريط
    ويمرّر قائمة التبويبات وحدها (قواعد مستقلة عن دروس الوحدة الأولى). */
@@ -437,8 +488,14 @@
     max-height: var(--rail-max-height, calc(100dvh - 136px));
   }
 }
+/* الشاشات الضيقة: الفهرس والتخطيط بعمود واحد، والخطوات تتكدّس رأسياً. */
+@media (max-width: 1024px) {
+  .u2l2-page .student-notebook-toc ol { grid-template-columns: 1fr; }
+}
 @media (max-width: 760px) {
   .u2l2-page .student-notebook-header { padding: 16px 15px 13px; }
+  .u2l2-page .student-notebook-tag { display: inline-block; margin-inline-start: 0; }
+  .u2l2-page .student-notebook-step { grid-template-columns: 1fr; gap: 4px; }
   .u2l2-page .student-notebook-header h2 { font-size: 20px; }
   .u2l2-page .student-notebook-sheet { padding-block: 15px 18px; padding-inline: 30px 14px; }
   .u2l2-page .student-notebook-sheet::before { inset-inline-start: 15px; }
