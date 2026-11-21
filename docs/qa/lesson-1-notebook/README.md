@@ -118,3 +118,79 @@ node docs/qa/lesson-1-notebook/qa.mjs → 44/44 فحصًا ناجحًا على 1
 4. **ص 55 — الأسئلة الثلاثة بلا إجابات مطبوعة:** الإجابات في الدفتر مستنتجة من ص 56 ومعلَّمة
    بذلك، ولا تحتوي أيّ عدد لم يرد في المصدر.
 5. **ص 56 — التجربة نوعية:** لا يذكر الكتاب شدّات ولا زوايا؛ لم تُخترع أيّة قيمة عددية.
+
+## 8. تحقّق نهائي: خط الأساس مقابل فرع PR (2026-11-21)
+
+أُجري هذا التحقّق دون أي تعديل على الشيفرة أو الاختبارات، وفي نسختين مستقلّتين نظيفتين
+أُخرجتا من Git بلا لمس شجرة العمل:
+
+```
+git archive 101246df0276bbba8751507ad9301d92e66b9a40 | tar -x -C /tmp/verify-base
+git archive 77e08ac721bd3f802c851e1539d90f81bca57a89 | tar -x -C /tmp/verify-pr
+cd /tmp/verify-base && npm test     # خط الأساس
+cd /tmp/verify-pr   && npm test     # فرع الـ PR
+```
+
+| | خط الأساس `101246d` | فرع الـ PR `77e08ac` |
+|---|---|---|
+| إجمالي الاختبارات | 453 | 472 |
+| ناجحة | 434 | 454 |
+| فاشلة | **6** | **5** |
+| متخطّاة | 13 | 13 |
+
+### أسماء الاختبارات الفاشلة (مقارنة بالاسم لا بالعدد)
+
+| # | اسم الاختبار | الملف | في خط الأساس | في فرع الـ PR |
+|---|---|---|---|---|
+| 1 | `Lesson 1 remains an independent 20-question test after the authorized Unit 1 Test is published` | `tests/lesson-test.test.js` | فاشل | فاشل (موروث) |
+| 2 | `lesson navigation follows 8 self-contained stages mapped to textbook pages 55 through 62` | `tests/lesson.test.js` | فاشل | فاشل (موروث) |
+| 3 | `tests/physics-in-life.test.js` (فشل تحميل الوحدة كلّها) | `tests/physics-in-life.test.js` | فاشل | فاشل (موروث) |
+| 4 | `the notebook sits inside Unit 2 Lesson 1 and on no other page` | `tests/unit2-lesson1-student-notebook.test.js` | فاشل | فاشل (موروث) |
+| 5 | `notebook selects the definitions, units, measurement rules, circuit laws and source examples` | `tests/unit2-lesson3-student-notebook.test.js` | فاشل | فاشل (موروث) |
+| 6 | `no interactive region is re-sized by a max-width reset` | `tests/lesson-1-reading-measure.test.js` | **فاشل** | **ناجح** |
+
+**النتيجة:** مجموعة إخفاقات فرع الـ PR مجموعة جزئية من إخفاقات خط الأساس؛ لا اسم جديد
+ولا إخفاق إضافي (`comm` بين القائمتين أعطى فرقًا واحدًا فقط هو الاختبار 6 الذي صار أخضر).
+سبب التحسّن أنّ الاختبار 6 كان يرفض قاعدة `max-width: none`، وهي قاعدة كانت مكتوبة داخل
+كتلة دفتر الطالب نفسها، فأُصلحت في نطاق المهمة (`max-width: max-content`).
+
+### إعادة تشغيل البناء والاختبارات المخصّصة
+
+```
+cd /tmp/verify-pr
+npm run build    → Production static build written to dist/.   (dist/src/lesson-1-notebook.js = 79,250 B)
+node --test tests/lesson-1-student-notebook.test.js tests/student-notebook-placement.test.js
+                 → 21/21 ناجحًا (tests 21, pass 21, fail 0, skip 0)
+```
+
+خط الأساس لا يحتوي `tests/lesson-1-student-notebook.test.js` أصلًا (يحتوي النسخة القديمة من
+`tests/student-notebook-placement.test.js` فقط)، لذلك أعداد خط الأساس لا تتضمّن الاختبارات
+التسعة عشر الجديدة؛ 453 + 19 = 472.
+
+### إثبات أنّ تقرير QA واللقطات تعود إلى `77e08ac` نفسه
+
+- `git rev-parse HEAD` = `77e08ac721bd3f802c851e1539d90f81bca57a89`، وهو أيضًا طرف الفرع
+  على `origin`، وشجرة العمل نظيفة (`git status --porcelain` فارغ).
+- عدد الالتزامات بين خط الأساس والفرع = **التزام واحد** فقط (`77e08ac`)، وهو الالتزام الوحيد
+  الذي يمسّ `docs/qa/lesson-1-notebook` و`src/lesson-1-notebook.js` و`src/lesson-1.css`
+  و`src/lesson-content.js`.
+- زمن الالتزام `2026-11-21T20:55:44+00:00`، وزمن تشغيل QA المسجَّل في `browser-results.txt`
+  هو `2026-11-21T20:55:05.981Z` — أي أنّ اللقطات أُخذت من نفس المحتوى الذي التُقط في الالتزام.
+- وأُعيد تشغيل `qa.mjs` من النسخة النظيفة `/tmp/verify-pr`: **44/44**، وناتج التشغيل مطابق
+  حرفيًّا للملف المحفوظ بعد تجاهل سطر الطابع الزمني، و**بصمات اللقطات الأربع عشرة متطابقة
+  بايت ببايت** (بصمة مجمّعة `b10e1bfd61787059caec86ffadd1b7f40caadd7821da6f10d3dd62fa4f1b2044`).
+
+### بصمات SHA-256 للملفات المرجعية عند `77e08ac`
+
+```
+4effb2b0d0dc641966a3fe9541cb099db5bf7658bbdb0c4a498448e9fca31314  src/lesson-1-notebook.js
+fd571263b38dee0063678450c9880b5400eb24679805e2f8000869c2d11248c1  docs/qa/lesson-1-notebook/qa.mjs
+5a131e8173743a266c222bf60ec2e60b3b9e3e98614c8bd3170af24bbd1eeead  docs/qa/lesson-1-notebook/browser-results.txt
+f8fe05d6b26d695d7450a23dc1070ab58697852eb25e846ee6723faf77fe5a95  1366x768/06-self-check.png
+6af909da4079bfbaf1d490c8f5eaca455f8ff53e68bd099b88b738d5170a3111  1440x900/07-textbook-problems.png
+```
+
+> **ملاحظة:** كل ما سبق قيس عند `77e08ac`. أُضيف هذا القسم وحده بعد ذلك في التزام توثيقي
+> لا يمسّ الشيفرة ولا الاختبارات ولا اللقطات؛ وللتحقّق: `git diff 77e08ac..HEAD --stat`
+> يُظهر هذا الملف (`docs/qa/lesson-1-notebook/README.md`) وحده، و`npm test` على الشجرة
+> بعد إضافته يعطي النتيجة نفسها (454 ناجحًا، 5 فاشلة، 13 متخطّاة).
