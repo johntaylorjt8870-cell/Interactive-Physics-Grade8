@@ -122,12 +122,92 @@ for (const [width, height] of [[1366, 768], [1440, 900]]) {
   check(`${tag}: no horizontal page scroll`, geometry.scrollWidth <= geometry.innerWidth, `${geometry.scrollWidth} <= ${geometry.innerWidth}`);
   check(`${tag}: no section block escapes the sheet`, geometry.offenders.length === 0, geometry.offenders.slice(0, 4).join(' '));
 
-  // 6. tables scroll inside their own wrapper, never widen the page
+  /* 6. Every table must sit inside its own wrapper, and each wrapper must either
+     let the table fit (no overflow) or be a real horizontal scroll container.
+     Counting "wraps that overflow" alone proves nothing, so each table is walked
+     individually: parent is a wrapper, wrapper is a direct child of the sheet,
+     the wrapper's computed overflow-x allows scrolling, and no table is orphaned
+     or nested. A table that overflows a wrapper which cannot scroll is a failure. */
   const tableFit = await page.evaluate(() => {
+    const all = [...document.querySelectorAll('.student-notebook-table')];
     const wraps = [...document.querySelectorAll('.student-notebook-table-wrap')];
-    return wraps.filter((w) => w.scrollWidth > w.clientWidth + 1).length;
+    const sheet = document.querySelector('.student-notebook-sheet');
+    const problems = [];
+    let fits = 0;
+    let scrolls = 0;
+    for (const [index, table] of all.entries()) {
+      const label = `#${index + 1}`;
+      const wrap = table.parentElement;
+      const caption = (table.querySelector('caption')?.textContent ?? '').trim().slice(0, 28);
+
+      if (!wrap || !wrap.classList.contains('student-notebook-table-wrap')) {
+        problems.push(`${label} not wrapped (${caption})`);
+        continue;
+      }
+      // one table per wrapper, and the wrapper belongs to the sheet, not a nested cell
+      if (wrap.querySelectorAll('.student-notebook-table').length !== 1) {
+        problems.push(`${label} shares its wrapper (${caption})`);
+      }
+      if (!sheet || !sheet.contains(wrap) || wrap.closest('td, th')) {
+        problems.push(`${label} wrapper is misplaced (${caption})`);
+      }
+      if ([...wrap.children].some((child) => child.tagName === 'TABLE' && child !== table)) {
+        problems.push(`${label} wrapper holds a second table (${caption})`);
+      }
+      // the wrapper must not widen the sheet or the page
+      const wrapBox = wrap.getBoundingClientRect();
+      const sheetBox = sheet.getBoundingClientRect();
+      if (wrapBox.width > sheetBox.width + 1) {
+        problems.push(`${label} wrapper wider than the sheet (${wrapBox.width}>${sheetBox.width})`);
+      }
+      if (wrapBox.right > window.innerWidth + 1) {
+        problems.push(`${label} wrapper past the viewport (${Math.round(wrapBox.right)})`);
+      }
+      // the scroll contract: fits, or the wrapper can actually scroll
+      const overflowX = getComputedStyle(wrap).overflowX;
+      const scrollable = overflowX === 'auto' || overflowX === 'scroll';
+      if (!scrollable) {
+        problems.push(`${label} wrapper cannot scroll (overflow-x=${overflowX})`);
+      }
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      if (overflows) {
+        // overflow must be absorbed by the wrapper, not leak to the page
+        if (!scrollable) problems.push(`${label} overflows an unscrollable wrapper`);
+        if (wrap.scrollWidth < table.scrollWidth - 1) {
+          problems.push(`${label} table clipped by its wrapper (${table.scrollWidth}>${wrap.scrollWidth})`);
+        }
+        scrolls += 1;
+      } else {
+        // no overflow: the table must genuinely fit inside its wrapper
+        if (table.scrollWidth > wrap.clientWidth + 1) {
+          problems.push(`${label} table wider than its wrapper (${table.scrollWidth}>${wrap.clientWidth})`);
+        }
+        fits += 1;
+      }
+    }
+    for (const [index, wrap] of wraps.entries()) {
+      if (!wrap.querySelector('.student-notebook-table')) problems.push(`wrap #${index + 1} is empty`);
+    }
+    // no table may escape the class-based checks: every <table> under the notebook
+    // must be a .student-notebook-table (so nothing is silently "lost")
+    const bare = [...document.querySelectorAll('.student-notebook table')]
+      .filter((table) => !table.classList.contains('student-notebook-table'));
+    for (const table of bare) problems.push(`unclassified table: ${(table.textContent ?? '').trim().slice(0, 24)}`);
+    return {
+      tables: all.length,
+      wraps: wraps.length,
+      bare: bare.length,
+      fits,
+      scrolls,
+      problems,
+      pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
+    };
   });
-  check(`${tag}: every table fits or scrolls in its wrapper`, tableFit === 0 || tableFit > 0, `overflowing=${tableFit}`);
+  check(`${tag}: every table sits in its own wrapper`, tableFit.tables === tableFit.wraps && tableFit.tables > 0 && tableFit.bare === 0 && tableFit.problems.length === 0,
+    `tables=${tableFit.tables} wraps=${tableFit.wraps} unclassified=${tableFit.bare} ${tableFit.problems.slice(0, 4).join(' | ')}`);
+  check(`${tag}: every table fits or scrolls inside a scrollable wrapper`, tableFit.problems.length === 0 && tableFit.fits + tableFit.scrolls === tableFit.tables,
+    `fits=${tableFit.fits} scrolls=${tableFit.scrolls} table=${tableFit.tables} ${tableFit.problems.slice(0, 4).join(' | ')}`);
+  check(`${tag}: no table widens the page`, tableFit.pageOverflow <= 0, `overflow=${tableFit.pageOverflow}px`);
 
   // 7. the table of contents resolves to real, reachable sections
   const toc = await page.evaluate(() => {
