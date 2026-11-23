@@ -391,6 +391,48 @@
 .student-notebook-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
 .student-notebook-tags .curriculum-tag { font-size: 0.74rem; }
 
+/* فهرس الدفتر على نهج دفاتر الدروس الأخرى: عمودان على الحاسوب، وروابط
+   مباشرة إلى كل قسم مع هامش تمرير وإشارة تركيز واضحة. */
+.l2-page .student-notebook-toc {
+  margin-top: 0.85rem;
+  padding: 0.75rem 0.9rem;
+  background: var(--l2-blue-soft);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+}
+.l2-page .student-notebook-header p.student-notebook-toc-title {
+  margin: 0 0 0.4rem;
+  color: var(--l2-ink);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+.l2-page .student-notebook-toc ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.2rem 1.25rem;
+  margin: 0;
+  padding-inline-start: 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.75;
+}
+.l2-page .student-notebook-toc li::marker { color: var(--l2-teal); font-weight: 800; }
+.l2-page .student-notebook-toc a {
+  color: var(--l2-blue);
+  text-decoration: none;
+  border-bottom: 1px dotted #93b4e0;
+}
+.l2-page .student-notebook-toc a:hover { border-bottom-style: solid; }
+.l2-page .student-notebook-toc a:focus-visible {
+  outline: 2px solid var(--l2-blue);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+.l2-page .student-notebook-section h3 { scroll-margin-top: 1rem; }
+
+@media (max-width: 900px) {
+  .l2-page .student-notebook-toc ol { grid-template-columns: 1fr; }
+}
+
 .l2-page .student-notebook-sheet::before { background: #cde9e4; }
 .l2-page .student-notebook-section h3 { color: var(--l2-navy); }
 .l2-page .student-notebook-section > p { color: #1e293b; }
@@ -461,6 +503,63 @@
    a whole worked example reads as a compact table rather than stacked cards */
 .student-notebook-step { padding: .3rem .7rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
 .student-notebook-step .math-inline { font-size: .98em; }
+
+/* Page-source, platform explanation, and inference stay visually distinct in
+   the student notebook instead of relying on the introductory legend alone. */
+.student-notebook-source-block,
+.student-notebook-inference-block,
+.student-notebook-platform-block {
+  margin: .7rem 0;
+  padding: .75rem .9rem;
+  border: 1px solid #dbe4f0;
+  border-inline-start: 4px solid #2563eb;
+  border-radius: 10px;
+  background: #eff6ff;
+  font-size: .92rem;
+  line-height: 1.85;
+}
+.student-notebook-inference-block {
+  border-color: #e9d5ff;
+  border-inline-start-color: #7c3aed;
+  background: #faf5ff;
+}
+.student-notebook-platform-block {
+  border-color: #99f6e4;
+  border-inline-start-color: var(--l2-teal);
+  background: #f0fdfa;
+}
+.student-notebook-source-block > .curriculum-tag,
+.student-notebook-inference-block > .curriculum-tag,
+.student-notebook-platform-block > .curriculum-tag {
+  margin: 0 0 .45rem;
+}
+.student-notebook-source-block p,
+.student-notebook-inference-block p,
+.student-notebook-platform-block p { margin: .3rem 0 .55rem; }
+.student-notebook-source-block .student-notebook-list,
+.student-notebook-inference-block .student-notebook-list,
+.student-notebook-platform-block .student-notebook-list { margin-block: .35rem; }
+.student-notebook-figure { margin: .8rem 0; }
+.student-notebook-figure figcaption { color: var(--l2-muted); font-size: .84rem; line-height: 1.8; }
+.student-notebook-figure .diagram-card-head { align-items: flex-start; }
+.student-notebook-mcq { display: grid; gap: .25rem; }
+.student-notebook-mcq > p { margin: .45rem 0 .1rem; font-weight: 650; }
+.student-notebook-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .25rem 1.25rem;
+  margin: .15rem 0 .55rem;
+  padding-inline-start: 1.55rem;
+  font-size: .92rem;
+  line-height: 1.85;
+}
+.student-notebook-source-block table,
+.student-notebook-inference-block table { width: 100%; }
+
+@media (max-width: 640px) {
+  .student-notebook-options { grid-template-columns: 1fr; }
+  .student-notebook-figure .diagram-card-head { flex-direction: column; align-items: flex-start; }
+}
 
 @media (max-width: 640px) {
   .student-notebook-header { padding: 1rem; }

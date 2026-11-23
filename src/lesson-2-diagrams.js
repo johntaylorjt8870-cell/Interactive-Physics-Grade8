@@ -260,22 +260,22 @@ const workedSameSvg = svgFrame(
   'تطبيق محلول: F1 = 20 N و F2 = 30 N على ساق طولها 0.5 m',
   'F2 = 30 N إلى أعلى عند B، و F1 = 20 N إلى أعلى عند A، والمحصلة F = 50 N إلى أعلى عند C على بعد d2 = 0.2 m من B و d1 = 0.3 m من A.',
   `
-  ${carrier(140, 24, 330)}
-  ${carrier(300, 24, 330)}
-  ${carrier(560, 24, 330)}
-  ${bar(120, 200, 460, 16)}
-  ${forceArrow('worked-same', 140, 200, 88, 'f2')}
-  ${forceArrow('worked-same', 560, 200, 132, 'f1')}
-  ${forceArrow('worked-same', 300, 200, 48, 'result')}
-  ${forceLabel(96, 80, 'F₂ = 30 N', 'f2')}
-  ${forceLabel(600, 124, 'F₁ = 20 N', 'f1')}
-  ${forceLabel(330, 40, 'F = 50 N', 'result')}
-  ${point(140, 208, 'B', 24)}
-  ${point(300, 208, 'C', 24)}
-  ${point(560, 208, 'A', 24)}
-  ${dimension(140, 300, 270, 'd₂ = 0.2 m')}
-  ${dimension(300, 560, 270, 'd₁ = 0.3 m')}
-  ${dimension(140, 560, 308, 'd = 0.5 m')}
+  ${carrier(120, 24, 330)}
+  ${carrier(312, 24, 330)}
+  ${carrier(600, 24, 330)}
+  ${bar(120, 200, 480, 16)}
+  ${forceArrow('worked-same', 120, 200, 130, 'f2')}
+  ${forceArrow('worked-same', 600, 200, 140, 'f1')}
+  ${forceArrow('worked-same', 312, 200, 70, 'result')}
+  ${forceLabel(96, 120, 'F₂ = 30 N', 'f2')}
+  ${forceLabel(628, 130, 'F₁ = 20 N', 'f1')}
+  ${forceLabel(342, 58, 'F = 50 N', 'result')}
+  ${point(120, 208, 'B', 24)}
+  ${point(312, 208, 'C', 24)}
+  ${point(600, 208, 'A', 24)}
+  ${dimension(120, 312, 270, 'd₂ = 0.2 m')}
+  ${dimension(312, 600, 270, 'd₁ = 0.3 m')}
+  ${dimension(120, 600, 308, 'd = 0.5 m')}
   `,
 );
 
@@ -284,93 +284,93 @@ const oppositeSenseSvg = svgFrame(
   'محصلة قوتين متوازيتين بجهتين متعاكستين',
   'F1 إلى أعلى عند A، و F2 الأكبر إلى أسفل عند B، والمحصلة F إلى أسفل عند C خارج القطعة AB ومن جهة القوة الأكبر. d1 بين C و A عبر B، و d2 بين C و B.',
   `
-  ${carrier(110, 24, 350)}
-  ${carrier(300, 24, 350)}
-  ${carrier(560, 24, 350)}
-  ${bar(280, 176, 300, 16)}
-  ${forceArrow('opposite-sense', 560, 176, 64, 'f1')}
-  ${forceArrow('opposite-sense', 300, 192, 310, 'f2')}
-  ${forceArrow('opposite-sense', 110, 192, 330, 'result')}
-  ${forceLabel(592, 58, 'F₁', 'f1')}
-  ${forceLabel(332, 328, 'F₂', 'f2')}
-  ${forceLabel(138, 348, 'F', 'result')}
-  ${point(110, 184, 'C', 22)}
-  ${point(300, 184, 'B', 22)}
-  ${point(560, 184, 'A', 22)}
-  ${dimension(110, 300, 86, 'd₂')}
-  ${dimension(300, 560, 54, 'd')}
+  ${carrier(90, 24, 350)}
+  ${carrier(410, 24, 350)}
+  ${carrier(570, 24, 350)}
+  ${bar(410, 176, 160, 16)}
+  ${forceArrow('opposite-sense', 570, 176, 82, 'f1')}
+  ${forceArrow('opposite-sense', 410, 192, 310, 'f2')}
+  ${forceArrow('opposite-sense', 90, 192, 270, 'result')}
+  ${forceLabel(600, 74, 'F₁', 'f1')}
+  ${forceLabel(442, 328, 'F₂', 'f2')}
+  ${forceLabel(118, 290, 'F', 'result')}
+  ${point(90, 184, 'C', 22)}
+  ${point(410, 184, 'B', 22)}
+  ${point(570, 184, 'A', 22)}
+  ${dimension(90, 410, 86, 'd₂')}
+  ${dimension(410, 570, 54, 'd')}
   `,
 );
 
 const workedOppositeSvg = svgFrame(
   'worked-opposite',
   'تطبيق محلول: F1 = 200 N و F2 = 300 N والبعد 60 cm',
-  'F1 = 200 N إلى أعلى عند A، و F2 = 300 N إلى أسفل عند B، والمحصلة F = 100 N إلى أسفل عند C خارج القطعة من جهة F2. d1 = 180 cm من C إلى A.',
+  'F1 = 200 N إلى أعلى عند A، و F2 = 300 N إلى أسفل عند B، والمحصلة F = 100 N إلى أسفل عند C خارج القطعة من جهة F2. d1 = 180 cm من C إلى A، d2 = 120 cm من C إلى B، و d = 60 cm بين A و B.',
   `
   ${carrier(90, 24, 350)}
-  ${carrier(300, 24, 350)}
-  ${carrier(560, 24, 350)}
-  ${bar(280, 176, 300, 16)}
-  ${forceArrow('worked-opposite', 560, 176, 70, 'f1')}
-  ${forceArrow('worked-opposite', 300, 192, 308, 'f2')}
-  ${forceArrow('worked-opposite', 90, 192, 328, 'result')}
-  ${forceLabel(600, 64, 'F₁ = 200 N', 'f1')}
-  ${forceLabel(338, 326, 'F₂ = 300 N', 'f2')}
-  ${forceLabel(118, 348, 'F = 100 N', 'result')}
+  ${carrier(390, 24, 350)}
+  ${carrier(540, 24, 350)}
+  ${bar(390, 176, 150, 16)}
+  ${forceArrow('worked-opposite', 540, 176, 88, 'f1')}
+  ${forceArrow('worked-opposite', 390, 192, 316, 'f2')}
+  ${forceArrow('worked-opposite', 90, 192, 248, 'result')}
+  ${forceLabel(580, 82, 'F₁ = 200 N', 'f1')}
+  ${forceLabel(428, 334, 'F₂ = 300 N', 'f2')}
+  ${forceLabel(118, 268, 'F = 100 N', 'result')}
   ${point(90, 184, 'C', 22)}
-  ${point(300, 184, 'B', 22)}
-  ${point(560, 184, 'A', 22)}
-  ${dimension(90, 300, 86, 'd₂ = 120 cm')}
-  ${dimension(300, 560, 54, 'd = 60 cm')}
-  <text x="325" y="368" class="l2-caption" text-anchor="middle" direction="ltr">d₁ = CA = 180 cm</text>
+  ${point(390, 184, 'B', 22)}
+  ${point(540, 184, 'A', 22)}
+  ${dimension(90, 390, 86, 'd₂ = 120 cm')}
+  ${dimension(390, 540, 54, 'd = 60 cm')}
+  <text x="315" y="368" class="l2-caption" text-anchor="middle" direction="ltr">d₁ = CA = 180 cm</text>
   `,
 );
 
 const problem1Svg = svgFrame(
   'problem-1',
   'المسألة الأولى ص 70: قوتان بجهة واحدة 40 N و 10 N',
-  'F1 = 40 N إلى أعلى عند الطرف الأقرب للمحصلة، و F2 = 10 N إلى أعلى عند الطرف الآخر، و F = 50 N بينهما على بعد 30 cm من القوة الأكبر و 120 cm من الأصغر.',
+  'F1 = 40 N إلى أعلى عند A، و F2 = 10 N إلى أعلى عند B، و F = 50 N بينهما. d1 = 30 cm من A إلى C، d2 = 120 cm من C إلى B، وطول المسطرة 150 cm.',
   `
-  ${carrier(150, 28, 330)}
-  ${carrier(270, 28, 330)}
-  ${carrier(580, 28, 330)}
-  ${bar(130, 200, 470, 16)}
-  ${forceArrow('problem-1', 150, 200, 70, 'f1')}
-  ${forceArrow('problem-1', 580, 200, 150, 'f2')}
-  ${forceArrow('problem-1', 270, 200, 48, 'result')}
-  ${forceLabel(110, 62, 'F₁ = 40 N', 'f1')}
-  ${forceLabel(610, 142, 'F₂ = 10 N', 'f2')}
-  ${forceLabel(300, 40, 'F = 50 N', 'result')}
-  ${point(150, 208, 'A', 24)}
-  ${point(270, 208, 'C', 24)}
-  ${point(580, 208, 'B', 24)}
-  ${dimension(150, 270, 270, 'd₁ = 30 cm')}
-  ${dimension(270, 580, 270, 'd₂ = 120 cm')}
-  ${dimension(150, 580, 308, 'd = 150 cm')}
+  ${carrier(90, 28, 330)}
+  ${carrier(210, 28, 330)}
+  ${carrier(690, 28, 330)}
+  ${bar(90, 200, 600, 16)}
+  ${forceArrow('problem-1', 90, 200, 80, 'f1')}
+  ${forceArrow('problem-1', 690, 200, 140, 'f2')}
+  ${forceArrow('problem-1', 210, 200, 54, 'result')}
+  ${forceLabel(90, 72, 'F₁ = 40 N', 'f1')}
+  ${forceLabel(650, 128, 'F₂ = 10 N', 'f2')}
+  ${forceLabel(240, 44, 'F = 50 N', 'result')}
+  ${point(90, 208, 'A', 24)}
+  ${point(210, 208, 'C', 24)}
+  ${point(690, 208, 'B', 24)}
+  ${dimension(90, 210, 270, 'd₁ = 30 cm')}
+  ${dimension(210, 690, 270, 'd₂ = 120 cm')}
+  ${dimension(90, 690, 308, 'd = 150 cm')}
   `,
 );
 
 const problem2Svg = svgFrame(
   'problem-2',
   'المسألة الثانية ص 70: قوتان متعاكستان 80 N و 20 N',
-  'F1 = 80 N إلى أعلى عند A، و F2 = 20 N إلى أسفل عند B، والمحصلة F = 60 N إلى أعلى خارج القطعة من جهة القوة الأكبر. البعد بين الحاملين 40 cm.',
+  'F1 = 80 N إلى أعلى عند A، و F2 = 20 N إلى أسفل عند B، والمحصلة F = 60 N إلى أعلى خارج القطعة من جهة القوة الأكبر. d1 = CA = 40/3 cm، d = AB = 40 cm، d2 = CB = 160/3 cm.',
   `
   ${carrier(120, 24, 350)}
-  ${carrier(250, 24, 350)}
-  ${carrier(540, 24, 350)}
-  ${bar(230, 176, 330, 16)}
-  ${forceArrow('problem-2', 250, 176, 58, 'f1')}
-  ${forceArrow('problem-2', 540, 192, 300, 'f2')}
-  ${forceArrow('problem-2', 120, 176, 70, 'result')}
-  ${forceLabel(278, 50, 'F₁ = 80 N', 'f1')}
-  ${forceLabel(572, 318, 'F₂ = 20 N', 'f2')}
-  ${forceLabel(86, 62, 'F = 60 N', 'result')}
+  ${carrier(200, 24, 350)}
+  ${carrier(440, 24, 350)}
+  ${bar(200, 176, 240, 16)}
+  ${forceArrow('problem-2', 200, 176, 76, 'f1')}
+  ${forceArrow('problem-2', 440, 192, 254, 'f2')}
+  ${forceArrow('problem-2', 120, 176, 98, 'result')}
+  ${forceLabel(224, 66, 'F₁ = 80 N', 'f1')}
+  ${forceLabel(480, 272, 'F₂ = 20 N', 'f2')}
+  ${forceLabel(88, 86, 'F = 60 N', 'result')}
   ${point(120, 184, 'C', 22)}
-  ${point(250, 184, 'A', 22)}
-  ${point(540, 184, 'B', 22)}
-  ${dimension(120, 250, 96, 'd₁ ≈ 13.3 cm')}
-  ${dimension(250, 540, 54, 'd = 40 cm')}
-  <text x="330" y="368" class="l2-caption" text-anchor="middle" direction="ltr">d₂ ≈ 53.3 cm</text>
+  ${point(200, 184, 'A', 22)}
+  ${point(440, 184, 'B', 22)}
+  ${dimension(120, 200, 96, 'd₁ ≈ 13.3 cm')}
+  ${dimension(200, 440, 54, 'd = 40 cm')}
+  ${dimension(120, 440, 332, 'd₂ ≈ 53.3 cm')}
   `,
 );
 

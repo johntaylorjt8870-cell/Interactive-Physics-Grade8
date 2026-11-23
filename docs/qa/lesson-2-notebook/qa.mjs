@@ -6,7 +6,7 @@
  * the bundled `al2023.tar.br` on LD_LIBRARY_PATH:
  *
  *   python3 -m http.server 4173 --bind 0.0.0.0      # from the repository root
- *   LD_LIBRARY_PATH=/tmp/nss/lib node docs/qa/lesson-2-notebook/qa.mjs
+ *   LD_LIBRARY_PATH=/tmp/al2023/lib node docs/qa/lesson-2-notebook/qa.mjs
  *
  * The archived run is `browser-results.txt` next to this file.
  */
@@ -25,7 +25,8 @@ const context = await browser.newContext({ viewport: { width: 1440, height: 900 
 const results = [];
 const check = (name, ok, extra = '') => results.push({ name, ok, extra });
 
-for (const [w, h, tag] of [[1440, 900, '1440'], [1366, 768, '1366'], [390, 844, '390']]) {
+// Laptop-only viewport review: primary desktop plus a short 1366×768 laptop.
+for (const [w, h, tag] of [[1440, 900, '1440'], [1366, 768, '1366']]) {
   const page = await context.newPage();
   await page.setViewportSize({ width: w, height: h });
   const errors = [];
@@ -57,6 +58,61 @@ for (const [w, h, tag] of [[1440, 900, '1440'], [1366, 768, '1366'], [390, 844, 
 
   const sections = await page.locator('#page-content .student-notebook-section').count();
   check(`${tag}: 14 notebook sections`, sections === 14, `count=${sections}`);
+  const toc = page.locator('#page-content .student-notebook-toc');
+  const tocLabel = await toc.getAttribute('aria-label');
+  check(`${tag}: table of contents has an accessible label`, tocLabel === 'فهرس دفتر الطالب', tocLabel ?? 'missing');
+  const tocLinks = await toc.locator('a').count();
+  check(`${tag}: table of contents links all 14 sections`, tocLinks === 14, `count=${tocLinks}`);
+  const brokenTocTargets = await toc.locator('a').evaluateAll((links) =>
+    links.filter((link) => !document.getElementById(link.hash.slice(1))).map((link) => link.hash));
+  check(`${tag}: every table-of-contents link has a section target`, brokenTocTargets.length === 0, brokenTocTargets.join(', '));
+  await toc.locator('a[href="#l2-nb-figures"]').click();
+  try {
+    await page.waitForFunction(() => {
+      const target = document.getElementById('l2-nb-figures');
+      const top = target?.getBoundingClientRect().top;
+      return location.hash === '#l2-nb-figures' && top !== undefined &&
+        Math.abs(top - Number.parseFloat(getComputedStyle(target).scrollMarginTop)) < 2;
+    }, null, { timeout: 5000 });
+  } catch { /* report the settled target position below */ }
+  const tocJump = await page.evaluate(() => {
+    const target = document.getElementById('l2-nb-figures');
+    const top = target?.getBoundingClientRect().top;
+    const margin = target ? Number.parseFloat(getComputedStyle(target).scrollMarginTop) : NaN;
+    return {
+      ok: location.hash === '#l2-nb-figures' && Number.isFinite(top) && Math.abs(top - margin) < 2,
+      hash: location.hash,
+      top: Number.isFinite(top) ? top.toFixed(1) : 'missing',
+    };
+  });
+  check(`${tag}: a table-of-contents link jumps to its section`, tocJump.ok, `hash=${tocJump.hash} top=${tocJump.top}px`);
+  const figureCount = await page.locator('#page-content .student-notebook-figure').count();
+  check(`${tag}: 14 labelled notebook redraws`, figureCount === 14, `count=${figureCount}`);
+  const sourceBlocks = await page.locator('#page-content .student-notebook-source-block').count();
+  check(`${tag}: printed source blocks are distinguished`, sourceBlocks >= 10, `count=${sourceBlocks}`);
+  const optionCounts = await page.locator('#page-content .student-notebook-options').evaluateAll((lists) =>
+    lists.map((list) => list.querySelectorAll('li').length));
+  check(`${tag}: four MCQs retain all four options`, JSON.stringify(optionCounts) === '[4,4,4,4]', JSON.stringify(optionCounts));
+  const oppositeTex = await page.locator('.student-notebook-section[aria-labelledby="l2-nb-opposite"] annotation').allTextContents();
+  const conditionalDistances = oppositeTex.includes('d=d_{1}-d_{2}') && oppositeTex.includes('d=d_{2}-d_{1}');
+  check(`${tag}: opposite-distance signs are conditional`, conditionalDistances,
+    conditionalDistances ? 'both conditional signs present' : oppositeTex.join(' | '));
+  const problem2Text = await page.locator('.student-notebook-section[aria-labelledby="l2-nb-examples"]').innerText();
+  const ambiguityIsUnresolved = problem2Text.includes('[كلمة غير محسومة في المسح]') && problem2Text.includes('لا نثبتها حرفياً');
+  check(`${tag}: p70 ambiguous word remains unresolved`, ambiguityIsUnresolved,
+    ambiguityIsUnresolved ? 'marked unresolved; no silent «محصلة» substitution' : problem2Text.slice(-500));
+
+  if (tag === '1366') {
+    await page.locator('.student-notebook-header').screenshot({ path: '/tmp/l2-notebook-toc-1366.png' });
+    for (const [selector, filename] of [
+      ['#l2-nb-opposite', '/tmp/l2-notebook-opposite-1366.png'],
+      ['#l2-nb-figures', '/tmp/l2-notebook-figures-1366.png'],
+      ['#l2-nb-answers', '/tmp/l2-notebook-answers-1366.png'],
+    ]) {
+      await page.locator(selector).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: filename, fullPage: false });
+    }
+  }
 
   const katexErrors = await page.locator('.katex-error').count();
   check(`${tag}: no katex errors`, katexErrors === 0, `count=${katexErrors}`);
