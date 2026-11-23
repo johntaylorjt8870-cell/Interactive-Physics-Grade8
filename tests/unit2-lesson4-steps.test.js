@@ -570,29 +570,91 @@ test('DOM: mounting the same step twice does not duplicate controls or listeners
   assert.match(card.querySelector('[data-r4p-feedback]').textContent, /أدخل قيمة/, 'one click produced one validation message, not two results');
 });
 
-/* Published-page boot regressions. Source regexes alone could not catch the
-   notebook SyntaxError that stopped every tab, or the deleted goToStep() that
-   stopped navigation after the module graph was repaired. */
-test('the notebook module evaluates all nine sections with rendered math', async () => {
+/* Published-page boot and notebook source-coverage regressions. */
+test('the expanded notebook renders every source page, demand, diagram, table and equation', async () => {
   const { UNIT2L4_NOTEBOOK_BLOCK: html, UNIT2L4_NOTEBOOK_TITLE: title } = await import('../src/unit2-lesson4-notebook.js');
   assert.equal(title, '📒 دفتر الطالب');
-  const sections = [...html.matchAll(/<section class="student-notebook-section" aria-labelledby="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(sections, ['u2l4nb-idea', 'u2l4nb-terms', 'u2l4nb-laws', 'u2l4nb-diagrams', 'u2l4nb-steps', 'u2l4nb-experiments', 'u2l4nb-special', 'u2l4nb-errors', 'u2l4nb-summary']);
+
+  const expectedSections = [
+    ...Array.from({ length: 14 }, (_, index) => `u2l4nb-p${107 + index}`),
+    'u2l4nb-glossary', 'u2l4nb-laws', 'u2l4nb-audit', 'u2l4nb-checklist',
+  ];
+  const sections = [...html.matchAll(/<section class="r4nb-section" data-notebook-section="([^"]+)" data-source-page="([^"]+)" aria-labelledby="([^"]+)">/g)];
+  assert.equal(sections.length, 18);
+  assert.deepEqual(sections.map((match) => match[1]), expectedSections);
+  assert.deepEqual(sections.map((match) => match[3]), expectedSections, 'each section heading labels its own region');
+  assert.deepEqual(sections.slice(0, 14).map((match) => match[2]), Array.from({ length: 14 }, (_, index) => `p${107 + index}`));
+  assert.ok(sections.slice(14).every((match) => match[2] === 'p107-p120'), 'the four cross-page references declare their full source range');
   assert.equal(html.includes('${'), false, 'template interpolations are evaluated, not shipped as text');
   assert.equal(html.includes('katex-error'), false, 'KaTeX renders every notebook expression');
-  assert.ok(html.includes('<annotation encoding="application/x-tex">1\\,\\mathrm A</annotation>'), 'units use one TeX command, not an over-escaped line break');
+  assert.match(html, /r4nb-tag-book/);
+  assert.match(html, /r4nb-tag-platform/);
+  assert.match(html, /r4nb-tag-inference/);
+  assert.match(html, /r4nb-tag-caveat/);
+
+  const demands = [...html.matchAll(/<article class="r4nb-source-demand" data-source-activity="([^"]+)" data-source-page="p(\d+)">([\s\S]*?)<\/article>/g)];
+  assert.equal(demands.length, 59);
+  assert.deepEqual(demands.map((match) => match[1]), ACTIVITIES.map((activity) => activity.id), 'each verified source demand appears once and in source order');
+  const escapeHtml = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  for (const [index, activity] of ACTIVITIES.entries()) {
+    const demand = demands[index];
+    assert.equal(Number(demand[2]), activity.page, `${activity.id} stays on its printed page`);
+    assert.ok(demand[3].includes(escapeHtml(activity.prompt)), `${activity.id} preserves the full source prompt`);
+    assert.ok(demand[3].includes(`href="#p${activity.page}"`), `${activity.id} links back to its source step`);
+  }
+
+  const figures = [...html.matchAll(/<div class="r4nb-embedded-figure" data-notebook-figure="([^"]+)" data-source-page="p(\d+)">/g)];
+  assert.equal(figures.length, 14);
+  assert.deepEqual(figures.map((match) => match[1]).sort(), Object.keys(UNIT2L4_DIAGRAMS).sort(), 'all and only the lesson diagrams are embedded');
+  for (const match of figures) {
+    const [, id, page] = match;
+    assert.equal(Number(page), UNIT2L4_DIAGRAMS[id].page, `${id} retains its source page`);
+    assert.match(html, new RegExp(`data-figure="${id}" data-source-page="p${page}"`), `${id} remains an accessible labelled platform reconstruction`);
+  }
+  assert.equal((html.match(/<svg\b/g) ?? []).length, 14);
+  assert.equal((html.match(/role="img"/g) ?? []).length, 14, 'each embedded SVG has an accessible image role');
+
+  const tableCount = (html.match(/<table class="r4nb-table/g) ?? []).length;
+  assert.equal(tableCount, 15);
+  assert.equal((html.match(/<caption(?:\s|>)/g) ?? []).length, tableCount, 'every table has a caption');
+  assert.equal((html.match(/<th scope="col">/g) ?? []).length >= tableCount, true, 'every table has column headings');
+  assert.equal((html.match(/<div class="r4nb-table-wrap" role="region" aria-labelledby="u2l4nb-table-\d+" tabindex="0">/g) ?? []).length, tableCount, 'wide tables have named keyboard-scroll regions');
+  assert.match(html, /الجدول المطبوع في ص109/);
+  assert.match(html, /جدول الترميز العالمي للألوان/);
+  assert.match(html, /المجموعة الثانية في جدول المطابقة ص120/);
+
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
+  assert.equal(new Set(ids).size, ids.length, 'section, diagram and table IDs stay unique');
+  const tocMarkup = html.match(/<nav class="student-notebook-toc r4nb-toc"[\s\S]*?<\/nav>/)?.[0] ?? '';
+  const tocTargets = [...tocMarkup.matchAll(/href="#([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(tocTargets, expectedSections, 'all 18 contents links resolve to their section');
+
   const { default: katex } = await import('../vendor/katex/katex.mjs');
   const annotations = [...html.matchAll(/<annotation encoding="application\/x-tex">([\s\S]*?)<\/annotation>/g)].map((match) => match[1]);
-  assert.ok(annotations.length >= 80, 'every notebook formula is audited');
+  assert.equal(annotations.length, 144, 'all notebook equations are counted and audited');
+  assert.ok(annotations.includes('1\\,\\mathrm A'), 'units use one TeX command, not an over-escaped line break');
   for (const annotation of annotations) {
     assert.equal(annotation.includes('\\\\'), false, `over-escaped TeX reaches KaTeX: ${annotation}`);
     katex.renderToString(annotation, { throwOnError: true, strict: 'ignore', output: 'htmlAndMathml' });
   }
   for (const conversion of [
     '1\\,\\mathrm{cm}^{2}=10^{-4}\\,\\mathrm m^{2}',
-    '30\\,\\mathrm{cm}^{2}=30\\times10^{-4}=0.003\\,\\mathrm m^{2}',
+    'S=30\\,\\mathrm{cm}^{2}=30\\times10^{-4}\\,\\mathrm m^{2}=0.003\\,\\mathrm m^{2}',
   ]) assert.ok(annotations.includes(conversion), `area conversion stays single-line: ${conversion}`);
+  for (const sourceFact of ['1787–1854', '3422°C', '10%', '4700 Ω', 'غير محسومة', 'لم يُجرَ بحث شبكي']) {
+    assert.ok(html.includes(sourceFact), `the notebook preserves/caveats ${sourceFact}`);
+  }
   assert.ok(html.length > 100000, 'the complete review sheet is retained');
+
+  const coverageMatrix = await read('docs/unit-2-lesson-4-notebook-coverage.md');
+  const matrixPages = coverageMatrix.split('\n')
+    .map((line) => line.split('|')[1]?.trim())
+    .filter((cell) => cell?.startsWith('**') && cell.endsWith('**'))
+    .map((cell) => Number(cell.slice(2, -2)));
+  assert.deepEqual(matrixPages, Array.from({ length: 14 }, (_, index) => 107 + index), 'the written audit has one row for every printed page');
+  assert.ok(coverageMatrix.includes('نتيجة ما بعد التنفيذ والتحقق'));
+  assert.ok(coverageMatrix.includes('59/59 مطلباً'));
+  assert.ok(coverageMatrix.includes('144 معادلة'));
 });
 
 let bootSequence = 0;
@@ -622,7 +684,7 @@ function assertPublishedStep(document, index, page) {
   assert.equal(document.querySelector('#progress-track').getAttribute('aria-valuemax'), String(UNIT2L4_META.steps));
   assert.equal(document.querySelector('#page-content').getAttribute('aria-busy'), 'false');
   if (page.id === 'student-notebook') {
-    assert.equal(document.querySelectorAll('#page-content .student-notebook-section').length, 9);
+    assert.equal(document.querySelectorAll('#page-content .r4nb-section').length, 18);
     assert.equal(document.querySelector('#page-badge-label').textContent, 'مرجع الكتاب');
     assert.equal(document.querySelector('#page-number').textContent, '107–120');
     assert.equal(document.querySelector('#next-button').disabled, true);

@@ -140,5 +140,5 @@ test('published content, appendix content and tests for lessons 1–3 retain the
 });
 test('core new palette text pairs meet WCAG AA normal-text contrast',()=>{
  const luminance=hex=>{const c=hex.replace('#','').match(/../g).map(h=>parseInt(h,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722;};
- for(const [fg,bg] of [['#173a30','#f4f2e9'],['#ffffff','#123b30'],['#ffffff','#286049'],['#7e431e','#ffffff'],['#536356','#f4f2e9'],['#173a30','#e4e9dc']]){const a=luminance(fg),b=luminance(bg);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,`${fg} on ${bg}`);}
+ for(const [fg,bg] of [['#173a30','#f4f2e9'],['#ffffff','#123b30'],['#ffffff','#286049'],['#7e431e','#ffffff'],['#536356','#f4f2e9'],['#173a30','#e4e9dc'],['#536356','#ffffff']]){const a=luminance(fg),b=luminance(bg);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,`${fg} on ${bg}`);}
 });
