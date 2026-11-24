@@ -189,9 +189,11 @@ test('the notebook table of contents links all fourteen sections in order', () =
     'l2-nb-answers', 'l2-nb-plan',
   ];
   assert.deepEqual(links.map(([, id]) => id), expectedIds);
+  assert.equal(new Set(links.map(([, id]) => id)).size, 14, 'all fourteen fragment IDs are unique');
   for (const [, id, label] of links) {
     assert.ok(label.trim(), `TOC link ${id} has a visible label`);
     assert.ok(html.includes(`<h3 id="${id}">`), `TOC link ${id} targets its section heading`);
+    assert.equal(html.split(`id="${id}"`).length - 1, 1, `section target ${id} appears exactly once`);
   }
   assert.ok(html.indexOf(nav[0]) < html.indexOf('<section class="student-notebook-section"'),
     'the table of contents precedes the study sections');

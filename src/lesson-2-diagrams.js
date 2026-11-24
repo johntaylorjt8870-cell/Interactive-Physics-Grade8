@@ -282,7 +282,7 @@ const workedSameSvg = svgFrame(
 const oppositeSenseSvg = svgFrame(
   'opposite-sense',
   'محصلة قوتين متوازيتين بجهتين متعاكستين',
-  'F1 إلى أعلى عند A، و F2 الأكبر إلى أسفل عند B، والمحصلة F إلى أسفل عند C خارج القطعة AB ومن جهة القوة الأكبر. d1 بين C و A عبر B، و d2 بين C و B.',
+  'F1 إلى أعلى عند A، و F2 الأكبر إلى أسفل عند B، والمحصلة F إلى أسفل عند C خارج القطعة AB ومن جهة القوة الأكبر. d1 = CA، و d2 = CB، و d = AB.',
   `
   ${carrier(90, 24, 350)}
   ${carrier(410, 24, 350)}
@@ -292,13 +292,14 @@ const oppositeSenseSvg = svgFrame(
   ${forceArrow('opposite-sense', 410, 192, 310, 'f2')}
   ${forceArrow('opposite-sense', 90, 192, 270, 'result')}
   ${forceLabel(600, 74, 'F₁', 'f1')}
-  ${forceLabel(442, 328, 'F₂', 'f2')}
+  ${forceLabel(442, 356, 'F₂', 'f2')}
   ${forceLabel(118, 290, 'F', 'result')}
   ${point(90, 184, 'C', 22)}
   ${point(410, 184, 'B', 22)}
   ${point(570, 184, 'A', 22)}
-  ${dimension(90, 410, 86, 'd₂')}
   ${dimension(410, 570, 54, 'd')}
+  ${dimension(90, 410, 86, 'd₂')}
+  ${dimension(90, 570, 322, 'd₁')}
   `,
 );
 
@@ -499,7 +500,7 @@ export const LESSON_2_DIAGRAMS = Object.freeze({
   },
   'opposite-sense': {
     title: 'موضع محصلة قوتين بجهتين متعاكستين',
-    platformNote: 'C خارج القطعة AB ومن جهة القوة الأكبر، والمحصلة بجهة تلك القوة. تبقى علاقة الجداءين صحيحة.',
+    platformNote: 'C خارج القطعة AB ومن جهة القوة الأكبر؛ d1 = CA و d2 = CB و d = AB موضّحة في الرسم. تبقى علاقة الجداءين صحيحة.',
     description: 'إعادة بناء للشكل في الصفحة 67.',
     svg: oppositeSenseSvg,
     legend: [
