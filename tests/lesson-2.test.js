@@ -184,6 +184,10 @@ test('reconstructed diagrams are labelled vectors with source-relevant points an
   }
   assert.match(LESSON_2_DIAGRAMS['same-sense'].svg, />C</);
   assert.match(LESSON_2_DIAGRAMS['opposite-sense'].svg, />A</);
+  const oppositeDimensionLabels = [...LESSON_2_DIAGRAMS['opposite-sense'].svg.matchAll(/class="l2-dim-label"[^>]*>([^<]+)<\/text>/g)].map(([, label]) => label);
+  for (const label of ['d₁', 'd₂', 'd']) {
+    assert.ok(oppositeDimensionLabels.includes(label), `opposite resultant diagram includes ${label}`);
+  }
   assert.match(LESSON_2_DIAGRAMS['worked-same'].svg, /50 N/);
   assert.match(LESSON_2_DIAGRAMS['worked-opposite'].svg, /180 cm/);
 });

@@ -7,6 +7,19 @@ PASS  1440: next is disabled on the final stage
 PASS  1440: previous is enabled on the final stage
 PASS  1440: last nav tab is current  → 9 📒 دفتر الطالب ص 70
 PASS  1440: 14 notebook sections  → count=14
+PASS  1440: table of contents has an accessible label  → فهرس دفتر الطالب
+PASS  1440: table of contents links all 14 sections  → count=14
+PASS  1440: every table-of-contents link has a section target
+PASS  1440: all section target IDs are unique  → count=14 unique=14
+PASS  1440: TOC uses RTL two-column reading order at laptop width  → dir=rtl columns=2
+PASS  1440: keyboard focus is visible on a TOC link  → inToc=true focusVisible=true outline=solid 2px
+PASS  1440: a table-of-contents link jumps to its section  → hash=#l2-nb-figures top=16.5px
+PASS  1440: 14 labelled notebook redraws  → count=14
+PASS  1440: printed source blocks are distinguished  → count=19
+PASS  1440: four MCQs retain all four options  → [4,4,4,4]
+PASS  1440: opposite-distance signs are conditional  → both conditional signs present
+PASS  1440: opposite-case diagram labels d₁, d₂, and d  → d, d₂, d₁
+PASS  1440: p70 ambiguous word remains unresolved  → marked unresolved; no silent «محصلة» substitution
 PASS  1440: no katex errors  → count=0
 PASS  1440: no horizontal page overflow  → delta=0
 PASS  1440: wide equations stay scrollable, never clipped
@@ -26,6 +39,19 @@ PASS  1366: next is disabled on the final stage
 PASS  1366: previous is enabled on the final stage
 PASS  1366: last nav tab is current  → 9 📒 دفتر الطالب ص 70
 PASS  1366: 14 notebook sections  → count=14
+PASS  1366: table of contents has an accessible label  → فهرس دفتر الطالب
+PASS  1366: table of contents links all 14 sections  → count=14
+PASS  1366: every table-of-contents link has a section target
+PASS  1366: all section target IDs are unique  → count=14 unique=14
+PASS  1366: TOC uses RTL two-column reading order at laptop width  → dir=rtl columns=2
+PASS  1366: keyboard focus is visible on a TOC link  → inToc=true focusVisible=true outline=solid 2px
+PASS  1366: a table-of-contents link jumps to its section  → hash=#l2-nb-figures top=16.4px
+PASS  1366: 14 labelled notebook redraws  → count=14
+PASS  1366: printed source blocks are distinguished  → count=19
+PASS  1366: four MCQs retain all four options  → [4,4,4,4]
+PASS  1366: opposite-distance signs are conditional  → both conditional signs present
+PASS  1366: opposite-case diagram labels d₁, d₂, and d  → d, d₂, d₁
+PASS  1366: p70 ambiguous word remains unresolved  → marked unresolved; no silent «محصلة» substitution
 PASS  1366: no katex errors  → count=0
 PASS  1366: no horizontal page overflow  → delta=0
 PASS  1366: wide equations stay scrollable, never clipped
@@ -36,25 +62,6 @@ PASS  1366: next returns to the notebook
 PASS  1366: PageUp leaves the notebook
 PASS  1366: PageDown returns to the notebook
 PASS  1366: no console/page errors
-PASS  390: nav has 9 tabs  → count=9
-PASS  390: last tab is the notebook  → 9 📒 دفتر الطالب ص 70
-PASS  390: heading is دفتر الطالب  → دفتر الطالب
-PASS  390: exactly one notebook rendered  → count=1
-PASS  390: progress is 9 / 9  → 9 / 9
-PASS  390: next is disabled on the final stage
-PASS  390: previous is enabled on the final stage
-PASS  390: last nav tab is current  → 9 📒 دفتر الطالب ص 70
-PASS  390: 14 notebook sections  → count=14
-PASS  390: no katex errors  → count=0
-PASS  390: no horizontal page overflow  → delta=0
-PASS  390: wide equations stay scrollable, never clipped
-PASS  390: no forced line breaks inside equations  → count=0
-PASS  390: previous returns to the p70 stage  → أختبر نفسي
-PASS  390: notebook leaves the DOM when navigating back
-PASS  390: next returns to the notebook
-PASS  390: PageUp leaves the notebook
-PASS  390: PageDown returns to the notebook
-PASS  390: no console/page errors
 PASS  lesson 1 still has 9 tabs
 PASS  lesson 1 notebook is still its own final stage
 PASS  lesson 1 has no lesson-2 notebook content
@@ -69,4 +76,4 @@ PASS  no notebook rendered on /physics-in-life-lesson-1.html  → l2=0 l1=0
 PASS  no notebook rendered on /unit-questions.html  → l2=0 l1=0
 PASS  no notebook rendered on /unit-1-test.html  → l2=0 l1=0
 
-70/70 checks passed
+77/77 checks passed
