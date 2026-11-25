@@ -488,6 +488,60 @@
 .u2l1-page .student-notebook-table thead th { background: var(--teal-soft); color: var(--ink); font-weight: 800; }
 .u2l1-page .student-notebook-table tbody tr:nth-child(even) td { background: #fcfbf7; }
 
+/* --- quoted printed text and platform-only notes -------------------------- */
+/* A blockquote is a literal line of the book. The gold rule plus the «نص
+   الكتاب» chip must stay visually distinct from `.student-notebook-note`,
+   which is always a platform explanation and never printed book wording. */
+.u2l1-page .student-notebook-quote {
+  margin: 10px 0;
+  padding: 10px 14px;
+  background: #fbf8f1;
+  border-inline-start: 3px solid var(--gold-line);
+  border-radius: 9px;
+  font-size: 14px;
+  line-height: 1.95;
+}
+.u2l1-page .student-notebook-quote > .u2-tag { margin-bottom: 6px; }
+.u2l1-page .student-notebook-quote p { margin: 0; }
+.u2l1-page .student-notebook-quote-list { margin: 0; padding-inline-start: 22px; }
+.u2l1-page .student-notebook-quote-list li + li { margin-top: 4px; }
+.u2l1-page .student-notebook-inference { border-inline-start-color: var(--teal-line); background: var(--teal-soft); }
+
+/* --- embedded source figures ---------------------------------------------- */
+/* Every figure carries an explicit «إعادة بناء … · ص N» chip so a reader can
+   never mistake a redrawn SVG for a scan of the printed page. The canvas is a
+   horizontal scroller, so a wide SVG can never widen the notebook. */
+.u2l1-page .student-notebook-figure {
+  margin: 12px 0;
+  padding: 11px 12px;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+}
+.u2l1-page .student-notebook-figure-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 8px;
+  color: var(--accent-deep);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.u2l1-page .student-notebook-figure-head .u2-tag { margin: 0; }
+.u2l1-page .student-notebook-figure-canvas { width: 100%; min-width: 0; overflow-x: auto; }
+.u2l1-page .student-notebook-figure-canvas svg { display: block; width: 100%; max-width: 660px; min-width: 300px; height: auto; margin: 0 auto; }
+/* SVG start/end anchors follow text direction. Keep Arabic callouts outside
+   the instrument instead of letting inherited RTL put them across the jar. */
+.u2l1-page .student-notebook-figure-canvas text[dir="auto"] { direction: rtl; unicode-bidi: isolate; }
+.u2l1-page .student-notebook-figure-canvas text[dir="auto"][text-anchor="end"] { text-anchor: start; }
+.u2l1-page .student-notebook-figure-canvas text[dir="auto"][text-anchor="start"] { text-anchor: end; }
+.u2l1-page .student-notebook-figure .u2-diagram-key { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 10px; }
+.u2l1-page .student-notebook-source-image { display: block; width: 100%; max-width: 660px; height: auto; margin: 10px auto; }
+.u2l1-page .student-notebook-figure-caption { margin: 8px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.9; }
+
 /* the step rail: with fifteen tabs the stack is taller than a laptop window, so
    the rail is bounded to the viewport and only the tab list scrolls (the same
    contract `lesson-1.css` / `lesson-2.css` use for their notebooks). */
@@ -530,9 +584,14 @@
   .u2l1-page .student-notebook-table { font-size: 12.5px; }
   .u2l1-page .student-notebook-table th,
   .u2l1-page .student-notebook-table td { padding: 7px 8px; }
+  .u2l1-page .student-notebook-figure .u2-diagram-key { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .u2l1-page .student-notebook-figure { padding: 9px 10px; }
 }
 @media (max-width: 480px) {
   .u2l1-page .student-notebook-step { grid-template-columns: 1fr; gap: 3px; }
   .u2l1-page .student-notebook-sheet { padding-inline: 24px 11px; }
   .u2l1-page .student-notebook-sheet::before { inset-inline-start: 11px; }
+  .u2l1-page .student-notebook-figure .u2-diagram-key { grid-template-columns: 1fr; }
+  .u2l1-page .student-notebook-figure-head { display: block; }
+  .u2l1-page .student-notebook-figure-head .u2-tag { margin-top: 5px; }
 }
