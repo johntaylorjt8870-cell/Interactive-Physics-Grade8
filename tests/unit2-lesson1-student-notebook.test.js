@@ -84,7 +84,10 @@ test('the notebook sits inside Unit 2 Lesson 1 and on no other page', async () =
   // name the tab in its stage counter, but it never carries the notebook markup.
   for (const html of pages) {
     assert.doesNotMatch(html, /student-notebook/, 'no page pre-renders the notebook');
-    if (html !== pages[3]) assert.doesNotMatch(html, /دفتر الطالب/, 'the notebook lives in one lesson only');
+    if (html !== pages[3]) {
+      // Other lessons may have their own notebooks; only this module is exclusive.
+      assert.doesNotMatch(html, /unit2-lesson1-(?:main|notebook)\.js|UNIT2_LESSON1_NOTEBOOK_BLOCK/);
+    }
   }
   const lessonShell = pages[3];
   assert.equal((lessonShell.match(/دفتر الطالب/g) ?? []).length, 1,
@@ -158,9 +161,83 @@ test('the notebook covers every scientific point of pages 73–86', () => {
     'ملامسة ساق بلاستيكية معتدلة لساق معدنية',
     'لا يوجد تعريف مطبوع واحد',
     'نوعان: سالبة (−) وموجبة (+)',
+    // p74 opening question, previously absent from the notebook
+    'يُعتبر البرق والصاعقة من أهم المظاهر الناتجة عن الكهرباء الساكنة',
+    'سبب حدوث هذه الظواهر الطبيعية',
   ]) {
     assert.ok(text.includes(phrase), `missing: ${phrase}`);
   }
+});
+
+test('the p74 electroscope-state figure is read from its printed labels, not from left/right position', () => {
+  const block = UNIT2_LESSON1_NOTEBOOK_BLOCK;
+  // Printed page: charged on the left, neutral on the right.
+  // The shared schematic reverses positions but must preserve label/state associations.
+  assert.ok(block.includes('«مشحون»'), 'the printed label «مشحون» is named verbatim');
+  assert.ok(block.includes('«معتدل»'), 'the printed label «معتدل» is named verbatim');
+  // The old, wrong reading (closed = left, diverged = right) must be gone.
+  assert.ok(!text.includes('يسار الشكل: الوريقتان منطبقتان'),
+    'the reversed left/right reading is dropped');
+  assert.ok(!text.includes('يمينه: منفرجتان'),
+    'the reversed left/right reading is dropped');
+  // The invariant that actually matters is stated explicitly.
+  assert.ok(text.includes('منفرجتان ⇒ مشحون'), 'diverged leaves mean charged');
+  assert.ok(text.includes('منطبقتان ⇒ معتدل'), 'closed leaves mean neutral');
+  assert.ok(text.includes('الأصل المطبوع يضع «مشحون» يساراً و«معتدل» يميناً'));
+  assert.ok(text.includes('تعكس موضع الجهازين'), 'redraw layout difference is explicit');
+});
+
+test('every audited source figure is embedded in the notebook and tagged as a rebuild', async () => {
+  const { UNIT2_DIAGRAMS } = await import('../src/unit2-lesson1-diagrams.js');
+  const block = UNIT2_LESSON1_NOTEBOOK_BLOCK;
+
+  // the notebook must not fork its own copy of a book figure
+  const embedded = [...block.matchAll(/data-notebook-diagram="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual([...new Set(embedded)].sort(), Object.keys(UNIT2_DIAGRAMS).sort(),
+    'the notebook embeds exactly the seven audited lesson diagrams');
+  assert.equal(new Set(embedded).size, embedded.length, 'each diagram appears exactly once');
+
+  for (const [id, entry] of Object.entries(UNIT2_DIAGRAMS)) {
+    const figure = block.split(`data-notebook-diagram="${id}"`)[1]?.split('</figure>')[0] ?? '';
+    assert.ok(figure.includes(`data-source-page="${entry.page}"`), `${id}: source page`);
+    assert.ok(figure.includes('إعادة بناء'), `${id}: rebuild provenance badge`);
+    assert.ok(figure.includes(entry.svg), `${id}: shared audited SVG is reused in full`);
+    assert.match(figure, /role="img"/, `${id}: role=img`);
+    assert.match(figure, /<title/, `${id}: title`);
+    assert.match(figure, /<desc/, `${id}: desc`);
+  }
+
+  for (const page of [73, 75, 77, 78, 79]) {
+    assert.ok(block.includes(`data-notebook-source-page="${page}"`), `source image page ${page}`);
+  }
+
+  // the page-82 rod figure keeps its full six-label key
+  const rodIndex = block.indexOf('data-notebook-diagram="lightning-rod"');
+  const rodFigure = block.slice(rodIndex, block.indexOf('</figure>', rodIndex));
+  for (const label of ['الهوائي', 'مانع الصواعق', 'سلك نحاسي', 'نقطة الاتصال بالأرضي', 'مادة محيطة بساق التأريض', 'ساق التأريض']) {
+    assert.ok(rodFigure.includes(label), `rod key: ${label}`);
+  }
+});
+
+test('printed book wording is quoted and platform explanations are labelled separately', () => {
+  const block = UNIT2_LESSON1_NOTEBOOK_BLOCK;
+  const quotes = [...block.matchAll(/<blockquote[^>]*data-source-page="(\d+)"[^>]*>([\s\S]*?)<\/blockquote>/g)];
+  assert.ok(quotes.length >= 5, 'the notebook quotes the printed text it depends on');
+  for (const [, page, body] of quotes) {
+    assert.match(body, /نص الكتاب · ص \d+/, 'each quote names its source page');
+    assert.ok(Number(page) >= 73 && Number(page) <= 86, `quote page in range: ${page}`);
+  }
+  const quotedPages = new Set(quotes.map((q) => Number(q[1])));
+  for (const page of [74, 76, 77, 78, 79, 82, 85]) {
+    assert.ok(quotedPages.has(page), `page ${page} is quoted verbatim`);
+  }
+  const page85 = quotes.filter((q) => q[1] === '85').map((q) => q[2]).join(' ');
+  assert.ok(page85.includes('ربع ما كانت عليه'), 'quarter-distance problem belongs to page 85');
+  assert.ok(page85.includes('e=-1.6'), 'printed electron sign is negative');
+  assert.ok(!quotedPages.has(81), 'quarter-distance question is not misattributed to page 81');
+  assert.ok(block.includes('لا تطبع صيغة q=Ne'), 'N is not silently attributed to the source');
+  const inferences = [...block.matchAll(/class="student-notebook-note student-notebook-inference"/g)];
+  assert.ok(inferences.length >= 4, 'platform inference blocks are marked, not disguised as book text');
 });
 
 test('every law, symbol, unit and textbook value of the lesson is in the notebook', () => {
@@ -241,9 +318,7 @@ test('the notebook stylesheet reuses the shared contract and cannot widen the pa
 
 test('the notebook markup is a well-formed fragment that cannot break the page shell', () => {
   const html = UNIT2_LESSON1_NOTEBOOK_BLOCK;
-  const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr',
-    // SVG primitives used by inline KaTeX output are self-closed in the source
-  ]);
+  const VOID = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
   const stack = [];
   const problems = [];
   const tagPattern = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:"[^"]*"|'[^']*'|[^>])*?)(\/?)>/g;
@@ -272,6 +347,7 @@ test('the notebook markup is a well-formed fragment that cannot break the page s
   assert.doesNotMatch(html, /\$\$|\\begin\{aligned\}/);
   const textContent = html.replace(/<[^>]+>/g, ' ');
   assert.doesNotMatch(textContent, /undefined|NaN|\[object Object\]/);
+  assert.doesNotMatch(html, /' \+ (?:inline|formula|tex|step|law)\(/, 'no JS concatenation leaks');
 });
 
 /* ---------------------------------------------------------------------------
@@ -395,4 +471,70 @@ test('runtime: the notebook is the single last tab and every navigation path rea
       else globalThis[key] = value;
     }
   }
+});
+
+test('every page 73–86 has a coverage-matrix row, and the matrix stays honest about provenance', async () => {
+  const matrix = await read('../docs/unit-2-lesson-1-notebook-coverage.md');
+  for (let page = 73; page <= 86; page += 1) {
+    assert.ok(matrix.includes('`p' + page + '-'),
+      `the coverage matrix has at least one requirement for page ${page}`);
+  }
+  for (const marker of ['من الكتاب', 'حل منصة', 'استنتاج تعليمي']) {
+    assert.ok(matrix.includes(marker), `matrix records provenance: ${marker}`);
+  }
+  assert.ok(matrix.includes('غامض'), 'ambiguities stay marked as ambiguous');
+  assert.ok(matrix.includes('SHA256SUMS'), 'the matrix names the archival checksum check');
+});
+
+test('RTL holds for mixed Arabic/math, and every number keeps its SI unit attached', async () => {
+  const block = UNIT2_LESSON1_NOTEBOOK_BLOCK;
+
+  // every rendered expression is LTR-isolated so Arabic prose cannot reorder it
+  const inlineMath = [...block.matchAll(/<span class="math math-inline" dir="ltr"/g)];
+  assert.ok(inlineMath.length > 40, 'the notebook renders its symbols through the LTR-isolated helper');
+  assert.equal((block.match(/class="math math-inline"/g) ?? []).length, inlineMath.length,
+    'no inline expression escapes the LTR isolation');
+  assert.equal((block.match(/class="math math-display equation" dir="ltr"/g) ?? []).length,
+    (block.match(/class="math math-display equation"/g) ?? []).length,
+    'every display equation is dir="ltr"');
+
+  // TeX source survives only inside KaTeX's MathML annotation, never as visible
+  // copy: strip every rendered expression, then assert no command remains.
+  const visible = block
+    .replace(/<div class="math math-display equation"[\s\S]*?<\/div>/g, ' ')
+    .replace(/<span class="math math-inline"[\s\S]*?<\/span>/g, ' ')
+    .replace(/<annotation[\s\S]*?<\/annotation>/g, ' ');
+  assert.doesNotMatch(visible, /\\[a-zA-Z]+/, 'no TeX command leaks into visible Arabic copy');
+  assert.doesNotMatch(visible, /\$\$/, 'no dollar-delimited math');
+
+  // the units of the lesson are typeset inside equations, not typed as prose
+  for (const unit of ['\\mathrm{N}', '\\mathrm{C}', '\\mathrm{m}', '\\mathrm{cm}', '\\mu\\mathrm{C}', '\\mu\\mathrm{c}']) {
+    assert.ok(block.includes(unit), `unit ${unit} is typeset in an equation`);
+  }
+
+  // the si unit travels with its value inside one expression: 36 N is one TeX run
+  assert.ok(block.includes('=36\\,\\mathrm{N}'), '36 N keeps its unit inside the equation');
+  assert.ok(block.includes('2.32\\,\\mathrm{N}'), '2.32 N keeps its unit inside the equation');
+  assert.ok(block.includes('6.75\\,\\mathrm{N}'), '6.75 N keeps its unit inside the equation');
+
+  for (const value of ['36 N', '6.75 N', '1 N', '5.75 N', 'AB = 20 cm', 'BC = 40 cm']) {
+    assert.ok(block.includes(`<bdi dir="ltr">${value}</bdi>`), `prose value ${value} is isolated too`);
+  }
+
+  // the page itself is declared RTL with Arabic
+  const html = await read('../unit2-lesson-1.html');
+  assert.match(html, /<html lang="ar" dir="rtl">/);
+  assert.match(html, /<body class="u2l1-page">/);
+});
+
+test('the notebook stylesheet can host figures and quotes without widening the page', async () => {
+  const css = await read('../src/unit2-lesson1.css');
+  assert.match(css, /\.u2l1-page \.student-notebook-figure \{[\s\S]{0,200}?min-width: 0;/,
+    'the figure is a shrinkable child');
+  assert.match(css, /\.u2l1-page \.student-notebook-figure-canvas \{[^}]*overflow-x: auto/,
+    'a wide SVG scrolls inside its own box');
+  assert.match(css, /\.u2l1-page \.student-notebook-figure-caption \{/);
+  assert.match(css, /\.u2l1-page \.student-notebook-quote \{/);
+  assert.match(css, /\.u2l1-page \.student-notebook-inference \{/);
+  assert.match(css, /\.u2l1-page \.student-notebook-table-wrap \{[^}]*overflow-x: auto/);
 });

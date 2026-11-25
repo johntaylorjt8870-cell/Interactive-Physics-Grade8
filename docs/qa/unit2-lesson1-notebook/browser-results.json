@@ -1,0 +1,154 @@
+[
+  {
+    "viewport": {
+      "width": 1366,
+      "height": 768
+    },
+    "errors": [],
+    "failed": [],
+    "badResponses": [],
+    "rtl": "rtl",
+    "lang": "ar",
+    "fonts": "loaded",
+    "mathCount": 110,
+    "katexErrors": 0,
+    "rawLeaks": false,
+    "pageWidth": 1366,
+    "scrollWidth": 1366,
+    "overflows": [],
+    "svgs": [
+      {
+        "title": "أجزاء الكاشف الكهربائي",
+        "clippedLabels": []
+      },
+      {
+        "title": "الكاشف المعتدل والمشحون",
+        "clippedLabels": []
+      },
+      {
+        "title": "قوتا كولوم في التنافر والتجاذب",
+        "clippedLabels": []
+      },
+      {
+        "title": "تمثيل قوتي التطبيق المحلول",
+        "clippedLabels": []
+      },
+      {
+        "title": "ثلاث شحنات على مستقيم واحد",
+        "clippedLabels": []
+      },
+      {
+        "title": "الشحنات في السحابة الرعدية والأرض",
+        "clippedLabels": []
+      },
+      {
+        "title": "مكونات مانعة الصواعق وتوصيلها بالأرض",
+        "clippedLabels": []
+      }
+    ],
+    "images": [
+      {
+        "src": "./src/assets/unit2-lesson1/lightning.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p75.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p77.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p78.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p79.jpg",
+        "ok": true
+      }
+    ],
+    "duplicateIds": [],
+    "progress": "15 / 15",
+    "activeTabs": 1,
+    "mathDirections": [
+      "ltr"
+    ]
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "errors": [],
+    "failed": [],
+    "badResponses": [],
+    "rtl": "rtl",
+    "lang": "ar",
+    "fonts": "loaded",
+    "mathCount": 110,
+    "katexErrors": 0,
+    "rawLeaks": false,
+    "pageWidth": 1440,
+    "scrollWidth": 1440,
+    "overflows": [],
+    "svgs": [
+      {
+        "title": "أجزاء الكاشف الكهربائي",
+        "clippedLabels": []
+      },
+      {
+        "title": "الكاشف المعتدل والمشحون",
+        "clippedLabels": []
+      },
+      {
+        "title": "قوتا كولوم في التنافر والتجاذب",
+        "clippedLabels": []
+      },
+      {
+        "title": "تمثيل قوتي التطبيق المحلول",
+        "clippedLabels": []
+      },
+      {
+        "title": "ثلاث شحنات على مستقيم واحد",
+        "clippedLabels": []
+      },
+      {
+        "title": "الشحنات في السحابة الرعدية والأرض",
+        "clippedLabels": []
+      },
+      {
+        "title": "مكونات مانعة الصواعق وتوصيلها بالأرض",
+        "clippedLabels": []
+      }
+    ],
+    "images": [
+      {
+        "src": "./src/assets/unit2-lesson1/lightning.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p75.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p77.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p78.jpg",
+        "ok": true
+      },
+      {
+        "src": "./src/assets/unit2-lesson1/notebook-p79.jpg",
+        "ok": true
+      }
+    ],
+    "duplicateIds": [],
+    "progress": "15 / 15",
+    "activeTabs": 1,
+    "mathDirections": [
+      "ltr"
+    ]
+  }
+]
