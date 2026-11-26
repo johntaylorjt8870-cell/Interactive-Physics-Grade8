@@ -6,6 +6,7 @@
  * the textbook laws (pp. 55–70):
  *   same sense      F = F1 + F2, C between A and B, closer to the larger force
  *   opposite sense  F = |F2 − F1|, sense = larger force, C outside beyond it
+ *   BOTH senses     F1 × d1 = F2 × d2 at C, within a half-pixel tolerance
  *   resolution      w = F1 + F2 on an incline, R = −F2, w vertical
  *   equilibrium     F′ = −F, and a zero resultant is drawn as no single arrow
  */
@@ -168,6 +169,88 @@ test('opposite-sense assessment diagram: resultant = larger − smaller, points 
   assert.equal(labelOnShaft(texts, [...forces, ...resultants]), null, 'no label sits on a force shaft');
   assert.doesNotMatch(svg, /\d+\s*N/, 'source-neutral: no numeric magnitude is leaked');
   markersResolve(svg, 'opposite-parallel');
+});
+
+/* --------------------------------------------------------------------------
+ * 3b. Law of moments for BOTH assessment schematics (textbook pp. 65, 68):
+ *     F1 × d1 = F2 × d2, with d1 = |C − A|, d2 = |C − B|.
+ * Every quantity is measured from the RENDERED SVG, not from the module's
+ * constants: shifting C without re-balancing the moments fails these tests.
+ * ------------------------------------------------------------------------ */
+function assessmentMomentGeometry(svg) {
+  const lines = linesOf(svg);
+  const forces = lines.filter((l) => /assessment-force/.test(l.class ?? ''));
+  const resultants = lines.filter((l) => /assessment-resultant/.test(l.class ?? ''));
+  assert.equal(forces.length, 2, 'two component forces');
+  assert.equal(resultants.length, 1, 'one resultant');
+  const f1 = forces.find((l) => /assessment-force-one/.test(l.class ?? ''));
+  const f2 = forces.find((l) => /assessment-force-two/.test(l.class ?? ''));
+  assert.ok(f1 && f2, 'F1/F2 carriers are identified by their semantic classes');
+
+  const span = (l) => Math.abs(num(l.y1) - num(l.y2));
+  /* Signed vertical component: up (y2 < y1) is +, down is −. */
+  const signed = (l) => (num(l.y2) < num(l.y1) ? 1 : -1) * span(l);
+  return {
+    xA: num(f1.x1), xB: num(f2.x1), xC: num(resultants[0].x1),
+    F1: span(f1), F2: span(f2), F: span(resultants[0]),
+    s1: signed(f1), s2: signed(f2), sRes: signed(resultants[0]),
+  };
+}
+
+/* Moment imbalance |F1·d1 − F2·d2| if the resultant carrier were at xC. */
+const residualAt = (g, xC) => Math.abs(
+  g.F1 * Math.abs(xC - g.xA) - g.F2 * Math.abs(xC - g.xB),
+);
+
+/* C is rounded to a whole SVG pixel. A displacement δ changes the residual by
+ * |s1 + s2|·δ = F·δ, so |δ| ≤ 0.5 px bounds the residual by F × 0.5. This is
+ * the physically derived tolerance — not an arbitrary loose epsilon. */
+const pixelTolerance = (g) => 0.5 * g.F + 1e-9;
+
+function assertMomentBalanced(g, label) {
+  const d1 = Math.abs(g.xC - g.xA);
+  const d2 = Math.abs(g.xC - g.xB);
+  assert.ok(d1 > 0 && d2 > 0, `${label}: both moment arms are non-zero`);
+  assert.equal(g.F, Math.abs(g.s1 + g.s2), `${label}: F is the signed sum of the components`);
+  assert.equal(g.sRes, g.s1 + g.s2, `${label}: the resultant's sense is the signed sum`);
+
+  /* (1) C equals the force-weighted mean of the two carriers (exact law),
+   *     up to the half-pixel rounding of the drawn x coordinate. */
+  const exactC = (g.s1 * g.xA + g.s2 * g.xB) / (g.s1 + g.s2);
+  assert.ok(Math.abs(g.xC - exactC) <= 0.5 + 1e-9,
+    `${label}: C=${g.xC} must be the moment-balanced carrier ${exactC} ± 0.5 px`);
+
+  /* (2) The two moments about C balance within the pixel-rounding tolerance. */
+  const residual = residualAt(g, g.xC);
+  const tol = pixelTolerance(g);
+  assert.ok(residual <= tol,
+    `${label}: F1·d1=${g.F1 * d1} vs F2·d2=${g.F2 * d2}; residual ${residual} must be ≤ ${tol}`);
+  assert.ok(residual / (g.F1 * d1) < 0.01, `${label}: relative moment error < 1%`);
+
+  /* (3) Not a vacuous "C is closer / outside" check: moving C by 5 px breaks
+   *     the balance by a wide margin, so this test really measures the law. */
+  assert.ok(residualAt(g, g.xC + 5) > tol, `${label}: a 5 px displacement of C is detected`);
+  assert.ok(residualAt(g, g.xC - 5) > tol, `${label}: a 5 px displacement of C is detected`);
+  return { d1, d2, residual, tol };
+}
+
+test('same-parallel: C balances the moments F1×d1 = F2×d2 (not merely closer to the larger force)', () => {
+  const g = assessmentMomentGeometry(lesson2AssessmentDiagram({ diagram: 'same-parallel' }));
+  assert.equal(g.F, g.F1 + g.F2, 'resultant magnitude F = F1 + F2');
+  assert.ok(g.s1 > 0 && g.s2 > 0, 'both forces act upward (same sense)');
+  const { d1, d2 } = assertMomentBalanced(g, 'same-parallel');
+  assert.ok(g.xC > Math.min(g.xA, g.xB) && g.xC < Math.max(g.xA, g.xB), 'C still lies between A and B');
+  assert.ok(d1 > d2, 'the smaller force has the longer moment arm');
+});
+
+test('opposite-parallel: C balances the moments F1×d1 = F2×d2 outside AB (not merely outside)', () => {
+  const g = assessmentMomentGeometry(lesson2AssessmentDiagram({ diagram: 'opposite-parallel' }));
+  assert.equal(g.F, Math.abs(g.F2 - g.F1), 'resultant magnitude F = |F2 − F1|');
+  assert.ok(g.s1 * g.s2 < 0, 'the two forces are opposite in sense');
+  const { d1, d2 } = assertMomentBalanced(g, 'opposite-parallel');
+  assert.ok(g.xC < Math.min(g.xA, g.xB) || g.xC > Math.max(g.xA, g.xB), 'C lies outside AB');
+  assert.ok(d2 < d1, 'the larger force has the shorter moment arm');
+  assert.ok(Math.abs(g.xC - g.xB) < Math.abs(g.xC - g.xA), 'C is beyond the larger force, on its side');
 });
 
 /* --------------------------------------------------------------------------

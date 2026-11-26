@@ -7,6 +7,13 @@
  * shafts. Both figures now use ONE px-per-unit scale so every drawn arrow
  * satisfies the textbook law, and every force carries an RTL-safe LTR symbol.
  *
+ * PR #58 scientific-note follow-up: the resultant's carrier C must ALSO
+ * satisfy the law of moments F1 × d1 = F2 × d2 (textbook pp. 65, 68) — not
+ * merely lie between A and B / outside on the larger force's side. C is now
+ * derived from that law as the force-weighted mean of the two carriers and
+ * rounded to the nearest whole pixel; see parallelGeometry() below and the
+ * half-pixel tolerance asserted in tests/force-diagrams-scientific.test.js.
+ *
  * These are intentionally source-neutral schematics: NO numeric magnitudes
  * are printed, so no answer is leaked before the question is graded. */
 
@@ -24,9 +31,28 @@ const vec = (x, y1, y2, cls, marker) =>
 const lab = (x, y, text) =>
   `<text x="${x}" y="${y}" direction="ltr">${text}</text>`;
 
-/* Same sense: F = F1 + F2. 45 + 75 = 120 px; C is between A and B and closer
- * to the larger force (at B), consistent with F1 × d1 = F2 × d2. */
-const SAME = Object.freeze({ rodY: 165, A: 155, C: 350, B: 470, F1: 45, F2: 75, F: 120 });
+/* Law of moments (textbook pp. 65 and 68): F1 × d1 = F2 × d2, where d1 is the
+ * distance from C to the carrier of F1 (at A) and d2 from C to that of F2
+ * (at B). For two parallel forces, C is the force-weighted mean of the two
+ * carriers using SIGNED magnitudes (up = +, down = −):
+ *     C = (s1·A + s2·B)/(s1 + s2),  |s1| = F1, |s2| = F2, |s1 + s2| = F.
+ * Same sense → both signs alike → C between A and B. Opposite sense (s2<0)
+ * → C outside AB on the larger force's side. SVG x is rounded to a whole
+ * pixel, so the residual |F1·d1 − F2·d2| is at most F × 0.5 px; that is the
+ * exact tolerance checked by the scientific tests. */
+const parallelGeometry = ({ rodY, A, B, F1, F2, s2Sign }) => {
+  const s1 = F1;
+  const s2 = s2Sign * F2;
+  return Object.freeze({
+    rodY, A, B, F1, F2,
+    F: Math.abs(s1 + s2),
+    C: Math.round((s1 * A + s2 * B) / (s1 + s2)),
+  });
+};
+
+/* Same sense: F = F1 + F2 = 45 + 75 = 120 px. Exact C = 351.875 → 352 px;
+ * d1 = 197, d2 = 118 ⇒ 45 × 197 = 8865 ≈ 75 × 118 = 8850 (residual 15 ≤ 60). */
+const SAME = parallelGeometry({ rodY: 165, A: 155, B: 470, F1: 45, F2: 75, s2Sign: +1 });
 
 const same = wrap('test-same', 'قوتان في جهة واحدة',
   'قوتان متوازيتان إلى أعلى عند A وB، ومحصلتهما إلى أعلى عند C بينهما.', `
@@ -40,11 +66,12 @@ const same = wrap('test-same', 'قوتان في جهة واحدة',
   ${lab(SAME.A, 195, 'A')}${lab(SAME.C, 195, 'C')}${lab(SAME.B, 195, 'B')}
 `);
 
-/* Opposite sense: F = F2 − F1. 95 − 50 = 45 px; the larger force (at B) acts
- * downward, so the resultant also acts downward, and C lies outside AB on the
- * larger force's side (beyond B). The dashed carrier shows it is on the
+/* Opposite sense: F = F2 − F1 = 95 − 50 = 45 px; the larger force (at B) acts
+ * downward, so the resultant also acts downward and C lies outside AB beyond
+ * B. Exact C = 111.1… → 111 px; d1 = 359, d2 = 189 ⇒ 50 × 359 = 17950 ≈
+ * 95 × 189 = 17955 (residual 5 ≤ 22.5). The dashed carrier shows C is on the
  * extension of AB rather than on the rod itself. */
-const OPP = Object.freeze({ rodY: 130, A: 470, B: 300, C: 120, F1: 50, F2: 95, F: 45 });
+const OPP = parallelGeometry({ rodY: 130, A: 470, B: 300, F1: 50, F2: 95, s2Sign: -1 });
 
 const opposite = wrap('test-opp', 'قوتان متعاكستان',
   'قوة صغيرة إلى أعلى عند A وقوة أكبر إلى أسفل عند B، والمحصلـة خارج القطعة بعد B وفي جهة القوة الأكبر.', `
