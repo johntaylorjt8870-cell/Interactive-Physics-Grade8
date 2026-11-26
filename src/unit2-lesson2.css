@@ -262,7 +262,7 @@
 .u2-bulb.is-lit { fill: #ffe873; }
 [data-lamp].is-off .u2l2-lamp-glow { opacity: 0; }
 [data-lamp].is-off .u2l2-lamp { fill: #e7e3da; stroke: #a9a294; }
-[data-lamp-x].is-hidden { display: none; }
+[data-lamp].is-removed { display: none; }
 [data-circuit-canvas-group].is-hidden { display: none; }
 /* In the single-column (wide) layout the drawing comes first, then the tools,
    then the conclusion: the conclusion must never be read before the trial. */
@@ -278,7 +278,7 @@
 .u2l2-cell-sign { font-size: 19px; }
 /* The voltage bracket uses the source-note gold, never the red of the electron
    arrows on p89, so the two meanings cannot be confused. */
-.u2l2-voltage-bracket { stroke: #8a6420; stroke-width: 2.5; }
+.u2l2-voltage-bracket { fill: none; stroke-dasharray: 6 3; stroke: #8a6420; stroke-width: 2.5; }
 .u2l2-voltage-label { fill: #6b4e00; font: 700 17px var(--font-latin); }
 
 @media (max-width: 700px) {
@@ -510,3 +510,6 @@
   .u2l2-page .student-notebook-sheet { padding-inline: 24px 11px; }
   .u2l2-page .student-notebook-sheet::before { inset-inline-start: 11px; }
 }
+
+/* Keep each sign inside its 24-unit cell face. */
+[data-circuit-canvas="series"] .u2l2-terminal-sign { font-size: 20px; }

@@ -631,8 +631,10 @@ body.u2l3a-page {
 .u2l3a-pot-bars { display: flex; gap: 8px; align-items: flex-end; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 12px 10px 8px; min-height: 150px; }
 .u2l3a-pot-bar { flex: 1; display: grid; justify-items: center; gap: 4px; }
 .u2l3a-pot-bar-value { font-family: var(--font-latin); font-size: 11.5px; font-weight: 800; color: var(--volt); }
-.u2l3a-pot-bar-fill { width: 70%; background: linear-gradient(180deg, var(--volt-bright), var(--volt)); border-radius: 6px 6px 0 0; }
-.u2l3a-pot-bar.is-negative .u2l3a-pot-bar-fill { background: linear-gradient(180deg, #90a2b8, #5d7188); }
+.u2l3a-pot-scale { width: 100%; height: 168px; position: relative; }
+.u2l3a-pot-scale::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px solid var(--steel); }
+.u2l3a-pot-bar-fill { position: absolute; bottom: 50%; left: 15%; width: 70%; background: linear-gradient(180deg, var(--volt-bright), var(--volt)); border-radius: 6px 6px 0 0; }
+.u2l3a-pot-bar.is-negative .u2l3a-pot-bar-fill { top: 50%; bottom: auto; border-radius: 0 0 6px 6px; background: linear-gradient(180deg, #90a2b8, #5d7188); }
 .u2l3a-pot-bar.is-negative .u2l3a-pot-bar-value { color: var(--muted); }
 .u2l3a-pot-bar-letter { font-family: var(--font-latin); font-size: 11.5px; font-weight: 800; color: var(--steel); }
 

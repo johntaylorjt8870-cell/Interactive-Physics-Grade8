@@ -417,10 +417,13 @@ test('u2l2q04 drawing: + and − poles, arrowheads and directions follow the cir
   // As in the lesson's p89 drawing: + on the left with the terminal cap, − on the right.
   assert.ok(pos.x2 <= neg.x, '+ half left of the − half');
   assert.ok(cap.x < pos.x && cap.x2 > pos.x, 'terminal cap on the + half');
-  // One closed path: it leaves the + cap, goes round the loop and enters the − half.
+  // Two conductors meet opposite sides of the load; no bare short across the cell.
   const wires = wirePolylines(svg);
-  assert.equal(wires.length, 1);
-  const path = wires[0];
+  assert.equal(wires.length, 2);
+  const [x, y, w, h] = svg.match(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/).slice(1).map(Number);
+  assert.deepEqual(wires[0].at(-1), [x, y + h / 2]);
+  assert.deepEqual(wires[1][0], [x + w, y + h / 2]);
+  const path = wires.flat();
   const [[sx, sy], [ex, ey]] = [path[0], path.at(-1)];
   assert.ok(sx >= cap.x && sx <= cap.x2 && sy > cap.y && sy < cap.y2, 'wire starts on the + cap');
   assert.ok(ex === neg.x2 && ey > neg.y && ey < neg.y2, 'wire ends on the − half');
@@ -429,7 +432,7 @@ test('u2l2q04 drawing: + and − poles, arrowheads and directions follow the cir
   const loop = { x: Math.min(...xs), x2: Math.max(...xs), y: Math.min(...ys), y2: Math.max(...ys) };
   const UNIT = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
   const along = (p, u) => p[0] * u[0] + p[1] * u[1];
-  const segments = path.slice(1).map((q, i) => ({ p: path[i], q, u: [Math.sign(q[0] - path[i][0]), Math.sign(q[1] - path[i][1])] }));
+  const segments = wires.flatMap((wire) => wire.slice(1).map((q, i) => ({ p: wire[i], q, u: [Math.sign(q[0] - wire[i][0]), Math.sign(q[1] - wire[i][1])] })));
   const arrows = [...svg.matchAll(/<polygon data-flow="(\w+)" data-dir="(\w+)" points="([^"]+)"/g)].map(([, flow, dir, p]) => {
     const v = p.trim().split(/\s+/).map((xy) => xy.split(',').map(Number));
     return { flow, dir, v, c: [v.reduce((s, q) => s + q[0], 0) / v.length, v.reduce((s, q) => s + q[1], 0) / v.length] };

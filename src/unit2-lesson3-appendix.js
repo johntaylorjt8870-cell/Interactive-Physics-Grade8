@@ -182,12 +182,31 @@ function paintDmm(scope, id, { value, status, points }) {
 const labelText = (anchor, value) =>
   `<text class="${anchor.className}" x="${anchor.x}" y="${anchor.y}" text-anchor="middle" direction="rtl">${value}</text>`;
 
-function wirePaths(circuit) {
-  const { corners, topology } = circuit;
-  const paths = [`M ${corners.left} ${corners.top} H ${corners.right} V ${corners.bottom} H ${corners.left} Z`];
-  if (topology === 'parallel') {
-    for (const x of [430, 570]) paths.push(`M ${x} ${corners.top} V ${corners.bottom}`);
-  }
+function wirePaths(circuit, fault) {
+  const { left, right, top, bottom } = circuit.corners;
+  const { source, elements } = circuit;
+  // A conductor stops at each component boundary. In parallel, the rails
+  // end at the last measurement points; there is no bare right-hand return.
+  const rail = (fixed, start, end, horizontal, gaps) => {
+    const point = (n) => horizontal ? `${n} ${fixed}` : `${fixed} ${n}`;
+    const segments = [];
+    let cursor = start;
+    for (const [lo, hi] of [...gaps, [end, end]].sort((a, b) => a[0] - b[0])) {
+      if (lo > cursor) segments.push(`M${point(cursor)}L${point(lo)}`);
+      cursor = hi;
+    }
+    return segments;
+  };
+  const gaps = (parts, coord) => parts.map((p) => [p[coord] - p.r, p[coord] + p.r]);
+  const parallel = circuit.topology === 'parallel';
+  const paths = [
+    ...rail(top, left, parallel ? circuit.nodes.find(n => n.id === 'jtop').x : right, true,
+      [[source.from, source.to], ...(fault ? [[530, 570]] : []), ...gaps(elements.filter(p => p.y === top), 'x')]),
+    ...rail(bottom, left, parallel ? circuit.nodes.find(n => n.id === 'jbot').x : right, true,
+      gaps(elements.filter(p => p.y === bottom), 'x')),
+  ];
+  const verticals = parallel ? [left, ...elements.filter(p => p.kind === 'lamp').map(p => p.x)] : [left, right];
+  for (const x of verticals) paths.push(...rail(x, top, bottom, false, gaps(elements.filter(p => p.x === x), 'y')));
   return paths;
 }
 
@@ -197,8 +216,8 @@ function sourceMarkup(circuit) {
   return `
   <g class="u2l3a-source" data-part="source">
     <rect x="${from}" y="${y - 20}" width="${to - from}" height="40" rx="8" />
-    <line x1="${mid - 8}" y1="${y - 11}" x2="${mid - 8}" y2="${y + 11}" class="u2l3a-source-plate is-plus" />
-    <line x1="${mid + 8}" y1="${y - 6}" x2="${mid + 8}" y2="${y + 6}" class="u2l3a-source-plate is-minus" />
+    <line x1="${mid + 8}" y1="${y - 11}" x2="${mid + 8}" y2="${y + 11}" class="u2l3a-source-plate is-plus" />
+    <line x1="${mid - 8}" y1="${y - 6}" x2="${mid - 8}" y2="${y + 6}" class="u2l3a-source-plate is-minus" />
     <text class="u2l3a-symbol-plus" x="${to - 16}" y="${y + 6}" text-anchor="middle" direction="ltr">+</text>
     <text class="u2l3a-symbol-minus" x="${from + 16}" y="${y + 6}" text-anchor="middle" direction="ltr">−</text>
   </g>`;
@@ -263,8 +282,8 @@ function probeMarkup(point, kind) {
  * One bench scene. The wires, parts and glowing points all come from the solved
  * circuit, so a label can never disagree with the model.
  */
-function benchSceneMarkup(circuit, options = {}) {
-  const { red = null, black = null, referenceId = null, interactive = true, sceneId = 'bench' } = options;
+export function benchSceneMarkup(circuit, options = {}) {
+  const { red = null, black = null, referenceId = null, interactive = true, fault = false, sceneId = 'bench' } = options;
   const anchors = SCENE_LABEL_ANCHORS[circuit.layout];
   const lamps = circuit.elements.filter((element) => element.kind === 'lamp');
   const switchElement = circuit.elements.find((element) => element.kind === 'switch');
@@ -284,9 +303,10 @@ function benchSceneMarkup(circuit, options = {}) {
     aria-label="لوحة دارة ${circuit.layout === 'parallel2' ? 'متفرعة' : 'متسلسلة'} بنقاط قياس مضيئة؛ المجس الأحمر والأسود يلمسان نقطتين لقراءة فرق الكمون بينهما.">
     <title>لوحة الدارة ونقاط القياس</title>
     <desc>رسم إثرائي توضيحي من المنصة: مولّد ومصابيح وقاطعة وأسلاك، مع نقاط قياس مضيئة بحروف لاتينية.</desc>
-    <g class="u2l3a-wires">${wirePaths(circuit).map((d) => `<path d="${d}" />`).join('')}</g>
+    <g class="u2l3a-wires">${wirePaths(circuit, fault).map((d) => `<path d="${d}" />`).join('')}</g>
     ${sourceMarkup(circuit)}
-    ${lamps.map((lamp) => lampMarkup(lamp, circuit.closed && lamp.u > 0)).join('')}
+    ${fault ? '<g data-part="series-voltmeter"><circle cx="550" cy="90" r="20" fill="white" stroke="#33475f" stroke-width="3"/><text x="550" y="96" text-anchor="middle" direction="ltr">V</text></g>' : ''}
+    ${lamps.map((lamp) => lampMarkup(lamp, !fault && circuit.closed && lamp.u > 0)).join('')}
     ${switchMarkup(switchElement, circuit.closed)}
     <g class="u2l3a-nodes">${circuit.nodes.map((point) => nodeMarkup(point, { red, black, referenceId, interactive })).join('')}</g>
     <g class="u2l3a-probes">${probes.join('')}</g>
@@ -488,7 +508,7 @@ function mountProbes(panel) {
   const redraw = (note) => {
     const c = circuit();
     const reading = state.fault ? null : voltmeterReading(c, state.red, state.black);
-    sceneHost.innerHTML = benchSceneMarkup(c, { red: state.fault ? null : state.red, black: state.fault ? null : state.black, sceneId: 'probes' });
+    sceneHost.innerHTML = benchSceneMarkup(c, { red: state.fault ? null : state.red, black: state.fault ? null : state.black, fault: state.fault, sceneId: 'probes' });
     paintDmm(panel, 'probes', {
       value: state.fault ? formatVoltage(seriesConnectionFault(c).meterReading) : formatVoltage(reading.value),
       status: state.fault
@@ -556,10 +576,16 @@ function mountProbes(panel) {
   }
   panel.querySelector('[data-probes-closed]').addEventListener('change', (event) => {
     state.closed = event.target.checked;
+    state.fault = false;
+    panel.querySelector('[data-probes-fault]').classList.remove('is-active');
     redraw(state.closed ? 'أُغلقت الدارة: عاد التيار إلى النموذج وعادت فروق الكمون على المصابيح.' : PROBES_MESSAGES.openCircuitZero);
   });
   panel.querySelector('[data-probes-fault]').addEventListener('click', (event) => {
     state.fault = !state.fault;
+    if (state.fault) {
+      state.closed = true; // the inserted ideal V, not the switch, interrupts the current
+      panel.querySelector('[data-probes-closed]').checked = true;
+    }
     event.currentTarget.classList.toggle('is-active', state.fault);
     redraw(state.fault
       ? 'وُصل المقياس داخل المسار (على التسلسل): قاطعَ الدارة تقريباً، فانطفأ المصباحان وقرأ المقياس فرق كمون المولّد. هذا سبب قاعدة التوصيل على التفرع.'
@@ -631,7 +657,7 @@ function dipolesMarkup() {
 }
 
 const DIPPOLE_SYMBOLS = Object.freeze({
-  source: `<svg viewBox="0 0 220 120" role="img" aria-label="رمز المولّد: دائرتان طويلتان وقصيرتان تمثلان قطبيه">
+  source: `<svg viewBox="0 0 220 120" role="img" aria-label="رمز المولّد: زوجان من خط طويل وخط قصير يمثلان خليتين">
     <title>رمز المولّد</title>
     <line x1="20" y1="60" x2="80" y2="60" class="u2l3a-sym-wire" />
     <line x1="80" y1="26" x2="80" y2="94" class="u2l3a-sym-plate is-long" />
@@ -767,7 +793,7 @@ function mountPotentials(panel) {
       const negative = point.potential < -1e-9;
       return `<div class="u2l3a-pot-bar${negative ? ' is-negative' : ''}" title="${point.label}: ${formatVoltage(point.potential)} V">
         <span class="u2l3a-pot-bar-value" dir="ltr">${formatVoltage(point.potential)}</span>
-        <span class="u2l3a-pot-bar-fill" style="height:${Math.max(4, height)}px"></span>
+        <span class="u2l3a-pot-scale"><span class="u2l3a-pot-bar-fill" style="height:${height}px"></span></span>
         <span class="u2l3a-pot-bar-letter" dir="ltr">${point.letter}</span>
       </div>`;
     }).join('');
@@ -952,6 +978,7 @@ function mountSum(panel) {
 
   panel.querySelectorAll('[data-sum-layout]').forEach((tab) => tab.addEventListener('click', () => {
     state.layout = tab.dataset.sumLayout;
+    if (state.layout === 'series3') state.shares[2] ??= BENCH_DEFAULTS.series3.shares[2];
     state.revealed = false;
     state.prediction = null;
     result.innerHTML = '';

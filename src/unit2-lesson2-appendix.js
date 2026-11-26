@@ -720,8 +720,8 @@ function mountDirection(panel) {
   const visible = { current: true, electrons: false, energy: false };
 
   function applyVisibility() {
-    Object.entries(layers).forEach(([id, group]) => { group.hidden = !visible[id]; });
-    scene.querySelectorAll('[data-direction-toggle]').forEach((button) => {
+    Object.entries(layers).forEach(([id, group]) => { group.toggleAttribute('hidden', !visible[id]); });
+    panel.querySelectorAll('[data-direction-toggle]').forEach((button) => {
       button.setAttribute('aria-pressed', visible[button.dataset.directionToggle] ? 'true' : 'false');
     });
     const shown = Object.entries(visible).filter(([, value]) => value).map(([key]) => (
@@ -1135,11 +1135,22 @@ function mapLinkMarkup(link) {
   const dy = to.y - from.y;
   const length = Math.hypot(dx, dy) || 1;
   const controlX = midX - (dy / length) * link.curved;
-  const controlY = midY + (dx / length) * link.curved;
+  // The two links spanning the whole map go AROUND the intervening node,
+  // not through it. Place the caption on the quadratic at t = 1/2.
+  const spansRow = dy === 0 && Math.abs(dx) > 400;
+  const controlY = spansRow ? (midY < 200 ? -172 : 554) : midY + (dx / length) * link.curved;
+  const labelX = (midX + controlX) / 2;
+  const labelY = (midY + controlY) / 2 - 8;
+  const words = link.label.split(' ');
+  const lines = [''];
+  for (const word of words) {
+    if (!spansRow && (lines.at(-1) + word).length > 18) lines.push('');
+    lines[lines.length - 1] = `${lines.at(-1)} ${word}`.trim();
+  }
   return `
     <g class="u2l2a-map-link" data-link="${link.from}-${link.to}">
       <path d="M${from.x} ${from.y} Q${controlX.toFixed(1)} ${controlY.toFixed(1)} ${to.x} ${to.y}" />
-      <text x="${controlX.toFixed(1)}" y="${(controlY - 6).toFixed(1)}" text-anchor="middle" direction="rtl">${link.label}</text>
+      <text x="${labelX}" y="${labelY - 8 * (lines.length - 1)}" text-anchor="middle" direction="rtl">${lines.map((line, i) => `<tspan x="${labelX}" dy="${i ? 16 : 0}">${line}</tspan>`).join(' ')}</text>
     </g>`;
 }
 
@@ -1147,11 +1158,11 @@ function mapSvgMarkup() {
   const nodes = CONCEPT_NODES.map((node) => `
     <g class="u2l2a-map-node" data-map-node="${node.id}" data-active="false">
       <title>${node.label}</title>
-      <circle cx="${node.x}" cy="${node.y}" r="62" />
+      <circle cx="${node.x}" cy="${node.y}" r="46" />
       <text x="${node.x}" y="${node.y + 6}" text-anchor="middle" direction="rtl" class="u2l2a-map-node-short">${node.short}</text>
     </g>`).join('');
   return `
-  <svg class="u2l2a-map-svg" viewBox="0 0 660 420" role="img" aria-labelledby="map-title map-desc" data-map-svg>
+  <svg class="u2l2a-map-svg" viewBox="0 -76 660 526" role="img" aria-labelledby="map-title map-desc" data-map-svg>
     <title id="map-title">خريطة مفاهيم الدرس الثاني</title>
     <desc id="map-desc">ستّة مفاهيم موصولة بخطوط: المولّد والطاقة الكهربائية، والدارة المغلقة، والإلكترونات الحرّة، وجهة التيّار، وشِدّة التيّار، وكمية الكهرباء والزمن.</desc>
     ${CONCEPT_LINKS.map(mapLinkMarkup).join('')}

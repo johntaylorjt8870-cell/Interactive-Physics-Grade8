@@ -503,7 +503,7 @@
 .r4-band-preview { display: flex; gap: 0; align-items: center; justify-content: center; min-height: 92px; }
 .r4-band-preview-lead { width: 54px; height: 4px; background: #9aa597; }
 .r4-band-preview-body { display: flex; gap: 12px; align-items: center; height: 58px; padding: 0 18px; background: #dbc49b; border: 1px solid #b69a6b; border-radius: 22px; }
-.r4-band-preview-body i { display: block; width: 10px; height: 58px; }
+.r4-band-preview-body i { display: block; width: 10px; height: 58px; box-sizing: border-box; padding-top: 59px; text-align: center; font: 700 11px var(--r4-latin); color: #374b3c; }
 .r4-band-preview-d { margin-inline-start: 14px; }
 .r4-band-preview-labels { display: flex; gap: 30px; margin-inline-start: 10px; font: 700 11px var(--r4-latin); color: #5a6a5b; }
 .r4-challenge { padding: 10px 12px; background: #f6f4e8; border: 1px dashed #d8ccaa; border-radius: 9px; }

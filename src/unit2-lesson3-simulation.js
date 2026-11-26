@@ -129,8 +129,9 @@ function mountWaterLab(root) {
       else line.setAttribute('d', `M432 ${y}h112`);
       panel.querySelector(`[data-water-level-label="${key}"]`).textContent = String(level);
     }
-    arrow.hidden = direction !== 'a-to-b' && direction !== 'b-to-a';
-    arrowHead.hidden = arrow.hidden;
+    const noFlow = direction !== 'a-to-b' && direction !== 'b-to-a';
+    arrow.toggleAttribute('hidden', noFlow);
+    arrowHead.toggleAttribute('hidden', noFlow);
     if (direction === 'a-to-b') {
       arrow.setAttribute('d', 'M190 253H450');
       arrowHead.setAttribute('d', 'm450 253-18-10v20z');

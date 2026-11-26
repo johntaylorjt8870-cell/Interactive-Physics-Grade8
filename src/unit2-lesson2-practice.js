@@ -165,7 +165,7 @@ const CURVE_SHAPES = Object.freeze({
 
 const curveOption = (letter, caption) => `<span class="u2l2-curve-option">
   <svg viewBox="0 0 132 106" class="u2l2-curve-svg" role="img" aria-label="منحنى ${letter}"><title>منحنى ${letter}</title>
-    <line class="u2-axis" x1="30" y1="84" x2="122" y2="84"/><line class="u2-axis" x1="30" y1="88" x2="30" y2="10"/>
+    <line class="u2-axis" x1="30" y1="${letter === 'b' ? 50 : 84}" x2="122" y2="${letter === 'b' ? 50 : 84}"/><line class="u2-axis" x1="30" y1="88" x2="30" y2="10"/>
     <path class="u2l2-curve-path" d="${CURVE_SHAPES[letter]}"/>
     <text class="u2l2-tick" x="128" y="99" text-anchor="end" direction="ltr">t</text>
     <text class="u2l2-tick" x="38" y="18" text-anchor="start" direction="ltr">i</text>

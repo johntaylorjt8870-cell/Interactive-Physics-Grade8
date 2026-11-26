@@ -387,16 +387,15 @@ function seriesLab() {
             <title id="r4p-series-title">دارة تسلسل رقمية: مولد ومقاومتان وأمبيرمتر وفولتميتر وقاطعة</title>
             <desc id="r4p-series-desc">القاطعة مفتوحة؛ لم تُؤخذ قراءة بعد.</desc>
             <rect class="r4p-circuit-back" x="12" y="10" width="616" height="318" rx="20"/>
-            <path class="r4p-wire" d="M80 96H560V120"/>
-            <path class="r4p-wire" d="M560 168V272H80V96"/>
-            <path class="r4p-battery-long" d="M80 164v60"/><path class="r4p-battery-short" d="M62 176v36"/>
-            <text class="r4p-sign" x="52" y="160" text-anchor="end">+</text><text class="r4p-sign" x="88" y="160" text-anchor="start">−</text>
+            <path class="r4p-wire" d="M80 184V96H190 M282 96H307 M353 96H380 M472 96H560V120"/>
+            <path class="r4p-wire" d="M560 168V272H80V204"/>
+            <path class="r4p-battery-long" d="M56 184h48"/><path class="r4p-battery-short" d="M66 204h28"/>
+            <text class="r4p-sign" x="117" y="187" text-anchor="middle" direction="ltr">+</text><text class="r4p-sign" x="117" y="209" text-anchor="middle" direction="ltr">−</text>
             <rect class="r4p-resistor" x="190" y="80" width="92" height="32" rx="4"/><text class="r4p-part" x="236" y="102" text-anchor="middle" direction="ltr">R₁</text>
             <rect class="r4p-resistor" x="380" y="80" width="92" height="32" rx="4"/><text class="r4p-part" x="426" y="102" text-anchor="middle" direction="ltr">R₂</text>
             ${meterFace(330, 96, 'A', 'i')}
             ${meterFace(330, 210, 'V', 'u')}
-            <path class="r4p-wire" d="M236 96V60H424V80"/>
-            <path class="r4p-wire" d="M190 96V210H307M353 210H470V96"/>
+            <path class="r4p-wire" d="M190 96V210H307 M353 210H472V96"/>
             <text class="r4p-reading" x="236" y="148" text-anchor="middle" direction="ltr" data-lab-reading="u1">—</text>
             <text class="r4p-reading" x="426" y="148" text-anchor="middle" direction="ltr" data-lab-reading="u2">—</text>
             ${labSwitch(560, 120)}
@@ -447,16 +446,16 @@ function parallelLab() {
             <title id="r4p-parallel-title">دارة تفرع رقمية: مقاومتان بين العقدتين مع مولد وقاطعة وأمبيرمترات</title>
             <desc id="r4p-parallel-desc">القاطعة مفتوحة؛ لم تُؤخذ قراءة بعد.</desc>
             <rect class="r4p-circuit-back" x="12" y="10" width="636" height="348" rx="20"/>
-            <path class="r4p-wire" d="M190 150V64H500V150"/>
-            <path class="r4p-wire" d="M190 150V246H500V150"/>
-            <path class="r4p-wire" d="M190 150H96M96 198V300H500V150"/>
+            <path class="r4p-wire" d="M190 150V64H227 M273 64H300 M392 64H500V150"/>
+            <path class="r4p-wire" d="M190 150V246H227 M273 246H300 M392 246H500V150"/>
+            <path class="r4p-wire" d="M190 150H96 M96 198V226 M96 246V300H407 M453 300H500V246"/>
             <rect class="r4p-resistor" x="300" y="48" width="92" height="32" rx="4"/><text class="r4p-part" x="346" y="70" text-anchor="middle" direction="ltr">R₁</text>
             <rect class="r4p-resistor" x="300" y="230" width="92" height="32" rx="4"/><text class="r4p-part" x="346" y="252" text-anchor="middle" direction="ltr">R₂</text>
             ${meterFace(250, 64, 'A₁', 'i1')}${meterFace(250, 246, 'A₂', 'i2')}
             ${meterFace(346, 150, 'V', 'u')}
-            <path class="r4p-wire" d="M190 150H323M369 150H400"/>
-            <path class="r4p-battery-long" d="M96 214v52"/><path class="r4p-battery-short" d="M78 226v28"/>
-            <text class="r4p-sign" x="68" y="210" text-anchor="end">+</text><text class="r4p-sign" x="104" y="210" text-anchor="start">−</text>
+            <path class="r4p-wire" d="M190 150H323 M369 150H500"/>
+            <path class="r4p-battery-long" d="M72 226h48"/><path class="r4p-battery-short" d="M82 246h28"/>
+            <text class="r4p-sign" x="133" y="229" text-anchor="middle" direction="ltr">+</text><text class="r4p-sign" x="133" y="250" text-anchor="middle" direction="ltr">−</text>
             ${meterFace(430, 300, 'A', 'i')}
             ${labSwitch(96, 150, 'l-24 32')}
             <circle class="r4p-node" cx="190" cy="150" r="6"/><circle class="r4p-node" cx="500" cy="150" r="6"/>
@@ -771,7 +770,7 @@ function renderLab(root, kind) {
     write('i1', closed ? `${num(model.i1)} A` : '0 A');
     write('i2', closed ? `${num(model.i2)} A` : '0 A');
     write('i', closed ? `${num(model.i)} A` : '0 A');
-    write('u', closed ? `${num(model.u)} V` : '0 V');
+    write('u', closed ? `${num(model.u1)} V` : '0 V');
   }
   const lever = out(root, '[data-lab-lever]');
   if (lever) {

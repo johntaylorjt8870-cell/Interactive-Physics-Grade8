@@ -167,13 +167,12 @@ const DOMINO_SVG = (() => {
 /* Right-hand panel of p87: one closed loop, generator on the left, two lamps on
    the branch, switch on the outer branch. */
 const INTRO_CIRCUIT_SVG = `
-  <path class="u2-wire" d="M470 130 H650 V196 H560"/>
-  <path class="u2-wire" d="M560 196 H470 V160"/>
-  <g data-part="generator"><rect class="u2l2-battery-pos" x="424" y="112" width="38" height="36" rx="5"/><rect class="u2l2-battery-cap" x="416" y="122" width="9" height="16" rx="3"/>
-    <text class="u2l2-terminal-sign" x="442" y="138" text-anchor="middle">+</text></g>
+  <path class="u2-wire" d="M462 130H544 M576 130H650V150 M650 184V196H576 M544 196H400V130H416"/>
+  <g data-part="generator"><rect class="u2l2-battery-pos" x="416" y="112" width="23" height="36" rx="3"/><rect class="u2l2-battery-neg" x="439" y="112" width="23" height="36" rx="3"/>
+    <text class="u2l2-circuit-label" x="427" y="136" text-anchor="middle" direction="ltr">+</text><text class="u2l2-circuit-label" x="450" y="136" text-anchor="middle" direction="ltr">−</text></g>
   <g data-part="lamp"><circle class="u2l2-lamp-glow" cx="560" cy="130" r="24"/><circle class="u2l2-lamp" cx="560" cy="130" r="16"/><path class="u2l2-lamp-x" d="M549 119 L571 141 M571 119 L549 141"/></g>
   <g data-part="lamp"><circle class="u2l2-lamp-glow" cx="560" cy="196" r="24"/><circle class="u2l2-lamp" cx="560" cy="196" r="16"/><path class="u2l2-lamp-x" d="M549 185 L571 207 M571 185 L549 207"/></g>
-  <g data-part="switch"><line class="u2l2-switch-lever" x1="650" y1="172" x2="630" y2="152"/><circle class="u2l2-switch-contact" cx="650" cy="172" r="5"/><circle class="u2l2-switch-contact" cx="650" cy="196" r="5"/></g>
+  <g data-part="switch"><line class="u2l2-switch-lever" x1="650" y1="150" x2="650" y2="184"/><circle class="u2l2-switch-contact" cx="650" cy="150" r="5"/><circle class="u2l2-switch-contact" cx="650" cy="184" r="5"/></g>
   ${arTxt(404, 100, 'مولّد', 'u2l2-part-sub')}
   ${arTxt(430, 176, 'مصباحان', 'u2l2-part-sub')}
   ${arTxt(700, 168, 'مفتاح', 'u2l2-part-sub')}
@@ -230,10 +229,10 @@ const PARALLEL_TOP = 118;
 const PARALLEL_BOTTOM = 236;
 const PARALLEL_BANK_SVG = `
   <rect class="u2l2-bank-box" x="70" y="70" width="540" height="230" rx="18"/>
-  <path class="u2-wire" data-wire d="M${BANK_X[0]} ${PARALLEL_TOP} H634"/>
-  <path class="u2-wire" data-wire d="M${BANK_X[0]} ${PARALLEL_BOTTOM} H634"/>
+  <path class="u2-wire" data-wire d="M${BANK_X[0]} ${PARALLEL_TOP} H622"/>
+  <path class="u2-wire" data-wire d="M${BANK_X[0]} ${PARALLEL_BOTTOM} H622"/>
   ${BANK_X.map((x, i) => cellSymbol(x, PARALLEL_TOP, PARALLEL_BOTTOM, i, 'parallel')).join('')}
-  <path class="u2l2-voltage-bracket" d="M634 ${PARALLEL_TOP} H648 M648 ${PARALLEL_TOP} V${PARALLEL_BOTTOM} M634 ${PARALLEL_BOTTOM} H648"/>
+  <path class="u2l2-voltage-bracket" d="M622 ${PARALLEL_TOP} H632 V${PARALLEL_BOTTOM} H622"/>
   ${txt(676, (PARALLEL_TOP + PARALLEL_BOTTOM) / 2 + 6, '1.5 Volts', 'u2l2-voltage-label')}
   ${arTxt(340, 44, 'وصل عدة مولّدات متماثلة على التفرع', 'u2l2-part-label')}
   ${arTxt(340, 340, 'جميع الأقطاب الموجبة على خط واحد، وجميع السالبة على خط واحد', 'u2l2-part-sub')}
@@ -267,7 +266,7 @@ export const UNIT2L2_DIAGRAMS = Object.freeze({
       ${[0,1,2,3,4,5,6].map((i)=>`<line class="u2-grid" x1="80" y1="${300-i*40}" x2="640" y2="${300-i*40}"/>`).join('')}
       ${QT_TICKS}
       ${txt(80, 28, 'q (C)', 'u2l2-axis-label')}${txt(684, 288, 't (s)', 'u2l2-axis-label')}
-      <polyline fill="none" stroke="#33568f" stroke-width="3" points="160,260 240,220 320,180 400,140 480,100"/>
+      <polyline fill="none" stroke="#33568f" stroke-width="3" points="80,300 160,260 240,220 320,180 400,140 480,100"/>
       ${[[160,260],[240,220],[320,180],[400,140],[480,100]].map(([x,y])=>`<circle class="u2-plot" cx="${x}" cy="${y}" r="6"/>`).join('')}
     `),
     legend: [{ color: 'blue', symbol: `نقاط الكتاب: تيار ثابت ${tex('4\\,\\mathrm{A}', '4 A')}` }],
@@ -283,7 +282,7 @@ export const UNIT2L2_DIAGRAMS = Object.freeze({
     title: 'دارة على التفرع',
     platformNote: 'تخطيط من المنصة لشكل الكتاب ص93: فرعان بمصباحين ومقاييس. في المصدر المصباح الثاني مكتوب L1؛ الرسم يحفظ التفرع دون اختلاق قيم لم تُطبع.',
     description: 'فرعان متوازيان؛ التيار الأصلي مجموع تياري الفرعين.',
-    svg: frame('parallel-circuit', 'وصل على التفرع', 'دارة مغلقة: من المولّد إلى مقياس الأمبير A في الخط الأصلي، ثم فرعان متوازيان: في الأعلى A1 مع المصباح L1، وفي الأسفل A2 مع مصباح مطبوع عليه L1 في المصدر؛ يلتقي الفرعان ويعود التيار إلى المولّد.', PARALLEL_CIRCUIT_SVG),
+    svg: frame('parallel-circuit', 'وصل على التفرع', 'دارة مغلقة: مقياس الأمبير A في الخط الأصلي مع المولّد، ثم فرعان متوازيان: في الأعلى A1 مع المصباح L1، وفي الأسفل A2 مع مصباح مطبوع عليه L1 في المصدر؛ يلتقي الفرعان ويعود التيار إلى المولّد.', PARALLEL_CIRCUIT_SVG),
     legend: [{ color: 'teal', symbol: 'التيار الأصلي = مجموع تياري الفرعين' }],
   },
   'batteries-series': {

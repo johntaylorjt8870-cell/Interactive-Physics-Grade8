@@ -235,7 +235,7 @@ a { color: inherit; }
 .p3-svg .p3-keyboard { fill: #858da4; }
 .p3-svg .p3-key-dots circle { fill: #e7ecf7; }
 .p3-svg .p3-number { fill: #7c5787; font: 700 14px var(--p3-latin); }
-.p3-svg .p3-vessel path:first-child { fill: #fff; stroke: #97a3bb; stroke-width: 4; }
+.p3-svg .p3-vessel-wall { fill: #fff; stroke: #97a3bb; stroke-width: 4; }
 .p3-svg .p3-vessel .p3-water { fill: #40b6d0; fill-opacity: .78; stroke: #1995b3; stroke-width: 1.2; }
 .p3-svg .p3-vessel .p3-water-surface { fill: none; stroke: #087991; stroke-width: 2; }
 .p3-svg .p3-vessel .p3-pipe { fill: none; stroke: #2a9fbe; stroke-width: 11; stroke-linecap: round; }
@@ -481,7 +481,7 @@ a { color: inherit; }
 .p3-svg .p3-keyboard { fill: #858da4; }
 .p3-svg .p3-key-dots circle { fill: #e7ecf7; }
 .p3-svg .p3-number { fill: #7c5787; font: 700 14px var(--p3-latin); }
-.p3-svg .p3-vessel path:first-child { fill: #fff; stroke: #97a3bb; stroke-width: 4; }
+.p3-svg .p3-vessel-wall { fill: #fff; stroke: #97a3bb; stroke-width: 4; }
 .p3-svg .p3-vessel .p3-water { fill: #40b6d0; fill-opacity: .78; stroke: #1995b3; stroke-width: 1.2; }
 .p3-svg .p3-vessel .p3-water-surface { fill: none; stroke: #087991; stroke-width: 2; }
 .p3-svg .p3-vessel .p3-pipe { fill: none; stroke: #2a9fbe; stroke-width: 11; stroke-linecap: round; }
@@ -797,6 +797,7 @@ a { color: inherit; }
 .p3p-lamp.is-lit .p3-lamp-symbol { fill: #ffe9a8; }
 .p3p-lamp.is-lit .p3-lamp-cross { stroke: #b4791a; }
 .p3p-switch.is-closed .p3-switch-lever { stroke: var(--p3-teal); }
+.p3p-flow[hidden] { display: none; }
 .p3p-flow .p3-flow-arrow { stroke: var(--p3-teal); }
 .p3p-flow .p3-flow-head { fill: var(--p3-teal); }
 
@@ -1121,8 +1122,6 @@ a { color: inherit; }
 .p3-student-notebook .student-notebook-figure-page { color: var(--nb-muted); font-size: 11.5px; font-weight: 700; }
 .p3-student-notebook .student-notebook-figure .p3-figure-visual { padding: 12px; }
 .p3-student-notebook .student-notebook-figure .p3-svg { max-width: 680px; margin: 0 auto; }
-.p3-student-notebook .p3-svg .p3-vessel path:first-child,
-.p3-student-notebook .p3-svg .p3-vessel path:nth-child(2) { fill: #fff; stroke: #97a3bb; stroke-width: 4; }
 .p3-student-notebook .student-notebook-figure figcaption {
   display: block;
   padding: 9px 14px 11px;
@@ -1203,3 +1202,5 @@ a { color: inherit; }
   .p3-student-notebook .student-notebook-options { grid-template-columns: 1fr; }
   .p3-student-notebook .student-notebook-table { min-width: 390px; }
 }
+
+.p3-terminal-caption { fill: #fff; font: 700 13px var(--p3-ar); }

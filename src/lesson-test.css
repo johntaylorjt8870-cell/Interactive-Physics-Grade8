@@ -411,3 +411,14 @@ button, select, input { font: inherit; }
 .unit-assessment .question-index { grid-template-columns:repeat(6,minmax(0,1fr)); }
 @media(max-width:780px){.unit-assessment .question-index{grid-template-columns:repeat(10,minmax(0,1fr));}}
 @media(max-width:560px){.unit-assessment .question-index{grid-template-columns:repeat(6,minmax(0,1fr));}}
+
+/* Unit 2's U(I) assessment reuses the resistance graph, not the lesson page CSS. */
+.unit-assessment .r4-graph-svg { display: block; width: 100%; max-height: 320px; direction: ltr; }
+.unit-assessment .r4-graph-back { fill: #fffdf7; }
+.unit-assessment .r4-grid { fill: none; stroke: #dce3e8; }
+.unit-assessment .r4-axis { fill: none; stroke: #24304a; stroke-width: 2; }
+.unit-assessment .r4-plot-line { fill: none; stroke: #33568f; stroke-width: 3; }
+.unit-assessment .r4-plot-point { fill: #33568f; }
+.unit-assessment .r4-axis-tick { font: 12px var(--font-latin); }
+
+.unit-assessment .r4-axis-label { font: 600 13px var(--font-latin); }

@@ -215,39 +215,39 @@ const SIM_WIRE = 'u2-wire';
 
 function seriesCanvas() {
   return `<g data-circuit-canvas="series">
-    <path class="${SIM_WIRE}" d="M120 170 V90 H240"/><path class="${SIM_WIRE}" d="M292 90 H330"/><path class="${SIM_WIRE}" d="M390 90 H440"/>
-    <path class="${SIM_WIRE}" d="M500 90 H600 V170"/><path class="${SIM_WIRE}" d="M600 210 V250 H120 V210"/>
-    <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="30" rx="5"/>
-      <text class="u2l2-terminal-sign" data-terminal="positive" x="120" y="204" text-anchor="middle">+</text></g>
+    <path class="${SIM_WIRE}" d="M120 170 V90 H240"/><path class="${SIM_WIRE}" d="M292 90 H332"/><path class="${SIM_WIRE}" d="M388 90 H442"/>
+    <path class="${SIM_WIRE}" d="M498 90 H600 V164"/><path class="${SIM_WIRE}" d="M600 216 V250 H120 V228"/>
+    <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="24" rx="4"/><rect class="u2l2-battery-neg" x="100" y="204" width="40" height="24" rx="4"/>
+      <text class="u2l2-terminal-sign" data-terminal="positive" x="120" y="198" text-anchor="middle">+</text><text class="u2l2-terminal-sign" data-terminal="negative" x="120" y="223" text-anchor="middle">−</text></g>
     <g data-part="ammeter"><circle class="u2-ammeter" cx="266" cy="90" r="26"/><text class="u2l2-circuit-label" x="266" y="90" text-anchor="middle" dominant-baseline="central" direction="ltr">A₁</text></g>
     <g data-part="lamp" data-lamp="1"><circle class="u2l2-lamp-glow" cx="360" cy="90" r="36"/><circle class="u2l2-lamp" cx="360" cy="90" r="28" data-bulb="1"/><path class="u2l2-lamp-x" data-bulb-x="1" d="M340 70 L380 110 M380 70 L340 110"/></g>
     <g data-part="lamp" data-lamp="2"><circle class="u2l2-lamp-glow" cx="470" cy="90" r="36"/><circle class="u2l2-lamp" cx="470" cy="90" r="28" data-bulb="2"/><path class="u2l2-lamp-x" data-bulb-x="2" d="M450 70 L490 110 M490 70 L450 110"/></g>
     <g data-part="ammeter"><circle class="u2-ammeter" cx="600" cy="190" r="26"/><text class="u2l2-circuit-label" x="600" y="190" text-anchor="middle" dominant-baseline="central" direction="ltr">A₂</text></g>
-    <text class="u2l2-part-label" x="360" y="40" text-anchor="middle" direction="rtl">L₁</text>
-    <text class="u2l2-part-label" x="470" y="40" text-anchor="middle" direction="rtl">L₂</text>
+    <text class="u2l2-part-label" x="360" y="40" text-anchor="middle" direction="ltr">L₁</text>
+    <text class="u2l2-part-label" x="470" y="40" text-anchor="middle" direction="ltr">L₂</text>
     <text class="u2l2-circuit-label" data-series-a1 x="266" y="132" text-anchor="middle" direction="ltr">200 mA</text>
     <text class="u2l2-circuit-label" data-series-a2 x="546" y="196" text-anchor="end" direction="ltr">200 mA</text>
     <text class="u2l2-part-label" x="70" y="240" text-anchor="middle" direction="rtl">المولّد</text>
-    <text class="u2l2-part-sub" x="360" y="284" text-anchor="middle" direction="rtl">مسار واحد مغلق: التيار نفسه في كل أجزائه</text>
+    <text data-series-caption class="u2l2-part-sub" x="360" y="284" text-anchor="middle" direction="rtl">مسار واحد مغلق: التيار نفسه في كل أجزائه</text>
   </g>`;
 }
 
 function parallelCanvas() {
   return `<g data-circuit-canvas="parallel">
-    <path class="${SIM_WIRE}" d="M120 170 H210"/><path class="${SIM_WIRE}" d="M262 170 H320"/><path class="${SIM_WIRE}" d="M320 170 V100 H356"/>
-    <path class="${SIM_WIRE}" d="M444 100 H520 V170"/><path class="${SIM_WIRE}" d="M320 170 V240 H356"/><path class="${SIM_WIRE}" d="M444 240 H520 V170"/>
-    <path class="${SIM_WIRE}" d="M520 170 H620 V304 H120 V210"/>
+    <path class="${SIM_WIRE}" d="M120 170 H210"/><path class="${SIM_WIRE}" d="M262 170 H320"/><path class="${SIM_WIRE}" d="M320 170 V100 H376 M424 100H448"/>
+    <path class="${SIM_WIRE}" d="M492 100 H520 V170"/><path class="${SIM_WIRE}" d="M320 170 V240 H376 M424 240H448"/><path class="${SIM_WIRE}" d="M492 240 H520 V170"/>
+    <path class="${SIM_WIRE}" d="M520 170 H620 V304 H120 V228"/>
     <circle class="u2l2-junction" data-junction="320,170" cx="320" cy="170" r="5"/>
     <circle class="u2l2-junction" data-junction="520,170" cx="520" cy="170" r="5"/>
-    <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="30" rx="5"/>
-      <text class="u2l2-terminal-sign" data-terminal="positive" x="120" y="204" text-anchor="middle">+</text></g>
+    <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="24" rx="4"/><rect class="u2l2-battery-neg" x="100" y="204" width="40" height="24" rx="4"/>
+      <text class="u2l2-terminal-sign" data-terminal="positive" x="120" y="198" text-anchor="middle">+</text><text class="u2l2-terminal-sign" data-terminal="negative" x="120" y="223" text-anchor="middle">−</text></g>
     <g data-part="ammeter"><circle class="u2-ammeter" cx="236" cy="170" r="26"/><text class="u2l2-circuit-label" x="236" y="170" text-anchor="middle" dominant-baseline="central" direction="ltr">A</text></g>
     <g data-part="ammeter"><circle class="u2-ammeter" cx="400" cy="100" r="24"/><text class="u2l2-circuit-label" x="400" y="100" text-anchor="middle" dominant-baseline="central" direction="ltr">A₁</text></g>
     <g data-part="lamp" data-lamp="1"><circle class="u2l2-lamp-glow" cx="470" cy="100" r="32"/><circle class="u2l2-lamp" cx="470" cy="100" r="22" data-bulb="1"/><path class="u2l2-lamp-x" data-bulb-x="1" d="M454 84 L486 116 M486 84 L454 116"/></g>
     <g data-part="ammeter"><circle class="u2-ammeter" cx="400" cy="240" r="24"/><text class="u2l2-circuit-label" x="400" y="240" text-anchor="middle" dominant-baseline="central" direction="ltr">A₂</text></g>
     <g data-part="lamp" data-lamp="2"><circle class="u2l2-lamp-glow" cx="470" cy="240" r="32"/><circle class="u2l2-lamp" cx="470" cy="240" r="22" data-bulb="2"/><path class="u2l2-lamp-x" data-bulb-x="2" d="M454 224 L486 256 M486 224 L454 256"/></g>
-    <text class="u2l2-part-label" x="470" y="52" text-anchor="middle" direction="rtl">L₁</text>
-    <text class="u2l2-part-label" x="470" y="292" text-anchor="middle" direction="rtl">L₂</text>
+    <text class="u2l2-part-label" x="470" y="52" text-anchor="middle" direction="ltr">L₁</text>
+    <text class="u2l2-part-label" x="470" y="292" text-anchor="middle" direction="ltr">L₂</text>
     <text class="u2l2-circuit-label" data-parallel-a x="236" y="212" text-anchor="middle" direction="ltr">300 mA</text>
     <text class="u2l2-circuit-label" data-parallel-a1 x="400" y="140" text-anchor="middle" direction="ltr">200 mA</text>
     <text class="u2l2-circuit-label" data-parallel-a2 x="400" y="282" text-anchor="middle" direction="ltr">100 mA</text>
@@ -481,7 +481,7 @@ export function mountUnit2l2Simulations(scope) {
         const isOn = typeof on === 'function' ? on(lamp.dataset.lamp) : on;
         lamp.classList.toggle('is-off', !isOn);
         lamp.querySelectorAll('[data-bulb]').forEach((bulb) => bulb.classList.toggle('is-lit', isOn));
-        lamp.querySelector('[data-lamp-x]')?.classList.toggle('is-hidden', isOn);
+        lamp.classList.toggle('is-removed', removed && lamp.dataset.lamp === '2');
       });
     };
     function update() {
@@ -501,8 +501,9 @@ export function mountUnit2l2Simulations(scope) {
       const status = q('[data-circuit-status]');
       if (mode === 'series') {
         const s = seriesCurrents(i1, 2);
-        q('[data-series-a1]').textContent = `${i1} mA`;
-        q('[data-series-a2]').textContent = `${i1} mA`;
+        q('[data-series-a1]').textContent = `${removed ? 0 : i1} mA`;
+        q('[data-series-a2]').textContent = `${removed ? 0 : i1} mA`;
+        q('[data-series-caption]').textContent = removed ? 'المسار مقطوع: التيار صفر' : 'مسار واحد مغلق: التيار نفسه في كل أجزائه';
         if (removed) {
           source.textContent = '0 mA';
           state.textContent = 'مقطوعة';
