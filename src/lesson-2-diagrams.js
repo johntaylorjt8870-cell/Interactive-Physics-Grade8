@@ -102,23 +102,30 @@ const swingSvg = svgFrame(
   `,
 );
 
+/* Scientific audit (p63): the two horses pull the wagon FORWARD along the
+   direction of motion, on two parallel, side-by-side horizontal carriers.
+   Drawing the traction as vertical (upward) arrows put the force at 90° to the
+   actual pull and used vertical carriers, contradicting the scene and the
+   lesson's own inquiry answer «بقوتين متوازيتين وبجهة واحدة ... نحو الأمام».
+   The photograph gives no numeric magnitudes, so the two arrows are equal and
+   carry no invented values. Both markers are `orient="auto"`, so a horizontal
+   shaft gets a horizontal arrowhead pointing forward. */
 const wagonSvg = svgFrame(
   'wagon-scene',
   'حصانان يشدّان عربة بقوتين متوازيتين',
-  'سهمان متوازيان بجهة واحدة يمثّلان شد الحصانين للعربة، وحاملا القوتين مستقيمان متوازيان لا يتقاطعان.',
+  'سهمان أفقيان متوازيان بجهة واحدة نحو الأمام يمثّلان شدّ الحصانين للعربة في اتجاه حركتها، وحاملا القوتين مستقيمان أفقيان متوازيان لا يتقاطعان، ولا يحمل الشكل مقادير عددية.',
   `
-  <rect x="300" y="150" width="250" height="90" rx="10" class="l2-wagon" />
-  <circle cx="340" cy="248" r="18" class="l2-wheel" />
-  <circle cx="510" cy="248" r="18" class="l2-wheel" />
-  ${carrier(140, 70, 300)}
-  ${carrier(220, 70, 300)}
-  ${forceArrow('wagon-scene', 140, 196, 86, 'f1')}
-  ${forceArrow('wagon-scene', 220, 196, 86, 'f2')}
-  ${line(140, 196, 300, 196, 'class="l2-trace"')}
-  ${line(220, 196, 300, 176, 'class="l2-trace"')}
-  ${forceLabel(140, 72, 'F₁', 'f1')}
-  ${forceLabel(220, 72, 'F₂', 'f2')}
-  <text x="425" y="204" class="l2-caption" text-anchor="middle">العربة</text>
+  <rect x="90" y="150" width="250" height="90" rx="10" class="l2-wagon" />
+  <circle cx="130" cy="248" r="18" class="l2-wheel" />
+  <circle cx="300" cy="248" r="18" class="l2-wheel" />
+  ${line(340, 180, 650, 180, 'class="l2-carrier"')}
+  ${line(340, 214, 650, 214, 'class="l2-carrier"')}
+  ${line(340, 180, 560, 180, 'class="l2-force l2-force-f1" marker-end="url(#wagon-scene-f1)"')}
+  ${line(340, 214, 560, 214, 'class="l2-force l2-force-f2" marker-end="url(#wagon-scene-f2)"')}
+  ${forceLabel(596, 173, 'F₁', 'f1')}
+  ${forceLabel(596, 241, 'F₂', 'f2')}
+  <text x="215" y="204" class="l2-caption" text-anchor="middle">العربة</text>
+  <text x="495" y="268" class="l2-caption" text-anchor="middle">نحو الأمام</text>
   `,
 );
 
@@ -425,7 +432,7 @@ export const LESSON_2_DIAGRAMS = Object.freeze({
   },
   'wagon-scene': {
     title: 'حصانان يشدّان العربة',
-    platformNote: 'الشدّان متوازيان وبجهة واحدة في المشهد المقصود من الكتاب، لذلك تُجمع الشّدتان لاحقاً عند دراسة المحصلة.',
+    platformNote: 'رُسم الشدّان أفقياً في اتجاه حركة العربة (نحو الأمام) لا شاقولياً؛ حاملاهما مستقيمان أفقيان متوازيان منفصلان والجهتان واحدة. صورة ص 63 لا تعطي مقادير عددية، لذلك السهمان متساويان بلا أرقام.',
     description: 'إعادة بناء تخطيطية لمشهد العربة في الصفحة 63.',
     svg: wagonSvg,
     legend: [{ color: 'teal', symbol: `${V_F1} و ${V_F2}: قوتان متوازيتان بجهة واحدة` }],
