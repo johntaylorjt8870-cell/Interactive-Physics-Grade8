@@ -1,4 +1,5 @@
 import { cp, mkdir, rm } from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -54,6 +55,15 @@ await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), {
   filter: (source) => !PLAINTEXT_TEACHER_CONTENT.some((name) => source.endsWith(name)),
 });
 await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
+// Build the independent external lab to guarantee its production output is present
+// regardless of whether the pre-built dist/index.html was included in source.
+try {
+  const labDir = resolve(projectDirectory, 'External-labs/unit-2/lesson-1');
+  execSync('npm install', { cwd: labDir, stdio: 'inherit', timeout: 120000 });
+  execSync('npm run build', { cwd: labDir, stdio: 'inherit', timeout: 120000 });
+} catch (e) {
+  console.warn('Warning: independent lab build step failed. Copying existing External-labs assets if available.', e.message);
+}
 await cp(resolve(projectDirectory, 'External-labs'), resolve(outputDirectory, 'External-labs'), {
   recursive: true,
   filter: (source) => !source.includes('node_modules'),
