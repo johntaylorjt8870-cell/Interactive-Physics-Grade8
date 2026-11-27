@@ -1,4 +1,5 @@
 import { tex } from './math.js';
+import { seriesCircuit, parallelCircuit } from './unit2-lesson2-circuits.js';
 
 const defs = (id) => `<defs><marker id="${id}-i" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2a7a5a"/></marker><marker id="${id}-e" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c95348"/></marker></defs>`;
 const frame = (id, t, d, body, height = 360) => `<svg viewBox="0 0 720 ${height}" role="img" aria-labelledby="${id}-title ${id}-desc" xmlns="http://www.w3.org/2000/svg"><title id="${id}-title">${t}</title><desc id="${id}-desc">${d}</desc>${defs(id)}${body}</svg>`;
@@ -20,8 +21,8 @@ function blockArrow(cx, cy, dir, flow, segment) {
 }
 
 /* p89 circuit, laid out as in the textbook figure: generator on top (+ left, − right),
-   lamp on the left branch, switch on the right branch, wires closing the loop.
-   Conventional current (yellow, outside the loop) leaves + and returns to −;
+   lamp then switch along the lower return, wires closing the loop.
+   Conventional current (blue, outside the loop) leaves + and returns to −;
    electrons e⁻ (red, inside the loop) move the opposite way on every segment. */
 const LOOP = Object.freeze({ left: 170, right: 550, top: 110, bottom: 330 });
 const CURRENT_FLOW = Object.freeze({ 'top-left': 'left', left: 'down', bottom: 'right', right: 'up', 'top-right': 'left' });
@@ -34,12 +35,12 @@ const ARROW_SPOTS = Object.freeze({
   'top-right': { current: [482, 90], electron: [482, 130] },
 });
 const flowArrows = Object.entries(ARROW_SPOTS).map(([segment, spot]) => `${blockArrow(...spot.current, CURRENT_FLOW[segment], 'current', segment)}${blockArrow(...spot.electron, OPPOSITE[CURRENT_FLOW[segment]], 'electron', segment)}`).join('');
-const electronSymbol = (x, y) => `<text x="${x}" y="${y}" class="u2l2-sym u2l2-sym-electron" text-anchor="middle" direction="ltr">e<tspan dy="-8" font-size="14">−</tspan></text>`;
+const electronSymbol = (x, y) => `<text x="${x}" y="${y}" class="u2l2-sym u2l2-sym-electron" text-anchor="middle" direction="ltr">e</text>`;
 const currentSymbol = (x, y) => `<text x="${x}" y="${y}" class="u2l2-sym u2l2-sym-current" text-anchor="middle" direction="ltr">I</text>`;
 const CURRENT_DIRECTION_SVG = `
-      <path class="u2-wire" d="M302 ${LOOP.top} H${LOOP.left} V192"/>
-      <path class="u2-wire" d="M${LOOP.left} 248 V${LOOP.bottom} H${LOOP.right} V246"/>
-      <path class="u2-wire" d="M410 ${LOOP.top} H${LOOP.right} V194"/>
+      <path class="u2-wire" d="M302 ${LOOP.top} H${LOOP.left} V${LOOP.bottom} H217"/>
+      <path class="u2-wire" d="M273 ${LOOP.bottom} H449"/>
+      <path class="u2-wire" d="M410 ${LOOP.top} H${LOOP.right} V${LOOP.bottom} H495"/>
       <g data-part="generator" data-x="360" data-y="${LOOP.top}">
         <rect class="u2l2-battery-cap" x="300" y="101" width="11" height="18" rx="3"/>
         <rect class="u2l2-battery-pos" x="310" y="88" width="50" height="44" rx="6"/>
@@ -49,90 +50,24 @@ const CURRENT_DIRECTION_SVG = `
       </g>
       ${arTxt(335, 154, 'موجب', 'u2l2-part-sub')}${arTxt(385, 154, 'سالب', 'u2l2-part-sub')}
       ${arTxt(360, 48, 'المولّد', 'u2l2-part-label is-title')}${arTxt(360, 72, 'مصدر الطاقة الكهربائية', 'u2l2-part-sub')}
-      <g data-part="lamp" data-x="${LOOP.left}" data-y="220">
-        <circle class="u2l2-lamp-glow" cx="${LOOP.left}" cy="220" r="40"/>
-        <circle class="u2l2-lamp" cx="${LOOP.left}" cy="220" r="28"/>
-        <path class="u2l2-lamp-x" d="M150.2 200.2 L189.8 239.8 M189.8 200.2 L150.2 239.8"/>
+      <g data-part="lamp" data-x="245" data-y="330">
+        <circle class="u2l2-lamp-glow" cx="245" cy="330" r="37"/><circle class="u2l2-lamp" cx="245" cy="330" r="28"/>
+        <path class="u2l2-lamp-x" d="M225.2 310.2l39.6 39.6m-39.6 0l39.6 -39.6"/>
       </g>
-      ${arTxt(78, 212, 'جهاز كهربائي')}${arTxt(78, 234, 'مستهلك (مصباح)')}
-      <g data-part="switch" data-x="${LOOP.right}" data-y="220">
-        <line class="u2l2-switch-lever" x1="${LOOP.right}" y1="246" x2="${LOOP.right}" y2="194"/>
-        <circle class="u2l2-switch-contact" cx="${LOOP.right}" cy="194" r="5.5"/>
-        <circle class="u2l2-switch-contact" cx="${LOOP.right}" cy="246" r="5.5"/>
+      ${arTxt(245, 387, 'جهاز كهربائي')}${arTxt(245, 408, 'مستهلك (مصباح)')}
+      <g data-part="switch" data-x="472" data-y="330">
+        <line class="u2l2-switch-lever" x1="449" y1="330" x2="495" y2="330"/>
+        <circle class="u2l2-switch-contact" cx="449" cy="330" r="5.5"/><circle class="u2l2-switch-contact" cx="495" cy="330" r="5.5"/>
       </g>
-      ${arTxt(640, 214, 'مفتاح (قاطعة)')}${arTxt(640, 236, 'مغلق', 'u2l2-part-sub')}
-      ${arTxt(360, 402, 'موصل كهربائي (أسلاك التوصيل)')}
+      ${arTxt(472, 387, 'مفتاح (قاطعة)')}${arTxt(472, 408, 'مغلق', 'u2l2-part-sub')}
+      ${arTxt(97, 201, 'موصل كهربائي')}${arTxt(97, 224, '(أسلاك التوصيل)', 'u2l2-part-sub')}
       ${flowArrows}
       ${currentSymbol(236, 68)}${currentSymbol(314, 357)}
       ${electronSymbol(236, 166)}${electronSymbol(312, 317)}
     `;
 
-/* p92 series circuit: one closed loop, generator -> A1 -> L1 -> L2 -> A2 -> generator.
-   The order follows the p92 textbook reference text in the lesson (A1, then L1 and L2,
-   then A2) and the original component placement. Every wire ends exactly on a
-   component terminal; data-terminals records those points so tests can verify the
-   loop geometrically (no gaps, nothing merely drawn next to the wire). */
-const SERIES = Object.freeze({ left: 75, right: 640, top: 80, bottom: 280 });
-const circuitPart = (name, cx, cy, r, cls, vertical = false, label = name) => {
-  const terminals = vertical ? `${cx},${cy - r} ${cx},${cy + r}` : `${cx - r},${cy} ${cx + r},${cy}`;
-  return `<g data-part="${cls === 'u2-bulb' ? 'lamp' : 'ammeter'}" data-name="${name}" data-cx="${cx}" data-cy="${cy}" data-r="${r}" data-terminals="${terminals}"><circle cx="${cx}" cy="${cy}" r="${r}" class="${cls}"/><text x="${cx}" y="${cy}" class="u2l2-circuit-label" text-anchor="middle" dominant-baseline="central" direction="ltr">${label}</text></g>`;
-};
-const SERIES_CIRCUIT_SVG = `
-      <path class="u2-wire" data-wire d="M${SERIES.left} 140 V${SERIES.top} H178"/>
-      <path class="u2-wire" data-wire d="M222 ${SERIES.top} H332"/>
-      <path class="u2-wire" data-wire d="M388 ${SERIES.top} H492"/>
-      <path class="u2-wire" data-wire d="M548 ${SERIES.top} H${SERIES.right} V158"/>
-      <path class="u2-wire" data-wire d="M${SERIES.right} 202 V${SERIES.bottom} H${SERIES.left} V210"/>
-      <g data-part="generator" data-name="G" data-terminals="${SERIES.left},140 ${SERIES.left},210">
-        <rect class="u2l2-battery-cap" x="67" y="140" width="16" height="11" rx="3"/>
-        <rect class="u2l2-battery-pos" x="55" y="150" width="40" height="30" rx="5"/>
-        <rect class="u2l2-battery-neg" x="55" y="180" width="40" height="30" rx="5"/>
-        <text class="u2l2-terminal-sign" data-terminal="positive" x="${SERIES.left}" y="174" text-anchor="middle">+</text>
-        <text class="u2l2-terminal-sign" data-terminal="negative" x="${SERIES.left}" y="204" text-anchor="middle">−</text>
-      </g>
-      ${arTxt(140, 186, 'المولّد', 'u2l2-series-gen')}
-      ${circuitPart('A1', 200, SERIES.top, 22, 'u2-ammeter', false, 'A₁')}
-      ${circuitPart('L1', 360, SERIES.top, 28, 'u2-bulb', false, 'L₁')}
-      ${circuitPart('L2', 520, SERIES.top, 28, 'u2-bulb', false, 'L₂')}
-      ${circuitPart('A2', SERIES.right, 180, 22, 'u2-ammeter', true, 'A₂')}
-      ${txt(360, 330, 'I = 200 mA = Const', 'u2l2-circuit-label')}
-    `;
-
-/* p93 parallel circuit. Topology from the lesson text (p93 reference, platform note, teacher
-   solution): ammeter A in the main line; upper branch A1 with lamp L1; lower branch A2 with a
-   lamp that the source also prints as L1 (label kept). Component positions and the + − marking
-   of the generator are those of the original platform drawing; the textbook figure itself is
-   not in the repository. Each wire runs between a component terminal and a junction
-   (data-junction), so tests can rebuild the netlist: no gaps, no short, one return path. */
-const PARALLEL_CIRCUIT_SVG = `
-      <path class="u2-wire" data-wire d="M110 180 H140"/>
-      <path class="u2-wire" data-wire d="M180 180 H220"/>
-      <path class="u2-wire" data-wire d="M220 180 V80 H260"/>
-      <path class="u2-wire" data-wire d="M300 80 H412"/>
-      <path class="u2-wire" data-wire d="M468 80 H500 V280"/>
-      <path class="u2-wire" data-wire d="M220 180 V280 H260"/>
-      <path class="u2-wire" data-wire d="M300 280 H412"/>
-      <path class="u2-wire" data-wire d="M468 280 H500"/>
-      <path class="u2-wire" data-wire d="M500 280 V330 H20 V180 H40"/>
-      <circle class="u2l2-junction" data-junction="220,180" cx="220" cy="180" r="5"/>
-      <circle class="u2l2-junction" data-junction="500,280" cx="500" cy="280" r="5"/>
-      <g data-part="generator" data-name="G" data-terminals="40,180 110,180">
-        <rect class="u2-cell" x="40" y="160" width="70" height="40"/>
-        <text class="u2l2-circuit-label" data-terminal="positive" x="62" y="180" text-anchor="middle" dominant-baseline="central" direction="ltr">+</text>
-        <text class="u2l2-circuit-label" data-terminal="negative" x="88" y="180" text-anchor="middle" dominant-baseline="central" direction="ltr">−</text>
-      </g>
-      ${circuitPart('A', 160, 180, 20, 'u2-ammeter')}
-      ${circuitPart('A1', 280, 80, 20, 'u2-ammeter', false, 'A₁')}
-      ${circuitPart('L1', 440, 80, 28, 'u2-bulb', false, 'L₁')}
-      ${circuitPart('A2', 280, 280, 20, 'u2-ammeter', false, 'A₂')}
-      ${circuitPart('L1-lower', 440, 280, 28, 'u2-bulb', false, 'L₁')}
-      ${txt(580, 180, 'I = I1 + I2', 'u2l2-circuit-label')}
-    `;
-
-/* p90 q-t graph ticks. Scale = the existing grid (80 px per 5 s, 40 px per 20 C), on which
-   the book points (5,20)...(25,100) already sit. Ranges follow the p90 textbook reference
-   text in the lesson (q from 0 to 120, t from 0 to 35); units come from the existing axis
-   labels q (C) and t (s); steps are the existing grid spacing (5 s, 20 C). */
+/* p90: 5 s and 20 C per grid step. The scan labels its charge axis q (c);
+   use SI C in the explanation and exercise, not as a different quantity. */
 const QT_TICKS_T = Object.freeze([5, 10, 15, 20, 25, 30, 35]);
 const QT_TICKS_Q = Object.freeze([20, 40, 60, 80, 100, 120]);
 const qtX = (t) => 80 + t * 16;
@@ -164,48 +99,33 @@ const DOMINO_SVG = (() => {
     ${arTxt(160, 70, 'صف دومينو', 'u2l2-part-label')}`;
 })();
 
-/* Right-hand panel of p87: one closed loop, generator on the left, two lamps on
-   the branch, switch on the outer branch. */
+/* The photograph shows two cells in a holder. Only its external leads are
+   visible: don't invent a series/parallel connection inside the holder. */
 const INTRO_CIRCUIT_SVG = `
-  <path class="u2-wire" d="M462 130H544 M576 130H650V150 M650 184V196H576 M544 196H400V130H416"/>
-  <g data-part="generator"><rect class="u2l2-battery-pos" x="416" y="112" width="23" height="36" rx="3"/><rect class="u2l2-battery-neg" x="439" y="112" width="23" height="36" rx="3"/>
-    <text class="u2l2-circuit-label" x="427" y="136" text-anchor="middle" direction="ltr">+</text><text class="u2l2-circuit-label" x="450" y="136" text-anchor="middle" direction="ltr">−</text></g>
-  <g data-part="lamp"><circle class="u2l2-lamp-glow" cx="560" cy="130" r="24"/><circle class="u2l2-lamp" cx="560" cy="130" r="16"/><path class="u2l2-lamp-x" d="M549 119 L571 141 M571 119 L549 141"/></g>
-  <g data-part="lamp"><circle class="u2l2-lamp-glow" cx="560" cy="196" r="24"/><circle class="u2l2-lamp" cx="560" cy="196" r="16"/><path class="u2l2-lamp-x" d="M549 185 L571 207 M571 185 L549 207"/></g>
-  <g data-part="switch"><line class="u2l2-switch-lever" x1="650" y1="150" x2="650" y2="184"/><circle class="u2l2-switch-contact" cx="650" cy="150" r="5"/><circle class="u2l2-switch-contact" cx="650" cy="184" r="5"/></g>
-  ${arTxt(404, 100, 'مولّد', 'u2l2-part-sub')}
-  ${arTxt(430, 176, 'مصباحان', 'u2l2-part-sub')}
-  ${arTxt(700, 168, 'مفتاح', 'u2l2-part-sub')}
-  ${arTxt(556, 70, 'دارة كهربائية', 'u2l2-part-label')}
-  ${arTxt(556, 262, 'دارة مغلقة تنتقل فيها الطاقة من المولّد إلى المصباحين', 'u2l2-part-sub')}`;
+  <path class="u2-wire" d="M460 145H484V112H520 M580 112H674V205H636 M604 205H554 M522 205H484V173H460"/>
+  <g data-part="generator"><rect class="u2l2-holder" x="378" y="133" width="82" height="52" rx="5"/>
+    <rect class="u2l2-holder-cell" x="384" y="137" width="68" height="18" rx="6"/><rect class="u2l2-holder-cell" x="384" y="162" width="68" height="18" rx="6"/></g>
+  ${[538, 620].map((x) => `<g data-part="lamp"><circle class="u2l2-lamp-glow" cx="${x}" cy="205" r="23"/><circle class="u2l2-lamp" cx="${x}" cy="205" r="16"/><path class="u2l2-lamp-x" d="M${x-11} 194l22 22m-22 0l22 -22"/></g>`).join('')}
+  <g data-part="switch"><line class="u2l2-switch-lever" x1="520" y1="112" x2="580" y2="112"/><circle class="u2l2-switch-contact" cx="520" cy="112" r="5"/><circle class="u2l2-switch-contact" cx="580" cy="112" r="5"/></g>
+  ${arTxt(419, 112, 'حامل خليتين', 'u2l2-part-sub')}${arTxt(550, 93, 'مفتاح مغلق', 'u2l2-part-sub')}
+  ${arTxt(579, 252, 'مصباحان', 'u2l2-part-sub')}${arTxt(556, 58, 'دارة كهربائية', 'u2l2-part-label')}`;
 
-/* p93 / p94: identical cells connected on series and on parallel.
-   The printed figures carry only the total («6 Volts» on p93, «1.5 Volts» on
-   p94) and the cell symbols; the + and − signs and the cell numbers below are the
-   platform's own labelling, added so every part is identifiable.
-   The geometry is data-driven and recorded in data-* attributes, so tests can
-   check that the series chain really runs − of one cell into + of the next, and
-   that the parallel bank really joins every + to one rail and every − to the other. */
-const BANK_CELLS = 4;
+/* pp93–94: on BOTH pages every printed cell has + at the top and − at the
+   bottom. The leads, not alternating cell orientations, distinguish the banks. */
 const BANK_X = Object.freeze([130, 270, 410, 550]);
 
-/* A single cell of the bank. `flipped` turns the cell upside down so its + cap is
-   at the bottom; the series chain needs this to run − of one cell into + of the
-   next along one level, without a wire crossing a cell. */
-function cellSymbol(x, topY, bottomY, index, bank, flipped = false) {
+function cellSymbol(x, topY, bottomY, index, bank) {
   const inset = bank === 'series' ? 16 : 14;
   const bodyTop = topY + inset;
   const bodyBottom = bottomY - inset;
-  const positiveY = flipped ? bodyBottom - 6 : bodyTop + 22;
-  const negativeY = flipped ? bodyTop + 22 : bodyBottom - 6;
-  return `<g class="u2l2-cell-symbol" data-cell="${index + 1}" data-bank="${bank}" data-x="${x}" data-top="${topY}" data-bottom="${bottomY}" data-flipped="${flipped}">
+  return `<g class="u2l2-cell-symbol" data-cell="${index + 1}" data-bank="${bank}" data-x="${x}" data-top="${topY}" data-bottom="${bottomY}">
     <line class="u2l2-cell-stub" x1="${x}" y1="${topY}" x2="${x}" y2="${bodyTop}"/>
     <line class="u2l2-cell-stub" x1="${x}" y1="${bodyBottom}" x2="${x}" y2="${bottomY}"/>
     <rect class="u2l2-cell-body" x="${x - 21}" y="${bodyTop}" width="42" height="${bodyBottom - bodyTop}" rx="7"/>
     <rect class="u2l2-cell-band" x="${x - 21}" y="${bodyTop + 8}" width="42" height="10"/>
-    <text class="u2l2-terminal-sign u2l2-cell-sign" data-terminal="positive" data-cell-terminal="positive" x="${x}" y="${positiveY}" text-anchor="middle" direction="ltr">+</text>
-    <text class="u2l2-terminal-sign u2l2-cell-sign" data-terminal="negative" data-cell-terminal="negative" x="${x}" y="${negativeY}" text-anchor="middle" direction="ltr">−</text>
-    ${arTxt(x, bottomY + 46, `خلية ${index + 1}`, 'u2l2-part-sub')}
+    <text class="u2l2-terminal-sign u2l2-cell-sign" data-terminal="positive" data-cell-terminal="positive" x="${x}" y="${bodyTop + 22}" text-anchor="middle" direction="ltr">+</text>
+    <text class="u2l2-terminal-sign u2l2-cell-sign" data-terminal="negative" data-cell-terminal="negative" x="${x}" y="${bodyBottom - 6}" text-anchor="middle" direction="ltr">−</text>
+    ${arTxt(x, bottomY + (bank === 'series' ? 67 : 46), `خلية ${index + 1}`, 'u2l2-part-sub')}
   </g>`;
 }
 
@@ -213,14 +133,15 @@ const SERIES_TOP = 130;
 const SERIES_BOTTOM = 230;
 const SERIES_BANK_SVG = `
   <rect class="u2l2-bank-box" x="70" y="70" width="540" height="230" rx="18"/>
-  ${BANK_X.map((x, i) => cellSymbol(x, SERIES_TOP, SERIES_BOTTOM, i, 'series', i % 2 === 1)).join('')}
+  ${BANK_X.map((x, i) => cellSymbol(x, SERIES_TOP, SERIES_BOTTOM, i, 'series')).join('')}
   ${BANK_X.slice(0, -1).map((x, i) => {
     const next = BANK_X[i + 1];
-    const y = i % 2 === 0 ? SERIES_BOTTOM : SERIES_TOP;
-    return `<path class="u2-wire" data-bank-wire="chain-${i + 1}" data-wire data-from="cell${i + 1}-negative" data-to="cell${i + 2}-positive" data-level="${y}" d="M${x} ${y} H${next}"/>`;
+    return `<path class="u2-wire" data-bank-wire="chain-${i + 1}" data-wire d="M${x} ${SERIES_TOP} V104 H${(x+next)/2} V248 H${next} V${SERIES_BOTTOM}"/>`;
   }).join('')}
-  <path class="u2l2-voltage-bracket" d="M${BANK_X[0]} ${SERIES_TOP} V96 H${BANK_X[3]} V${SERIES_TOP}"/>
-  ${txt((BANK_X[0] + BANK_X[3]) / 2, 84, '6 Volts', 'u2l2-voltage-label')}
+  <path class="u2-wire" data-wire d="M${BANK_X[0]} ${SERIES_BOTTOM} V268 H622"/>
+  <path class="u2-wire" data-wire d="M${BANK_X[3]} ${SERIES_TOP} V104 H622"/>
+  <path class="u2l2-voltage-bracket" d="M622 104 H632 V268 H622"/>
+  ${txt(672, 192, '6 Volts', 'u2l2-voltage-label')}
   ${arTxt(340, 44, 'وصل مجموعة مولّدات متماثلة على التسلسل', 'u2l2-part-label')}
   ${arTxt(340, 340, 'موجب كل خلية إلى سالب الخلية التي تليها، فتضاف الجهود', 'u2l2-part-sub')}
 `;
@@ -241,63 +162,63 @@ const PARALLEL_BANK_SVG = `
 export const UNIT2L2_DIAGRAMS = Object.freeze({
   'intro-scenes': {
     title: 'مشهدا الافتتاح: صف الدومينو والدارة المغلقة',
-    platformNote: 'إعادة بناء تخطيطية من المنصة لصورتَي ص87: صف دومينو يتساقط بالتتابع، ودارة بمصباحين ومولّد ومفتاح مغلق. الصور الفوتوغرافية في الكتاب لا تُعاد طباعتها، والرسم يوضّح الوضع نفسه لا الصورة نفسها.',
-    description: 'على اليسار صف من قطع الدومينو تسقط بالتتابع بعد دفعة واحدة، وعلى اليمين دارة كهربائية مغلقة فيها مولّد ومصباحان ومفتاح مغلق.',
-    svg: frame('intro-scenes', 'دومينو ودارة', 'صف دومينو يتساقط بالتتابع، ودارة كهربائية مغلقة فيها مولّد ومصباحان ومفتاح.', `${DOMINO_SVG}${INTRO_CIRCUIT_SVG}`, 320),
+    platformNote: 'إعادة بناء تخطيطية من المنصة لصورتَي ص87: صف دومينو يتساقط بالتتابع، ودارة بمصباحين وحامل خليتين ومفتاح مغلق؛ لا يظهر توصيل الحامل الداخلي. الصور الفوتوغرافية في الكتاب لا تُعاد طباعتها، والرسم يوضّح الوضع نفسه لا الصورة نفسها.',
+    description: 'على اليسار صف من قطع الدومينو تسقط بالتتابع بعد دفعة واحدة، وعلى اليمين دارة كهربائية مغلقة فيها حامل خليتين ومصباحان ومفتاح مغلق.',
+    svg: frame('intro-scenes', 'دومينو ودارة', 'صف دومينو يتساقط بالتتابع، ودارة كهربائية مغلقة فيها حامل خليتين ومصباحان متتاليان ومفتاح.', `${DOMINO_SVG}${INTRO_CIRCUIT_SVG}`, 320),
     legend: [{ color: 'coral', symbol: 'المشهدان يفتحان أسئلة ص87: من أين نحصل على الطاقة الكهربائية، وكيف تنتقل إلى المصباح؟' }],
   },
   'current-direction': {
     title: 'جهة التيار وحركة الإلكترونات',
-    platformNote: `إعادة بناء تخطيطية من المنصة لشكل الكتاب ص89: المولّد في الأعلى (القطب الموجب يساراً والسالب يميناً)، والمصباح يساراً والقاطعة يميناً. الأسهم الصفراء لجهة التيار الاصطلاحية (اصطلاح أمبير)، والأسهم الحمراء ${tex('e^{-}', 'electrons')} لحركة الإلكترونات في الاتجاه المعاكس. Educational simplified model.`,
-    description: 'دارة مغلقة: المولّد (مصدر الطاقة الكهربائية) في الأعلى، والمصباح (الجهاز الكهربائي المستهلك) يساراً، والمفتاح (القاطعة) يميناً، وتصل بينها أسلاك التوصيل (الموصل الكهربائي). الأسهم الصفراء خارج الحلقة تبيّن جهة التيار الاصطلاحية، والأسهم الحمراء داخلها تبيّن حركة الإلكترونات بالاتجاه المعاكس.',
-    svg: frame('current-direction', 'جهة التيار الاصطلاحية وحركة الإلكترونات', 'المولّد في الأعلى وقطبه الموجب يساراً والسالب يميناً، والمصباح يساراً والمفتاح يميناً. أسهم صفراء للتيار الاصطلاحي من القطب الموجب إلى القطب السالب خارج المولّد، وأسهم حمراء للإلكترونات بالاتجاه المعاكس.', CURRENT_DIRECTION_SVG, 420),
+    platformNote: `إعادة بناء تخطيطية من المنصة لشكل الكتاب ص89: المولّد في الأعلى (القطب الموجب يساراً والسالب يميناً)، والمصباح أسفل اليسار والقاطعة أسفل اليمين. اختُصر تكرار الأسهم: الزرقاء لجهة التيار الاصطلاحية، والحمراء المسمّاة ${tex('e', 'electron')} لحركة الإلكترونات في الاتجاه المعاكس. Educational simplified model.`,
+    description: 'دارة مغلقة: المولّد (مصدر الطاقة الكهربائية) في الأعلى، والمصباح (الجهاز الكهربائي المستهلك) يساراً، والمفتاح (القاطعة) يميناً، وتصل بينها أسلاك التوصيل (الموصل الكهربائي). الأسهم الزرقاء خارج الحلقة تبيّن جهة التيار الاصطلاحية، والأسهم الحمراء داخلها تبيّن حركة الإلكترونات بالاتجاه المعاكس.',
+    svg: frame('current-direction', 'جهة التيار الاصطلاحية وحركة الإلكترونات', 'المولّد في الأعلى وقطبه الموجب يساراً والسالب يميناً، والمصباح يساراً والمفتاح يميناً. أسهم زرقاء للتيار الاصطلاحي من القطب الموجب إلى القطب السالب خارج المولّد، وأسهم حمراء للإلكترونات بالاتجاه المعاكس.', CURRENT_DIRECTION_SVG, 420),
     legend: [
-      { color: 'yellow', symbol: `أسهم صفراء: جهة التيار الاصطلاحية ${tex('I', 'I')} — من القطب الموجب (+) إلى القطب السالب (−) خارج المولّد` },
+      { color: 'sky', symbol: `أسهم زرقاء: جهة التيار الاصطلاحية ${tex('I', 'I')} — من القطب الموجب (+) إلى القطب السالب (−) خارج المولّد` },
       { color: 'red', symbol: `أسهم حمراء: حركة الإلكترونات ${tex('e^{-}', 'electrons')} — من القطب السالب (−) إلى القطب الموجب (+) خارج المولّد، عكس جهة التيار` },
     ],
   },
   'qt-graph': {
     title: 'الخط البياني لكمية الكهرباء بدلالة الزمن',
-    platformNote: `إعادة بناء لشبكة الكتاب ص90 بنقاط (5,20) (10,40) (15,60) (20,80) (25,100). الخط المستقيم يعني أن ${tex('\\dfrac{q}{t}', 'q over t')} ثابتة.`,
-    description: 'نقاط على خط مستقيم صاعد: كمية الكهرباء تتناسب طرداً مع الزمن عند تيار متواصل ثابت.',
+    platformNote: 'شبكة ص90 كما طُبعت: خمس نقاط فقط. يُطلب من الطالب رسم المستقيم؛ لا يوجد خطّ واصل مطبوع. وحدة الشحنة هي الكولوم (c في الشكل، وC في الترميز المعياري).',
+    description: 'خمس نقاط منتظمة تمثّل كمية الكهرباء بدلالة الزمن. لا نقطة قياس إضافية عند المبدأ.',
     svg: frame('qt-graph', 'q versus t', 'المحور الأفقي t من 0 إلى 35 s والمحور العمودي q من 0 إلى 120 C؛ نقاط منتظمة على خط مستقيم من (5,20) إلى (25,100).', `
       <line class="u2-axis" x1="80" y1="300" x2="680" y2="300"/><line class="u2-axis" x1="80" y1="300" x2="80" y2="40"/>
-      ${[0,1,2,3,4,5,6,7].map((i)=>`<line class="u2-grid" x1="${80+i*80}" y1="300" x2="${80+i*80}" y2="50"/>`).join('')}
+      ${[0,1,2,3,4,5,6,7].map((i)=>`<line class="u2-grid" x1="${80+i*80}" y1="300" x2="${80+i*80}" y2="60"/>`).join('')}
       ${[0,1,2,3,4,5,6].map((i)=>`<line class="u2-grid" x1="80" y1="${300-i*40}" x2="640" y2="${300-i*40}"/>`).join('')}
+      <polygon fill="#24304a" points="680,300 670,296 670,304"/><polygon fill="#24304a" points="80,40 76,50 84,50"/>
       ${QT_TICKS}
-      ${txt(80, 28, 'q (C)', 'u2l2-axis-label')}${txt(684, 288, 't (s)', 'u2l2-axis-label')}
-      <polyline fill="none" stroke="#33568f" stroke-width="3" points="80,300 160,260 240,220 320,180 400,140 480,100"/>
+      ${txt(80, 28, 'q (c)', 'u2l2-axis-label')}${txt(684, 288, 't (s)', 'u2l2-axis-label')}
       ${[[160,260],[240,220],[320,180],[400,140],[480,100]].map(([x,y])=>`<circle class="u2-plot" cx="${x}" cy="${y}" r="6"/>`).join('')}
     `),
-    legend: [{ color: 'blue', symbol: `نقاط الكتاب: تيار ثابت ${tex('4\\,\\mathrm{A}', '4 A')}` }],
+    legend: [{ color: 'blue', symbol: `من ميل النقاط المطبوعة نستنتج تياراً ثابتاً شدته ${tex('4\\,\\mathrm{A}', '4 A')}` }],
   },
   'series-circuit': {
     title: 'دارة على التسلسل',
     platformNote: `تخطيط من المنصة لشكل الكتاب ص92: مصباحان ومقياسا أمبير والتيار ${tex('200\\,\\mathrm{mA}', '200 mA')} في الجزأين. Educational simplified model.`,
     description: `مسار واحد: التيار نفسه ${tex('200\\,\\mathrm{mA}', '200 mA')} عند A1 و A2.`,
-    svg: frame('series-circuit', 'وصل على التسلسل', 'مسار واحد مغلق: المولّد ثم مقياس الأمبير A1 ثم المصباحان L1 و L2 ثم مقياس الأمبير A2 والعودة إلى المولّد؛ يمر التيار نفسه في كل الأجهزة.', SERIES_CIRCUIT_SVG),
+    svg: frame('series-circuit', 'وصل على التسلسل', 'من موجب المولّد إلى A₁ ثم L₁ أعلى الدارة، ثم A₂ فـL₂ على مسار العودة. يدخل التيار من يسار A₁ ومن يمين A₂؛ كلاهما يقرأ 200 mA.', seriesCircuit()),
     legend: [{ color: 'blue', symbol: 'I ثابت في كل أجزاء الدارة المغلقة على التسلسل' }],
   },
   'parallel-circuit': {
     title: 'دارة على التفرع',
     platformNote: 'تخطيط من المنصة لشكل الكتاب ص93: فرعان بمصباحين ومقاييس. في المصدر المصباح الثاني مكتوب L1؛ الرسم يحفظ التفرع دون اختلاق قيم لم تُطبع.',
     description: 'فرعان متوازيان؛ التيار الأصلي مجموع تياري الفرعين.',
-    svg: frame('parallel-circuit', 'وصل على التفرع', 'دارة مغلقة: مقياس الأمبير A في الخط الأصلي مع المولّد، ثم فرعان متوازيان: في الأعلى A1 مع المصباح L1، وفي الأسفل A2 مع مصباح مطبوع عليه L1 في المصدر؛ يلتقي الفرعان ويعود التيار إلى المولّد.', PARALLEL_CIRCUIT_SVG),
-    legend: [{ color: 'teal', symbol: 'التيار الأصلي = مجموع تياري الفرعين' }],
+    svg: frame('parallel-circuit', 'وصل على التفرع', 'دارة مغلقة: من القطب الموجب يسار المولّد عبر القاطعة المغلقة ثم المقياس A إلى فرعين متوازيين: في الأعلى A1 مع المصباح L1، وفي الأسفل A2 مع مصباح مطبوع عليه L1 في المصدر؛ يلتقي الفرعان ويعود التيار إلى المولّد.', parallelCircuit()),
+    legend: [{ color: 'teal', symbol: 'استنتاج ص94: I = I₁ + I₂ — التيار الأصلي مجموع تياري الفرعين' }],
   },
   'batteries-series': {
     title: 'مولّدات متماثلة على التسلسل',
-    platformNote: 'إعادة بناء تخطيطية من المنصة لشكل الكتاب ص93: أربع خلايا متماثلة، موجب كل خلية إلى سالب التي تليها، والمجموع المطبوع في الكتاب 6 Volts. أرقام الخلايا وعلامتا + و− تسميات من المنصة لتحديد الأجزاء، وليست مطبوعة في الصورة.',
-    description: 'أربع خلايا متماثلة موصولة على التسلسل: يصل سلك من القطب السالب لكل خلية إلى القطب الموجب للخلية التالية، ويقاس مجموع الجهود بين طرفي السلسلة فيكون 6 Volts.',
-    svg: frame('batteries-series', 'وصل على التسلسل', 'سلسلة من أربع خلايا: القطب السالب لكل خلية موصول بالقطب الموجب للخلية التالية، وقوس في الأعلى يبيّن مجموع الجهود 6 Volts.', SERIES_BANK_SVG, 370),
+    platformNote: 'إعادة بناء تخطيطية من المنصة لشكل الكتاب ص93: أربع خلايا متماثلة، موجب كل خلية إلى سالب التي تليها، والمجموع المطبوع في الكتاب 6 Volts. علامتا + و− مطبوعتان على كل خلية، وأرقام الخلايا فقط من المنصة.',
+    description: 'أربع خلايا متماثلة موصولة على التسلسل: يصل سلك من القطب الموجب لكل خلية إلى القطب السالب للخلية التالية، ويقاس مجموع الجهود بين طرفي السلسلة فيكون 6 Volts.',
+    svg: frame('batteries-series', 'وصل على التسلسل', 'سلسلة من أربع خلايا: القطب الموجب لكل خلية موصول بالقطب السالب للخلية التالية، وقوس على اليمين يبيّن مجموع الجهود 6 Volts.', SERIES_BANK_SVG, 370),
     legend: [
-      { color: 'blue', symbol: 'القطب الموجب (+) والسالب (−) على كل خلية، والخلايا تتناوب اتجاهها لتصل السلسلة' },
+      { color: 'blue', symbol: 'القطب الموجب (+) والسالب (−) على كل خلية، وكلها موجَبها أعلى وسالبها أسفل' },
       { color: 'yellow', symbol: `المجموع المطبوع في الكتاب: ${tex('6\\,\\mathrm{Volts}', '6 volts')} لأربع خلايا متماثلة` },
     ],
   },
   'batteries-parallel': {
     title: 'مولّدات متماثلة على التفرع',
-    platformNote: 'إعادة بناء تخطيطية من المنصة لشكل الكتاب ص94: أربع خلايا متماثلة على التفرع، والجهد المطبوع 1.5 Volts. أرقام الخلايا وعلامتا + و− تسميات من المنصة لتحديد الأجزاء.',
+    platformNote: 'إعادة بناء تخطيطية من المنصة لشكل الكتاب ص94: أربع خلايا متماثلة على التفرع، والجهد المطبوع 1.5 Volts. علامتا + و− مطبوعتان على كل خلية، والترقيم من المنصة.',
     description: 'أربع خلايا متماثلة موصولة على التفرع: جميع الأقطاب الموجبة على خط ناقل واحد وجميع السالبة على خط آخر، فيبقى الجهد بين طرفي المجموعة 1.5 Volts.',
     svg: frame('batteries-parallel', 'وصل على التفرع', 'مجموعة على التفرع: خط أعلى يجمع الأقطاب الموجبة وخط أسفل يجمع السالبة، وقوس على اليمين يبيّن 1.5 Volts.', PARALLEL_BANK_SVG, 370),
     legend: [

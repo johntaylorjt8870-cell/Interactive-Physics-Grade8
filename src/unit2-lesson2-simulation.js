@@ -1,5 +1,6 @@
+import { seriesCircuit, parallelCircuit } from './unit2-lesson2-circuits.js';
 import { calculation, tex } from './math.js';
-import { currentFromChargeTime, chargeFromCurrentTime, seriesCurrents, parallelTotal } from './unit2-lesson2-physics.js';
+import { p91Readings, seriesCurrents, parallelTotal } from './unit2-lesson2-physics.js';
 
 const fmt = (v) => {
   if (v === 0) return '0';
@@ -139,7 +140,7 @@ function tubeLabMarkup() {
    <li><span class="u2l2-key-dot is-new" aria-hidden="true"></span>كرة دُفعت الآن</li>
    <li><span class="u2l2-key-dot is-out" aria-hidden="true"></span>كرة خرجت من الطرف الآخر</li>
   </ul>
-  <figcaption>الكرات تمثّل الإلكترونات الحرة الموجودة سلفاً في السلك، والدفع يمثّل تأثير المولّد.</figcaption></figure>
+  <figcaption>الكرات تمثّل الإلكترونات الحرة الموجودة سلفاً في السلك، والدفع يمثّل تأثير المولّد. اخترنا الدفع من اليسار؛ لا تمثّل جهة الدفع جهة تيار اصطلاحي.</figcaption></figure>
   ${conclusionMarkup('sim-tube', 'مطابق لاستنتاج الكتاب ص88: التيار المتواصل انتقال مستمرّ للإلكترونات الحرة باتجاه واحد.')}
   </div></aside>`;
 }
@@ -154,7 +155,7 @@ function rng(id, label, min, max, step, val, unit) {
    full), only the label and the readout do. */
 function currentCanvasSvg() {
   /* Every element sits ON the closed loop and the wire stops at each element,
-     as in the book figure of p89: the battery on the top side, the lamp on the
+     in this platform model of the p90 measuring loop: the battery on the top side, the lamp on the
      right side and the ammeter on the bottom side. The plus terminal is on the
      left, so the conventional current leaves it leftwards, runs down the left
      side, rightwards along the bottom and up through the lamp. The red arrows
@@ -196,7 +197,7 @@ function currentLabMarkup() {
    <button class="simulation-sweep" type="button" data-current-reset>إعادة الضبط</button>
    <div class="simulation-result-grid">
      <div class="simulation-result-cell"><span>شدة التيار I</span><output class="simulation-result-value" data-current-i><bdi dir="ltr">—</bdi></output></div>
-     <div class="simulation-result-cell"><span>q عند ثلاثة أمثال الزمن</span><output class="simulation-result-value" data-current-q3><bdi dir="ltr">—</bdi></output></div>
+     <div class="simulation-result-cell"><span>كمية الكهرباء خلال ثلاث دقائق</span><output class="simulation-result-value" data-current-q3><bdi dir="ltr">—</bdi></output></div>
    </div>
    <div class="simulation-status" role="status" aria-live="polite" data-current-status></div>
    <p class="u2l2-predict">تحقق: عند قيم الكتاب ${tex('q=60\\,\\mathrm{C}', 'q equals 60 C')} و ${tex('t=30\\,\\mathrm{s}', 't equals 30 s')} يجب أن تحصل على ${tex('I=2\\,\\mathrm{A}', 'I equals 2 A')}.</p>
@@ -205,55 +206,6 @@ function currentLabMarkup() {
   <figcaption><div class="u2l2-live-equation" data-current-equation>${currentEquation(60, 30, 2)}</div></figcaption></figure>
   ${conclusionMarkup('sim-current', 'مطابق لاستنتاج الكتاب ص91: النسبة بين كمية الكهرباء والزمن ثابتة وهي تعبّر عن شدة التيار I، وتُحسب بقسمة كمية الكهرباء المارّة على زمن مرورها.')}
   </div></aside>`;
-}
-
-/* The two circuit canvases follow the topology of the p92 and p93 figures:
-   series = one closed loop through G, A1, L1, L2 and A2; parallel = A in the main
-   line and two branches between the same two junctions. Lamps switch off when a
-   lamp is removed, and the ammeter labels follow the mode. */
-const SIM_WIRE = 'u2-wire';
-
-function seriesCanvas() {
-  return `<g data-circuit-canvas="series">
-    <path class="${SIM_WIRE}" d="M120 170 V90 H240"/><path class="${SIM_WIRE}" d="M292 90 H332"/><path class="${SIM_WIRE}" d="M388 90 H442"/>
-    <path class="${SIM_WIRE}" d="M498 90 H600 V164"/><path class="${SIM_WIRE}" d="M600 216 V250 H120 V228"/>
-    <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="24" rx="4"/><rect class="u2l2-battery-neg" x="100" y="204" width="40" height="24" rx="4"/>
-      <text class="u2l2-terminal-sign" data-terminal="positive" x="120" y="198" text-anchor="middle">+</text><text class="u2l2-terminal-sign" data-terminal="negative" x="120" y="223" text-anchor="middle">−</text></g>
-    <g data-part="ammeter"><circle class="u2-ammeter" cx="266" cy="90" r="26"/><text class="u2l2-circuit-label" x="266" y="90" text-anchor="middle" dominant-baseline="central" direction="ltr">A₁</text></g>
-    <g data-part="lamp" data-lamp="1"><circle class="u2l2-lamp-glow" cx="360" cy="90" r="36"/><circle class="u2l2-lamp" cx="360" cy="90" r="28" data-bulb="1"/><path class="u2l2-lamp-x" data-bulb-x="1" d="M340 70 L380 110 M380 70 L340 110"/></g>
-    <g data-part="lamp" data-lamp="2"><circle class="u2l2-lamp-glow" cx="470" cy="90" r="36"/><circle class="u2l2-lamp" cx="470" cy="90" r="28" data-bulb="2"/><path class="u2l2-lamp-x" data-bulb-x="2" d="M450 70 L490 110 M490 70 L450 110"/></g>
-    <g data-part="ammeter"><circle class="u2-ammeter" cx="600" cy="190" r="26"/><text class="u2l2-circuit-label" x="600" y="190" text-anchor="middle" dominant-baseline="central" direction="ltr">A₂</text></g>
-    <text class="u2l2-part-label" x="360" y="40" text-anchor="middle" direction="ltr">L₁</text>
-    <text class="u2l2-part-label" x="470" y="40" text-anchor="middle" direction="ltr">L₂</text>
-    <text class="u2l2-circuit-label" data-series-a1 x="266" y="132" text-anchor="middle" direction="ltr">200 mA</text>
-    <text class="u2l2-circuit-label" data-series-a2 x="546" y="196" text-anchor="end" direction="ltr">200 mA</text>
-    <text class="u2l2-part-label" x="70" y="240" text-anchor="middle" direction="rtl">المولّد</text>
-    <text data-series-caption class="u2l2-part-sub" x="360" y="284" text-anchor="middle" direction="rtl">مسار واحد مغلق: التيار نفسه في كل أجزائه</text>
-  </g>`;
-}
-
-function parallelCanvas() {
-  return `<g data-circuit-canvas="parallel">
-    <path class="${SIM_WIRE}" d="M120 170 H210"/><path class="${SIM_WIRE}" d="M262 170 H320"/><path class="${SIM_WIRE}" d="M320 170 V100 H376 M424 100H448"/>
-    <path class="${SIM_WIRE}" d="M492 100 H520 V170"/><path class="${SIM_WIRE}" d="M320 170 V240 H376 M424 240H448"/><path class="${SIM_WIRE}" d="M492 240 H520 V170"/>
-    <path class="${SIM_WIRE}" d="M520 170 H620 V304 H120 V228"/>
-    <circle class="u2l2-junction" data-junction="320,170" cx="320" cy="170" r="5"/>
-    <circle class="u2l2-junction" data-junction="520,170" cx="520" cy="170" r="5"/>
-    <g data-part="generator"><rect class="u2l2-battery-cap" x="112" y="170" width="16" height="11" rx="3"/><rect class="u2l2-battery-pos" x="100" y="180" width="40" height="24" rx="4"/><rect class="u2l2-battery-neg" x="100" y="204" width="40" height="24" rx="4"/>
-      <text class="u2l2-terminal-sign" data-terminal="positive" x="120" y="198" text-anchor="middle">+</text><text class="u2l2-terminal-sign" data-terminal="negative" x="120" y="223" text-anchor="middle">−</text></g>
-    <g data-part="ammeter"><circle class="u2-ammeter" cx="236" cy="170" r="26"/><text class="u2l2-circuit-label" x="236" y="170" text-anchor="middle" dominant-baseline="central" direction="ltr">A</text></g>
-    <g data-part="ammeter"><circle class="u2-ammeter" cx="400" cy="100" r="24"/><text class="u2l2-circuit-label" x="400" y="100" text-anchor="middle" dominant-baseline="central" direction="ltr">A₁</text></g>
-    <g data-part="lamp" data-lamp="1"><circle class="u2l2-lamp-glow" cx="470" cy="100" r="32"/><circle class="u2l2-lamp" cx="470" cy="100" r="22" data-bulb="1"/><path class="u2l2-lamp-x" data-bulb-x="1" d="M454 84 L486 116 M486 84 L454 116"/></g>
-    <g data-part="ammeter"><circle class="u2-ammeter" cx="400" cy="240" r="24"/><text class="u2l2-circuit-label" x="400" y="240" text-anchor="middle" dominant-baseline="central" direction="ltr">A₂</text></g>
-    <g data-part="lamp" data-lamp="2"><circle class="u2l2-lamp-glow" cx="470" cy="240" r="32"/><circle class="u2l2-lamp" cx="470" cy="240" r="22" data-bulb="2"/><path class="u2l2-lamp-x" data-bulb-x="2" d="M454 224 L486 256 M486 224 L454 256"/></g>
-    <text class="u2l2-part-label" x="470" y="52" text-anchor="middle" direction="ltr">L₁</text>
-    <text class="u2l2-part-label" x="470" y="292" text-anchor="middle" direction="ltr">L₂</text>
-    <text class="u2l2-circuit-label" data-parallel-a x="236" y="212" text-anchor="middle" direction="ltr">300 mA</text>
-    <text class="u2l2-circuit-label" data-parallel-a1 x="400" y="140" text-anchor="middle" direction="ltr">200 mA</text>
-    <text class="u2l2-circuit-label" data-parallel-a2 x="400" y="282" text-anchor="middle" direction="ltr">100 mA</text>
-    <text class="u2l2-part-label" x="66" y="240" text-anchor="middle" direction="rtl">المولّد</text>
-    <text class="u2l2-part-sub" x="360" y="326" text-anchor="middle" direction="rtl">فرعان بين النقطتين نفسيهما: تيار الأصل = مجموع تياري الفرعين</text>
-  </g>`;
 }
 
 function circuitLabMarkup() {
@@ -278,10 +230,10 @@ function circuitLabMarkup() {
    <div class="simulation-status" role="status" aria-live="polite" data-circuit-status></div>
   </section>
   <figure class="simulation-visual"><div class="simulation-svg-wrap"><svg viewBox="0 0 720 330" role="img" aria-labelledby="cc-title cc-desc"><title id="cc-title">دارة تسلسل أو تفرع</title><desc id="cc-desc" data-circuit-desc>دارة تسلسل.</desc>
-   <g data-circuit-canvas-group="series">${seriesCanvas()}</g>
-   <g data-circuit-canvas-group="parallel" class="is-hidden" hidden>${parallelCanvas()}</g>
+   <g data-circuit-canvas-group="series"><g data-circuit-canvas="series">${seriesCircuit(true)}</g></g>
+   <g data-circuit-canvas-group="parallel" class="is-hidden" hidden><g data-circuit-canvas="parallel">${parallelCircuit(true)}</g></g>
   </svg></div>
-  <figcaption>على التسلسل I ثابت؛ على التفرع I = I₁ + I₂ ما دامت الفروع مغلقة. الرسم تخطيطي من المنصة وليس صورة الكتاب.</figcaption></figure>
+  <figcaption>على التسلسل I ثابت؛ على التفرع I = I₁ + I₂ ما دامت الفروع مغلقة. القراءتان 200 mA في شكل التسلسل المطبوع. قراءات التفرع في المختبر أمثلة من المنصة؛ نسمّي المصباح الثاني L₂ هنا لتمييزه.</figcaption></figure>
   ${conclusionMarkup('sim-circuit', 'مطابق لاستنتاج الكتاب ص92 وص94: شدة التيار ثابتة في جميع أجزاء الدارة الموصولة على التسلسل، ومجموع تياري الفرعين يساوي التيار الأصلي على التفرع.')}
   </div></aside>`;
 }
@@ -439,14 +391,13 @@ export function mountUnit2l2Simulations(scope) {
         const out = root.querySelector(`output[for="${inp.id}"]`);
         if (out) out.innerHTML = `<bdi dir="ltr">${inp.value} ${inp.id === 'cq' ? 'C' : 's'}</bdi>`;
       });
-      const r = currentFromChargeTime(charge, time);
-      const later = chargeFromCurrentTime(r.current, time * 3);
-      q('[data-current-i]').innerHTML = `<bdi dir="ltr">${fmt(r.current)} A</bdi>`;
-      q('[data-current-q3]').innerHTML = `<bdi dir="ltr">${fmt(later.charge)} C</bdi>`;
-      q('[data-current-equation]').innerHTML = currentEquation(charge, time, r.current);
-      q('[data-current-status]').innerHTML = `شدة التيار <bdi dir="ltr">${fmt(r.current)} A</bdi>: تمر <bdi dir="ltr">${fmt(charge)} C</bdi> خلال <bdi dir="ltr">${fmt(time)} s</bdi>. إذا بقي التيار ثابتاً فإن كمية الكهرباء خلال ثلاثة أمثال الزمن تساوي <bdi dir="ltr">${fmt(later.charge)} C</bdi>.`;
-      q('[data-current-desc]').textContent = `تيار متواصل شدته ${fmt(r.current)} أمبير.`;
-      q('[data-current-label]').textContent = `I = ${fmt(r.current)} A`;
+      const { current, chargeInThreeMinutes } = p91Readings(charge, time);
+      q('[data-current-i]').innerHTML = `<bdi dir="ltr">${fmt(current)} A</bdi>`;
+      q('[data-current-q3]').innerHTML = `<bdi dir="ltr">${fmt(chargeInThreeMinutes)} C</bdi>`;
+      q('[data-current-equation]').innerHTML = currentEquation(charge, time, current);
+      q('[data-current-status]').innerHTML = `شدة التيار <bdi dir="ltr">${fmt(current)} A</bdi>: تمر <bdi dir="ltr">${fmt(charge)} C</bdi> خلال <bdi dir="ltr">${fmt(time)} s</bdi>. إذا بقي التيار ثابتاً فإن كمية الكهرباء خلال ثلاث دقائق تساوي <bdi dir="ltr">${fmt(chargeInThreeMinutes)} C</bdi>.`;
+      q('[data-current-desc]').textContent = `تيار متواصل شدته ${fmt(current)} أمبير.`;
+      q('[data-current-label]').textContent = `I = ${fmt(current)} A`;
     }
     root.addEventListener('input', () => {
       update();

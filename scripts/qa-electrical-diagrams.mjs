@@ -1,21 +1,23 @@
 /* Laptop-only audit. Start `npm start` at the checkout root. Then set
  * QA_MODULE_DIR to an installation containing playwright-core and CHROMIUM_PATH
  * to Chromium. No detached fixtures, injected diagrams, zoom or teacher unlocks.
+ * QA_SCOPE=dc runs only pp87–96, their notebook, appendix and lesson test.
  * Optional: QA_OUTPUT_DIR (default below), QA_MATCH (recapture matching names).
  */
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-const require = createRequire(
-  process.env.QA_MODULE_DIR ? `${process.env.QA_MODULE_DIR}/entry.cjs` : import.meta.url,
-);
+const require = createRequire(process.env.QA_MODULE_DIR ? `${process.env.QA_MODULE_DIR}/entry.cjs` : import.meta.url);
 const { chromium } = require('playwright-core');
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH,
   args: ['--no-sandbox', '--disable-dev-shm-usage'],
 });
-const out = process.env.QA_OUTPUT_DIR || 'docs/qa/electrical-diagrams-audit';
+const dcOnly = process.env.QA_SCOPE === 'dc';
+const out =
+  process.env.QA_OUTPUT_DIR ||
+  (dcOnly ? 'docs/qa/electrical-diagrams-audit/dc-source' : 'docs/qa/electrical-diagrams-audit');
 const base = process.env.QA_BASE_URL || 'http://127.0.0.1:4173';
 const records = [],
   errors = [],
@@ -135,6 +137,147 @@ try {
         await snap(`l${n}-${copy ? 'nb' : 'p'}${p}-${id}`, selector);
       }
     };
+    const checkDc = async () => {
+      await go('unit2-lesson-2');
+      const d2 = [
+        [87, 'intro-scenes'],
+        [89, 'current-direction'],
+        [92, 'series-circuit'],
+        [90, 'qt-graph'],
+        [93, 'batteries-series'],
+        [93, 'parallel-circuit'],
+        [94, 'batteries-parallel'],
+      ];
+      await indexed(2, 87, 10, d2);
+      await indexed(2, 87, 10, d2, true);
+      for (const [p, id] of [
+        [88, 'tl'],
+        [90, 'p90-graph'],
+        [91, 'cl'],
+      ]) {
+        await step(p - 87);
+        await snap(`l2-p${p}-${id}`, byTitle(id));
+      }
+      if (dcOnly) {
+        await step(10);
+        await snap('l2-nb89-current-table', 'table:has(caption:has-text("اصطلاح أمبير"))');
+        await snap('l2-nb90-source-table', 'table:has(caption:has-text("الخلايا الفارغة مطبوعة"))');
+        await snap('l2-nb90-completed-table', 'table:has(caption:has-text("الجدول بعد الإتمام"))');
+        await snap('l2-nb95-curve-table', 'table:has(caption:has-text("المنحنيات الأربعة"))');
+        await step(1);
+        await snap('l2-p88-source-arrows', '.source-reference-inline:has-text("كلاهما")');
+        await click('[data-tube-push="3"]');
+        assert.equal(await text('[data-tube-exited]'), '3');
+        await snap('l2-p88-tube-push', byTitle('tl'));
+        await step(4);
+        assert.equal(await text('[data-current-i]'), '2 A');
+        assert.equal(await text('[data-current-q3]'), '360 C');
+        await snap('l2-p91-book-readings', '[data-u2l2-sim="current"] .simulation-result-grid');
+        await loc('#ct').fill('60');
+        assert.equal(await text('[data-current-q3]'), '180 C'); // 1 A for three minutes, NOT three times the slider
+        await click('[data-current-reset]');
+        assert.equal(await text('[data-current-q3]'), '360 C');
+      }
+      await step(3);
+      const construction = loc('[data-constructed-line]');
+      assert.equal(await construction.getAttribute('points'), null);
+      for (const t of [5, 10, 15, 20, 25])
+        await page.locator(`[data-graph-point="${t},${4 * t}"] .u2l2-graph-hit`).dispatchEvent('click');
+      await click('[data-u2l2-practice="p90-graph"] [data-practice-action="check"]');
+      await page.waitForFunction(() => !document.querySelector('[data-u2l2-practice="p90-graph"][aria-busy]'));
+      assert.equal(await page.locator('.u2l2-graph-point.is-correct').count(), 5);
+      assert.equal(await construction.getAttribute('points'), '80,300 160,260 240,220 320,180 400,140 480,100');
+      await snap('l2-p90-placed', byTitle('p90-graph'));
+      const removePoint = () => loc('[data-graph-point="5,20"] .u2l2-graph-hit').dispatchEvent('click');
+      await removePoint();
+      assert.equal(await construction.getAttribute('points'), null);
+      await removePoint();
+      await click('[data-u2l2-practice="p90-graph"] [data-practice-action="check"]');
+      await page.waitForFunction(() => document.querySelector('[data-constructed-line]').hasAttribute('points'));
+      await click('[data-u2l2-practice="p90-graph"] [data-practice-action="reset"]');
+      assert.equal(await construction.getAttribute('points'), null);
+      await step(6);
+      for (const mode of ['series', 'parallel']) {
+        await click(`[data-circuit-mode="${mode}"]`);
+        for (const removed of [false, true]) {
+          if (removed) await click('[data-circuit-remove]');
+          const s = `[data-circuit-canvas="${mode}"]`;
+          assert.equal(await shown(`${s} [data-lamp="2"]`), !removed);
+          const meters = await page.locator(`${s} [data-${mode}-a1], ${s} [data-${mode}-a2]`).allTextContents();
+          assert.deepEqual(
+            meters,
+            mode === 'series'
+              ? removed
+                ? ['0 mA', '0 mA']
+                : ['200 mA', '200 mA']
+              : removed
+                ? ['200 mA', '0 mA']
+                : ['200 mA', '100 mA'],
+          );
+          assert.equal(
+            await text('[data-circuit-src]'),
+            (mode === 'series' ? (removed ? 0 : 200) : removed ? 200 : 300) + ' mA',
+          );
+          await snap(`l2-p93-${mode}-${removed ? 'removed' : 'closed'}`, byTitle('cc'));
+        }
+      }
+      await step(8);
+      const curves = '[data-u2l2-practice="p95-q3"]';
+      await snap(dcOnly ? 'l2-p95-curves-a-d' : 'l2-p95-curve-b', `${curves} fieldset`);
+      if (dcOnly) {
+        await click(`${curves} input[value="d"]`);
+        await click(`${curves} [data-practice-action="check"]`);
+        await page.waitForFunction(() => !document.querySelector('[data-u2l2-practice="p95-q3"][aria-busy]'));
+        await click(`${curves} [data-practice-action="solution"]`);
+        await loc(`${curves} [data-practice-solution]`).waitFor({ state: 'visible' });
+        await snap('l2-p95-model-solution', `${curves} [data-practice-solution]`);
+      }
+      await go('unit2-lesson-2-appendix');
+      await snap('l2-app-hero', '.u2l2a-hero-art svg');
+      for (const s of ['origin', 'electrons', 'direction']) {
+        await station(s);
+        if (s === 'origin') await click('[data-origin-switch]');
+        if (s === 'electrons') await click('[data-drift-circuit]');
+        if (s === 'direction') {
+          assert.equal(await shown('[data-layer="electrons"]'), false);
+          await click('[data-direction-toggle="electrons"]');
+          assert.equal(await shown('[data-layer="electrons"]'), true);
+          assert.equal(await loc('[data-direction-toggle="electrons"]').getAttribute('aria-pressed'), 'true');
+        }
+        await snap(`l2-app-${s}`, `svg[data-scene="${s}-scene"]`);
+      }
+      await station('ammeter');
+      await click('[data-lab-book]');
+      await snap('l2-app-dial', '.u2l2a-dial-svg');
+      await station('map');
+      await snap('l2-app-map', '[data-map-svg]');
+    };
+    const checkAssessment = async (route, items) => {
+      const rendered = [];
+      await go(route);
+      await click('[data-action="start"]');
+      for (const [n, id] of items) {
+        await click(`[data-action="go-question"][data-index="${n - 1}"]`);
+        const s = id === 'ui' ? '.r4-graph-svg' : '.assessment-figure svg';
+        if (id === 'ui')
+          assert.notEqual(await loc('.r4-plot-line').evaluate((e) => getComputedStyle(e).stroke), 'none');
+        rendered.push([n, id, await loc(s).getAttribute('aria-labelledby')]);
+        await snap(`${route}-q${n}-${id}`, s);
+      }
+      await click('[data-action="attempt-submit"]');
+      await click('[data-dialog-action="confirm-submit"]');
+      for (const [n, id, title] of rendered)
+        await snap(`${route}-solution-q${n}-${id}`, `.solution-item svg[aria-labelledby="${title}"]`);
+    };
+    if (dcOnly) {
+      await checkDc();
+      await checkAssessment('unit2-lesson-2-test', [
+        [4, 'directions'],
+        [14, 'qt'],
+      ]);
+      await page.close();
+      continue;
+    }
     await go('unit2-lesson-1');
     const d1 = [
       [74, 'electroscope-parts'],
@@ -259,79 +402,7 @@ try {
         await snap(`l1-app-${method}-${state}`, s);
       }
     }
-    await go('unit2-lesson-2');
-    const d2 = [
-      [87, 'intro-scenes'],
-      [89, 'current-direction'],
-      [92, 'series-circuit'],
-      [90, 'qt-graph'],
-      [93, 'batteries-series'],
-      [93, 'parallel-circuit'],
-      [94, 'batteries-parallel'],
-    ];
-    await indexed(2, 87, 10, d2);
-    await indexed(2, 87, 10, d2, true);
-    for (const [p, id] of [
-      [88, 'tl'],
-      [90, 'p90-graph'],
-      [91, 'cl'],
-    ]) {
-      await step(p - 87);
-      await snap(`l2-p${p}-${id}`, byTitle(id));
-    }
-    await step(3);
-    for (const t of [5, 10, 15, 20, 25])
-      await page.locator(`[data-graph-point="${t},${4 * t}"] .u2l2-graph-hit`).dispatchEvent('click');
-    await click('[data-u2l2-practice="p90-graph"] [data-practice-action="check"]');
-    await page.waitForFunction(() => !document.querySelector('[data-u2l2-practice="p90-graph"][aria-busy]'));
-    assert.equal(await page.locator('.u2l2-graph-point.is-correct').count(), 5);
-    await snap('l2-p90-placed', byTitle('p90-graph'));
-    await step(6);
-    for (const mode of ['series', 'parallel']) {
-      await click(`[data-circuit-mode="${mode}"]`);
-      for (const removed of [false, true]) {
-        if (removed) await click('[data-circuit-remove]');
-        const s = `[data-circuit-canvas="${mode}"]`;
-        assert.equal(await shown(`${s} [data-lamp="2"]`), !removed);
-        const meters = await page.locator(`${s} [data-${mode}-a1], ${s} [data-${mode}-a2]`).allTextContents();
-        assert.deepEqual(
-          meters,
-          mode === 'series'
-            ? removed
-              ? ['0 mA', '0 mA']
-              : ['200 mA', '200 mA']
-            : removed
-              ? ['200 mA', '0 mA']
-              : ['200 mA', '100 mA'],
-        );
-        assert.equal(
-          await text('[data-circuit-src]'),
-          (mode === 'series' ? (removed ? 0 : 200) : removed ? 200 : 300) + ' mA',
-        );
-        await snap(`l2-p93-${mode}-${removed ? 'removed' : 'closed'}`, byTitle('cc'));
-      }
-    }
-    await step(8);
-    await snap('l2-p95-curve-b', '.u2l2-curve-option:has(svg[aria-label="منحنى b"])');
-    await go('unit2-lesson-2-appendix');
-    await snap('l2-app-hero', '.u2l2a-hero-art svg');
-    for (const s of ['origin', 'electrons', 'direction']) {
-      await station(s);
-      if (s === 'origin') await click('[data-origin-switch]');
-      if (s === 'electrons') await click('[data-drift-circuit]');
-      if (s === 'direction') {
-        assert.equal(await shown('[data-layer="electrons"]'), false);
-        await click('[data-direction-toggle="electrons"]');
-        assert.equal(await shown('[data-layer="electrons"]'), true);
-        assert.equal(await loc('[data-direction-toggle="electrons"]').getAttribute('aria-pressed'), 'true');
-      }
-      await snap(`l2-app-${s}`, `svg[data-scene="${s}-scene"]`);
-    }
-    await station('ammeter');
-    await click('[data-lab-book]');
-    await snap('l2-app-dial', '.u2l2a-dial-svg');
-    await station('map');
-    await snap('l2-app-map', '[data-map-svg]');
+    await checkDc();
     await go('unit2-lesson-3');
     await snap('l3-hero', '.p3-hero-visual svg');
     const d3 = [
@@ -406,10 +477,7 @@ try {
       if (s === 'sum')
         for (const layout of ['series2', 'series3', 'parallel2']) {
           await click(`[data-sum-layout="${layout}"]`);
-          assert.equal(
-            await page.locator('[data-scene="sum"] .u2l3a-lamp-body').count(),
-            layout === 'series3' ? 3 : 2,
-          );
+          assert.equal(await page.locator('[data-scene="sum"] .u2l3a-lamp-body').count(), layout === 'series3' ? 3 : 2);
           await snap(`l3-app-sum-${layout}`, '[data-scene="sum"]');
         }
       if (s === 'detective') await snap('l3-app-probe-dt1', '[data-scene="q-dt1"]');
@@ -508,21 +576,7 @@ try {
         ],
       ],
     ]) {
-      const rendered = [];
-      await go(route);
-      await click('[data-action="start"]');
-      for (const [n, id] of items) {
-        await click(`[data-action="go-question"][data-index="${n - 1}"]`);
-        const s = id === 'ui' ? '.r4-graph-svg' : '.assessment-figure svg';
-        if (id === 'ui')
-          assert.notEqual(await loc('.r4-plot-line').evaluate((e) => getComputedStyle(e).stroke), 'none');
-        rendered.push([n, id, await loc(s).getAttribute('aria-labelledby')]);
-        await snap(`${route}-q${n}-${id}`, s);
-      }
-      await click('[data-action="attempt-submit"]');
-      await click('[data-dialog-action="confirm-submit"]');
-      for (const [n, id, title] of rendered)
-        await snap(`${route}-solution-q${n}-${id}`, `.solution-item svg[aria-labelledby="${title}"]`);
+      await checkAssessment(route, items);
     }
     await go('unit2-exercises');
     for (const id of ['charge', 'circuit']) await snap(`ex-p122-${id}`, byTitle(id));

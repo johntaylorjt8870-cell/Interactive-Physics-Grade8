@@ -17,6 +17,11 @@ import { unit2AssessmentDiagram as unitTest } from '../src/unit-2-test-diagrams.
 import { benchSceneMarkup } from '../src/unit2-lesson3-appendix.js';
 import { createCircuit } from '../src/unit2-lesson3-appendix-physics.js';
 import { circuitMarkup } from '../src/unit2-lesson4-simulations.js';
+import { UNIT2L2_PAGES } from '../src/unit2-lesson2-content.js';
+import { UNIT2L2_NOTEBOOK_BLOCK as notebook } from '../src/unit2-lesson2-notebook.js';
+import { ORIGIN_SCENE_NOTE } from '../src/unit2-lesson2-appendix-content.js';
+import { unit2l2Answer } from '../src/unit2-lesson2-answers.js';
+import * as dcPhysics from '../src/unit2-lesson2-physics.js';
 import { unit2l2PracticeMarkup } from '../src/unit2-lesson2-practice.js';
 
 const file = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -155,33 +160,36 @@ test('E04 · p87 two lamps, source and switch really in one loop; lever closes b
   const svg = current['intro-scenes'].svg;
   nets(copper(svg, 'u2-wire'), [
     [
-      [462, 130],
-      [544, 130],
+      [460, 145],
+      [520, 112],
+    ], // holder (two visible cells) to switch
+    [
+      [580, 112],
+      [636, 205],
     ],
     [
-      [576, 130],
-      [650, 150],
-    ],
+      [604, 205],
+      [554, 205],
+    ], // the wire BETWEEN the two lamps, as photographed
     [
-      [650, 184],
-      [576, 196],
-    ],
-    [
-      [544, 196],
-      [416, 130],
+      [522, 205],
+      [460, 173],
     ],
   ]);
   const lever = tags(svg, 'line').find((p) => cls(p, 'u2l2-switch-lever'));
   assert.deepEqual([num(lever, 'x1', 'y1'), num(lever, 'x2', 'y2')], points(svg, 'u2l2-switch-contact'));
 });
 test('E05 · q(t) measured points are distinguished from the origin and match assessment ticks and slopes', () => {
-  const svg = current['qt-graph'].svg,
-    pairs = attr(tags(svg, 'polyline')[0], 'points')
-      .split(' ')
-      .map((p) => p.split(',').map(Number));
-  assert.deepEqual(pairs[0], [80, 300]);
-  assert.deepEqual(pairs.slice(1), points(svg, 'u2-plot'));
-  for (const [x, y] of pairs.slice(1)) near((300 - y) / 2 / ((x - 80) / 16), 4);
+  const svg = current['qt-graph'].svg;
+  const dots = points(svg, 'u2-plot');
+  assert.equal(dots.length, 5);
+  assert.equal(tags(svg, 'polyline').length, 0, 'no pre-drawn construction on the printed p90 grid');
+  for (const [i, [x, y]] of dots.entries()) {
+    const t = (x - 80) / 16,
+      q = (300 - y) / 2;
+    assert.equal(t, (i + 1) * 5);
+    near(q / t, 4);
+  }
   const test = currentTest({ diagram: 'qt' });
   for (const t of tags(test, 'circle')) {
     const [x, y] = num(t, 'cx', 'cy');
@@ -199,31 +207,34 @@ test('E06 · p93 digital boards break the conductor at the removable bulb and bo
   const boards = currentLab('circuit-lab').split('data-circuit-canvas="');
   nets(copper(boards[1], 'u2-wire'), [
     [
-      [120, 170],
-      [240, 90],
+      [105, 146],
+      [213, 75],
     ],
     [
-      [292, 90],
-      [332, 90],
+      [257, 75],
+      [478, 75],
     ],
     [
-      [388, 90],
-      [442, 90],
+      [526, 75],
+      [524, 246],
     ],
     [
-      [498, 90],
-      [600, 164],
+      [480, 246],
+      [259, 246],
     ],
     [
-      [600, 216],
-      [120, 228],
+      [211, 246],
+      [105, 177],
     ],
   ]);
   const svg = boards[2],
     segs = copper(svg, 'u2-wire');
   for (const t of tags(svg, 'circle').filter((t) => cls(t, 'u2-ammeter') || cls(t, 'u2l2-lamp'))) {
     const [x, y, r] = num(t, 'cx', 'cy', 'r');
-    nets(segs, [[[x - r, y]], [[x + r, y]]]);
+    const vertical = cls(t, 'u2-ammeter') && y < Math.min(...points(svg, 'u2l2-junction').map((p) => p[1]));
+    const dx = vertical ? 0 : r,
+      dy = vertical ? r : 0;
+    nets(segs, [[[x - dx, y - dy]], [[x + dx, y + dy]]]);
     assert.ok(!segs.some((s) => on([x, y], s)), 'no wire through glass or meter');
   }
 });
@@ -831,14 +842,14 @@ test('E21 · p89 each pair of polygon tips follows its copper segment, I from + 
   nets(wire, [
     [
       [302, 110],
-      [170, 192],
+      [217, 330],
     ],
     [
-      [170, 248],
-      [550, 246],
+      [273, 330],
+      [449, 330],
     ],
     [
-      [550, 194],
+      [495, 330],
       [410, 110],
     ],
   ]);
@@ -888,13 +899,14 @@ test('E22 · pp93–94 four real cell faces, series polarity and parallel buses;
     // drawn toward or away from its rail; only its two contact points matter.
     const ends = bracket.flat().filter((p) => w.some((s) => on(p, s)));
     assert.equal(ends.length, 2);
-    const axis = mode === 'series' ? 0 : 1;
-    ends.sort((a, b) => a[axis] - b[axis]);
+    ends.sort((a, b) => a[1] - b[1]); // free terminals on the right, + above −
+    assert.ok(cells.every(([plus, minus]) => plus[1] < minus[1]));
+    assert.ok(ends.every(([x]) => x > Math.max(...cells.map(([p]) => p[0]))));
     if (mode === 'series') {
       nets(w, [
-        [cells[0][0], ends[0]],
-        ...cells.slice(1).map(([plus], i) => [cells[i][1], plus]),
-        [cells[3][1], ends[1]],
+        [cells[3][0], ends[0]],
+        ...cells.slice(1).map(([, minus], i) => [cells[i][0], minus]),
+        [cells[0][1], ends[1]],
       ]);
     } else {
       nets(w, [...ends.map((end, i) => [end, ...cells.map((c) => c[i])])]);
@@ -1015,4 +1027,216 @@ test('E24 · unit Q41: read both scales from printed ticks, recover the three ac
     near(u, 3 * (n + 1));
     near(u / i, 3);
   });
+});
+
+// DC01…10: independent expectations read from image-1…10 (pp87–96).
+// The photos are the oracle; the notebook and both lab boards are consumers.
+const dcPage = (n) => UNIT2L2_PAGES.find((p) => p.page === n).blocks;
+const book = (n) =>
+  dcPage(n)
+    .filter((b) => b.type === 'book')
+    .map((b) => b.html)
+    .join('');
+const board = (mode) =>
+  currentLab('circuit-lab').split('data-circuit-canvas="')[mode === 'series' ? 1 : 2].split('</svg>')[0];
+const signs = (s) =>
+  [...s.matchAll(/(<text\b[^>]*>)([+−])<\/text>/g)].map(([, t, glyph]) => ({ glyph, at: num(t, 'x', 'y') }));
+
+test('DC01 · p87 two adjacent horizontal cells in one holder; two loads, no asserted internal wiring', () => {
+  const svg = current['intro-scenes'].svg;
+  const rows = tags(svg, 'rect')
+    .filter((r) => cls(r, 'u2l2-holder-cell'))
+    .map((r) => num(r, 'x', 'y', 'width', 'height'));
+  assert.equal(rows.length, 2);
+  assert.ok(rows.every((r) => r[2] > r[3]) && rows[0][0] === rows[1][0] && rows[0][1] + rows[0][3] < rows[1][1]);
+  assert.equal(points(svg, 'u2l2-lamp').length, 2);
+  assert.ok(copper(svg, 'u2-wire').every((s) => !rows.some(([x, y, w, h]) => on([x + w / 2, y + h / 2], s))));
+  assert.equal(signs(svg).length, 0, 'no guessed individual poles');
+  assert.match(ORIGIN_SCENE_NOTE, /برمز واحد/); // independent common-switch experiment, not the holder photograph
+});
+
+test('DC02 · p88 both blue conductor arrows point LEFT; the push from one chosen end is a different model', () => {
+  const reference = book(88).match(/<span class="source-reference-inline">[\s\S]*?<\/span>/)[0];
+  assert.match(reference, /سهمان.*كلاهما.*اليسار/);
+  assert.doesNotMatch(reference, /متعاكس/);
+  assert.match(book(88), /من أحد طرفي الأنبوب/);
+  assert.match(currentLab('tube-lab'), /اخترنا الدفع من اليسار/);
+});
+
+test('DC03 · p89 lamp and switch interrupt the BOTTOM run; printed e is outside the cell, not drift inside it', () => {
+  const svg = current['current-direction'].svg;
+  const [[x, y]] = points(svg, 'u2l2-lamp');
+  const contacts = points(svg, 'u2l2-switch-contact');
+  const bottom = Math.max(
+    ...copper(svg, 'u2-wire')
+      .flat()
+      .map((p) => p[1]),
+  );
+  assert.equal(y, bottom);
+  assert.ok(contacts.every(([sx, sy]) => y === sy && x < sx));
+  assert.match(svg, />e<\/text>/);
+  assert.match(notebook, /أسهم زرقاء خارج الحلقة/);
+  assert.doesNotMatch(notebook, /من القطب الموجب إلى السالب داخل المولّد/);
+  assert.match(currentTest({ diagram: 'directions' }), /سهم أصفر/); // its own question and key
+});
+
+test('DC04 · p90 distinguish the five printed dots, five blank cells, learner construction and authored q14', () => {
+  const blanks = [...book(90).matchAll(/<tr><th>[\s\S]*?<\/th>((?:<td>.*?<\/td>){5})<\/tr>/g)].map(([, row]) =>
+    [...row.matchAll(/<td>(.*?)<\/td>/g)].map((m) => m[1]),
+  );
+  assert.deepEqual(blanks, [
+    ['5', '10', '', '20', ''],
+    ['4', '', '4', '', ''],
+  ]);
+  assert.match(notebook, /خانات النسبة الثلاث الناقصة/);
+  const ref = current['qt-graph'].svg;
+  assert.match(ref, />q \(c\)</);
+  const task = unit2l2PracticeMarkup('p90-graph');
+  const construction = tags(task, 'polyline').find((e) => e.includes('data-constructed-line'));
+  assert.ok(construction && !attr(construction, 'points'), 'no answer path before the attempt');
+  assert.ok(
+    dcPhysics.gradeGraphPoints([
+      [5, 20],
+      [10, 40],
+      [15, 60],
+      [20, 80],
+      [25, 100],
+    ]).correct,
+  );
+  assert.equal(tags(currentTest({ diagram: 'qt' }), 'circle').length, 3, 'q14 is NOT the printed p90 grid');
+});
+
+test('DC05 · p91 60 C in 30 s ⇒ 2 A, then 360 C in three MINUTES, not three sampling intervals', () => {
+  assert.equal(dcPage(91).filter((b) => b.type === 'diagram').length, 0);
+  assert.deepEqual(dcPhysics.p91Readings(60, 30), { current: 2, chargeInThreeMinutes: 360 });
+  assert.deepEqual(dcPhysics.p91Readings(60, 20), { current: 3, chargeInThreeMinutes: 540 });
+  assert.match(currentLab('current-lab'), /كمية الكهرباء خلال ثلاث دقائق/);
+});
+
+test('DC06 · p92 source has long upper plate; current enters A₁ from LEFT and A₂ from RIGHT on both boards', () => {
+  for (const svg of [current['series-circuit'].svg, board('series')]) {
+    plateCheck(svg, 'u2l2-plate');
+    const [[long]] = copper(svg, 'u2l2-plate-long'),
+      [[short]] = copper(svg, 'u2l2-plate-short');
+    assert.ok(long[1] < short[1]);
+    const meters = points(svg, 'u2-ammeter').sort((a, b) => a[1] - b[1]);
+    const lamps = points(svg, 'u2l2-lamp');
+    assert.equal(meters.length, 2);
+    for (const [i, [x, y]] of meters.entries()) {
+      const lamp = lamps.find((p) => p[1] === y);
+      const side = i === 0 ? 1 : -1; // sign of travel in SVG x
+      assert.ok(lamp && (lamp[0] - x) * side > 0, 'meter before lamp');
+      const nearest = signs(svg)
+        .sort((a, b) => Math.hypot(a.at[0] - x, a.at[1] - y) - Math.hypot(b.at[0] - x, b.at[1] - y))
+        .slice(0, 2);
+      assert.equal(new Set(nearest.map((s) => s.glyph)).size, 2);
+      for (const s of nearest) assert.equal(Math.sign((x - s.at[0]) * side), s.glyph === '+' ? 1 : -1);
+    }
+    const readings = [...svg.matchAll(/(<text\b[^>]*>)(?:I = )?200 mA<\/text>/g)].map(([, t]) => num(t, 'x', 'y'));
+    assert.equal(readings.length, 2);
+    for (const [x, y] of meters) assert.ok(readings.some(([rx, ry]) => Math.abs(x - rx) < 30 && Math.abs(y - ry) < 65));
+  }
+});
+
+test('DC07 · p93 closed switch from the + plate to A BEFORE the split, not across the rails or inside a branch', () => {
+  for (const svg of [current['parallel-circuit'].svg, board('parallel')]) {
+    plateCheck(svg, 'u2l2-plate');
+    const segs = copper(svg, 'u2-wire'),
+      contacts = points(svg, 'u2l2-switch-contact').sort((a, b) => a[0] - b[0]);
+    assert.equal(contacts.length, 2);
+    const lever = tags(svg, 'line').find((e) => cls(e, 'u2l2-switch-lever'));
+    assert.deepEqual([num(lever, 'x1', 'y1'), num(lever, 'x2', 'y2')], contacts);
+    // Derive plate centres and meter ports from the drawn faces, not their declared netlist.
+    const plate = (type) => {
+      const [[a, b]] = copper(svg, 'u2l2-plate-' + type);
+      return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    };
+    const [a, a1, a2] = tags(svg, 'circle')
+      .filter((e) => cls(e, 'u2-ammeter'))
+      .map((e) => num(e, 'cx', 'cy', 'r'))
+      .sort((l, r) => l[1] - r[1]);
+    assert.ok(contacts[1][0] < plate('long')[0] && plate('long')[0] < plate('short')[0]);
+    assert.ok(contacts.every((p) => p[1] === plate('long')[1] && p[1] < a[1]));
+    const [l1, l2] = tags(svg, 'circle')
+      .filter((e) => cls(e, 'u2l2-lamp'))
+      .map((e) => num(e, 'cx', 'cy', 'r'))
+      .sort((l, r) => l[1] - r[1]);
+    const port = ([x, y, r], dx, dy) => [x + dx * r, y + dy * r];
+    nets(segs, [
+      [plate('long'), contacts[1]],
+      [contacts[0], port(a, 0, -1)],
+      [port(a, 0, 1), port(a1, -1, 0), port(a2, -1, 0)],
+      [port(a1, 1, 0), port(l1, -1, 0)],
+      [port(a2, 1, 0), port(l2, -1, 0)],
+      [port(l1, 1, 0), port(l2, 1, 0), plate('short')],
+    ]);
+  }
+  assert.equal((current['parallel-circuit'].svg.match(/>L₁<\/text>/g) || []).length, 2);
+  assert.doesNotMatch(current['parallel-circuit'].svg, /\d+ mA|>I =/);
+  assert.match(board('parallel'), />L₂<\/text>/);
+});
+
+test('DC08 · pp93–94 both banks show the four PRINTED pairs of signs, only cell numbers are annotations', () => {
+  for (const mode of ['series', 'parallel']) {
+    const bank = current[`batteries-${mode}`];
+    assert.match(bank.platformNote, /علامتا \+ و− مطبوعتان/);
+    const byX = new Map();
+    for (const {
+      at: [x, y],
+      glyph,
+    } of signs(bank.svg))
+      byX.set(x, [...(byX.get(x) || []), [y, glyph]]);
+    assert.equal(byX.size, 4);
+    for (const pair of byX.values())
+      assert.deepEqual(
+        pair.sort((a, b) => a[0] - b[0]).map((p) => p[1]),
+        ['+', '−'],
+      );
+    const label = bank.svg.match(/<text[^>]+>[^<]*Volts</)[0];
+    assert.ok(num(label, 'x')[0] > Math.max(...byX.keys()), 'voltage is across the free terminals on the right');
+  }
+});
+
+test('DC09 · p95 sample the four traces relative to THEIR axes, including b endpoints and negative c plateau', () => {
+  const chart = (id) => {
+    const svg = unit2l2PracticeMarkup('p95-q3').match(
+      new RegExp(`<svg[^>]*aria-label="منحنى ${id}"[\\s\\S]*?</svg>`),
+    )[0];
+    const [h, v] = tags(svg, 'line').filter((e) => cls(e, 'u2-axis'));
+    assert.match(svg, />I<\/text>/);
+    assert.match(svg, />t<\/text>/);
+    return { axis: num(h, 'y1')[0], x0: num(v, 'x1')[0], d: attr(tags(svg, 'path')[0], 'd') };
+  };
+  const a = chart('a'),
+    an = nums(a.d);
+  assert.ok(an[1] < an[7] && an[7] < a.axis && a.axis - an[7] < (a.axis - an[1]) / 8);
+  assert.ok(
+    (an[3] - an[1]) / (an[2] - an[0]) > (an[7] - an[5]) / (an[6] - an[4]),
+    'steep fall initially, flatten at the tail',
+  );
+  const b = chart('b'),
+    bn = nums(b.d);
+  assert.deepEqual(bn.slice(0, 2), [b.x0, b.axis]);
+  assert.equal(bn.at(-1), b.axis);
+  assert.deepEqual(
+    [0, 6, 12].map((i) => Math.sign(b.axis - (bn[i + 1] + 3 * bn[i + 3] + 3 * bn[i + 5] + bn[i + 7]) / 8)),
+    [1, -1, 1],
+  );
+  const c = chart('c'),
+    levels = lines(c.d)
+      .filter(([l, r]) => l[1] === r[1])
+      .map(([l]) => c.axis - l[1]);
+  assert.deepEqual(levels.map(Math.sign), [1, -1, 1]);
+  assert.ok(levels[0] > levels[2]);
+  const d = chart('d'),
+    [[l, r]] = lines(d.d);
+  assert.ok(l[0] < d.x0 && d.x0 < r[0] && l[1] === r[1] && l[1] < d.axis);
+  assert.equal(unit2l2Answer('p95-q3').correct, 'd');
+});
+
+test('DC10 · p96 has text, not another circuit: preserve the given 12 c, 2 min and 5 min', () => {
+  assert.equal(dcPage(96).filter((b) => b.type === 'diagram' || b.type === 'simulation').length, 0);
+  assert.match(book(96), /12\\,\\mathrm\{c\}/);
+  assert.deepEqual(dcPhysics.P96_DATA, { chargeC: 12, timeMin: 2, laterMin: 5 });
+  assert.deepEqual(dcPhysics.solveP96Question5(), { seconds: 120, laterSeconds: 300, current: 0.1, charge: 30 });
 });

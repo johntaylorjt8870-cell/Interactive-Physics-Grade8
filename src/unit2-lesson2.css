@@ -24,11 +24,11 @@
 .u2-grid{stroke:#d5dde8;stroke-width:1}
 .u2-plot{fill:#33568f}
 .u2-axis{stroke:#24304a;stroke-width:1.5}
-/* p89 current-direction diagram (book layout: yellow current, red electrons) */
-.u2l2-arrow-current{fill:#f6c700;stroke:#7a5b00;stroke-width:1.5;stroke-linejoin:round}
+/* p89 current-direction diagram (book layout: blue current, red electrons) */
+.u2l2-arrow-current{fill:#55acda;stroke:#235f82;stroke-width:1.5;stroke-linejoin:round}
 .u2l2-arrow-electron{fill:#d32f2f;stroke:#7f1414;stroke-width:1.2;stroke-linejoin:round}
 .u2l2-sym{font:italic 400 24px KaTeX_Math,Georgia,'Times New Roman',serif}
-.u2l2-sym-current{fill:#7a5b00}
+.u2l2-sym-current{fill:#235f82}
 .u2l2-sym-electron{fill:#b3261e}
 .u2l2-part-label{fill:#24304a;font:700 15px var(--font-ar)}
 .u2l2-part-label.is-title{font-size:18px}
@@ -43,6 +43,7 @@
 .u2l2-switch-lever{stroke:#24304a;stroke-width:5;stroke-linecap:round}
 .u2l2-switch-contact{fill:#fff;stroke:#24304a;stroke-width:2.5}
 .legend-swatch.yellow{height:6px;background:#f6c700;box-shadow:0 0 0 1px #7a5b00}
+.legend-swatch.sky{height:6px;background:#55acda;box-shadow:0 0 0 1px #235f82}
 .legend-swatch.red{height:6px;background:#d32f2f}
 /* I = q/t lab: live typeset substitution */
 .u2l2-live-equation{color:var(--ink);font-size:15px}
@@ -511,5 +512,8 @@
   .u2l2-page .student-notebook-sheet::before { inset-inline-start: 11px; }
 }
 
-/* Keep each sign inside its 24-unit cell face. */
-[data-circuit-canvas="series"] .u2l2-terminal-sign { font-size: 20px; }
+/* p87: the two visible cells sit inside one two-terminal holder. */
+.u2l2-holder { fill: #343d45; stroke: #28303a; stroke-width: 2; }
+.u2l2-holder-cell { fill: #a5c991; stroke: #36543c; stroke-width: 1.5; }
+/* The long face is positive; leads stop at the centres of the faces. */
+.u2l2-plate-long, .u2l2-plate-short { fill: none; stroke: #884225; stroke-width: 4; }

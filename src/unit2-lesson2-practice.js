@@ -102,6 +102,7 @@ function graphSvg() {
     <text class="u2l2-tick" x="70" y="320" text-anchor="end" dominant-baseline="hanging" direction="ltr">0</text>
     <text class="u2l2-axis-label" x="86" y="26" text-anchor="start" direction="ltr">q (C)</text>
     <text class="u2l2-axis-label" x="684" y="288" text-anchor="end" direction="ltr">t (s)</text>
+    <polyline data-constructed-line fill="none" stroke="#33568f" stroke-width="3" pointer-events="none"/>
     ${hits.join('')}
   </svg>`;
 }
@@ -154,26 +155,26 @@ function trueFalseBody() {
 
 /* ---------- p95 q3 and p96 q3: choose one answer ---------- */
 
-/* The four curves of p95 are redrawn from the book's own axes: a decaying
-   curve, a wave that changes sign, a two-level step, and a horizontal line. */
+/* p95: qualitative traces about the actual I=0 axis, not fitted measurements. */
 const CURVE_SHAPES = Object.freeze({
-  a: 'M30 24 C58 24 66 66 118 76',
-  b: 'M30 50 C40 16 52 16 64 50 C76 84 88 84 100 50 C106 34 112 34 118 42',
-  c: 'M30 80 H52 V28 H74 V80 H96 V28 H118',
-  d: 'M30 52 H118',
+  a: 'M36 14 C39 54 50 65 115 65',
+  b: 'M35 67 C43 47 51 27 62 67 C70 92 78 97 83 67 C89 35 99 36 107 67',
+  c: 'M35 33 H52 V82 H83 V37 H104',
+  d: 'M17 36 H110',
 });
 
 const curveOption = (letter, caption) => `<span class="u2l2-curve-option">
   <svg viewBox="0 0 132 106" class="u2l2-curve-svg" role="img" aria-label="منحنى ${letter}"><title>منحنى ${letter}</title>
-    <line class="u2-axis" x1="30" y1="${letter === 'b' ? 50 : 84}" x2="122" y2="${letter === 'b' ? 50 : 84}"/><line class="u2-axis" x1="30" y1="88" x2="30" y2="10"/>
+    <line class="u2-axis" x1="8" y1="67" x2="123" y2="67"/><line class="u2-axis" x1="35" y1="96" x2="35" y2="9"/>
+    <polygon fill="#24304a" points="124,67 117,64 117,70"/><polygon fill="#24304a" points="35,8 32,15 38,15"/>
     <path class="u2l2-curve-path" d="${CURVE_SHAPES[letter]}"/>
-    <text class="u2l2-tick" x="128" y="99" text-anchor="end" direction="ltr">t</text>
-    <text class="u2l2-tick" x="38" y="18" text-anchor="start" direction="ltr">i</text>
+    <text class="u2l2-tick" x="126" y="84" text-anchor="end" direction="ltr">t</text>
+    <text class="u2l2-tick" x="28" y="18" text-anchor="end" direction="ltr">I</text>
   </svg>
   <span class="u2l2-curve-letter"><bdi dir="ltr">${letter}</bdi> · ${caption}</span>
 </span>`;
 
-const CURVE_CAPTIONS = Object.freeze({ a: 'منحنى متناقص', b: 'موجة متغيرة', c: 'مستويان متعاقبان', d: 'خط أفقي ثابت' });
+const CURVE_CAPTIONS = Object.freeze({ a: 'منحنى متناقص', b: 'موجة متغيرة', c: 'منحنى متدرّج', d: 'خط أفقي ثابت' });
 
 /* The options keep the printed order of p95 (a, b, c, d). */
 const CURVE_OPTIONS = Object.freeze([
@@ -331,6 +332,7 @@ function clearResult(root, id) {
     output.closest('td, li, fieldset')?.classList.remove('is-correct', 'is-incorrect');
   });
   root.querySelectorAll('.u2l2-choice').forEach((choice) => choice.classList.remove('is-selected'));
+  root.querySelector('[data-constructed-line]')?.removeAttribute('points');
   root.querySelectorAll('[data-graph-point]').forEach((point) => point.classList.remove('is-correct', 'is-incorrect'));
   const hintPanel = root.querySelector('[data-practice-hint]');
   const solutionPanel = root.querySelector('[data-practice-solution]');
@@ -454,7 +456,11 @@ function gradeGraph(root, values, spec) {
   const wrong = result.extra.length;
   score(root, `النتيجة: ${result.placed} نقطة موضوعة · ${result.total - result.missing.length} منها في مواضعها`);
   if (result.correct) {
-    feedback(root, '✓ رسمت النقاط المطلوبة كلها في مواضعها الصحيحة.', 'correct');
+    // The scan prints only five dots. Draw the construction from the learner's
+    // verified coordinates, not as a sixth sample or part of the printed grid.
+    const ordered = [[0, 0], ...values.points.slice().sort((a, b) => a[0] - b[0])];
+    root.querySelector('[data-constructed-line]').setAttribute('points', ordered.map(([t, q]) => `${graphX(t)},${graphY(q)}`).join(' '));
+    feedback(root, '✓ رسمت النقاط الخمس. المستقيم الواصل من المبدأ هو نتيجة الإنشاء، وليس خطاً مطبوعاً في الكتاب.', 'correct');
   } else if (wrong) {
     feedback(root, `بعض النقاط الموضوعة ليست من قيم الجدول (${wrong}). احذفها بالضغط عليها، ثم أعد المحاولة؛ لن تُكشف بقية النقاط.`, 'incorrect');
   } else {
@@ -616,6 +622,7 @@ function resetPractice(root, id) {
   state.checked = false;
   state.request += 1;
   state.graph.clear();
+  root.querySelector('[data-constructed-line]')?.removeAttribute('points');
   root.querySelector('[data-practice-form]')?.reset();
   root.querySelectorAll('[data-cell-feedback], [data-term-feedback], [data-truth-feedback], [data-step-feedback]').forEach((output) => {
     output.textContent = '';

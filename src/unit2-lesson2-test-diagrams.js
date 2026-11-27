@@ -2,8 +2,7 @@ const wrap = (id, t, d, body) => `<figure class="assessment-figure"><svg class="
 /* u2l2q04 follows the lesson's p89 drawing: generator on top with + on the left (pink half,
    terminal cap) and − on the right (blue half); conventional current I (yellow, outside the
    loop) leaves + and returns to −; electrons e⁻ (red, inside the loop) move the opposite way
-   on the same wire. Colours are those of .u2l2-arrow-current / .u2l2-arrow-electron, inlined
-   because the test page does not load the lesson stylesheet. The prompt names these colours,
+   on the same wire. Yellow/red is the authored assessment key; the printed p89 arrows are blue/red. The prompt names these colours,
    so the drawing and the prompt must change together (tests check this). */
 const FLOW = Object.freeze({
   current: Object.freeze({ fill: '#f6c700', stroke: '#7a5b00', text: '#7a5b00' }),
