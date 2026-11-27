@@ -26,9 +26,9 @@ const DIAGRAMS = Object.freeze({
       <title id="${id}-title">${DIAGRAMS['water-levels'].title}</title><desc id="${id}-desc">${DIAGRAMS['water-levels'].description}</desc>
       <rect class="p3-panel" x="18" y="18" width="350" height="294" rx="22"/><rect class="p3-panel" x="392" y="18" width="350" height="294" rx="22"/>
       ${label(193, 52, 'الحالة الأولى · مستويان متساويان', { className: 'p3-panel-title' })}${label(567, 52, 'الحالة الثانية · منسوبان مختلفان', { className: 'p3-panel-title' })}
-      <g class="p3-vessel"><path d="M85 88v143q0 14 14 14h54q14 0 14-14V88"/><path d="M217 88v143q0 14 14 14h54q14 0 14-14V88"/><path class="p3-water" d="M89 148h74v83q0 10-10 10H99q-10 0-10-10z"/><path class="p3-water" d="M221 148h74v83q0 10-10 10h-54q-10 0-10-10z"/><path class="p3-water-surface" d="M89 148h74M221 148h74"/><path class="p3-pipe" d="M122 244v20h140v-20"/><path class="p3-tap" d="M181 264v19m-12 0h24m-18-19h12"/></g>
+      <g class="p3-vessel"><path class="p3-vessel-wall" d="M85 88v143q0 14 14 14h54q14 0 14-14V88"/><path class="p3-vessel-wall" d="M217 88v143q0 14 14 14h54q14 0 14-14V88"/><path class="p3-water" d="M89 148h74v83q0 10-10 10H99q-10 0-10-10z"/><path class="p3-water" d="M221 148h74v83q0 10-10 10h-54q-10 0-10-10z"/><path class="p3-water-surface" d="M89 148h74M221 148h74"/><path class="p3-pipe" d="M122 244v20h140v-20"/><path class="p3-tap" d="M181 264v19m-12 0h24m-18-19h12"/></g>
       <text x="340" y="171" class="p3-number" direction="ltr">(1)</text>
-      <g class="p3-vessel" transform="translate(374 0)"><path d="M85 88v143q0 14 14 14h54q14 0 14-14V88"/><path d="M217 88v143q0 14 14 14h54q14 0 14-14V88"/><path class="p3-water" d="M89 184h74v47q0 10-10 10H99q-10 0-10-10z"/><path class="p3-water" d="M221 108h74v123q0 10-10 10h-54q-10 0-10-10z"/><path class="p3-water-surface" d="M89 184h74M221 108h74"/><path class="p3-pipe" d="M122 244v20h140v-20"/><path class="p3-tap" d="M181 264v19m-12 0h24m-18-19h12"/><path class="p3-flow-arrow" d="M246 256h-90"/><path class="p3-flow-head" d="m155 256 13-8v16z"/></g>
+      <g class="p3-vessel" transform="translate(374 0)"><path class="p3-vessel-wall" d="M85 88v143q0 14 14 14h54q14 0 14-14V88"/><path class="p3-vessel-wall" d="M217 88v143q0 14 14 14h54q14 0 14-14V88"/><path class="p3-water" d="M89 184h74v47q0 10-10 10H99q-10 0-10-10z"/><path class="p3-water" d="M221 108h74v123q0 10-10 10h-54q-10 0-10-10z"/><path class="p3-water-surface" d="M89 184h74M221 108h74"/><path class="p3-pipe" d="M122 244v20h140v-20"/><path class="p3-tap" d="M181 264v19m-12 0h24m-18-19h12"/><path class="p3-flow-arrow" d="M246 256h-90"/><path class="p3-flow-head" d="m155 256 13-8v16z"/></g>
       <text x="714" y="171" class="p3-number" direction="ltr">(2)</text>
       ${label(193, 292, 'الصنبور مغلق / منسوبان متساويان', { className: 'p3-panel-note' })}${label(567, 292, 'عند فتح الصنبور يجري الماء من الأعلى إلى الأدنى', { className: 'p3-panel-note' })}
     </svg>`,
@@ -59,16 +59,18 @@ const DIAGRAMS = Object.freeze({
       <title id="${id}-title">${DIAGRAMS['pump-circuit'].title}</title><desc id="${id}-desc">${DIAGRAMS['pump-circuit'].description}</desc>
       <rect class="p3-panel" x="14" y="18" width="366" height="354" rx="24"/><rect class="p3-panel" x="400" y="18" width="366" height="354" rx="24"/>
       ${label(197, 55, 'دارة مائية', { className: 'p3-panel-title' })}${label(583, 55, 'دارة كهربائية', { className: 'p3-panel-title' })}
-      <path class="p3-water-pipe" d="M80 130H300V280H80V130"/><rect class="p3-water-tank" x="106" y="96" width="72" height="112" rx="18"/><rect class="p3-water-tank" x="218" y="176" width="72" height="112" rx="18"/><path class="p3-water" d="M110 151h64v53h-64z"/><path class="p3-water" d="M222 231h64v53h-64z"/>
-      <g class="p3-pump"><circle cx="80" cy="205" r="28"/><path d="M68 190l24 15-24 15z"/></g>
-      <path class="p3-flow-arrow" d="M110 280h160"/><path class="p3-flow-head" d="m270 280-16-9v18z"/><path class="p3-flow-arrow" d="M300 255V144"/><path class="p3-flow-head" d="m300 144-9 16h18z"/>
-      ${label(142, 91, 'الوعاء (أ)')}${label(254, 171, 'الوعاء (ب)')}${label(80, 253, 'مضخة', { className: 'p3-small-label' })}
+      <path class="p3-water-pipe" d="M80 177V130H106 M178 186H218 M290 254H312V314H80V233"/>
+      <rect class="p3-water-tank" x="106" y="96" width="72" height="112" rx="18"/><rect class="p3-water-tank" x="218" y="140" width="72" height="142" rx="18"/>
+      <path class="p3-water" d="M110 151h64v53h-64z M222 175h64v103h-64z"/>
+      <g class="p3-pump"><circle cx="80" cy="205" r="28"/><path d="M66 216l14-24 14 24z"/></g>
+      <path class="p3-flow-arrow" d="M180 186h33"/><path class="p3-flow-head" d="m213 186-12-6v12z"/><path class="p3-flow-arrow" d="M249 314H151"/><path class="p3-flow-head" d="m151 314 14-8v16z"/>
+      ${label(142, 91, 'الوعاء (أ)')}${label(254, 134, 'الوعاء (ب)')}${label(116, 254, 'مضخة', { className: 'p3-small-label' })}
       ${wire('electric-top', 'M454 128H712')}${wire('electric-right-upper', 'M712 128V179')}${wire('electric-right-lower', 'M712 234V284')}${wire('electric-bottom-right', 'M712 284H578')}${wire('electric-bottom-left', 'M550 284H454')}${wire('electric-left', 'M454 284V128')}
       <g class="p3-resistor"><path d="M712 179l-10 7 20 7-20 7 20 7-20 7 20 7-10 13"/></g>
       <g class="p3-generator" data-part="generator-analogy" data-terminals="550,284 578,284"><path class="p3-battery-long" d="M550 263v42"/><path class="p3-battery-short" d="M578 271v26"/><text class="p3-sign" x="538" y="259" direction="ltr">+</text><text class="p3-sign" x="580" y="259" direction="ltr">−</text></g>
-      ${wire('voltmeter-upper', 'M550 284V335H546')}${wire('voltmeter-lower', 'M578 284V335H582')}
+      ${wire('voltmeter-upper', 'M512 284V335H546')}${wire('voltmeter-lower', 'M614 284V335H582')}
       <g data-part="voltmeter-generator" data-terminals="546,335 582,335"><circle class="p3-voltmeter" cx="564" cy="335" r="18"/><text class="p3-meter-letter" x="564" y="341" direction="ltr">V</text></g>
-      <path class="p3-flow-arrow" d="M554 128H674"/><path class="p3-flow-head" d="m674 128-16-9v18z"/><path class="p3-flow-arrow" d="M712 150V260"/><path class="p3-flow-head" d="m712 260-9-16h18z"/><path class="p3-flow-arrow" d="M676 284H610"/><path class="p3-flow-head" d="m610 284 16-9v18z"/><path class="p3-flow-arrow" d="M454 258V150"/><path class="p3-flow-head" d="m454 150-9 16h18z"/>
+      <path class="p3-flow-arrow" d="M554 128H674"/><path class="p3-flow-head" d="m674 128-16-9v18z"/><path class="p3-flow-arrow" d="M735 177V237"/><path class="p3-flow-head" d="m735 237-9-16h18z"/><path class="p3-flow-arrow" d="M676 284H610"/><path class="p3-flow-head" d="m610 284 16-9v18z"/><path class="p3-flow-arrow" d="M454 258V150"/><path class="p3-flow-head" d="m454 150-9 16h18z"/>
       ${label(564, 370, 'الفولتميتر على التفرع عبر المولد · شرح المنصة', { className: 'p3-small-label' })}${label(588, 90, 'مقاومة / مصباح', { className: 'p3-small-label' })}
     </svg>`,
   },
@@ -85,14 +87,16 @@ const DIAGRAMS = Object.freeze({
         <rect class="p3-meter-face" x="18" y="14" width="294" height="164" rx="10"/>
         <path class="p3-meter-arc" d="M63 138a102 102 0 0 1 204 0"/>
         ${[0, 10, 20, 30].map((value, index) => {
-          const x = 63 + index * 68;
-          return `<text class="p3p-meter-label" x="${x}" y="126" direction="ltr" text-anchor="middle">${value}</text>`;
+          const angle = Math.PI * (1 - index / 3);
+          const tick = (r) => [165 + r * Math.cos(angle), 138 - r * Math.sin(angle)];
+          const [x, y] = tick(77);
+          return `<path class="p3-meter-arc" d="M${tick(95).join(' ')}L${tick(102).join(' ')}"/><text class="p3p-meter-label" x="${x}" y="${index === 0 || index === 3 ? y + 19 : y + 5}" direction="ltr" text-anchor="middle">${value}</text>`;
         }).join('')}
-        <path class="p3-meter-needle" d="M165 138 L112 84"/>
+        <path class="p3-meter-needle" d="M165 138 L63 138"/>
         <circle class="p3-meter-pivot" cx="165" cy="138" r="6"/>
-        <text class="p3-meter-letter" x="165" y="52" direction="ltr">V</text>
+        <text class="p3-meter-letter" x="165" y="112" direction="ltr">V</text>
         <circle class="p3-meter-terminal" cx="92" cy="212" r="13"/><circle class="p3-meter-terminal" cx="238" cy="212" r="13"/>
-        <text class="p3p-meter-label" x="150" y="216" direction="rtl">طرفا التوصيل</text>
+        <text class="p3-terminal-caption" x="165" y="216" direction="rtl" text-anchor="middle">طرفا التوصيل</text>
       </g>
     </svg>`,
   },
@@ -113,10 +117,10 @@ const DIAGRAMS = Object.freeze({
       <g class="p3-part" data-part="ammeter" data-terminals="338,110 382,110"><circle class="p3-meter" cx="360" cy="110" r="22"/><text class="p3-meter-letter" x="360" y="117" direction="ltr">A</text></g>
       <g class="p3-part" data-part="lamp" data-terminals="150,198 150,242"><circle class="p3-lamp-symbol" cx="150" cy="220" r="22"/><path class="p3-lamp-cross" d="M137 207l26 26m0-26-26 26"/></g>
       <g class="p3-part" data-part="switch" data-terminals="620,200 620,240"><circle class="p3-contact" cx="620" cy="200" r="5"/><circle class="p3-contact" cx="620" cy="240" r="5"/><path class="p3-switch-lever" d="M620 200l-20 18"/></g>
-      <g class="p3-part" data-part="generator" data-terminals="320,340 420,340"><path class="p3-battery-wire" d="M320 340H360M400 340H420"/><path class="p3-battery-long" d="M370 319v42"/><path class="p3-battery-short" d="M390 327v26"/><text class="p3-sign" x="360" y="317" direction="ltr">+</text><text class="p3-sign" x="402" y="317" direction="ltr">−</text></g>
+      <g class="p3-part" data-part="generator" data-terminals="320,340 420,340"><path class="p3-battery-wire" d="M320 340H370M390 340H420"/><path class="p3-battery-long" d="M370 319v42"/><path class="p3-battery-short" d="M390 327v26"/><text class="p3-sign" x="360" y="317" direction="ltr">+</text><text class="p3-sign" x="402" y="317" direction="ltr">−</text></g>
       <g class="p3-part" data-part="voltmeter-lamp" data-terminals="70,200 70,240"><circle class="p3-meter" cx="70" cy="220" r="20"/><text class="p3-meter-letter" x="70" y="227" direction="ltr">V</text></g>
       <g class="p3-part" data-part="voltmeter-source" data-terminals="350,420 390,420"><circle class="p3-meter" cx="370" cy="420" r="20"/><text class="p3-meter-letter" x="370" y="427" direction="ltr">V</text></g>
-      ${label(422, 78, 'A · أمبيرمتر', { className: 'p3-schematic-label' })}${label(101, 288, 'مصباح', { className: 'p3-schematic-label' })}${label(638, 224, 'قاطعة', { className: 'p3-schematic-label', anchor: 'start' })}${label(370, 387, 'المولد', { className: 'p3-schematic-label' })}
+      ${label(422, 78, 'A · أمبيرمتر', { className: 'p3-schematic-label' })}${label(101, 288, 'مصباح', { className: 'p3-schematic-label' })}${label(638, 224, 'قاطعة', { className: 'p3-schematic-label', anchor: 'end' })}${label(370, 387, 'المولد', { className: 'p3-schematic-label' })}
       <text x="70" y="260" class="p3-meter-caption" direction="rtl" text-anchor="middle">عبر المصباح</text><text x="370" y="462" class="p3-meter-caption" direction="rtl" text-anchor="middle">عبر المولد</text>
     </svg>`,
   },
@@ -137,12 +141,12 @@ const DIAGRAMS = Object.freeze({
       <g class="p3-part" data-part="lamp-1" data-terminals="221,110 269,110"><circle class="p3-lamp-symbol" cx="245" cy="110" r="24"/><path class="p3-lamp-cross" d="M231 96l28 28m0-28-28 28"/></g>
       <g class="p3-part" data-part="lamp-2" data-terminals="391,110 439,110"><circle class="p3-lamp-symbol" cx="415" cy="110" r="24"/><path class="p3-lamp-cross" d="M401 96l28 28m0-28-28 28"/></g>
       <g class="p3-part" data-part="switch" data-terminals="630,205 630,245"><circle class="p3-contact" cx="630" cy="205" r="5"/><circle class="p3-contact" cx="630" cy="245" r="5"/><path class="p3-switch-closed" d="M630 205v40"/></g>
-      <g class="p3-part" data-part="generator" data-terminals="320,350 440,350"><path class="p3-battery-wire" d="M320 350H365M395 350H440"/><path class="p3-battery-long" d="M375 329v42"/><path class="p3-battery-short" d="M390 337v26"/><text class="p3-sign" x="354" y="328" direction="ltr">+</text><text class="p3-sign" x="398" y="328" direction="ltr">−</text></g>
+      <g class="p3-part" data-part="generator" data-terminals="320,350 440,350"><path class="p3-battery-wire" d="M320 350H375M390 350H440"/><path class="p3-battery-long" d="M375 329v42"/><path class="p3-battery-short" d="M390 337v26"/><text class="p3-sign" x="354" y="328" direction="ltr">+</text><text class="p3-sign" x="398" y="328" direction="ltr">−</text></g>
       <g class="p3-part" data-part="voltmeter-lamp-1" data-terminals="225,50 265,50"><circle class="p3-meter" cx="245" cy="50" r="20"/><text class="p3-meter-letter" x="245" y="57" direction="ltr">V₁</text></g>
       <g class="p3-part" data-part="voltmeter-lamp-2" data-terminals="395,50 435,50"><circle class="p3-meter" cx="415" cy="50" r="20"/><text class="p3-meter-letter" x="415" y="57" direction="ltr">V₂</text></g>
       <g class="p3-part" data-part="voltmeter-source" data-terminals="360,420 400,420"><circle class="p3-meter" cx="380" cy="420" r="20"/><text class="p3-meter-letter" x="380" y="427" direction="ltr">V</text></g>
       ${label(245, 24, 'U₁', { className: 'p3-voltage-label', direction: 'ltr' })}${label(415, 24, 'U₂', { className: 'p3-voltage-label', direction: 'ltr' })}${label(380, 458, 'U', { className: 'p3-voltage-label', direction: 'ltr' })}
-      ${label(245, 160, 'المصباح الأول', { className: 'p3-schematic-label' })}${label(415, 160, 'المصباح الثاني', { className: 'p3-schematic-label' })}${label(380, 390, 'المولد', { className: 'p3-schematic-label' })}${label(650, 230, 'قاطعة', { className: 'p3-schematic-label', anchor: 'start' })}
+      ${label(245, 160, 'المصباح الأول', { className: 'p3-schematic-label' })}${label(415, 160, 'المصباح الثاني', { className: 'p3-schematic-label' })}${label(380, 390, 'المولد', { className: 'p3-schematic-label' })}${label(650, 230, 'قاطعة', { className: 'p3-schematic-label', anchor: 'end' })}
     </svg>`,
   },
   'parallel-circuit': {
@@ -153,23 +157,22 @@ const DIAGRAMS = Object.freeze({
     svg: (id) => `<svg class="p3-svg p3-circuit-svg" viewBox="0 0 760 500" role="img" aria-labelledby="${id}-title ${id}-desc">
       <title id="${id}-title">${DIAGRAMS['parallel-circuit'].title}</title><desc id="${id}-desc">${DIAGRAMS['parallel-circuit'].description}</desc>
       <rect class="p3-circuit-back" x="18" y="16" width="724" height="464" rx="26"/>
-      ${wire('par-top-rail', 'M130 120 H630')}${wire('par-bottom-rail', 'M130 350 H630')}
+      ${wire('par-top-rail', 'M130 120 H180 M220 120 H470')}${wire('par-bottom-rail', 'M130 350 H470')}
       ${wire('par-source-top', 'M130 120 V190')}${wire('par-source-bottom', 'M130 270 V350')}
       ${wire('par-lamp-1-top', 'M300 120 V198')}${wire('par-lamp-1-bottom', 'M300 242 V350')}
       ${wire('par-lamp-2-top', 'M470 120 V198')}${wire('par-lamp-2-bottom', 'M470 242 V350')}
-      ${wire('par-switch-top', 'M630 120 V205')}${wire('par-switch-bottom', 'M630 245 V350')}
       ${wire('par-v-source-top', 'M130 190 H70 V210')}${wire('par-v-source-bottom', 'M70 250 V270 H130')}
       ${wire('par-v1-top', 'M300 198 H230 V200')}${wire('par-v1-bottom', 'M230 240 V259 H300 V242')}
       ${wire('par-v2-top', 'M470 198 H540 V200')}${wire('par-v2-bottom', 'M540 240 V259 H470 V242')}
-      <g class="p3-part" data-part="generator" data-terminals="130,190 130,270"><path class="p3-battery-long" d="M109 220h42"/><path class="p3-battery-short" d="M117 240h26"/><text class="p3-sign" x="151" y="218" direction="ltr">+</text><text class="p3-sign" x="151" y="258" direction="ltr">−</text></g>
+      <g class="p3-part" data-part="generator" data-terminals="130,190 130,270"><path class="p3-battery-wire" d="M130 190V220 M130 240V270"/><path class="p3-battery-long" d="M109 220h42"/><path class="p3-battery-short" d="M117 240h26"/><text class="p3-sign" x="151" y="218" direction="ltr">+</text><text class="p3-sign" x="151" y="258" direction="ltr">−</text></g>
       <g class="p3-part" data-part="lamp-1" data-terminals="300,198 300,242"><circle class="p3-lamp-symbol" cx="300" cy="220" r="22"/><path class="p3-lamp-cross" d="M287 207l26 26m0-26-26 26"/></g>
       <g class="p3-part" data-part="lamp-2" data-terminals="470,198 470,242"><circle class="p3-lamp-symbol" cx="470" cy="220" r="22"/><path class="p3-lamp-cross" d="M457 207l26 26m0-26-26 26"/></g>
-      <g class="p3-part" data-part="switch" data-terminals="630,205 630,245"><circle class="p3-contact" cx="630" cy="205" r="5"/><circle class="p3-contact" cx="630" cy="245" r="5"/><path class="p3-switch-closed" d="M630 205v40"/></g>
+      <g class="p3-part" data-part="switch" data-terminals="180,120 220,120"><circle class="p3-contact" cx="180" cy="120" r="5"/><circle class="p3-contact" cx="220" cy="120" r="5"/><path class="p3-switch-closed" d="M180 120h40"/></g>
       <g class="p3-part" data-part="voltmeter-source" data-terminals="70,210 70,250"><circle class="p3-meter" cx="70" cy="230" r="20"/><text class="p3-meter-letter" x="70" y="237" direction="ltr">V</text></g>
       <g class="p3-part" data-part="voltmeter-lamp-1" data-terminals="230,200 230,240"><circle class="p3-meter" cx="230" cy="220" r="20"/><text class="p3-meter-letter" x="230" y="227" direction="ltr">V₁</text></g>
       <g class="p3-part" data-part="voltmeter-lamp-2" data-terminals="540,200 540,240"><circle class="p3-meter" cx="540" cy="220" r="20"/><text class="p3-meter-letter" x="540" y="227" direction="ltr">V₂</text></g>
       ${label(70, 185, 'U', { className: 'p3-voltage-label', direction: 'ltr' })}${label(230, 185, 'U₁', { className: 'p3-voltage-label', direction: 'ltr' })}${label(540, 185, 'U₂', { className: 'p3-voltage-label', direction: 'ltr' })}
-      ${label(130, 166, 'المولد', { className: 'p3-schematic-label' })}${label(300, 288, 'المصباح الأول', { className: 'p3-schematic-label' })}${label(470, 288, 'المصباح الثاني', { className: 'p3-schematic-label' })}${label(650, 230, 'قاطعة', { className: 'p3-schematic-label', anchor: 'start' })}
+      ${label(130, 166, 'المولد', { className: 'p3-schematic-label' })}${label(300, 288, 'المصباح الأول', { className: 'p3-schematic-label' })}${label(470, 288, 'المصباح الثاني', { className: 'p3-schematic-label' })}${label(200, 95, 'قاطعة', { className: 'p3-schematic-label' })}
     </svg>`,
   },
   'transformer': {
@@ -180,11 +183,11 @@ const DIAGRAMS = Object.freeze({
     svg: (id) => `<svg class="p3-svg" viewBox="0 0 760 340" role="img" aria-labelledby="${id}-title ${id}-desc">
       <title id="${id}-title">${DIAGRAMS['transformer'].title}</title><desc id="${id}-desc">${DIAGRAMS['transformer'].description}</desc>
       <rect class="p3-panel" x="20" y="20" width="720" height="300" rx="26"/>
-      <path class="p3-core" d="M280 78h200v184H280v-38h162V116H280z"/>
-      <path class="p3-coil-primary" d="M210 85c-44 0-44 26 0 26s44 26 0 26  -44 26 0 26 44 26 0 26 -44 26 0 26 44 26 0 26"/>
-      <path class="p3-coil-secondary" d="M550 119c-40 0-40 28 0 28s40 28 0 28-40 28 0 28 40 28 0 28"/>
-      <path class="p3-ac-line" d="M118 114h42m-42 114h42M600 144h42m-42 114h42"/><text x="137" y="99" class="p3-transformer-value" direction="ltr">220 V~</text><text x="623" y="129" class="p3-transformer-value" direction="ltr">110 V~</text>
-      <path class="p3-terminal-line" d="M160 114h50M160 228h50M550 144h50M550 258h50"/>
+      <path class="p3-core" d="M264 68H496V260H264Z M310 108H450V220H310Z"/>
+      <path class="p3-coil-primary" d="M264 106${'q70 0 46 8l-46 8'.repeat(8)}"/>
+      <path class="p3-coil-secondary" d="M496 126${'q-70 0 -46 10l46 10'.repeat(4)}"/>
+      <path class="p3-ac-line" d="M120 106H264 M120 234H264 M496 126H642 M496 206H642"/>
+      <text x="148" y="93" class="p3-transformer-value" direction="ltr">220 V~</text><text x="608" y="113" class="p3-transformer-value" direction="ltr">110 V~</text>
       ${label(210, 294, 'الملف الابتدائي · لفات أكثر', { className: 'p3-panel-note' })}${label(550, 294, 'الملف الثانوي · لفات أقل', { className: 'p3-panel-note' })}${label(380, 57, 'قلب حديدي مشترك', { className: 'p3-small-label' })}
     </svg>`,
   },

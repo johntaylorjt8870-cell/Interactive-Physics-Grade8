@@ -217,8 +217,8 @@ function p100Svg() {
   <text class="p3p-meter-label" x="365" y="80" direction="rtl" text-anchor="middle">أمبيرمتر</text>
   <text class="p3p-meter-label" x="112" y="292" direction="rtl" text-anchor="middle">عبر المصباح</text>
   <text class="p3p-meter-label" x="305" y="450" direction="rtl" text-anchor="end">عبر المولد</text>
-  <text class="p3-schematic-label" x="624" y="278" direction="rtl" text-anchor="start">قاطعة</text>
-  <text class="p3-schematic-label" x="212" y="232" direction="rtl" text-anchor="start">مصباح</text>
+  <text class="p3-schematic-label" x="624" y="278" direction="rtl" text-anchor="end">قاطعة</text>
+  <text class="p3-schematic-label" x="212" y="232" direction="rtl" text-anchor="end">مصباح</text>
   <text class="p3-schematic-label" x="424" y="366" direction="rtl" text-anchor="start">المولد</text>
   <g class="p3p-flow" data-lab-flow hidden>
     ${flowArrow('M250 352 H208', ARROW_HEAD.left(208, 352))}
@@ -280,10 +280,10 @@ function p101Svg() {
   <text class="p3-voltage-label" x="240" y="26" direction="ltr">U₂</text>
   <text class="p3-voltage-label" x="480" y="26" direction="ltr">U₁</text>
   <text class="p3-voltage-label" x="413" y="450" direction="ltr">U</text>
-  <text class="p3-schematic-label" x="480" y="168" direction="rtl" text-anchor="middle">المصباح الأول</text>
-  <text class="p3-schematic-label" x="240" y="168" direction="rtl" text-anchor="middle">المصباح الثاني</text>
+  <text class="p3-schematic-label" x="480" y="192" direction="rtl" text-anchor="middle">المصباح الأول</text>
+  <text class="p3-schematic-label" x="240" y="192" direction="rtl" text-anchor="middle">المصباح الثاني</text>
   <text class="p3-schematic-label" x="424" y="406" direction="rtl" text-anchor="start">المولد</text>
-  <text class="p3-schematic-label" x="654" y="284" direction="rtl" text-anchor="start">قاطعة</text>
+  <text class="p3-schematic-label" x="654" y="284" direction="rtl" text-anchor="end">قاطعة</text>
   <g class="p3p-flow" data-lab-flow hidden>
     ${flowArrow('M300 392 H256', ARROW_HEAD.left(256, 392))}
     ${flowArrow('M118 340 V296', ARROW_HEAD.up(118, 296))}
@@ -326,12 +326,12 @@ function p102Svg() {
   <text class="p3-voltage-label" x="380" y="26" direction="ltr">U₂</text>
   <text class="p3-voltage-label" x="423" y="218" direction="ltr">U₁</text>
   <text class="p3-voltage-label" x="413" y="474" direction="ltr">U</text>
-  <text class="p3-schematic-label" x="500" y="148" direction="rtl" text-anchor="middle">المصباح الثاني · الفرع العلوي</text>
-  <text class="p3-schematic-label" x="585" y="322" direction="rtl" text-anchor="end">المصباح الأول · الفرع السفلي</text>
+  <text class="p3-schematic-label" x="460" y="190" direction="rtl" text-anchor="middle">المصباح الثاني · الفرع العلوي</text>
+  <text class="p3-schematic-label" x="462" y="350" direction="rtl" text-anchor="middle">المصباح الأول · الفرع السفلي</text>
   <text class="p3-schematic-label" x="346" y="404" direction="rtl" text-anchor="start">المولد</text>
   <text class="p3-schematic-label" x="262" y="458" direction="rtl" text-anchor="middle">قاطعة</text>
   <g class="p3p-flow" data-lab-flow hidden>
-    ${flowArrow('M430 104 H386', ARROW_HEAD.left(386, 104))}
+    ${flowArrow('M470 104 H426', ARROW_HEAD.left(426, 104))}
     ${flowArrow('M300 280 H256', ARROW_HEAD.left(256, 280))}
     ${flowArrow('M422 424 H468', ARROW_HEAD.right(468, 424))}
   </g>

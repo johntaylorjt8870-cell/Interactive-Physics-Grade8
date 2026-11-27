@@ -34,11 +34,12 @@ const meter = (cx, cy, letter, label, side = 'below') => `<g class="r4-meter" da
     : side === 'above'
       ? `<text class="r4-part-label" x="${cx}" y="${cy - 32}" text-anchor="middle">${label}</text>`
       : `<text class="r4-part-label" x="${cx}" y="${cy + 46}" text-anchor="middle">${label}</text>`}</g>`;
-const battery = (cx, cy, vertical = true) => `<g class="r4-battery" data-part="battery">
-  <path class="r4-battery-long" d="${vertical ? `M${cx} ${cy - 26}v52` : `M${cx - 26} ${cy}h52`}"/>
-  <path class="r4-battery-short" d="${vertical ? `M${cx + 18} ${cy - 15}v30` : `M${cx - 15} ${cy + 18}h30`}"/>
-  <text class="r4-sign" x="${vertical ? cx - 6 : cx - 30}" y="${vertical ? cy - 34 : cy - 14}" text-anchor="middle">+</text>
-  <text class="r4-sign" x="${vertical ? cx + 26 : cx + 30}" y="${vertical ? cy - 34 : cy + 30}" text-anchor="middle">−</text></g>`;
+// All five circuits place the cell in a vertical lead: plates run ACROSS it.
+const battery = (x, y) => `<g class="r4-battery" data-part="battery">
+  <path class="r4-battery-long" d="M${x - 22} ${y}h44"/>
+  <path class="r4-battery-short" d="M${x - 12} ${y + 18}h24"/>
+  <text class="r4-sign" x="${x + 33}" y="${y + 4}" text-anchor="middle" direction="ltr">+</text>
+  <text class="r4-sign" x="${x + 33}" y="${y + 25}" text-anchor="middle" direction="ltr">−</text></g>`;
 const switchPart = (x, y, label = 'قاطعة') => `<g class="r4-switch" data-part="switch">
   <circle cx="${x}" cy="${y}" r="5"/><circle cx="${x}" cy="${y + 52}" r="5"/>
   <path class="r4-switch-lever" d="M${x} ${y}l-26 34"/>
@@ -71,8 +72,9 @@ export function graph(points, { id = 'r4-ohm-graph', maxI = 4, maxU = 16, active
       <text class="r4-axis-tick" x="${left - 10}" y="${gy + 5}" text-anchor="end">${+(n * maxU / 5).toFixed(2)}</text>`;
   }).join('');
   const sorted = [...points].sort((a, b) => a.i - b.i);
-  const lineEnd = sorted.at(-1);
-  const extrapolated = extension && !sorted.some((p) => p.i === extension.i);
+  const last = sorted.at(-1);
+  const extendsLine = extension && extension.i > last.i;
+  const lineEnd = extendsLine ? extension : last;
   return `<svg class="r4-graph-svg" viewBox="0 0 620 318" role="img" aria-labelledby="${id}-title ${id}-desc">
     ${titles(id, 'خط بياني لفرق الكمون بدلالة شدة التيار', `المحور الأفقي ${xLabel} والرأسي ${yLabel}. النقاط: ${points.map((p) => `I=${p.i} A، U=${p.u} V`).join('؛ ')}`)}
     <rect class="r4-graph-back" x="14" y="10" width="592" height="292" rx="8"/>
@@ -80,9 +82,9 @@ export function graph(points, { id = 'r4-ohm-graph', maxI = 4, maxU = 16, active
     <path class="r4-axis" d="M${left} ${top - 6}V${bottom}H${right + 10}"/>
     <path class="r4-plot-line" d="M${left} ${bottom}L${x(lineEnd.i)} ${y(lineEnd.u)}"/>
     ${sorted.map((p) => `<circle class="r4-plot-point" cx="${x(p.i)}" cy="${y(p.u)}" r="5.5"><title>I = ${p.i} A، U = ${p.u} V</title></circle>`).join('')}
-    ${extension ? `<circle class="r4-plot-extension" cx="${x(extension.i)}" cy="${y(extension.u)}" r="7"><title>${extrapolated ? 'نقطة استيفاء' : 'امتداد'}: I = ${extension.i} A، U = ${extension.u} V</title></circle>
+    ${extension ? `<circle class="r4-plot-extension" cx="${x(extension.i)}" cy="${y(extension.u)}" r="7"><title>${extendsLine ? 'امتداد' : 'نقطة استيفاء'}: I = ${extension.i} A، U = ${extension.u} V</title></circle>
       <path class="r4-extension-line" d="M${left} ${y(extension.u)}H${x(extension.i)}V${bottom}"/>
-      <text class="r4-annotation" x="${x(extension.i) - 10}" y="${y(extension.u) - 14}" text-anchor="end">${extrapolated ? 'قراءة استيفاء' : 'امتداد'} <tspan direction="ltr" unicode-bidi="isolate">(${extension.i} A, ${extension.u} V)</tspan></text>` : ''}
+      <text class="r4-annotation" x="${x(extension.i) - 10}" y="${y(extension.u) - 14}" text-anchor="end">${extendsLine ? 'امتداد' : 'قراءة استيفاء'} <tspan direction="ltr" unicode-bidi="isolate">(${extension.i} A, ${extension.u} V)</tspan></text>` : ''}
     ${active ? `<circle class="r4-plot-active" cx="${x(active.i)}" cy="${y(active.u)}" r="10"><title>الوضع الحالي I = ${active.i} A، U = ${active.u} V</title></circle>
       <path class="r4-active-line" d="M${left} ${y(active.u)}H${x(active.i)}V${bottom}"/>` : ''}
     <text class="r4-axis-label" x="${(left + right) / 2}" y="302" text-anchor="middle" direction="ltr">${xLabel}</text>
@@ -128,23 +130,23 @@ function lampCircuitFigure(key) {
   const panel = (offsetX, title, extra) => `<g transform="translate(${offsetX} 26)">
     <rect class="r4-canvas" x="10" y="10" width="300" height="250" rx="10"/>
     <text class="r4-panel-label" x="160" y="36" text-anchor="middle">${title}</text>
-    ${wire('M60 80H100')}
+    ${wire('M60 135V80H100')}
     <circle class="r4-lamp" cx="120" cy="80" r="20"/>
     <path class="r4-lamp-cross" d="M107 67l26 26m0-26-26 26"/>
     ${wire('M140 80H164')}
     ${extra
       ? `<g class="r4-resistor" data-part="resistor-extra"><rect x="164" y="63" width="56" height="34" rx="4"/><text class="r4-part-label" x="192" y="85" text-anchor="middle" direction="ltr">R</text></g>${wire('M220 80H262')}`
-      : `${wire('M140 80H262')}`}
+      : `${wire('M164 80H262')}`}
     ${wire('M262 80V108')}
     ${meter(262, 132, 'A', '')}
     ${wire('M262 156V190')}
-    ${wire('M262 190H206')}
+    ${wire('M262 190H200')}
     <circle class="r4-switch" cx="200" cy="190" r="5"/><circle class="r4-switch" cx="148" cy="190" r="5"/>
-    <path class="r4-switch-lever" d="M148 190l44-20"/>
-    ${wire('M148 190H60V80')}
+    <path class="r4-switch-lever" d="M148 190H200"/>
+    ${wire('M148 190H60V153')}
     ${battery(60, 135)}
     <text class="r4-part-label" x="120" y="122" text-anchor="middle">مصباح</text>
-    <text class="r4-part-label" x="236" y="118" text-anchor="end">أمبيرمتر</text>
+    <text class="r4-part-label" x="220" y="158" text-anchor="middle">أمبيرمتر</text>
     <text class="r4-part-label" x="174" y="214" text-anchor="middle">قاطعة</text>
     <text class="r4-part-label" x="160" y="242" text-anchor="middle">${extra ? 'مقاومة مضافة على التسلسل' : 'بلا مقاومة مضافة'}</text>
   </g>`;
@@ -160,16 +162,15 @@ function ohmSetupFigure(key) {
   return figure('ohm-setup', 109, `${svgOpen(key, '0 0 640 370')}
     ${titles(key, 'دارة تجربة أوم: مولد وقاطعة وأمبيرمتر ومقاومة وفولتميتر', 'المولد يساراً، والأمبيرمتر على التسلسل في المسار، والفولتميتر على التفرع بين طرفي المقاومة، والقاطعة على التسلسل.')}
     <rect class="r4-canvas" x="10" y="10" width="620" height="340" rx="10"/>
-    ${wire('M110 90H530V280H110V90')}
+    ${wire('M110 185V90H296 M344 90H402 M498 90H530V150 M530 202V280H110V203')}
     ${battery(110, 185)}
     ${meter(320, 90, 'A', 'أمبيرمتر على التسلسل', 'above')}
     ${resistor(450, 90, 'R')}
-    ${wire('M402 90V56H498V90')}
-    ${meter(450, 56, 'V', 'فولتميتر على التفرع', 'above')}
+    ${wire('M402 90V180H426 M474 180H498V90')}
+    ${meter(450, 180, 'V', 'فولتميتر على التفرع')}
     ${switchPart(530, 150)}
     <text class="r4-axis-label" x="320" y="320" text-anchor="middle">يغيّر الطالب فرق كمون المولد، ويقرأ شدة التيار في المقاومة.</text>
-    <text class="r4-part-label" x="260" y="72" text-anchor="middle">I</text>
-    <path class="r4-flow-arrow" d="M240 90H288"/><path class="r4-flow-head" d="${headRight(288, 90)}"/>
+    <circle class="r4-node" cx="402" cy="90" r="4"/><circle class="r4-node" cx="498" cy="90" r="4"/>
   </svg>`, 'الدارة المعاد بناؤها لص109: A على التسلسل، وV بين طرفي R، والقاطعة مفتوحة أثناء التركيب.');
 }
 
@@ -234,9 +235,9 @@ function seriesCircuitFigure(key) {
      - the switch has a real gap with a closed lever, so it cannot look like a
        plain piece of wire. */
   return figure('series-circuit', 113, `${svgOpen(key, '0 0 700 400')}
-    ${titles(key, 'دارة التسلسل: مقاومتان في مسار واحد ومقياسا أمبير وفولط', 'المولد على اليمين، والمقاومتان R1 وR2 على التسلسل في المسار العلوي، والأمبيرمتر في المسار نفسه، والفولتميتر على التفرع بين طرفي المقاومتين.')}
+    ${titles(key, 'دارة التسلسل: مقاومتان في مسار واحد ومقياسا أمبير وفولط', 'المولد على اليسار، والمقاومتان R1 وR2 على التسلسل في المسار العلوي، والأمبيرمتر في المسار نفسه، والفولتميتر على التفرع بين طرفي المقاومتين.')}
     <rect class="r4-canvas" x="10" y="10" width="680" height="370" rx="10"/>
-    ${wire('M90 110H182')}
+    ${wire('M90 205V110H182')}
     ${resistor(230, 110, 'R₁')}
     ${wire('M278 110H316')}
     ${meter(340, 110, 'A', 'أمبيرمتر في المسار')}
@@ -244,7 +245,7 @@ function seriesCircuitFigure(key) {
     ${resistor(450, 110, 'R₂')}
     ${wire('M498 110H620V150')}
     ${switchClosed(620, 150, 52, 'قاطعة')}
-    ${wire('M620 202V300H90V110')}
+    ${wire('M620 202V300H90V223')}
     ${battery(90, 205)}
     ${wire('M170 110V214H316M364 214H520V110')}
     ${meter(340, 214, 'V', 'فولتميتر بين طرفي R₁ وR₂')}
@@ -266,35 +267,35 @@ function parallelCircuitFigure(key) {
      The previous draft drew V on top of the right node and left a stray wire
      crossing it; that has been replaced by explicit branch leads. */
   return figure('parallel-circuit', 114, `${svgOpen(key, '0 0 700 420')}
-    ${titles(key, 'دارة التفرع: مقاومتان بين العقدتين نفسيهما ومقياسان لكل فرع', 'المقاومتان R1 وR2 بين العقدتين نفسيهما، لكل فرع أمبيرمتر، وفولتميتر على فرع ثالث بين العقدتين، والمولد مع أمبيرمتر رئيسي في الحلقة الخارجية.')}
+    ${titles(key, 'دارة التفرع: مقاومتان بين العقدتين نفسيهما ومقياس أمبير لكل فرع', 'المقاومتان R1 وR2 بين العقدتين نفسيهما، لكل فرع أمبيرمتر، وفولتميتر على فرع ثالث بين العقدتين، والمولد مع أمبيرمتر رئيسي في الحلقة الخارجية.')}
     <rect class="r4-canvas" x="10" y="10" width="680" height="400" rx="10"/>
     ${wire('M170 80V270')}
     ${wire('M530 80V270')}
-    ${wire('M170 80H227')}
+    ${wire('M170 80H226')}
     ${meter(250, 80, 'A₁', '')}
-    ${wire('M273 80H374')}
+    ${wire('M274 80H372')}
     ${resistor(420, 80, 'R₁')}
-    ${wire('M466 80H530')}
-    ${wire('M170 270H227')}
+    ${wire('M468 80H530')}
+    ${wire('M170 270H226')}
     ${meter(250, 270, 'A₂', '')}
-    ${wire('M273 270H374')}
+    ${wire('M274 270H372')}
     ${resistor(420, 270, 'R₂')}
-    ${wire('M466 270H530')}
+    ${wire('M468 270H530')}
     ${wire('M170 170H326')}
     ${meter(350, 170, 'V', 'بين العقدتين')}
     ${wire('M374 170H530')}
-    ${wire('M170 170H96V244')}
+    ${wire('M170 170H96V270')}
     ${battery(96, 270)}
-    ${wire('M96 296V370H327')}
+    ${wire('M96 288V370H326')}
     ${meter(350, 370, 'A', 'تيار المولد', 'above')}
-    ${wire('M373 370H604V170H530')}
+    ${wire('M374 370H604V170H530')}
     <circle class="r4-node" cx="170" cy="170" r="6"/><circle class="r4-node" cx="530" cy="170" r="6"/>
   </svg>`, 'التفرع: R₁ وR₂ بين العقدتين نفسيهما، فيتساوى فرق الكمون على الفرعين، ويتوزّع التيار.');
 }
 
 function equivalentSummaryFigure(key) {
   return figure('equivalent-summary', 115, `${svgOpen(key, '0 0 700 330')}
-    ${titles(key, 'ملخص المقاومة المكافئة في التسلسل والتفرع', 'على اليمين دارة تسلسل ومقاومتها المكافئة مجموع المقاومتين. على اليسار دارة تفرع ومقلوب مكافئتها مجموع مقلوبي المقاومتين.')}
+    ${titles(key, 'ملخص المقاومة المكافئة في التسلسل والتفرع', 'على اليسار دارة تسلسل ومقاومتها المكافئة مجموع المقاومتين. على اليمين دارة تفرع ومقلوب مكافئتها مجموع مقلوبي المقاومتين.')}
     <rect class="r4-canvas" x="10" y="10" width="330" height="300" rx="10"/>
     <rect class="r4-canvas" x="360" y="10" width="330" height="300" rx="10"/>
     <text class="r4-panel-label" x="175" y="48" text-anchor="middle">على التسلسل</text>
@@ -304,7 +305,7 @@ function equivalentSummaryFigure(key) {
     <text class="r4-axis-label" x="175" y="244" text-anchor="middle">المكافئة أكبر من كل مقاومة</text>
     <text class="r4-axis-label" x="175" y="276" text-anchor="middle">التيار نفسه في المسار</text>
     <text class="r4-panel-label" x="525" y="48" text-anchor="middle">على التفرع</text>
-    <path class="r4-wire" d="M430 105H620M430 175H620"/>
+    <path class="r4-wire" d="M485 105H430V175H485 M565 105H620V175H565"/>
     ${resistor(525, 105, 'R₁', 80, 28)}${resistor(525, 175, 'R₂', 80, 28)}
     <text class="r4-formula-text" x="525" y="240" text-anchor="middle" direction="ltr">1/R_eq = 1/R₁ + 1/R₂</text>
     <text class="r4-axis-label" x="525" y="278" text-anchor="middle">المكافئة أصغر من أصغر مقاومة</text>
@@ -350,15 +351,15 @@ function ledFigure(key) {
   return figure('led', 117, `${svgOpen(key, '0 0 640 330')}
     ${titles(key, 'ثنائي ضوئي LED مع مقاومة تحديد تيار وقطبية صحيحة', 'دارة مغلقة: مصباح ليد بمصعد ومهبط ومقاومة تحديد تيار على التسلسل مع خلية، والمصعد متصل بقطب الخلية الموجب.')}
     <rect class="r4-canvas" x="10" y="10" width="620" height="300" rx="10"/>
-    ${wire('M70 110H150')}
+    ${wire('M70 200V110H161')}
     ${resistor(200, 110, 'R', 78, 32)}
     ${wire('M239 110H300')}
     <path class="r4-diode-body" d="M300 78L360 110L300 142z"/>
     <path class="r4-diode-bar" d="M360 76V144"/>
-    ${wire('M360 110H576V250H70V150')}
+    ${wire('M360 110H576V250H70V218')}
     ${battery(70, 200)}
-    <path class="r4-photon" d="M372 72l22-22M382 92l26-12M376 108l34-4"/>
-    <path class="r4-photon-head" d="m394 50 10-3-4 10z"/>
+    <path class="r4-photon" d="M328 80l18-24 M346 88l18-24"/>
+    <path class="r4-photon-head" d="M346 56l-3 12-7-5z M364 64l-3 12-7-5z"/>
     <text class="r4-part-label" x="294" y="62" text-anchor="end">مصعد (+)</text>
     <text class="r4-part-label" x="374" y="176" text-anchor="start">مهبط (−)</text>
     <text class="r4-part-label" x="200" y="152" text-anchor="middle">مقاومة تحديد التيار</text>

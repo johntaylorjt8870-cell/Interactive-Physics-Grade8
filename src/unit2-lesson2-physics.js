@@ -15,6 +15,12 @@ export function chargeFromCurrentTime(currentA, timeS) {
   return { charge: I * t, current: I, time: t };
 }
 
+/** p91: the second observation lasts three minutes, independently of the first sample. */
+export function p91Readings(chargeC, sampleSeconds) {
+  const { current } = currentFromChargeTime(chargeC, sampleSeconds);
+  return { current, chargeInThreeMinutes: chargeFromCurrentTime(current, 3 * 60).charge };
+}
+
 /** Series: same current in every part. */
 export function seriesCurrents(sourceCurrentA, branchCount) {
   const I = Number(sourceCurrentA);

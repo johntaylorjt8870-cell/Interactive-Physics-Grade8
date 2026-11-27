@@ -88,8 +88,8 @@ const STORM_CHARGES = frame('storm-charges-svg', 'الشحنات في السحا
   <rect width="720" height="420" fill="url(#storm-sky)" rx="18" />
   <path d="M0 342 Q130 302 260 342 T520 338 T720 330 V420 H0Z" class="u2-storm-ground" />
   <g class="u2-cloud"><ellipse cx="250" cy="120" rx="160" ry="65" /><ellipse cx="170" cy="130" rx="95" ry="52" /><ellipse cx="340" cy="135" rx="110" ry="50" /><ellipse cx="505" cy="166" rx="135" ry="58" /><ellipse cx="560" cy="178" rx="86" ry="43" /></g>
-  <path d="M330 192 300 236 326 232 294 286" class="u2-lightning-bolt" />
-  <path d="M516 220 488 268 514 260 478 335" class="u2-lightning-bolt" />
+  <path d="M310 170 365 187 353 166 470 126" class="u2-lightning-bolt" />
+  <path d="M510 200 488 268 514 260 478 350" class="u2-lightning-bolt" />
   ${charge(170, 82, '+')}${charge(250, 65, '+')}${charge(330, 88, '+')}${charge(470, 126, '+')}${charge(550, 136, '+')}
   ${charge(150, 164, '−')}${charge(230, 174, '−')}${charge(310, 170, '−')}${charge(470, 198, '−')}${charge(550, 204, '−')}
   ${charge(180, 356, '+')}${charge(260, 356, '+')}${charge(340, 356, '+')}${charge(420, 356, '+')}${charge(500, 356, '+')}
@@ -104,7 +104,7 @@ const LIGHTNING_ROD = frame('lightning-rod-svg', 'مكونات مانعة الص
   <g class="u2-building-windows"><rect x="300" y="175" width="30" height="35" /><rect x="350" y="175" width="30" height="35" /><rect x="400" y="175" width="30" height="35" /><rect x="300" y="235" width="30" height="35" /><rect x="350" y="235" width="30" height="35" /><rect x="400" y="235" width="30" height="35" /><rect x="300" y="295" width="30" height="35" /><rect x="350" y="295" width="30" height="35" /><rect x="400" y="295" width="30" height="35" /></g>
   <line x1="330" y1="130" x2="330" y2="72" class="u2-antenna" /><line x1="315" y1="82" x2="345" y2="82" class="u2-antenna" />
   <line x1="405" y1="126" x2="405" y2="58" class="u2-copper" />
-  <path d="M505 20 462 70 486 67 423 119" class="u2-lightning-bolt" />
+  <path d="M505 20 460 40 471 41 405 58" class="u2-lightning-bolt" />
   <path d="M405 126 V366 Q405 386 425 386 H480 V462" class="u2-copper" />
   <rect x="456" y="396" width="48" height="78" rx="8" class="u2-ground-material" />
   <line x1="480" y1="386" x2="480" y2="468" class="u2-ground-rod" />

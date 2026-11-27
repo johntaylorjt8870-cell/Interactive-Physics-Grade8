@@ -120,14 +120,14 @@ function paintVectors(root, values, directions, prefix = 'student') {
   const canvas = root.querySelector(`[data-vector-canvas="${prefix}"]`);
   if (!canvas) return;
   const labels = { f12: 'F₁₂', f13: 'F₁₃', resultant: 'Fnet' };
-  const lengths = {};
+  // One scale for all three forces; clamping them separately breaks vector addition.
+  const scale = Math.min(16, 145 / Math.max(...Object.values(values).map(Math.abs)));
   for (const key of Object.keys(labels)) {
     const group = canvas.querySelector(`[data-vector-arrow="${key}"]`);
     const value = Number(values[key]);
     const direction = directions[key];
     if (!group || !Number.isFinite(value) || !direction) continue;
-    const length = Math.min(145, Math.max(18, Math.abs(value) * 16));
-    lengths[key] = length;
+    const length = Math.abs(value) * scale;
     const x2 = 180 + (direction === 'left' ? -length : length);
     const line = group.querySelector('[data-vector-line]');
     line.setAttribute('x2', String(x2));

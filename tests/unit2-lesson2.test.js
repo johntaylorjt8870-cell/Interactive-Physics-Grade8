@@ -228,12 +228,12 @@ test('p89 circuit follows the textbook layout and the current/electron conventio
   assert.ok(arrows.every((a) => a.cls === (a.flow === 'current' ? 'u2l2-arrow-current' : 'u2l2-arrow-electron')));
   assert.doesNotMatch(d.svg, /marker-end/);
   const css = await read('../src/unit2-lesson2.css');
-  assert.match(css, /\.u2l2-arrow-current\{fill:#f6c700/, 'current arrows are yellow');
+  assert.match(css, /\.u2l2-arrow-current\{fill:#55acda/, 'printed p89 current arrows are blue');
   assert.match(css, /\.u2l2-arrow-electron\{fill:#d32f2f/, 'electron arrows are red');
   for (const label of ['المولّد', 'مصدر الطاقة الكهربائية', 'موصل كهربائي', 'جهاز كهربائي', 'مستهلك (مصباح)', 'مفتاح (قاطعة)', 'موجب', 'سالب']) assert.ok(d.svg.includes(label), label);
-  assert.match(d.svg, />e<tspan[^>]*>−<\/tspan><\/text>/, 'e⁻ label');
-  assert.deepEqual(d.legend.map((l) => l.color), ['yellow', 'red']);
-  assert.match(css, /\.legend-swatch\.yellow\{/);
+  assert.match(d.svg, />e<\/text>/, 'printed e label');
+  assert.deepEqual(d.legend.map((l) => l.color), ['sky', 'red']);
+  assert.match(css, /\.legend-swatch\.sky\{/);
   assert.match(css, /\.legend-swatch\.red\{/);
 });
 
@@ -270,7 +270,7 @@ test('tube lab: pushing one or several balls immediately pushes the same number 
   assert.equal((html.match(/class="u2l2-ball/g) ?? []).length, TUBE_CAPACITY);
 });
 
-test('p92 series circuit is one closed loop: generator, A1, L1, L2, A2 really wired in series', () => {
+test('p92 series circuit is one closed loop: generator, A1, L1, A2, L2 really wired in series', () => {
   const svg = UNIT2L2_DIAGRAMS['series-circuit'].svg;
   const key = ([x, y]) => `${x},${y}`;
   // Wires use only M/H/V commands: rebuild their polylines.
@@ -290,7 +290,7 @@ test('p92 series circuit is one closed loop: generator, A1, L1, L2, A2 really wi
       const num = (a) => Number(rest.match(new RegExp(`data-${a}="([\\d.]+)"`))?.[1]);
       return { part, name, a: [Number(ax), Number(ay)], b: [Number(bx), Number(by)], cx: num('cx'), cy: num('cy'), r: num('r') };
     });
-  assert.deepEqual(parts.map((p) => `${p.part}:${p.name}`), ['generator:G', 'ammeter:A1', 'lamp:L1', 'lamp:L2', 'ammeter:A2']);
+  assert.deepEqual(parts.map((p) => `${p.part}:${p.name}`), ['generator:G', 'ammeter:A1', 'lamp:L1', 'ammeter:A2', 'lamp:L2']);
   // Terminals of round symbols lie exactly on their outline, so wires meet the symbol edge.
   for (const p of parts.filter((x) => x.r)) for (const t of [p.a, p.b]) assert.equal(Math.hypot(t[0] - p.cx, t[1] - p.cy), p.r, `${p.name} terminal on outline`);
   // Every terminal is met by exactly one wire end and every wire end by exactly one terminal.
@@ -307,7 +307,7 @@ test('p92 series circuit is one closed loop: generator, A1, L1, L2, A2 really wi
       assert.ok(Math.hypot(p.cx - cx, p.cy - cy) >= p.r, `wire segment ${x1},${y1}-${x2},${y2} crosses ${p.name}`);
     }
   }
-  // Walk the loop leaving the generator through its + terminal: one cycle in the order of the p92 reference text.
+  // Walk the loop leaving the generator through its + terminal: one cycle in the order in the p92 photograph of the printed diagram.
   const wireFrom = new Map(wires.flatMap((w) => [[key(w[0]), key(w.at(-1))], [key(w.at(-1)), key(w[0])]]));
   const partAt = new Map(parts.flatMap((p) => [[key(p.a), p], [key(p.b), p]]));
   const order = [];
@@ -317,11 +317,11 @@ test('p92 series circuit is one closed loop: generator, A1, L1, L2, A2 really wi
     order.push(p.name);
     at = wireFrom.get(key(p.a) === at ? key(p.b) : key(p.a));
   }
-  assert.deepEqual(order, ['G', 'A1', 'L1', 'L2', 'A2']);
+  assert.deepEqual(order, ['G', 'A1', 'L1', 'A2', 'L2']);
   assert.equal(at, key(parts[0].b), 'the loop closes back at the generator');
   assert.match(svg, /data-terminal="positive"/);
   assert.match(svg, /data-terminal="negative"/);
-  assert.ok(svg.includes('I = 200 mA = Const'));
+  assert.equal((svg.match(/>I = 200 mA<\/text>/g) ?? []).length, 2);
 });
 
 test('p90 q-t graph: axis ticks from the textbook ranges, aligned with the plotted book points', () => {
@@ -342,7 +342,7 @@ test('p90 q-t graph: axis ticks from the textbook ranges, aligned with the plott
   // The plotted points are exactly the book's (t, q) pairs on the same scale as the ticks.
   const points = [...svg.matchAll(/<circle class="u2-plot" cx="([\d.]+)" cy="([\d.]+)"/g)].map(([, x, y]) => [Number(x), Number(y)]);
   assert.deepEqual(points, [[5, 20], [10, 40], [15, 60], [20, 80], [25, 100]].map(([t, q]) => [xOf(t), yOf(q)]));
-  assert.match(svg, />q \(C\)</);
+  assert.match(svg, />q \(c\)</);
   assert.match(svg, />t \(s\)</);
 });
 
@@ -367,15 +367,13 @@ test('teacher p96: arithmetic typeset left-to-right, fraction vertical, values a
   assert.ok(article.includes('خطأ شائع: القسمة على 2 بدل 120.'));
 });
 
-test('u2l2q04: the arrow colours named in the prompt and figure text are the colours drawn (p89 yellow and red); key and options unchanged', async () => {
+test('u2l2q04: the arrow colours named in the prompt and figure text are the colours drawn in this authored assessment; key and options unchanged', () => {
   const q = UNIT2L2_QUESTIONS.find((x) => x.id === 'u2l2q04');
   const svg = unit2l2AssessmentDiagram(q);
-  const css = await read('../src/unit2-lesson2.css');
-  const cssFill = (cls) => css.match(new RegExp(`\\.${cls}\\{fill:(#[0-9a-f]{6})`))[1];
   const fills = Object.fromEntries([...svg.matchAll(/<polygon data-flow="(\w+)"[^>]*? fill="(#[0-9a-f]{6})"/g)].map(([, flow, fill]) => [flow, fill]));
   assert.deepEqual(Object.keys(fills).sort(), ['current', 'electron']);
-  assert.equal(fills.current, cssFill('u2l2-arrow-current'), 'same yellow as the p89 current arrows');
-  assert.equal(fills.electron, cssFill('u2l2-arrow-electron'), 'same red as the p89 electron arrows');
+  assert.equal(fills.current, '#f6c700', 'question 4 asks about its own yellow arrow, not the blue in the scan');
+  assert.equal(fills.electron, '#d32f2f');
   // A colour change in the drawing must come with the matching word in the text, and vice versa.
   const COLOUR_NAMES = { '#f6c700': 'أصفر', '#d32f2f': 'أحمر' };
   const name = (flow) => COLOUR_NAMES[fills[flow]] ?? assert.fail(`no Arabic name for ${fills[flow]}: update the prompt with the drawing`);
@@ -417,10 +415,13 @@ test('u2l2q04 drawing: + and − poles, arrowheads and directions follow the cir
   // As in the lesson's p89 drawing: + on the left with the terminal cap, − on the right.
   assert.ok(pos.x2 <= neg.x, '+ half left of the − half');
   assert.ok(cap.x < pos.x && cap.x2 > pos.x, 'terminal cap on the + half');
-  // One closed path: it leaves the + cap, goes round the loop and enters the − half.
+  // Two conductors meet opposite sides of the load; no bare short across the cell.
   const wires = wirePolylines(svg);
-  assert.equal(wires.length, 1);
-  const path = wires[0];
+  assert.equal(wires.length, 2);
+  const [x, y, w, h] = svg.match(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/).slice(1).map(Number);
+  assert.deepEqual(wires[0].at(-1), [x, y + h / 2]);
+  assert.deepEqual(wires[1][0], [x + w, y + h / 2]);
+  const path = wires.flat();
   const [[sx, sy], [ex, ey]] = [path[0], path.at(-1)];
   assert.ok(sx >= cap.x && sx <= cap.x2 && sy > cap.y && sy < cap.y2, 'wire starts on the + cap');
   assert.ok(ex === neg.x2 && ey > neg.y && ey < neg.y2, 'wire ends on the − half');
@@ -429,7 +430,7 @@ test('u2l2q04 drawing: + and − poles, arrowheads and directions follow the cir
   const loop = { x: Math.min(...xs), x2: Math.max(...xs), y: Math.min(...ys), y2: Math.max(...ys) };
   const UNIT = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
   const along = (p, u) => p[0] * u[0] + p[1] * u[1];
-  const segments = path.slice(1).map((q, i) => ({ p: path[i], q, u: [Math.sign(q[0] - path[i][0]), Math.sign(q[1] - path[i][1])] }));
+  const segments = wires.flatMap((wire) => wire.slice(1).map((q, i) => ({ p: wire[i], q, u: [Math.sign(q[0] - wire[i][0]), Math.sign(q[1] - wire[i][1])] })));
   const arrows = [...svg.matchAll(/<polygon data-flow="(\w+)" data-dir="(\w+)" points="([^"]+)"/g)].map(([, flow, dir, p]) => {
     const v = p.trim().split(/\s+/).map((xy) => xy.split(',').map(Number));
     return { flow, dir, v, c: [v.reduce((s, q) => s + q[0], 0) / v.length, v.reduce((s, q) => s + q[1], 0) / v.length] };
@@ -485,13 +486,15 @@ test('p93 parallel circuit (geometric check of the SVG): closed, A in the main l
       const num = (a) => Number(rest.match(new RegExp(`data-${a}="([\\d.]+)"`))?.[1]);
       return { part, name, a: [Number(ax), Number(ay)], b: [Number(bx), Number(by)], cx: num('cx'), cy: num('cy'), r: num('r'), inner };
     });
-  assert.deepEqual(parts.map((p) => `${p.part}:${p.name}`), ['generator:G', 'ammeter:A', 'ammeter:A1', 'lamp:L1', 'ammeter:A2', 'lamp:L1-lower']);
-  const [gen, ...round] = parts;
+  assert.deepEqual(parts.map((p) => `${p.part}:${p.name}`), ['generator:G', 'switch:K', 'ammeter:A', 'ammeter:A1', 'lamp:L1', 'ammeter:A2', 'lamp:L1-lower']);
+  const [gen, sw, ...round] = parts;
   const byName = Object.fromEntries(parts.map((p) => [p.name, p]));
-  const [gx, gy, gw, gh] = gen.inner.match(/<rect class="u2-cell" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/).slice(1).map(Number);
-  // Terminals sit on the symbol outlines: circle edge, or the generator's left and right sides.
+  // Copper reaches the centres of the plates (p93: long + on the left) and the two switch contacts.
+  const plates = [...gen.inner.matchAll(/class="u2l2-plate-(long|short)" d="M(\d+) (\d+)V(\d+)"/g)].map(([, type, x, y, end]) => ({ type, x: +x, y: (+y + +end) / 2, len: +end - +y }));
+  assert.deepEqual(plates.map(({x,y}) => [x,y]), [gen.a, gen.b]);
+  assert.ok(plates[0].len > plates[1].len && plates[0].x < plates[1].x);
+  assert.deepEqual([...sw.inner.matchAll(/u2l2-switch-contact" cx="(\d+)" cy="(\d+)"/g)].map(([,x,y]) => [+x,+y]), [sw.a, sw.b]);
   for (const p of round) for (const t of [p.a, p.b]) assert.equal(Math.hypot(t[0] - p.cx, t[1] - p.cy), p.r, `${p.name} terminal on outline`);
-  assert.deepEqual([gen.a, gen.b], [[gx, gy + gh / 2], [gx + gw, gy + gh / 2]]);
   // + and − are separate signs, + next to the first (positive) terminal.
   const signX = (pole) => Number(gen.inner.match(new RegExp(`data-terminal="${pole}" x="([\\d.]+)"[^>]*>([^<]*)<`))[1]);
   assert.match(gen.inner, /data-terminal="positive"[^>]*>\+</);
@@ -516,11 +519,7 @@ test('p93 parallel circuit (geometric check of the SVG): closed, A in the main l
       const cy = Math.max(Math.min(p.cy, Math.max(y1, y2)), Math.min(y1, y2));
       assert.ok(Math.hypot(p.cx - cx, p.cy - cy) >= p.r, `wire ${x1},${y1}-${x2},${y2} crosses ${p.name}`);
     }
-    const len = Math.hypot(x2 - x1, y2 - y1);
-    for (let s = 0; s <= len; s++) {
-      const [x, y] = [x1 + ((x2 - x1) * s) / len, y1 + ((y2 - y1) * s) / len];
-      assert.ok(!(x > gx && x < gx + gw && y > gy && y < gy + gh), `wire ${x1},${y1}-${x2},${y2} crosses the generator`);
-    }
+    assert.ok(!(y1 === gen.a[1] && y2 === y1 && Math.min(x1,x2) < gen.b[0] && Math.max(x1,x2) > gen.a[0]), 'no wire bridges the plate gap');
   }
   // Netlist: each wire joins its two ends; parts touching the same conductor share a node.
   const parent = new Map();
@@ -530,9 +529,10 @@ test('p93 parallel circuit (geometric check of the SVG): closed, A in the main l
   for (const p of parts) for (const t of [p.a, p.b]) nodes.set(find(key(t)), [...(nodes.get(find(key(t))) ?? []), p.name]);
   assert.deepEqual([...nodes.values()].map((names) => names.sort().join(' ')).sort(), [
     'A A1 A2', // junction after the main ammeter: both branches start here
-    'A G', // main line: generator to A
+    'A K', // switch then ammeter in the common line
     'A1 L1', // upper branch: A1 in series with L1
     'A2 L1-lower', // lower branch: A2 in series with the lower lamp
+    'G K', // positive plate to switch
     'G L1 L1-lower', // both branches return to the generator's other terminal
   ]);
   // Upper branch A1–L1 above the lower branch A2–lamp; the lower lamp keeps the source's printed label L1.
@@ -541,7 +541,8 @@ test('p93 parallel circuit (geometric check of the SVG): closed, A in the main l
      for the geometry above, and the lower lamp keeps the source's printed L₁. */
   const printed = { A: 'A', A1: 'A₁', L1: 'L₁', A2: 'A₂', 'L1-lower': 'L₁' };
   for (const p of round) assert.match(p.inner, new RegExp(`>${printed[p.name]}</text>`));
-  assert.ok(svg.includes('I = I1 + I2'));
+  assert.ok(UNIT2L2_DIAGRAMS['parallel-circuit'].legend.some(({symbol}) => symbol.includes('I = I₁ + I₂')));
+  assert.ok(!svg.includes('I = I₁ + I₂'), 'p94 conclusion, not printed on the p93 circuit');
 });
 
 test('teacher gate unchanged and no plain password in new pages', async () => {
@@ -660,30 +661,19 @@ test('physics of the rebuilt activities: table, graph, terms, units, batteries, 
 test('battery diagrams: series chain closes cell i to cell i+1, parallel joins two rails', () => {
   const series = UNIT2L2_DIAGRAMS['batteries-series'].svg;
   const parallel = UNIT2L2_DIAGRAMS['batteries-parallel'].svg;
-  const cells = (svg) => [...svg.matchAll(/data-cell="(\d)" data-bank="(\w+)" data-x="([\d.]+)" data-top="([\d.]+)" data-bottom="([\d.]+)" data-flipped="(true|false)"/g)]
-    .map(([, index, bank, x, top, bottom, flipped]) => ({ index: Number(index), bank, x: Number(x), top: Number(top), bottom: Number(bottom), flipped: flipped === 'true' }));
+  const cells = (svg) => [...svg.matchAll(/data-cell="(\d)" data-bank="(\w+)" data-x="([\d.]+)" data-top="([\d.]+)" data-bottom="([\d.]+)"/g)]
+    .map(([, index, bank, x, top, bottom]) => ({ index: Number(index), bank, x: Number(x), top: Number(top), bottom: Number(bottom) }));
   const seriesCells = cells(series);
   assert.deepEqual(seriesCells.map((c) => c.index), [1, 2, 3, 4]);
   assert.ok(seriesCells.every((c) => c.bank === 'series'));
-  // The cells alternate so that every link runs − of one cell into + of the next.
-  assert.deepEqual(seriesCells.map((c) => c.flipped), [false, true, false, true]);
-  // One chain wire per gap, from the − cap of a cell to the + cap of the next.
-  const chains = [...series.matchAll(/data-bank-wire="chain-(\d)" data-wire data-from="cell(\d)-negative" data-to="cell(\d)-positive" data-level="([\d.]+)" d="M([\d.]+) ([\d.]+) H([\d.]+)"/g)]
-    .map(([, n, from, to, level, x1, y1, x2]) => ({ n: Number(n), from: Number(from), to: Number(to), level: Number(level), x1: Number(x1), y1: Number(y1), x2: Number(x2), y2: Number(y1) }));
-  assert.equal(chains.length, 3);
-  chains.forEach((wire, index) => {
-    const cell = seriesCells[index];
-    const next = seriesCells[index + 1];
-    assert.equal(wire.from, cell.index);
-    assert.equal(wire.to, next.index);
-    // The link leaves the − cap of this cell and enters the + cap of the next,
-    // whichever way each cell is turned, and stays on one level (no crossing).
-    const negativeY = cell.flipped ? cell.top : cell.bottom;
-    const positiveY = next.flipped ? next.bottom : next.top;
-    assert.deepEqual([wire.x1, wire.y1], [cell.x, negativeY], 'starts on the − cap');
-    assert.deepEqual([wire.x2, wire.y2], [next.x, positiveY], 'ends on the + cap of the next cell');
-    assert.equal(wire.y1, wire.level, 'the link runs at the level it declares');
-  });
+  // In image-7 all four + faces are UP. Follow each bent jumper from the
+  // upper pole to the lower pole of its right neighbour, not a straight line
+  // between alternating inverted cells. E22 independently traces the bare nets.
+  const jumpers = wirePolylines(series).slice(0, 3);
+  for (const [i, w] of jumpers.entries()) {
+    assert.deepEqual(w[0], [seriesCells[i].x, seriesCells[i].top]);
+    assert.deepEqual(w.at(-1), [seriesCells[i+1].x, seriesCells[i+1].bottom]);
+  }
   // The printed total of the book, once per diagram.
   assert.ok(series.includes('6 Volts'));
   assert.ok(parallel.includes('1.5 Volts'));
@@ -723,7 +713,7 @@ test('the three labs now carry a prediction before acting, a conclusion and thei
   /* `hidden` alone does nothing on an SVG <g>, so the inactive canvas also carries
      the class the stylesheet turns off. */
   assert.ok(circuit.includes('data-circuit-canvas-group="parallel" class="is-hidden" hidden'));
-  assert.ok(circuit.includes('data-junction="320,170"'));
+  assert.equal((circuit.match(/data-junction=/g) ?? []).length, 2);
   // Prediction answers exist for each lab and are not shipped in the page markup.
   for (const id of ['sim-tube', 'sim-current', 'sim-circuit']) {
     assert.equal(UNIT2L2_ANSWERS[id].kind, 'prediction');

@@ -65,12 +65,12 @@ function heatMarkup() {
       <div class="r4-lab-stage">
         <div class="r4-lamp-stage" data-heat-lamp data-lit="false" aria-hidden="true"><span class="r4-lamp-glow"></span><span class="r4-lamp-text">مصباح 6 Ω</span></div>
         <div class="r4-meter" role="status" aria-live="polite">
-          <span class="r4-meter-label">شدة التيار</span><strong data-heat-current>${num(initial.current)} A</strong>
+          <span class="r4-meter-label">شدة التيار</span><strong dir="ltr" data-heat-current>${num(initial.current)} A</strong>
         </div>
         <div class="r4-readouts">
-          <div><span>المقاومة الكلية</span><strong data-heat-resistance>${num(initial.totalResistance)} Ω</strong></div>
-          <div><span>فرق الكمون على المصباح</span><strong data-heat-voltage>${num(initial.lampVoltage)} V</strong></div>
-          <div><span>القدرة في المصباح</span><strong data-heat-power>${num(initial.lampPower)} W</strong></div>
+          <div><span>المقاومة الكلية</span><strong dir="ltr" data-heat-resistance>${num(initial.totalResistance)} Ω</strong></div>
+          <div><span>فرق الكمون على المصباح</span><strong dir="ltr" data-heat-voltage>${num(initial.lampVoltage)} V</strong></div>
+          <div><span>القدرة في المصباح</span><strong dir="ltr" data-heat-power>${num(initial.lampPower)} W</strong></div>
         </div>
       </div>
     </div>`,
@@ -90,7 +90,7 @@ function ohmMarkup() {
       </div>
       <div class="r4-lab-stage">
         <div class="r4-meter" role="status" aria-live="polite">
-          <span class="r4-meter-label">شدة التيار</span><strong data-ohm-current>${num(ohmCurrent(u, r))} A</strong>
+          <span class="r4-meter-label">شدة التيار</span><strong dir="ltr" data-ohm-current>${num(ohmCurrent(u, r))} A</strong>
           <span class="r4-meter-note" data-ohm-equation>I = U / R = 4 / 4 = 1 A</span>
         </div>
         <div class="r4-live-graph" data-ohm-graph>${graph([{ i: 0, u: 0 }, { i: 1, u: 4 }], { id: 'r4-live-ohm', maxI: 8, maxU: 16, active: { i: 1, u: 4 } })}</div>
@@ -114,12 +114,12 @@ function wireMarkup() {
       </div>
       <div class="r4-lab-stage">
         <div class="r4-meter" role="status" aria-live="polite">
-          <span class="r4-meter-label">مقاومة السلك</span><strong data-wire-resistance>${num(initial)} Ω</strong>
+          <span class="r4-meter-label">مقاومة السلك</span><strong dir="ltr" data-wire-resistance>${num(initial)} Ω</strong>
         </div>
         <div class="r4-readouts">
-          <div><span>الطول</span><strong data-wire-length>2 m</strong></div>
-          <div><span>المساحة</span><strong data-wire-area>1 mm²</strong></div>
-          <div><span>ρ</span><strong data-wire-rho>1.7×10⁻⁸ Ω·m</strong></div>
+          <div><span>الطول</span><strong dir="ltr" data-wire-length>2 m</strong></div>
+          <div><span>المساحة</span><strong dir="ltr" data-wire-area>1 mm²</strong></div>
+          <div><span>ρ</span><strong dir="ltr" data-wire-rho>1.7×10⁻⁸ Ω·m</strong></div>
         </div>
         <p class="r4-model-note">ضاعف الطول ← تتضاعف المقاومة. ضاعف المساحة ← تنقص إلى النصف. غيّر ρ وحدها ← تتغيّر المقاومة بالتناسب.</p>
       </div>
@@ -150,15 +150,15 @@ function networkMarkup() {
       <div class="r4-lab-stage">
         <div class="r4-circuit-stage" data-network-circuit>${circuitMarkup('series')}</div>
         <div class="r4-meter" role="status" aria-live="polite">
-          <span class="r4-meter-label">المقاومة المكافئة</span><strong data-network-req>${num(initial.r)} Ω</strong>
+          <span class="r4-meter-label">المقاومة المكافئة</span><strong dir="ltr" data-network-req>${num(initial.r)} Ω</strong>
         </div>
         <div class="r4-readouts">
-          <div><span>التيار الكلي</span><strong data-network-i>—</strong></div>
-          <div><span>تيار R₁</span><strong data-network-i1>—</strong></div>
-          <div><span>تيار R₂</span><strong data-network-i2>—</strong></div>
-          <div><span>فرق الكمون U₁</span><strong data-network-u1>—</strong></div>
-          <div><span>فرق الكمون U₂</span><strong data-network-u2>—</strong></div>
-          <div><span>تحقّق الحفظ</span><strong data-network-check>—</strong></div>
+          <div><span>التيار الكلي</span><strong dir="ltr" data-network-i>—</strong></div>
+          <div><span>تيار R₁</span><strong dir="ltr" data-network-i1>—</strong></div>
+          <div><span>تيار R₂</span><strong dir="ltr" data-network-i2>—</strong></div>
+          <div><span>فرق الكمون U₁</span><strong dir="ltr" data-network-u1>—</strong></div>
+          <div><span>فرق الكمون U₂</span><strong dir="ltr" data-network-u2>—</strong></div>
+          <div><span>تحقّق الحفظ</span><strong dir="ltr" data-network-check>—</strong></div>
         </div>
         <p class="r4-model-note" data-network-status>القاطعة مفتوحة؛ لا تيار قبل الإغلاق.</p>
       </div>
@@ -166,19 +166,20 @@ function networkMarkup() {
     'الدارة مثالية والمقاييس مثالية؛ لا تحاكي مقاومة داخلية للمولد أو أسلاكاً. غيّر القيم لاختبار جمع فروق الكمون في التسلسل وجمع التيارات في التفرع.');
 }
 
-function circuitMarkup(mode) {
+export function circuitMarkup(mode, closed = false) {
   const series = mode === 'series';
   const part = (x, y, label) => `<g class="r4-mini-resistor"><rect x="${x - 42}" y="${y - 15}" width="84" height="30" rx="4"/><text x="${x}" y="${y + 6}" text-anchor="middle" direction="ltr">${label}</text></g>`;
   return `<svg class="r4-mini-circuit" viewBox="0 0 560 230" role="img" aria-labelledby="r4-mini-title-${mode} r4-mini-desc-${mode}">
     <title id="r4-mini-title-${mode}">${series ? 'مقاومتان على التسلسل' : 'مقاومتان على التفرع'}</title>
     <desc id="r4-mini-desc-${mode}">${series ? 'مسار واحد يمر عبر R واحد ثم R اثنان.' : 'المقاومتان بين العقدتين نفسيهما في مسارين مستقلين.'}</desc>
-    <path class="r4-mini-wire" d="M60 180V50H500V180"/>
-    <path class="r4-mini-wire" d="M60 180H500"/>
-    <path class="r4-mini-wire" d="M45 184h30M52 210h16"/>
-    <text class="r4-mini-sign" x="28" y="182">+</text><text class="r4-mini-sign" x="28" y="216">−</text>
+    <path class="r4-mini-wire" d="M60 106V50H${series ? 188 : 238} M60 126V180H420 M460 180H500V50H${series ? 432 : 322}"/>
+    <path class="r4-mini-wire" d="M40 106h40 M48 126h24"/>
+    <text class="r4-mini-sign" x="28" y="110" direction="ltr">+</text><text class="r4-mini-sign" x="28" y="131" direction="ltr">−</text>
+    <circle class="r4-mini-node" cx="420" cy="180" r="4"/><circle class="r4-mini-node" cx="460" cy="180" r="4"/>
+    <path class="r4-mini-wire" d="M420 180${closed ? 'H460' : 'l32 -18'}"/>
     ${series
-      ? `${part(230, 50, 'R₁')}${part(390, 50, 'R₂')}`
-      : `<path class="r4-mini-wire" d="M180 50V115H380V50"/><path class="r4-mini-wire" d="M180 115V180"/><path class="r4-mini-wire" d="M380 115V180"/>${part(280, 50, 'R₁')}${part(280, 115, 'R₂')}<circle class="r4-mini-node" cx="180" cy="115" r="5"/><circle class="r4-mini-node" cx="380" cy="115" r="5"/>`}
+      ? `${part(230, 50, 'R₁')}<path class="r4-mini-wire" d="M272 50H348"/>${part(390, 50, 'R₂')}`
+      : `<path class="r4-mini-wire" d="M180 50V115H238 M322 115H380V50"/>${part(280, 50, 'R₁')}${part(280, 115, 'R₂')}<circle class="r4-mini-node" cx="180" cy="50" r="5"/><circle class="r4-mini-node" cx="380" cy="50" r="5"/>`}
     <text class="r4-mini-label" x="280" y="222" text-anchor="middle">${series ? 'مسار واحد · التيار نفسه' : 'عقدتان مشتركتان · الكمون نفسه'}</text>
   </svg>`;
 }
@@ -197,16 +198,15 @@ function colourMarkup() {
         <div class="r4-button-row">${reset('colour')}</div>
       </div>
       <div class="r4-lab-stage">
-        <div class="r4-band-preview" aria-hidden="true">
+        <div class="r4-band-preview" dir="ltr" aria-hidden="true">
           <span class="r4-band-preview-lead"></span>
           <span class="r4-band-preview-body">
-            <i data-band="a" style="background:${COLOURS[a][1]}"></i><i data-band="b" style="background:${COLOURS[b][1]}"></i><i data-band="c" style="background:${COLOURS[c][1]}"></i><i class="r4-band-preview-d" style="background:#b69750"></i>
+            <i data-band="a" style="background:${COLOURS[a][1]}">A</i><i data-band="b" style="background:${COLOURS[b][1]}">B</i><i data-band="c" style="background:${COLOURS[c][1]}">C</i><i class="r4-band-preview-d" style="background:#b69750">D</i>
           </span>
           <span class="r4-band-preview-lead"></span>
-          <span class="r4-band-preview-labels" dir="ltr"><b>A</b><b>B</b><b>C</b><b>D</b></span>
         </div>
         <div class="r4-meter" role="status" aria-live="polite">
-          <span class="r4-meter-label">قيمة المقاومة</span><strong data-colour-reading>${num(value)} Ω</strong>
+          <span class="r4-meter-label">قيمة المقاومة</span><strong dir="ltr" data-colour-reading>${num(value)} Ω</strong>
           <span class="r4-meter-note" data-colour-equation>R = (10×4 + 7) × 10² = 4700 Ω</span>
         </div>
         <div class="r4-challenge">
@@ -232,12 +232,12 @@ function rheostatMarkup() {
       <div class="r4-lab-stage">
         <div class="r4-rheostat-bar" aria-hidden="true"><span data-rheostat-fill style="width:100%"></span></div>
         <div class="r4-meter" role="status" aria-live="polite">
-          <span class="r4-meter-label">المقاومة والتيار</span><strong data-rheostat-reading>${num(initial.resistance)} Ω · ${num(initial.current)} A</strong>
+          <span class="r4-meter-label">المقاومة والتيار</span><strong dir="ltr" data-rheostat-reading>${num(initial.resistance)} Ω · ${num(initial.current)} A</strong>
         </div>
         <div class="r4-readouts">
-          <div><span>الطول الفعّال</span><strong data-rheostat-length>1 m</strong></div>
-          <div><span>المقاومة</span><strong data-rheostat-r>${num(initial.resistance)} Ω</strong></div>
-          <div><span>التيار</span><strong data-rheostat-i>${num(initial.current)} A</strong></div>
+          <div><span>الطول الفعّال</span><strong dir="ltr" data-rheostat-length>1 m</strong></div>
+          <div><span>المقاومة</span><strong dir="ltr" data-rheostat-r>${num(initial.resistance)} Ω</strong></div>
+          <div><span>التيار</span><strong dir="ltr" data-rheostat-i>${num(initial.current)} A</strong></div>
         </div>
         <p class="r4-model-note">تقليل الطول الفعّال يقلّل المقاومة، فيزداد التيار عند ثبات المصدر. هذا هو مبدأ التحكم بالتيار في المقاومة المتغيرة.</p>
       </div>
@@ -323,12 +323,12 @@ function renderNetwork(root) {
   const model = network(u, r1, r2, mode);
   write(root, '[data-network-req]', `${num(model.r)} Ω`);
   const stage = q(root, '[data-network-circuit]');
-  if (stage) stage.innerHTML = circuitMarkup(mode);
+  if (stage) stage.innerHTML = circuitMarkup(mode, state.networkClosed);
   for (const button of root.querySelectorAll('[data-network-switch]')) {
     button.setAttribute('aria-pressed', String((button.dataset.networkSwitch === 'close') === state.networkClosed));
   }
   if (!state.networkClosed) {
-    for (const key of ['i', 'i1', 'i2', 'u1', 'u2']) write(root, `[data-network-${key}]`, '0');
+    for (const key of ['i', 'i1', 'i2', 'u1', 'u2']) write(root, `[data-network-${key}]`, key.startsWith('i') ? '0 A' : '0 V');
     write(root, '[data-network-check]', '—');
     write(root, '[data-network-status]', 'القاطعة مفتوحة: لا تيار. أغلق القاطعة لقراءة التيارات وفروق الكمون.');
     return;

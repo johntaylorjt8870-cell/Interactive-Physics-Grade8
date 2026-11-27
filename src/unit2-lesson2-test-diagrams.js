@@ -2,8 +2,7 @@ const wrap = (id, t, d, body) => `<figure class="assessment-figure"><svg class="
 /* u2l2q04 follows the lesson's p89 drawing: generator on top with + on the left (pink half,
    terminal cap) and − on the right (blue half); conventional current I (yellow, outside the
    loop) leaves + and returns to −; electrons e⁻ (red, inside the loop) move the opposite way
-   on the same wire. Colours are those of .u2l2-arrow-current / .u2l2-arrow-electron, inlined
-   because the test page does not load the lesson stylesheet. The prompt names these colours,
+   on the same wire. Yellow/red is the authored assessment key; the printed p89 arrows are blue/red. The prompt names these colours,
    so the drawing and the prompt must change together (tests check this). */
 const FLOW = Object.freeze({
   current: Object.freeze({ fill: '#f6c700', stroke: '#7a5b00', text: '#7a5b00' }),
@@ -22,7 +21,9 @@ const flowArrow = (cx, cy, dir, flow) => {
 const flowSymbol = (x, y, flow, body) => `<text x="${x}" y="${y}" text-anchor="middle" direction="ltr" style="fill:${FLOW[flow].text};font:italic 400 24px KaTeX_Math,Georgia,'Times New Roman',serif">${body}</text>`;
 const poleSign = (x, pole, sign) => `<text data-terminal="${pole}" x="${x}" y="79" text-anchor="middle" style="fill:#24304a;font:800 26px var(--font-latin)">${sign}</text>`;
 const directions = wrap('u2l2-dir', 'جهتا التيار والإلكترونات', 'مولّد ومسار مغلق: سهم أصفر من الموجب إلى السالب وسهم أحمر بالعكس.', `
-  <path data-wire d="M230 70 H80 V220 H540 V70 H378" fill="none" stroke="#4a5a72" stroke-width="4"/>
+  <path data-wire d="M230 70 H80 V220 H284" fill="none" stroke="#4a5a72" stroke-width="4"/>
+  <path data-wire d="M336 220 H540 V70 H378" fill="none" stroke="#4a5a72" stroke-width="4"/>
+  <rect x="284" y="210" width="52" height="20" fill="#fff" stroke="#4a5a72" stroke-width="3"/>
   <g data-part="generator">
     <rect data-pole="cap" x="228" y="60" width="12" height="20" rx="3" fill="#bdb6a6" stroke="#5a5446" stroke-width="1.5"/>
     <rect data-pole="positive" x="238" y="48" width="70" height="44" rx="6" fill="#f7d0c7" stroke="#8a3b2e" stroke-width="2"/>
@@ -34,8 +35,10 @@ const directions = wrap('u2l2-dir', 'جهتا التيار والإلكترون�
 `);
 const qt = wrap('u2l2-qt', 'q بدلالة t', 'ثلاث نقاط على خط مستقيم صاعد.', `
   <line x1="60" y1="200" x2="560" y2="200" stroke="#24304a"/><line x1="60" y1="200" x2="60" y2="30" stroke="#24304a"/>
-  <polyline fill="none" stroke="#33568f" stroke-width="3" points="140,160 260,120 380,80"/>
-  <circle cx="140" cy="160" r="6" fill="#33568f"/><circle cx="260" cy="120" r="6" fill="#33568f"/><circle cx="380" cy="80" r="6" fill="#33568f"/>
+  <polyline fill="none" stroke="#33568f" stroke-width="3" points="60,200 180,160 300,120 420,80"/>
+  <g text-anchor="middle" direction="ltr"><text x="560" y="230">t (s)</text><text x="68" y="23">q (C)</text>
+    ${[[180,160,5,20],[300,120,10,40],[420,80,15,60]].map(([x,y,t,q]) => `<text x="${x}" y="222">${t}</text><text x="38" y="${y+5}">${q}</text>`).join('')}</g>
+  <circle cx="180" cy="160" r="6" fill="#33568f"/><circle cx="300" cy="120" r="6" fill="#33568f"/><circle cx="420" cy="80" r="6" fill="#33568f"/>
 `);
 export function unit2l2AssessmentDiagram(q) {
   if (q.diagram === 'directions') return directions;

@@ -602,8 +602,8 @@ function methodSceneMarkup(method) {
         </g>
         <g data-method-body-b>
           <circle class="u2l1a-method-ball" cx="530" cy="137" r="46" />
-          <text class="u2l1a-scene-label" x="530" y="212" text-anchor="middle">${card.bodies.b.name}</text>
-          <g data-method-marks-b></g>
+          <text class="u2l1a-scene-label" x="530" y="66" text-anchor="middle" data-method-body-label>${card.bodies.b.name}</text>
+          <g data-method-marks-b transform="translate(0 143)"></g>
           <text class="u2l1a-pole" data-method-near="${method}" x="500" y="142" text-anchor="middle" opacity="0">+</text>
           <text class="u2l1a-pole" data-method-far="${method}" x="562" y="142" text-anchor="middle" opacity="0">−</text>
         </g>
@@ -774,13 +774,17 @@ function mountMethods(panel, context) {
         <text class="u2l1a-charge-mark ${body.sign > 0 ? 'is-positive' : 'is-negative'}" x="${originX + index * 20}" y="0" text-anchor="middle">${signGlyph(body.sign)}</text>`).join('');
     };
     drawMarks(marksA, state.a, 180);
-    drawMarks(marksB, state.b, 500);
+    drawMarks(marksB, state.b.polarized ? { ...state.b, electronDelta: 0 } : state.b, 514);
+    svg.querySelector('[data-method-body-label]').setAttribute('y', state.grounded ? '66' : '212');
+    const touching = stepId === 'touch' || stepId === 'rub';
+    const shift = touching ? 194 : state.nearRod ? 170 : 0;
+    svg.querySelector('[data-method-body-a]').setAttribute('transform', `translate(${shift} 0)`);
     svg.querySelector(`[data-method-near="${method}"]`).setAttribute('opacity', state.b.polarized ? '1' : '0');
-    svg.querySelector(`[data-method-far="${method}"]`).setAttribute('opacity', state.b.polarized ? '1' : '0');
+    svg.querySelector(`[data-method-far="${method}"]`).setAttribute('opacity', state.b.polarized?.farEnd === 'negative' ? '1' : '0');
     svg.querySelector(`[data-method-ground="${method}"]`).setAttribute('opacity', state.grounded ? '1' : '0');
     const flow = svg.querySelector(`[data-method-flow="${method}"]`);
     const flowLabel = svg.querySelector(`[data-method-flow-label="${method}"]`);
-    if (state.flow) {
+    if (state.flow && (touching || state.grounded)) {
       const toGround = state.flow.to === 'ground';
       flow.setAttribute('opacity', '1');
       if (toGround) {
@@ -793,19 +797,19 @@ function mountMethods(panel, context) {
         flowLabel.textContent = `${state.flow.count} إلكترون إلى الأرض`;
       } else {
         const leftToRight = state.flow.from === 'a';
-        flow.querySelector('line').setAttribute('x1', leftToRight ? '300' : '470');
-        flow.querySelector('line').setAttribute('y1', '137');
-        flow.querySelector('line').setAttribute('x2', leftToRight ? '470' : '300');
-        flow.querySelector('line').setAttribute('y2', '137');
-        flowLabel.setAttribute('x', '385');
-        flowLabel.setAttribute('y', '122');
+        flow.querySelector('line').setAttribute('x1', leftToRight ? '452' : '516');
+        flow.querySelector('line').setAttribute('y1', '91');
+        flow.querySelector('line').setAttribute('x2', leftToRight ? '516' : '452');
+        flow.querySelector('line').setAttribute('y2', '91');
+        flowLabel.setAttribute('x', '484');
+        flowLabel.setAttribute('y', '68');
         flowLabel.textContent = `${state.flow.count} إلكترون`;
       }
     } else {
       flow.setAttribute('opacity', '0');
     }
     svg.querySelector(`[data-method-desc="${method}"]`).textContent =
-      `${card.bodies.a.name}: ${conditionWord(state.a.condition)}، ${card.bodies.b.name}: ${conditionWord(state.b.condition)}${state.b.polarized ? ' مع استقطاب داخلي (طرف قريب موجب وطرف بعيد سالب)' : ''}.`;
+      `${card.bodies.a.name}: ${conditionWord(state.a.condition)}، ${card.bodies.b.name}: ${conditionWord(state.b.condition)}${state.b.polarized ? ' مع تركز الشحنة الموجبة في الطرف القريب' : ''}.`;
 
     const copy = METHOD_STEP_COPY[state.summaryKey];
     panel.querySelector(`[data-method-observation="${method}"]`).textContent = copy.observation;
@@ -931,7 +935,7 @@ function arenaMarkup() {
           <title id="arena-title">جسمان مشحونان على مستقيم واحد وقوى التجاذب أو التنافر بينهما</title>
           <desc id="arena-desc" data-arena-desc>جسم موجب وجسم سالب قبل كشف النتيجة.</desc>
           <line class="u2l1a-axis" x1="40" y1="214" x2="680" y2="214" />
-          <text class="u2l1a-scene-label u2l1a-scene-label-small" x="40" y="238">الحامل: المستقيم المارّ بالشحنتين</text>
+          <text class="u2l1a-scene-label u2l1a-scene-label-small" x="360" y="285" text-anchor="middle" direction="rtl">الحامل: المستقيم المارّ بالشحنتين</text>
           <g data-arena-arrow-group opacity="0">
             <line class="u2l1a-leader" data-arena-leader="a" x1="252" y1="92" x2="252" y2="176" />
             <line class="u2l1a-leader" data-arena-leader="b" x1="468" y1="148" x2="468" y2="176" />
