@@ -4,7 +4,12 @@
 **Applies to:** every external physics lab added to the Interactive Physics Grade 8 platform
 **Owner / approver:** repository owner (`johntaylorjt8870-cell`)
 **Authority:** this file. Conversation history, agent memory and chat transcripts are **not** authoritative.
-**Version:** 1.0 — 2026-11-27, verified against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
+**Version:** 1.1 — 2026-11-27, verified against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
+
+> **1.1 correction:** acceptance items A5, A6, B2 and §9.2 test item 9 were universal, which
+> contradicted Shape C (§4.3) — a platform-native lab has no separate artifact. They are now scoped
+> to Shapes A and B, with equivalent Shape C items A8/B4 and test items 10–11 added. See §12 for the
+> applicability rule. No repository finding, screenshot or evidence claim changed in 1.1.
 
 ---
 
@@ -120,7 +125,10 @@ branch or source directory is forbidden (§11).
 ### P3 — Reproducible production builds · **MANDATORY**
 
 Any competent person must be able to rebuild the deployed artifact from a clean checkout, using
-only what the repository contains, and get a working result. This means:
+only what the repository contains, and get a working result. For Shapes A and B the artifact is the
+lab's own bundle; for Shape C (§4.3) it is the **platform** build that ships the lab source. Either
+way the rule is the same: one command, from a clean checkout, produces the thing that is deployed.
+This means:
 
 - committed dependency manifest **and** lockfile where the ecosystem has one (e.g.
   `package.json` + `package-lock.json`);
@@ -139,9 +147,10 @@ only what the repository contains, and get a working result. This means:
 
 ### P4 — Local and reliable asset loading · **MANDATORY with declared exceptions**
 
-The lab's production output must load its own core assets from the repository (relative paths),
-and must work when the whole `dist/` tree is served from any static host, including a
-GitHub Pages **project** subpath (e.g. `https://<user>.github.io/Interactive-Physics-Grade8/`).
+Whatever the lab ships (its own bundle for Shapes A/B, the platform build for Shape C) must load its
+core assets from the repository by relative path, and must work when the whole `dist/` tree is
+served from any static host, including a GitHub Pages **project** subpath
+(e.g. `https://<user>.github.io/Interactive-Physics-Grade8/`).
 
 If a lab depends on a third-party origin at runtime, that is an **exception that must be declared**:
 
@@ -314,7 +323,8 @@ one framework would be obsolete within a year and would block legitimate labs.
 A chosen technology is acceptable only if **all** of the following hold:
 
 1. **Source is preserved** in the repository (§6) in its normal, editable form.
-2. **Production output is reproducible** from a clean checkout by a documented command (§2 P3).
+2. **Production output is reproducible** from a clean checkout by a documented command (§2 P3) —
+   the lab's own bundle for Shapes A/B, the platform build for Shape C.
 3. **The output runs on a static host** with no server-side rendering, no Node process at runtime,
    and no required build step on the host.
 4. **All dependencies and assets are accounted for** — either committed, or declared external
@@ -331,14 +341,23 @@ A chosen technology is acceptable only if **all** of the following hold:
 
 Three supported shapes. A lab picks one, states it in the report, and justifies it:
 
-| Shape | What is committed | Integration | Trade-off |
-|---|---|---|---|
-| **A — Single-file bundle** *(first lab)* | full source + `dist/index.html` (JS/CSS inlined) | iframe points at `dist/index.html` | simplest to serve, trivially isolated; one large HTML file (~828 KB, 233 KB gzip for lab 1) |
-| **B — Multi-file static bundle** | full source + `dist/` (hashed JS/CSS/assets) | iframe points at `dist/index.html` | better caching and lazy loading; more files, so a tighter asset audit is required |
-| **C — Platform-native module** | source only, under the platform `src/` conventions | loaded directly into a platform page | no isolation boundary; changes must satisfy the platform's module/style/accessibility contracts |
+| Shape | What is committed | Integration | Separate lab artifact? | Trade-off |
+|---|---|---|---|---|
+| **A — Single-file bundle** *(first lab)* | full source + `dist/index.html` (JS/CSS inlined) | iframe points at `dist/index.html` | **Yes** | simplest to serve, trivially isolated; one large HTML file (~828 KB, 233 KB gzip for lab 1) |
+| **B — Multi-file static bundle** | full source + `dist/` (hashed JS/CSS/assets) | iframe points at `dist/index.html` | **Yes** | better caching and lazy loading; more files, so a tighter asset audit is required |
+| **C — Platform-native module** | source only, under the platform `src/` conventions | loaded directly into a platform page | **No** — the source *is* the artifact | no isolation boundary; changes must satisfy the platform's module/style/accessibility contracts |
 
-Shapes A and B keep the lab independent. Shape C trades independence for a smaller footprint and
-should be chosen only when the lab is genuinely simple.
+Shapes A and B keep the lab independent, so they ship a built artifact of their own that must be
+committed and tracked (§6.4). Shape C ships **no separate artifact**: its source is consumed by the
+platform build directly, so the deployable is the platform `dist/` itself.
+
+**The selected shape decides which acceptance items apply.** A5, A6, B2 and test item 5 in §9.2 are
+**Shapes A and B only**; A8, B4 and test items 10–11 in §9.2 are **Shape C only**. Every other
+requirement in this standard applies to all three shapes. Declare the shape in the report (§10.2
+item 4) — an undeclared shape makes the checklist ambiguous and is itself a defect.
+
+Shape C trades independence for a smaller footprint and should be chosen only when the lab is
+genuinely simple.
 
 > **Shape B caveat:** hashed filenames are fine, but the *entry* file must remain a stable,
 > predictable path, and every emitted asset must be committed (§6.3) or produced by a build the
@@ -360,7 +379,9 @@ in writing.
 
 > **Verified for the first lab:** `scripts/build.mjs` runs `npm install` (not `npm ci`) inside the
 > lab directory with a 120 s timeout, then `npm run build`. That is why a committed
-> `dist/index.html` must exist as the fallback (§6.5).
+> `dist/index.html` must exist as the fallback (§6.5) for **Shapes A and B**. Shape C needs no
+> fallback artifact: its source is copied to `dist/` as platform source and is never built by a
+> per-lab step.
 
 ### 4.6 Backend, paid services, and anything non-static · **MANDATORY declaration**
 
@@ -390,9 +411,9 @@ lab's own directory. It is independent of the platform's test suite.
 | 5.1.3 | **Diagrams and visual representations** correct in geometry, labels, and sign/arrow direction | per-diagram notes |
 | 5.1.4 | **Questions, feedback and answer validation** — correct answers accepted, wrong answers rejected, no answer revealed before an attempt, equivalent Arabic forms accepted | list of question IDs and outcomes |
 | 5.1.5 | **Audio and other media**, if present | what plays, when, and the autoplay-policy behaviour |
-| 5.1.6 | **Browser console** clean in a production build (no errors; warnings listed and explained) | console log excerpt or explicit statement that none occurred |
+| 5.1.6 | **Browser console** clean in the production build that will actually be deployed (lab bundle for A/B, platform `dist/` for C) | console log excerpt or explicit statement that none occurred |
 | 5.1.6b | **Degraded-network render** — load the production build with every declared external origin blocked, and confirm that no equation, unit, number or label becomes wrong or unreadable | screenshot per viewport + the list of blocked origins |
-| 5.1.7 | **Production build** succeeds from a clean checkout | command + output |
+| 5.1.7 | **Production build** succeeds from a clean checkout — the lab's own build for Shapes A/B, the platform build for Shape C | command + output |
 | 5.1.8 | **Laptop visual inspection at exactly 1366×768 and 1440×900** | screenshots from a real browser (§5.4) |
 
 ### 5.2 Scientific verification method · **MANDATORY**
@@ -514,6 +535,12 @@ lab is expected to be used on phones, say so and test it.
 | **Configuration files** | `vite.config.ts`, `tsconfig.json`, engine export presets, etc. |
 | **Tests** | the lab's own tests, if any, plus the §5 evidence |
 
+For **Shapes A and B**, the package additionally contains the committed production output (§6.4).
+For **Shape C**, the package contains **no** production output — the lab's shipped source lives under
+the platform `src/` conventions and is compiled by the platform build (§4.3). A Shape C lab must
+still keep its own `README.md`, `INTEGRATION-REPORT.md` and §5 evidence inside
+`External-labs/unit-X/lesson-Y/`, even though its code is not built into a separate bundle.
+
 ### 6.2 The lab `README.md` · **MANDATORY**
 
 Minimum content:
@@ -523,7 +550,10 @@ Minimum content:
 3. Experiments/interactions list.
 4. Technology stack + versions.
 5. **Build instructions**: install, build, preview, in order, with the tested Node/engine version.
-6. How to open the built output locally (served over HTTP, with the port).
+   For Shape C this is the **platform** build (`npm run build` at the repository root), because that
+   is what ships the lab.
+6. How to open the built output locally (served over HTTP, with the port) — for Shape C, the platform
+   page that mounts the lab, opened from `dist/`.
 7. Declared external runtime origins (§2 P4).
 8. Model limits.
 9. Where the integration report is.
@@ -543,33 +573,47 @@ Never commit:
 - generated logs, `*.log`, temporary files;
 - duplicate copies of the same asset in several resolutions "just in case".
 
-### 6.4 When production output **must** be committed · **MANDATORY**
+### 6.4 When production output **must** be committed · **Shapes A and B only**
 
-Commit the production output (e.g. `External-labs/unit-X/lesson-Y/dist/index.html`) when **any** of
-the following is true:
+**This section does not apply to Shape C**, which has no separate production artifact (§4.3).
+
+For Shapes A and B, commit the production output (e.g.
+`External-labs/unit-X/lesson-Y/dist/index.html`) when **any** of the following is true:
 
 1. The platform build may skip or fail the lab build without failing itself — which is the **current**
    behaviour of `scripts/build.mjs` (its lab-build step is wrapped in `try/catch` and only warns).
 2. The deployment runner is not guaranteed to have the lab's toolchain.
 3. The lab's build needs network access the deployment runner may not have.
 
-Given (1) is true today, **every lab integrated under the current pipeline must commit its
-production output.** A missing `dist/` therefore means a lab that silently disappears from the
-deployed site.
+Given (1) is true today, **every Shape A or B lab integrated under the current pipeline must commit
+its production output.** For those shapes a missing `dist/` means a lab that silently disappears
+from the deployed site. (Shape C has no `dist/` to be missing — see below.)
 
-### 6.5 When production output may be generated at platform-build time · **CONDITIONAL**
+**Shape C instead satisfies the same underlying goal — "the deployed site really contains this lab" —
+through the platform build.** Its requirement is that a clean-checkout `npm run build` emits the
+platform `dist/` containing the lab's functionality, verified structurally (A8, B4, §9.2 item 10).
+The goal is identical; only the mechanism differs.
 
-Production output may be **omitted** from the commit **only** after the owner has:
+### 6.5 When production output may be generated at platform-build time · **Shapes A and B, CONDITIONAL**
+
+For Shapes A and B, production output may be **omitted** from the commit **only** after the owner has:
 
 - extended `scripts/build.mjs` to build **every** registered lab, and
 - made a lab build failure **fail the platform build** (no `try/catch` swallow), and
 - proven it with a clean-checkout build (and ideally in CI).
 
-Until then, omitting `dist/` is an acceptance failure, not a preference.
+Until then, omitting `dist/` for a Shape A or B lab is an acceptance failure, not a preference.
 
 ### 6.6 Stale artifacts · **MANDATORY**
 
-If `dist/` is committed, it must correspond to the committed source.
+**Shapes A and B:** if `dist/` is committed, it must correspond to the committed source.
+
+**Shape C:** there is no committed lab artifact to go stale, but the *platform* build can still be
+stale or incomplete. Verify that a clean-checkout `npm run build` emits `dist/` containing the lab's
+shipped source and that the built entry page references it (B4, §9.2 item 10). Never hand-edit files
+inside the platform `dist/`.
+
+Details for Shapes A and B:
 
 - Rebuild and compare before opening the PR.
 - Record in the report: build command, byte size, and SHA-256, plus the toolchain used.
@@ -593,8 +637,11 @@ The root `.gitignore` contains `dist/` and `node_modules/`. A bare `dist/` patte
   ```
 
 Either approach is acceptable. What is **not** acceptable is a PR where the author believes `dist/`
-was committed and it was not — the integration test in §9.2 must assert the artifact is **tracked**
-(`git ls-files`), not merely present on disk.
+was committed and it was not — for Shapes A and B the integration test in §9.2 (item 5) must assert
+the artifact is **tracked** (`git ls-files`), not merely present on disk.
+
+**Shape C is unaffected by this section:** it commits no `dist/` at all, so no negation rule is
+needed. Do not add one "for consistency" — the root `dist/` must stay ignored.
 
 ---
 
@@ -635,6 +682,11 @@ later adopts padding — be consistent per lab and state it.
 
 ### 7.3 Directory layout · **MANDATORY**
 
+The layout below is a **Shape A** lab (the first lab). It is the reference, not a universal
+skeleton: `dist/` is present **only** for Shapes A and B, and the source subdirectories of a Shape C
+lab live under the platform `src/` conventions while its `README.md` and `INTEGRATION-REPORT.md`
+stay in `External-labs/unit-X/lesson-Y/` (§4.3, §6.1).
+
 ```text
 External-labs/
   unit-2/
@@ -647,8 +699,8 @@ External-labs/
       tsconfig.json
       index.html                  # source entry (dev)
       src/                        # all source
-      dist/
-        index.html                # committed production output (§6.4)
+      dist/                       # Shapes A/B ONLY — absent for Shape C
+        index.html                # committed production output (§6.4, A/B only)
     lesson-2/                     # next lab — no shared files with lesson-1
 ```
 
@@ -669,7 +721,7 @@ Labs are published under the lab section, **المخبر**:
 
 - course home navigation → lab directory (`almakhbar.html`);
 - lab directory → one row per lesson;
-- row → lab wrapper page → the lab itself.
+- row → entry page (a wrapper for Shapes A/B, a mounting platform page for Shape C) → the lab itself.
 
 A lab must be reachable from the directory by an ordinary `<a href>` link. JavaScript-only routing
 is acceptable *inside* the lab but must never be the only way to reach it.
@@ -757,12 +809,16 @@ legitimate different choice, provided the isolation outcomes above still hold.**
 
 ### 8.7 Asset paths · **MANDATORY**
 
+These rules apply to whatever the deployed page loads: the lab bundle for Shapes A/B, and both the
+platform output and the module paths it references for Shape C. Every rule applies to all shapes.
+
 - Every reference to an asset in the deployed artifact is **relative** (`./…`, `../…`).
-- **No** leading-slash paths (`/src/…`, `/assets/…`) in the production output — they break under a
-  GitHub Pages project subpath. *(Verified: the first lab's `dist/index.html` contains zero
+- **No** leading-slash paths (`/src/…`, `/assets/…`) anywhere in what the deployed page loads — they
+  break under a GitHub Pages project subpath. *(Verified: the first lab's `dist/index.html` contains zero
   root-absolute `src`/`href` values and no `<base>` tag.)*
 - The dev-only entry (`index.html` with `/src/main.tsx`) may be absolute; only the **built** output
-  must be relative.
+  must be relative — for Shape C that means the platform `dist/` output and the module paths the
+  built page references, not a lab bundle.
 - If the bundler supports it, set an explicit relative base (e.g. `base: './'`) rather than relying
   on defaults.
 - Asset references are case-exact — GitHub Pages is case-sensitive.
@@ -780,10 +836,15 @@ Current pipeline facts (verified):
 
 Integration requirements for a new lab:
 
-1. **MANDATORY** — the wrapper page is added to the copy list in `scripts/build.mjs`.
-2. **MANDATORY** — the lab's production output is present in `dist/External-labs/unit-X/lesson-Y/`
-   after `npm run build` on a clean checkout. With today's single-hardcoded-lab step, that is
-   achieved by the committed `dist/` (§6.4) **and must be asserted by an integration test**.
+1. **MANDATORY (Shapes A and B)** — the wrapper page is added to the copy list in
+   `scripts/build.mjs`. **Shape C** instead requires that the platform page mounting the lab is
+   already in that copy list, or is added to it by this PR — the lab must be reachable in `dist/`
+   either way.
+2. **MANDATORY (Shapes A and B)** — the lab's production output is present in
+   `dist/External-labs/unit-X/lesson-Y/` after `npm run build` on a clean checkout. With today's
+   single-hardcoded-lab step, that is achieved by the committed `dist/` (§6.4) **and must be
+   asserted by an integration test**. **Shape C** has no such artifact; instead `npm run build` must
+   emit the platform `dist/` containing the lab's shipped source (B4, §9.2 item 10).
 3. **RECOMMENDED** — register the lab in a data-driven lab list in `scripts/build.mjs` instead of
    hardcoding, and make a lab build failure fatal (§6.5). This is the target state and is tracked in
    [Appendix D](#appendix-d--known-gaps-in-the-current-platform).
@@ -812,8 +873,9 @@ python3 -m http.server 4173 --bind 0.0.0.0 --directory dist
 Integration touches the lab directory **only** to add `INTEGRATION-REPORT.md` (§10) and, if needed,
 to update the lab's own `README.md`. Lab source files are not reformatted, not re-styled to match
 the platform, and not trimmed to fit a wrapper. If a platform need truly requires a lab change, the
-change is a **lab change**: separate commit, separate justification, rebuilt `dist/`, re-recorded
-hash.
+change is a **lab change**: separate commit, separate justification, and — for Shapes A and B —
+rebuilt `dist/` with a re-recorded hash and a re-run clean-rebuild comparison. Shape C has no lab
+`dist/`, so its equivalent is re-running the platform build and the B4 assertion (§12).
 
 ---
 
@@ -824,8 +886,8 @@ bundler ran.
 
 | Level | Proves | Automated in this repository? | Evidence |
 |---|---|---|---|
-| **A — Structural** | Files, paths, links, titles, sizes, `.gitignore` handling, tracked-artifact presence | **Yes** — `node --test` (Node's test runner discovers `tests/*.test.js` **and** `External-labs/**/*.test.js`) | test output |
-| **B — Clean-checkout production build** | The site can be built from scratch and contains the lab | **Yes (manual invocation)** — `npm ci` + `npm run build`; CI builds but does **not** test | build log + `dist/` listing |
+| **A — Structural** | Files, paths, links, titles, sizes, `.gitignore` handling, and — for Shapes A/B — tracked-artifact presence | **Yes** — `node --test` (Node's test runner discovers `tests/*.test.js` **and** `External-labs/**/*.test.js`) | test output |
+| **B — Clean-checkout production build** | The site can be built from scratch and contains the lab (for Shape C this is the *only* artifact evidence, and it is mandatory) | **Yes (manual invocation)** — `npm ci` + `npm run build`; CI builds but does **not** test | build log + `dist/` listing |
 | **C — Functional interaction** | The controls actually do what they claim | **Partly** — DOM tests need `jsdom`, which is *not* installed, so those 13 tests **skip**; real browser runs need an external Playwright install | DOM/browser run log, interaction checklist |
 | **D — Scientific correctness** | Numbers, units, signs, diagrams | **Partly** — pure functions are unit-testable; rendering is not | expected-vs-observed table |
 | **E — Real-browser visual** | It looks right at 1366×768 and 1440×900 | **No** — requires a browser binary; none is committed | screenshots (§5.4) |
@@ -857,20 +919,42 @@ require that your PR adds **zero** new failures.
 
 ### 9.2 Required integration tests · **MANDATORY**
 
-A lab integration adds a test file (e.g. `tests/<lab-id>-integration.test.js`) asserting at minimum:
+A lab integration adds a test file (e.g. `tests/<lab-id>-integration.test.js`). The required
+assertions depend on the declared output shape (§4.3).
+
+**Required for every shape:**
 
 1. the directory page contains the unit block and the lab's `.lab-row` with the exact lesson title;
-2. the row links to the wrapper with a `./`-relative path;
-3. the wrapper contains the return links (directory + home) and the lab region;
-4. the wrapper's `src`/`href` to the lab is relative and points at the real artifact path;
-5. the committed artifact **is tracked by git** and contains lab-specific content;
-6. the lab source directory contains its `README.md`, manifest, and lockfile (`package-lock.json`
-   where npm is used);
-7. no root-absolute asset URLs in the built artifact, and no `<base>` tag pointing off-site;
-8. the pre-existing platform pages still match their key markers (regression smoke);
-9. any declared-status row (e.g. `قريباً`) still does **not** claim availability.
+2. the row links to the entry page with a `./`-relative path;
+3. the entry page contains the return links (directory + home) and the lab region;
+4. the entry page's `src`/`href` to the lab is relative and resolves to the real shipped path —
+   for Shapes A/B the committed artifact, for Shape C the platform path that serves the lab source;
+5. the lab source directory contains its `README.md`, `INTEGRATION-REPORT.md`, manifest, and lockfile
+   (`package-lock.json` where npm is used);
+6. no root-absolute asset URLs in whatever the deployed page loads, and no `<base>` tag pointing
+   off-site;
+7. the pre-existing platform pages still match their key markers (regression smoke);
+8. any declared-status row (e.g. `قريباً`) still does **not** claim availability.
 
-`tests/almakhbar-integration.test.js` (12 tests, all passing) is the reference for items 1–4 and 8–9.
+**Additionally required for Shapes A and B:**
+
+9. *(Shapes A and B only)* the separate lab artifact **is tracked by git** (`git ls-files`, not
+   merely present on disk) and contains lab-specific content that could only come from the lab source.
+
+**Additionally required for Shape C:**
+
+10. the complete platform production build contains the integrated functionality — after
+    `npm run build`, the built `dist/` contains the lab's shipped source at its platform path and
+    the built entry page references it, so the feature is genuinely deployed rather than merely
+    present in the working tree;
+11. the lab's own source is preserved in the repository (§6.1) and its integration does not
+    duplicate or fork platform modules — a Shape C lab reuses the platform's shared modules
+    (`src/math.js`, `src/fonts.css`, styles) rather than shipping parallel copies.
+
+`tests/almakhbar-integration.test.js` (12 tests, all passing) is the reference for the universal
+items 1–4 and 7–8, and for Shapes A/B item 9 (it reads the committed `dist/index.html` and asserts
+lab-specific content). **No Shape C lab exists yet**, so items 10–11 have no reference
+implementation — write them against the actual platform build, not against an imagined bundle.
 
 ### 9.3 Automated vs. manual — the bright line · **MANDATORY**
 
@@ -920,12 +1004,17 @@ record of the first lab and must **not** be overwritten or reused.
 2. **Source branch and directory** — branch name, source commit SHA, directory, and whether the
    directory equals the source branch tip plus the built artifact.
    *(For the first lab: source branch `lab-source/unit-2-lesson-1` @ `fcb6341`; the integrated
-   directory differs only by the added `dist/index.html` — a good example of the provenance check.)*
+   directory differs only by the added `dist/index.html` — a good example of the provenance check.
+   A Shape C lab has no added artifact, so the expected result is that the directory equals the
+   source branch tip.)*
 3. **Technology and dependencies** — framework, bundler, styling, library versions, all external
    runtime origins, and any paid/back-end services (§4.6).
 4. **Integration architecture** — shape A/B/C (§4.3), why, and how isolation is achieved.
 5. **Build commands and results** — exact commands, toolchain versions, exit codes, artifact size,
-   SHA-256, and whether the committed artifact matches a clean rebuild.
+   SHA-256, and whether the committed artifact matches a clean rebuild. *(Shapes A/B.)* For Shape C,
+   report the **platform** build (`npm run build` at the root): exit code, what the built `dist/`
+   contains for this lab, and the test that proves it (B4, §9.2 item 10). Do not report a lab
+   `dist/index.html` size or hash — there is none.
 6. **Test commands and results** — the lab's own tests, the baseline (§9.1), this PR's additions,
    and a diff of pass/fail/skip counts.
 7. **Scientific verification** — expected-vs-observed table, diagram checks, and unit/sign checks.
@@ -967,9 +1056,11 @@ sentence «This PR is intentionally left open and unmerged for owner review.»
 
 ### 11.3 When a lab PR should be closed instead of merged · **MANDATORY**
 
-Missing source, missing lockfile, missing/untracked production output, undeclared external
-dependency, scientific error, or a fabricated verification claim — any one of these means the PR is
-`NOT ACCEPTED` (§10.2, item 11) and must not be merged, even if CI is green.
+Missing source, missing lockfile, undeclared external dependency, scientific error, or a fabricated
+verification claim — any one of these means the PR is `NOT ACCEPTED` (§10.2, item 11) and must not be
+merged, even if CI is green. For **Shapes A and B** only, a missing or untracked production output is
+also disqualifying (§6.4); for Shape C the equivalent disqualifier is a platform build that does not
+contain the integrated lab (B4).
 
 ### 11.4 Documentation PRs (like this one) · **MANDATORY distinction**
 
@@ -986,31 +1077,47 @@ change.
 A lab may be approved **only** if every item below passes. "It builds" is item B1 — one line out of
 the whole list.
 
+**How the shape applies.** The lab declares its output shape (§4.3) in the report. Items marked
+**A/B** apply only to Shapes A and B; items marked **C** apply only to Shape C; unmarked items apply
+to **every** shape. An item that does not apply to the declared shape is reported as `N/A — <shape>`,
+never silently skipped, and never treated as a pass for the other shape's requirement. The two
+branches are deliberately equivalent in strength: Shapes A/B prove the lab artifact is committed and
+correct; Shape C proves the platform build genuinely contains and serves the integrated lab.
+
 ### A. Structure and preservation
 
 - [ ] **A1** Source directory is `External-labs/unit-X/lesson-Y/` and contains everything in §6.1.
 - [ ] **A2** `README.md` follows §6.2, including real build instructions.
 - [ ] **A3** Lockfile committed (npm) and build is reproducible from a clean checkout.
 - [ ] **A4** No `node_modules`, caches, secrets, `.env`, or OS/editor junk committed.
-- [ ] **A5** Production output is committed and **tracked by git** (§6.4, §6.7).
-- [ ] **A6** The committed artifact matches a clean rebuild (§6.6), with hash recorded.
-- [ ] **A7** Source branch `lab-source/unit-X/lesson-Y` exists and was not deleted or rewritten.
+- [ ] **A5** *(A/B)* Production output is committed and **tracked by git** (§6.4, §6.7).
+- [ ] **A6** *(A/B)* The committed artifact matches a clean rebuild (§6.6), with hash recorded.
+- [ ] **A7** *(all shapes)* Source branch `lab-source/unit-X/lesson-Y` exists and was not deleted or
+      rewritten.
+- [ ] **A8** *(C)* No separate `dist/` is committed or expected for this lab; the lab's **source** is
+      fully preserved in the repository under a stated path, and the report says where it lives
+      (§6.1, §4.3).
 
 ### B. Build
 
 - [ ] **B1** A clean-checkout build succeeds (`npm ci && npm run build` inside the lab where a
       lockfile exists; `npm run build` at the platform root) on the PR branch.
-- [ ] **B2** `dist/` contains the entry page (wrapper or mounting page) and
+- [ ] **B2** *(A/B)* `dist/` contains the entry page (wrapper) and
       `dist/External-labs/unit-X/lesson-Y/dist/index.html`.
-- [ ] **B3** The lab loads from a static server under a subpath with no root-absolute URLs (§8.7).
+- [ ] **B3** *(all shapes)* The lab loads from a static server under a subpath with no root-absolute
+      URLs (§8.7).
+- [ ] **B4** *(C)* The **platform** production build contains the integrated functionality: after
+      `npm run build`, `dist/` contains the lab's shipped source at its platform path and the built
+      entry page references it, so the lab is deployed rather than merely present in the working
+      tree (§6.6, §9.2 item 10).
 
 ### C. Navigation and integration
 
 - [ ] **C1** One `.lab-row` in the correct unit of `almakhbar.html`, with the exact lesson title.
 - [ ] **C2** The row's link is `./`-relative and resolves in `dist/`.
-- [ ] **C3** An entry page exists (wrapper, or an existing platform page that mounts the lab), is
-      included by `scripts/build.mjs`, and offers return links to both the directory and the course
-      home (§8.6).
+- [ ] **C3** An entry page exists — a wrapper for Shapes A/B, or a platform page that mounts the lab
+      for Shape C — is included by `scripts/build.mjs`, and offers return links to both the directory
+      and the course home (§8.6).
 - [ ] **C4** No unavailable lab is presented as available; status rows are honest (§8.2).
 - [ ] **C5** Language, direction, landmarks and accessible names are correct (§8.4).
 - [ ] **C6** Browser Back returns to the previous platform page.
@@ -1043,7 +1150,8 @@ the whole list.
 
 - [ ] **F1** `npm test` shows the same pre-existing failures as the recorded baseline and **no new
       ones** (§9.1).
-- [ ] **F2** Integration tests added per §9.2 and passing.
+- [ ] **F2** Integration tests added per §9.2 and passing — universal items 1–8 for every shape,
+      plus item 9 (Shapes A/B) or items 10–11 (Shape C).
 - [ ] **F3** `INTEGRATION-REPORT.md` complete (§10), located in the lab directory.
 - [ ] **F4** Exactly one lab changed; no unrelated modifications (§11.1).
 - [ ] **F5** No secrets, credentials or unapproved personal data (§2 P7).
@@ -1051,7 +1159,10 @@ the whole list.
 - [ ] **F7** PR open, unmerged, base `main`, branch preserved (§11).
 - [ ] **F8** No fabricated evidence; every limitation stated (§9.4).
 
-**A lab is declared acceptable only when A1–F8 all pass or are explicitly owner-waived in writing.**
+**A lab is declared acceptable only when every item that applies to its declared shape passes, or is
+explicitly owner-waived in writing.** "Applicable" is defined by §4.3: A/B-only items for a Shape C
+lab are recorded as `N/A`, not as passes, and a Shape C lab cannot be accepted by satisfying the A/B
+branch instead of its own.
 
 ---
 
@@ -1070,8 +1181,8 @@ Merging is not the end. The repository owner merges; verification continues on t
    wrong answer and one reset.
 4. **Confirm assets load** — no 404s for fonts, math stylesheets, images or audio in the network
    panel; declared external origins resolve.
-5. **Confirm return works** — the wrapper's return controls reach the directory and the course home,
-   and browser Back behaves.
+5. **Confirm return works** — the entry page's return controls reach the directory and the course
+   home, and browser Back behaves.
 6. **Confirm the rest of the site is intact** — home, a lesson page, a teacher area, a test page.
 
 ### 13.2 If post-merge verification fails · **MANDATORY**
@@ -1095,7 +1206,7 @@ This standard is written to survive all of the following.
 |---|---|
 | **Arena is replaced by another AI coding agent** | Every rule references repository files and commands, not agent behaviour. A new agent reads §1–§14 and Appendix A, runs the commands, and produces the same evidence. Nothing depends on conversation history. |
 | **The lab is developed on another platform/IDE** | §4.1 imposes no framework. A Godot export, a Svelte app, a Three.js scene and a hand-written ES-module page all satisfy §4.2. |
-| **The framework or build system changes** | Requirements are stated as outcomes (reproducible output, relative paths, static hosting, tracked artifact). Any bundler that meets them is acceptable. |
+| **The framework or build system changes** | Requirements are stated as outcomes (reproducible output, relative paths, static hosting, a build that genuinely contains the lab). Any bundler that meets them is acceptable, and the shape (§4.3) says which artifact proves it. |
 | **A lab needs a different runtime architecture** | Shapes A/B/C (§4.3) cover single-file, multi-file and platform-native. A genuinely new shape is allowed if it satisfies §4.2 and §8.4, and is added to §4.3 by a documentation PR. |
 | **The platform moves off GitHub Pages** | §8.9 requires "any static host", so nothing depends on Pages specifically. Only §8.9's URL example and §13.1's deploy check are Pages-specific and are updated with the platform. |
 | **The lab directory page is rebuilt** | Requirements are structural (one row per lab, exact title, honest status, relative link), not markup-specific. |
@@ -1166,7 +1277,9 @@ Verified 2026-11-27 against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
 - **Lab identity:** الوحدة <X> · الدرس <Y> · «<exact official title>» · textbook pp<a>–<b>
 - **Source branch:** `lab-source/unit-X/lesson-Y` @ `<sha>`
 - **Source directory:** `External-labs/unit-X/lesson-Y/`
-- **Lab URL:** `./lab-unitX-lessonY.html` → `./External-labs/unit-X/lesson-Y/dist/index.html`
+- **Output shape:** <A | B | C> (§4.3) — decides which acceptance items apply
+- **Lab URL:** <A/B:> `./lab-unitX-lessonY.html` → `./External-labs/unit-X/lesson-Y/dist/index.html`
+               <C:>   `./<platform-page>.html` → source at `src/<lab-module>.js` (no separate dist)
 - **Integration PR:** #<n> · base `main` · **OPEN, unmerged**
 
 ## 1. Technology and dependencies
@@ -1178,13 +1291,22 @@ None.  <!-- or the §4.6 declaration + owner approval quote -->
 
 ## 4. Integration architecture
 Shape <A|B|C> because <reason>. Isolation: <iframe | direct mount>. Chrome: <bar height, links>.
+This declaration decides which acceptance items apply (A5/A6/B2 and test item 9 are A/B only;
+A8/B4 and test items 10–11 are Shape C only).
 
 ## 5. Build
+
+**Shapes A and B:**
 | Command | Result | Notes |
 `npm ci` → `<exit 0>`
 `npm run build` → `<exit 0>`
 Artifact: `dist/index.html`, <bytes> bytes, gzip <bytes>, SHA-256 `<hash>`
 Clean-rebuild match: <byte-identical | differs, explained how>
+
+**Shape C** (replace the block above):
+`npm run build` (repository root) → `<exit 0>`
+Built `dist/` contains the lab source at `<path>`; entry page `<path>` references it
+No lab `dist/index.html` is expected — do not report a size or hash for one.
 
 ## 6. Tests
 | Suite | Pass | Fail | Skip |
@@ -1206,7 +1328,7 @@ This PR: <p>/<f>/<s> — new failures: <none | list>
 ## 11. Acceptance status
 **<PASS | PASS WITH DECLARED LIMITATIONS | NOT ACCEPTED>**
 | Criterion | Status | Evidence |
-| A1 … F8 | ✅ / ⚠️ / ❌ | |
+| A1 … F8 | ✅ / ⚠️ / ❌ / N/A | |   <!-- N/A only for the other shape's items, with the shape named -->
 ```
 
 ---
@@ -1215,20 +1337,29 @@ This PR: <p>/<f>/<s> — new failures: <none | list>
 
 ```markdown
 ### Acceptance — Unit X / Lesson Y
-A. [ ] A1 source dir  [ ] A2 README  [ ] A3 lockfile  [ ] A4 clean  [ ] A5 dist tracked
-   [ ] A6 rebuild match  [ ] A7 source branch intact
-B. [ ] B1 clean build  [ ] B2 dist contents  [ ] B3 subpath/relative URLs
-C. [ ] C1 directory row  [ ] C2 relative link  [ ] C3 wrapper + returns
+Declared output shape (§4.3): [ ] A   [ ] B   [ ] C
+Only the items for the selected shape apply. The other shape's items are marked N/A — never
+silently skipped, never counted as passes.
+
+A. [ ] A1 source dir  [ ] A2 README  [ ] A3 lockfile  [ ] A4 clean  [ ] A7 source branch intact
+   A/B only:  [ ] A5 dist tracked  [ ] A6 rebuild match
+   C only:    [ ] A8 source preserved, no separate dist expected
+B. [ ] B1 clean build  [ ] B3 subpath/relative URLs
+   A/B only:  [ ] B2 dist contents (entry page + lab dist/index.html)
+   C only:    [ ] B4 platform dist/ contains the shipped lab source + entry page references it
+C. [ ] C1 directory row  [ ] C2 relative link  [ ] C3 entry page + returns
    [ ] C4 honest status  [ ] C5 a11y/RTL  [ ] C6 Back works
 D. [ ] D1 interactions  [ ] D2 numbers  [ ] D3 diagrams  [ ] D4 questions
    [ ] D5 model limits  [ ] D6 labelling  [ ] D7 scope/numbering
 E. [ ] E1 1366×768 + 1440×900 screenshots  [ ] E2 no overflow/clipping
    [ ] E3 console clean  [ ] E4 media  [ ] E5 degraded-network math still correct
    [ ] E6 no clipped scroll strip
-F. [ ] F1 no new failures  [ ] F2 integration tests  [ ] F3 report
-   [ ] F4 one lab only  [ ] F5 no secrets  [ ] F6 origins declared
+F. [ ] F1 no new failures  [ ] F2 integration tests (universal 1-8; A/B 9; C 10-11)
+   [ ] F3 report  [ ] F4 one lab only  [ ] F5 no secrets  [ ] F6 origins declared
    [ ] F7 PR open/unmerged  [ ] F8 no fabricated evidence
 Status: PASS / PASS WITH DECLARED LIMITATIONS / NOT ACCEPTED
+Shape check: the N/A items belong to the *other* shape only, and the selected shape's own items
+all pass. A Shape C lab may not be accepted on the A/B branch, or vice versa.
 ```
 
 ---
@@ -1241,11 +1372,11 @@ deliberately rather than accidentally.
 
 | # | Gap | Impact | Closing action |
 |---|---|---|---|
-| D1 | `scripts/build.mjs` builds only `External-labs/unit-2/lesson-1`, hardcoded | A second lab's output reaches `dist/` only through the committed `dist/` copy | Make the lab list data-driven (§8.8.3) |
+| D1 | `scripts/build.mjs` builds only `External-labs/unit-2/lesson-1`, hardcoded | A second **Shape A/B** lab's output reaches `dist/` only through the committed `dist/` copy (Shape C is unaffected — it is copied as platform source) | Make the lab list data-driven (§8.8.3) |
 | D2 | The lab-build step is wrapped in `try/catch` and only warns | A broken lab build deploys a stale artifact and the pipeline still reports success | Make failures fatal (§6.5) |
 | D3 | The step runs `npm install`, not `npm ci` | A drifted lockfile can pass locally and fail in CI | Switch to `npm ci` |
 | D4 | `pages.yml` runs `npm run build` but not `npm test` | Broken tests can reach `main` and deploy | Add a test step (after §D6) |
-| D5 | Root `.gitignore` `dist/` also matches lab `dist/` | New labs' artifacts silently untracked | Negation rules or documented `git add -f` (§6.7) |
+| D5 | Root `.gitignore` `dist/` also matches lab `dist/` | New **Shape A/B** labs' artifacts silently untracked (no effect on Shape C, which commits none) | Negation rules or documented `git add -f` (§6.7) |
 | D6 | 3 pre-existing test failures, 13 jsdom skips on `main` | "Green suite" cannot be used as an acceptance signal | Fix separately; until then use a captured baseline (§9.1) |
 | D7 | Lab 1 `README.md` has no build instructions | The first lab cannot be rebuilt by a newcomer without reading the report | Extend it in a future lab-maintenance PR |
 | D8 | Lab 1 has no tests | Its own behaviour is verified only by hand | Add lab tests in a future PR |
