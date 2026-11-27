@@ -38,6 +38,8 @@ await cp(resolve(projectDirectory, 'unit2-lesson-3.html'), resolve(outputDirecto
 await cp(resolve(projectDirectory, 'unit2-lesson-3-appendix.html'), resolve(outputDirectory, 'unit2-lesson-3-appendix.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-3-teacher.html'), resolve(outputDirectory, 'unit2-lesson-3-teacher.html'));
 await cp(resolve(projectDirectory, 'unit2-lesson-3-test.html'), resolve(outputDirectory, 'unit2-lesson-3-test.html'));
+await cp(resolve(projectDirectory, 'almakhbar.html'), resolve(outputDirectory, 'almakhbar.html'));
+await cp(resolve(projectDirectory, 'lab-unit2-lesson1.html'), resolve(outputDirectory, 'lab-unit2-lesson1.html'));
 for (const entry of ['unit2-lesson-4.html', 'unit2-lesson-4-teacher.html', 'unit-2-test.html', 'unit2-exercises.html', 'unit2-exercises-teacher.html']) {
   await cp(resolve(projectDirectory, entry), resolve(outputDirectory, entry));
 }
@@ -52,5 +54,9 @@ await cp(resolve(projectDirectory, 'src'), resolve(outputDirectory, 'src'), {
   filter: (source) => !PLAINTEXT_TEACHER_CONTENT.some((name) => source.endsWith(name)),
 });
 await cp(resolve(projectDirectory, 'vendor'), resolve(outputDirectory, 'vendor'), { recursive: true });
+await cp(resolve(projectDirectory, 'External-labs'), resolve(outputDirectory, 'External-labs'), {
+  recursive: true,
+  filter: (source) => !source.includes('node_modules'),
+});
 
 console.log('Production static build written to dist/.');

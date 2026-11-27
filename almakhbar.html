@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1a2438" />
+  <title>المخبر — مختبرات الفيزياء | منصة الفيزياء التفاعلية</title>
+  <meta name="description" content="المخبر: دليل مختبرات الفيزياء التفاعلية للصف الثامن، منظم حسب وحدات الكتاب." />
+  <link rel="stylesheet" href="./src/fonts.css" />
+  <link rel="stylesheet" href="./src/home.css" />
+  <style>
+    .almakhbar-hero { background: linear-gradient(160deg,#05201b 0%,#0a2f28 60%,#16594a 100%); color:#f2f7f1; padding: 4rem 1.5rem 3rem; text-align:center; }
+    .almakhbar-hero h1 { font-family: "IBM Plex Sans Arabic", system-ui, sans-serif; font-weight:700; font-size:2.4rem; margin:0 0 .5rem; letter-spacing:-.02em; }
+    .almakhbar-hero p { margin:0; opacity:.85; font-size:1.05rem; }
+    .almakhbar-shell { max-width: 980px; margin: 2rem auto; padding: 0 1.5rem; }
+    .unit-dir { border: 1px solid #dde8e3; border-radius: .75rem; background:#fff; overflow:hidden; margin-bottom: 1.5rem; }
+    .unit-dir-header { background:#f1f9f5; padding: 1rem 1.25rem; display:flex; align-items:center; gap:.75rem; border-bottom:1px solid #dde8e3; }
+    .unit-dir-header .unit-num { background:#0a2f28; color:#fff; border-radius:.35rem; padding:.35rem .7rem; font-family:ui-monospace,menlo,monospace; font-weight:700; font-size:.9rem; }
+    .unit-dir-header .unit-name { font-weight:700; font-size:1.15rem; color:#05201b; }
+    .unit-dir-header .unit-sub { color:#5e7268; font-size:.9rem; }
+    .lab-row { display:flex; align-items:center; justify-content:space-between; padding: 1rem 1.25rem; border-bottom: 1px solid #eef4f0; gap:1rem; }
+    .lab-row:last-child { border-bottom:0; }
+    .lab-info h3 { margin:0 0 .15rem; font-size:1.05rem; color:#05201b; }
+    .lab-meta { color:#5e7268; font-size:.85rem; }
+    .lab-link { display:inline-flex; align-items:center; gap:.4rem; background:#0a2f28; color:#fff; text-decoration:none; padding:.55rem 1rem; border-radius:.4rem; font-weight:600; font-size:.9rem; transition: background .15s ease; }
+    .lab-link:hover { background:#16594a; }
+    .empty-state { padding:2rem 1.25rem; color:#9aaaa2; text-align:center; font-size:.95rem; }
+  </style>
+</head>
+<body class="course-home">
+  <a class="home-skip-link" href="#almakhbar-content">انتقل إلى محتوى المخبر</a>
+  <div class="home-shell">
+    <header class="home-header">
+      <a class="home-brand" href="./" aria-label="الصفحة الرئيسية لمنصة Interactive Physics">
+        <span class="home-brand-mark" aria-hidden="true">ف</span>
+        <span class="home-brand-copy"><strong dir="ltr">Interactive Physics</strong><span>مسار الفيزياء · الصف الثامن</span></span>
+      </a>
+      <nav class="home-nav" aria-label="التنقل الرئيسي">
+        <a href="./">الرئيسية</a>
+        <a href="#available-lessons">الدروس</a>
+        <a href="#available-tests">الاختبارات</a>
+        <a href="./physics-in-life.html">الفيزياء في حياتنا</a>
+        <a href="./almakhbar.html" aria-current="page">المخبر</a>
+      </nav>
+      <span class="home-status"><span aria-hidden="true"></span> الوحدتان الأولى والثانية مكتملتان</span>
+    </header>
+
+    <main id="almakhbar-content">
+      <section class="almakhbar-hero" aria-labelledby="almakhbar-title">
+        <h1 id="almakhbar-title">المخبر</h1>
+        <p>مختبرات تفاعلية للفيزياء — منظمة حسب وحدات الكتاب · من الدرس الأول إلى آخر درس</p>
+      </section>
+
+      <div class="almakhbar-shell">
+        <div class="unit-dir" aria-labelledby="unit-1-heading">
+          <header class="unit-dir-header">
+            <span class="unit-num" aria-hidden="true">01</span>
+            <div>
+              <h2 class="unit-name" id="unit-1-heading">الوحدة الأولى</h2>
+              <p class="unit-sub">الحركة والقوى · لم تُضاف مخابر بعد</p>
+            </div>
+          </header>
+          <div class="empty-state">لا توجد مختبرات متاحة لهذه الوحدة حالياً.</div>
+        </div>
+
+        <div class="unit-dir" aria-labelledby="unit-2-heading">
+          <header class="unit-dir-header">
+            <span class="unit-num" aria-hidden="true">02</span>
+            <div>
+              <h2 class="unit-name" id="unit-2-heading">الوحدة الثانية</h2>
+              <p class="unit-sub">الكهرباء · مخابر متاحة</p>
+            </div>
+          </header>
+          <div class="lab-row" aria-label="مختبر الدرس الأول: الكهرباء الساكنة">
+            <div class="lab-info">
+              <h3>الدرس الأول: الكهرباء الساكنة</h3>
+              <p class="lab-meta">مخبر تفاعلي · تجارب على الشحنة الكهربائية وقانون كولوم</p>
+            </div>
+            <a class="lab-link" href="./lab-unit2-lesson1.html">افتح المختبر <span aria-hidden="true">←</span></a>
+          </div>
+          <div class="lab-row" aria-label="مخبر الدرس الثاني: التيار الكهربائي">
+            <div class="lab-info">
+              <h3>الدرس الثاني: التيار الكهربائي</h3>
+              <p class="lab-meta">مخبر قيد الإعداد</p>
+            </div>
+            <span class="lab-meta" style="color:#9aaaa2;">قريباً</span>
+          </div>
+        </div>
+
+        <div class="unit-dir" aria-labelledby="unit-3-heading">
+          <header class="unit-dir-header">
+            <span class="unit-num" aria-hidden="true">03</span>
+            <div>
+              <h2 class="unit-name" id="unit-3-heading">الوحدة الثالثة</h2>
+              <p class="unit-sub">تُضاف المخابر عند توفرها</p>
+            </div>
+          </header>
+          <div class="empty-state">لا توجد مخابر متاحة لهذه الوحدة حالياً.</div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer" style="margin-top:3rem;"><span>المخبر · منصة الفيزياء التفاعلية</span><span>الوحدة الثانية — الدرس الأول: الكهرباء الساكنة</span></footer>
+  </div>
+</body>
+</html>
