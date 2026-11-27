@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f3a31" />
+  <title>المخبر — مختبر الكهرباء الساكنة | الوحدة الثانية · الدرس الأول</title>
+  <meta name="description" content="مختبر تفاعلي للكهرباء الساكنة — الوحدة الثانية، الدرس الأول، فيزياء الصف الثامن." />
+  <link rel="stylesheet" href="./src/fonts.css" />
+  <style>
+    :root { --bar-h: 56px; --ink: #05201b; --forest: #0a2f28; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: "IBM Plex Sans Arabic", system-ui, sans-serif; background: #f1f9f5; color: var(--ink); }
+    /* Compact top control bar — minimal, high visibility */
+    .lab-topbar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: var(--bar-h); padding: 0 1.25rem; background: rgba(10,47,40,.92); backdrop-filter: saturate(140%) blur(6px); border-bottom: 1px solid rgba(255,255,255,.08); }
+    .lab-topbar a { color: #fff; text-decoration: none; font-weight: 600; font-size: .95rem; display: inline-flex; align-items: center; gap: .45rem; padding: .35rem .7rem; border-radius: .35rem; background: rgba(255,255,255,.1); transition: background .15s ease; border: 1px solid rgba(255,255,255,.15); }
+    .lab-topbar a:hover { background: rgba(255,255,255,.2); }
+    .lab-topbar .top-label { color: rgba(255,255,255,.85); font-size: .8rem; font-weight: 500; }
+    .lab-topbar .top-label strong { color: #fff; font-weight: 700; }
+    /* Main lab viewport fills everything below bar */
+    .lab-viewport { position: absolute; top: var(--bar-h); left: 0; right: 0; bottom: 0; width: 100%; height: calc(100vh - var(--bar-h)); background: #fff; }
+    .lab-viewport iframe { width: 100%; height: 100%; border: none; display: block; }
+    /* Focus indicator for accessibility */
+    .lab-topbar a:focus-visible { outline: 2px solid #f2c14e; outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <nav class="lab-topbar" aria-label="تحكم المختبر">
+    <div style="display:flex; align-items:center; gap:1rem;">
+      <a href="./" aria-label="العودة إلى الصفحة الرئيسية">عودة للمنصة</a>
+      <a href="./almakhbar.html" aria-label="العودة إلى دليل المخبر">المخبر</a>
+    </div>
+    <div class="top-label" aria-label="معلومات المختبر">
+      <strong>الوحدة الثانية · الدرس الأول</strong> — الكهرباء الساكنة
+    </div>
+  </nav>
+  <main class="lab-viewport" role="region" aria-label="نافذة المختبر التفاعلية">
+    <iframe src="./External-labs/unit-2/lesson-1/dist/index.html"
+            title="مختبر الكهرباء الساكنة — الوحدة الثانية · الدرس الأول"
+            allow="fullscreen; autoplay; clipboard-write"
+            loading="eager"
+            aria-label="المختبر التفاعلي"></iframe>
+  </main>
+</body>
+</html>
