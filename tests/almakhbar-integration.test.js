@@ -77,3 +77,39 @@ test('navigation isolation: lab section does not break site styles', async () =>
   // Should reference external lab via relative path, not external redirect
   assert.match(wrap, /\.\/External-labs/);
 });
+
+test('Lesson 2 placeholder uses exact required title and "قريباً" status', async () => {
+  const dir = await read('../almakhbar.html');
+  assert.match(dir, /الدرس الثاني: التيار الكهربائي المتواصل/);
+  assert.match(dir, /قريباً/);
+  // Should not claim available
+  const lesson2Section = dir.split('الدرس الثاني: التيار الكهربائي المتواصل')[1] ?? '';
+  assert.doesNotMatch(lesson2Section, /افتح المختبر/);
+});
+
+test('full-page lab wrapper uses viewport-filling layout with compact return bar', async () => {
+  const wrap = await read('../lab-unit2-lesson1.html');
+  assert.match(wrap, /عودة للمنصة/);
+  assert.match(wrap, /\.\/almakhbar\.html/); // directory return available
+  assert.match(wrap, /lab-viewport/);
+  assert.match(wrap, /calc\(100vh/); // fills viewport
+  assert.doesNotMatch(wrap, /max-width/); // no constrained container
+  assert.match(wrap, /<iframe/);
+  assert.match(wrap, /External-labs\/unit-2\/lesson-1\/dist\/index\.html/);
+});
+
+test('full-page wrapper has no large obstructing header/footer that reduce lab area', async () => {
+  const wrap = await read('../lab-unit2-lesson1.html');
+  // Should not contain the old large hero/home-shell structure or site footer
+  assert.doesNotMatch(wrap, /home-hero/);
+  assert.doesNotMatch(wrap, /site-footer/);
+  assert.match(wrap, /lab-topbar/);
+});
+
+test('iframe isolation preserved and loads correct source', async () => {
+  const wrap = await read('../lab-unit2-lesson1.html');
+  assert.match(wrap, /<iframe[^>]*src="\.\/External-labs\/unit-2\/lesson-1\/dist\/index\.html"/);
+  // No external redirect
+  assert.doesNotMatch(wrap, /window\.location/);
+  assert.doesNotMatch(wrap, /https?:\/\/.*\.html/); // local relative only
+});
