@@ -4,12 +4,23 @@
 **Applies to:** every external physics lab added to the Interactive Physics Grade 8 platform
 **Owner / approver:** repository owner (`johntaylorjt8870-cell`)
 **Authority:** this file. Conversation history, agent memory and chat transcripts are **not** authoritative.
-**Version:** 1.1 — 2026-11-27, verified against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
+**Version:** 1.2 — 2026-11-27, verified against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
 
 > **1.1 correction:** acceptance items A5, A6, B2 and §9.2 test item 9 were universal, which
 > contradicted Shape C (§4.3) — a platform-native lab has no separate artifact. They are now scoped
 > to Shapes A and B, with equivalent Shape C items A8/B4 and test items 10–11 added. See §12 for the
-> applicability rule. No repository finding, screenshot or evidence claim changed in 1.1.
+> applicability rule.
+>
+> **1.2 correction:** four residual Shape C assumptions were fixed. (1) §4.3 pointed at §9.2
+> *item 5* for the artifact assertion; the correct item is *9*. (2) §6.1 and §7.2 still asserted that
+> `External-labs/unit-X/lesson-Y/` holds *all* executable source and is *the* source of record —
+> split into a metadata/documentation directory (all shapes) and an executable-source location
+> (shape-dependent, declared for Shape C), with the source branch as the provenance record.
+> (3) §9.2 item 5 demanded a manifest and lockfile in the lab directory universally — now the
+> *authoritative* paths are declared, with A/B owning theirs and Shape C using the platform's without
+> duplication. (4) §10.2 item 2 compared one directory to the source branch tip — it now reconciles
+> the *complete contribution* against the branch. No repository finding, screenshot or evidence claim
+> changed in 1.1 or 1.2.
 
 ---
 
@@ -118,9 +129,12 @@ else must be justified in the integration report (§10), never assumed by this d
 
 ### P2 — Independent source preservation · **MANDATORY**
 
-The lab's complete source lives in the repository under `External-labs/unit-X/lesson-Y/` (§7).
-Integration must never delete, replace or "clean up" the original source. Deleting a lab's source
-branch or source directory is forbidden (§11).
+The lab's complete source — code and documentation together — lives in the repository, and its
+**provenance** is the `lab-source/unit-X/lesson-Y` branch (§7). Where that code sits depends on the
+chosen shape: inside `External-labs/unit-X/lesson-Y/` for Shapes A and B, under the platform's `src/`
+conventions for Shape C (§4.3, §6.1.2). Integration must never delete, replace or "clean up" the
+original source, in either location. Deleting a lab's source branch, its metadata directory, or its
+platform-path module is forbidden (§11).
 
 ### P3 — Reproducible production builds · **MANDATORY**
 
@@ -131,7 +145,8 @@ way the rule is the same: one command, from a clean checkout, produces the thing
 This means:
 
 - committed dependency manifest **and** lockfile where the ecosystem has one (e.g.
-  `package.json` + `package-lock.json`);
+  `package.json` + `package-lock.json`) — the lab's own for Shapes A and B, the platform's for
+  Shape C, whose authoritative paths are declared in the report (§6.1.2, §9.2 items 9b, 11b);
 - a build command that runs without interactive input;
 - no manual post-processing steps that exist only in someone's head;
 - the exact toolchain recorded in the report (e.g. `Node 22.22.3 / npm 10.9.8`).
@@ -351,10 +366,23 @@ Shapes A and B keep the lab independent, so they ship a built artifact of their 
 committed and tracked (§6.4). Shape C ships **no separate artifact**: its source is consumed by the
 platform build directly, so the deployable is the platform `dist/` itself.
 
-**The selected shape decides which acceptance items apply.** A5, A6, B2 and test item 5 in §9.2 are
+**The selected shape decides which acceptance items apply.** A5, A6, B2 and test item 9 in §9.2 are
 **Shapes A and B only**; A8, B4 and test items 10–11 in §9.2 are **Shape C only**. Every other
 requirement in this standard applies to all three shapes. Declare the shape in the report (§10.2
 item 4) — an undeclared shape makes the checklist ambiguous and is itself a defect.
+
+**Where the lab's files live.** Two locations are distinguished, and only one of them is
+shape-dependent:
+
+| | Shapes A and B | Shape C |
+|---|---|---|
+| **Executable source** | inside `External-labs/unit-X/lesson-Y/` | under the **platform's** `src/` conventions, at a path declared in the report |
+| **Lab metadata / documentation** | `External-labs/unit-X/lesson-Y/` (`README.md`, `INTEGRATION-REPORT.md`, QA evidence) | the same directory — it holds the documents, not the code |
+| **Provenance record** | the `lab-source/unit-X/lesson-Y` branch | the same branch — it carries the *complete* contribution, including the platform-path module |
+
+A Shape C lab is therefore **never** required to duplicate its module into
+`External-labs/unit-X/lesson-Y/`, and that directory is never claimed to contain executable Shape C
+source.
 
 Shape C trades independence for a smaller footprint and should be chosen only when the lab is
 genuinely simple.
@@ -522,24 +550,38 @@ lab is expected to be used on phones, say so and test it.
 
 ### 6.1 Expected source package · **MANDATORY**
 
+Two distinct things are preserved, and they are **not** the same location for every shape:
+
+- the **lab metadata / documentation directory** — always `External-labs/unit-X/lesson-Y/`;
+- the **executable source** — shape-dependent (§4.3).
+
+#### 6.1.1 Lab metadata / documentation directory · all shapes
+
 `External-labs/unit-X/lesson-Y/` must contain:
 
 | Item | Rule |
 |---|---|
-| **Source code** | complete, in the lab's normal editable form |
-| **Assets** | images, fonts, audio, data — committed, or declared external (§2 P4) |
 | **`README.md`** | see §6.2 |
-| **Dependency manifest** | e.g. `package.json`, `pyproject.toml`, `project.godot` |
-| **Lockfile** | where the ecosystem has one (`package-lock.json` etc.) — **mandatory** for `npm` |
-| **Build instructions** | exact commands, exact toolchain versions |
-| **Configuration files** | `vite.config.ts`, `tsconfig.json`, engine export presets, etc. |
-| **Tests** | the lab's own tests, if any, plus the §5 evidence |
+| **`INTEGRATION-REPORT.md`** | see §10 |
+| **QA evidence** | the §5 screenshots, captures and expected-vs-observed tables, or a committed pointer to them |
+| **Build instructions** | exact commands, exact toolchain versions — for Shape C these are the **platform** build |
+| **Declared paths** | where the executable source actually lives (see below) |
 
-For **Shapes A and B**, the package additionally contains the committed production output (§6.4).
-For **Shape C**, the package contains **no** production output — the lab's shipped source lives under
-the platform `src/` conventions and is compiled by the platform build (§4.3). A Shape C lab must
-still keep its own `README.md`, `INTEGRATION-REPORT.md` and §5 evidence inside
-`External-labs/unit-X/lesson-Y/`, even though its code is not built into a separate bundle.
+#### 6.1.2 Executable source · shape-dependent
+
+| Shape | Where the executable source lives | What this directory additionally holds |
+|---|---|---|
+| **A / B** | inside `External-labs/unit-X/lesson-Y/` — complete, in the lab's normal editable form | assets, dependency manifest, lockfile (where the ecosystem has one; **mandatory** for `npm`), configuration files, the lab's own tests, and the committed production output (§6.4) |
+| **C** | under the **platform's** `src/` conventions, at a path declared in `INTEGRATION-REPORT.md` | **no** executable source, **no** manifest, **no** lockfile, **no** production output |
+
+A Shape C lab must **not** duplicate its module into `External-labs/unit-X/lesson-Y/`, and must not
+copy the platform's `package.json` / `package-lock.json` into the lab directory merely to satisfy a
+directory shape (§9.2 item 5). The metadata directory documents the lab; it does not have to contain
+the lab's code.
+
+**Provenance for every shape** is the `lab-source/unit-X/lesson-Y` branch, which carries the *complete*
+contribution — for Shape C that means both the platform-path module and the metadata directory (§10.2
+item 2).
 
 ### 6.2 The lab `README.md` · **MANDATORY**
 
@@ -556,7 +598,8 @@ Minimum content:
    page that mounts the lab, opened from `dist/`.
 7. Declared external runtime origins (§2 P4).
 8. Model limits.
-9. Where the integration report is.
+9. Where the integration report is, and — for Shape C — the **declared platform path** of the
+   executable module, since it is not inside this directory (§6.1.2).
 
 > **Gap in the first lab:** its `README.md` is 3 lines and contains **no** build instructions.
 > This standard exists so that no further lab repeats that.
@@ -670,11 +713,19 @@ later adopts padding — be consistent per lab and state it.
 ### 7.2 Rules · **MANDATORY**
 
 - **One lab = one independent source branch.** Do not put two labs on one source branch.
-- **One lab = one clearly identified source directory.** `External-labs/unit-2/lesson-1/` and
-  `External-labs/unit-2/lesson-2/` are separate labs and never share files.
+- **One lab = one clearly identified metadata directory** at `External-labs/unit-X/lesson-Y/`, plus
+  its declared executable source path (§6.1.2). Two labs never share files, and two lab metadata
+  directories never share files: `External-labs/unit-2/lesson-1/` and
+  `External-labs/unit-2/lesson-2/` are separate labs.
+- **The metadata directory is the documentation record; the source branch is the provenance record.**
+  For Shapes A and B the metadata directory also holds the executable source. For Shape C the
+  executable source lives under the platform `src/` conventions and the metadata directory holds only
+  documents, its QA evidence and the declared paths. Do not claim the metadata directory contains all
+  executable Shape C source (§6.1.1, §6.1.2).
 - **One dedicated integration PR per lab** (§11).
-- **Never overwrite or delete the original lab source during integration.** The directory is the
-  source of record; the source branch is the provenance.
+- **Never overwrite or delete the original lab source during integration.** The source branch is the
+  provenance record for the complete contribution; the metadata directory is the documentation record
+  and — for Shapes A and B only — also the home of the executable source.
 - **Do not modify `main` directly.** Every change arrives through a PR.
 - **Do not delete the source branch** after integration, and do not delete it *before* it either.
 - **Do not rewrite history** on a source branch that has been integrated (no force-push). If the lab
@@ -683,9 +734,13 @@ later adopts padding — be consistent per lab and state it.
 ### 7.3 Directory layout · **MANDATORY**
 
 The layout below is a **Shape A** lab (the first lab). It is the reference, not a universal
-skeleton: `dist/` is present **only** for Shapes A and B, and the source subdirectories of a Shape C
-lab live under the platform `src/` conventions while its `README.md` and `INTEGRATION-REPORT.md`
-stay in `External-labs/unit-X/lesson-Y/` (§4.3, §6.1).
+skeleton. `dist/`, `src/`, `package.json`, `package-lock.json`, `vite.config.ts` and `tsconfig.json`
+appear here because a Shape A lab owns its whole toolchain.
+
+A **Shape C** lab keeps `README.md`, `INTEGRATION-REPORT.md` and its QA evidence in
+`External-labs/unit-X/lesson-Y/`, but its executable module lives at the platform `src/` path declared
+in the report, and it declares the **platform** manifest and lockfile instead of owning copies
+(§4.3, §6.1.1, §6.1.2).
 
 ```text
 External-labs/
@@ -697,8 +752,10 @@ External-labs/
       package-lock.json           # lockfile
       vite.config.ts              # configuration
       tsconfig.json
-      index.html                  # source entry (dev)
-      src/                        # all source
+      index.html                  # source entry (dev) — Shapes A/B only
+      src/                        # Shapes A/B: all executable source.
+                                  # Shape C: absent here — the module lives under the
+                                  # platform src/ path declared in INTEGRATION-REPORT.md
       dist/                       # Shapes A/B ONLY — absent for Shape C
         index.html                # committed production output (§6.4, A/B only)
     lesson-2/                     # next lab — no shared files with lesson-1
@@ -870,9 +927,12 @@ python3 -m http.server 4173 --bind 0.0.0.0 --directory dist
 
 ### 8.10 Preserving the lab's independence · **MANDATORY**
 
-Integration touches the lab directory **only** to add `INTEGRATION-REPORT.md` (§10) and, if needed,
-to update the lab's own `README.md`. Lab source files are not reformatted, not re-styled to match
-the platform, and not trimmed to fit a wrapper. If a platform need truly requires a lab change, the
+Integration touches the lab's **metadata directory** only to add `INTEGRATION-REPORT.md` (§10) and,
+if needed, to update the lab's own `README.md`. Wherever the executable source lives — inside the
+metadata directory for Shapes A and B, under the platform `src/` conventions for Shape C — it is not
+reformatted, not re-styled to match the platform, and not trimmed to fit a wrapper. For Shape C,
+"not re-styled" also means the module keeps using the platform's shared modules rather than
+forking them (§9.2 item 11). If a platform need truly requires a lab change, the
 change is a **lab change**: separate commit, separate justification, and — for Shapes A and B —
 rebuilt `dist/` with a re-recorded hash and a re-run clean-rebuild comparison. Shape C has no lab
 `dist/`, so its equivalent is re-running the platform build and the B4 assertion (§12).
@@ -903,7 +963,9 @@ npm test 2>&1 | tail -20            # record pass/fail/skip counts and every "no
 npm run build                       # record success and dist/ contents
 ```
 
-Inside a lab directory that *has* a lockfile, `npm ci` is correct and preferred (§6.3).
+Inside a **Shapes A and B** lab directory that has its own lockfile, `npm ci` is correct and
+preferred. A Shape C lab has no lab lockfile, so its reproducibility is proven by the root build
+above (§9.2 items 9b, 11b).
 
 On `main` @ `3d3c0e9` (2026-11-27) the baseline was: **569 tests, 553 pass, 3 fail, 13 skip**, zero
 dependencies. The 3 failures are **pre-existing and unrelated to labs**:
@@ -929,8 +991,10 @@ assertions depend on the declared output shape (§4.3).
 3. the entry page contains the return links (directory + home) and the lab region;
 4. the entry page's `src`/`href` to the lab is relative and resolves to the real shipped path —
    for Shapes A/B the committed artifact, for Shape C the platform path that serves the lab source;
-5. the lab source directory contains its `README.md`, `INTEGRATION-REPORT.md`, manifest, and lockfile
-   (`package-lock.json` where npm is used);
+5. the lab metadata directory contains its `README.md` and `INTEGRATION-REPORT.md`, and the
+   **authoritative** dependency manifest and lockfile paths are those the report declares — see the
+   shape-specific items below. The metadata directory is **not** required to contain a manifest or
+   lockfile of its own;
 6. no root-absolute asset URLs in whatever the deployed page loads, and no `<base>` tag pointing
    off-site;
 7. the pre-existing platform pages still match their key markers (regression smoke);
@@ -939,7 +1003,10 @@ assertions depend on the declared output shape (§4.3).
 **Additionally required for Shapes A and B:**
 
 9. *(Shapes A and B only)* the separate lab artifact **is tracked by git** (`git ls-files`, not
-   merely present on disk) and contains lab-specific content that could only come from the lab source.
+   merely present on disk) and contains lab-specific content that could only come from the lab source;
+9b. *(Shapes A and B only)* the lab directory contains its **own** dependency manifest and lockfile
+   where the ecosystem has one (`package.json` + `package-lock.json` for npm), and `npm ci` against
+   that lockfile reproduces the build (§6.1.2, §2 P3).
 
 **Additionally required for Shape C:**
 
@@ -947,13 +1014,17 @@ assertions depend on the declared output shape (§4.3).
     `npm run build`, the built `dist/` contains the lab's shipped source at its platform path and
     the built entry page references it, so the feature is genuinely deployed rather than merely
     present in the working tree;
-11. the lab's own source is preserved in the repository (§6.1) and its integration does not
+11. the lab's own source is preserved in the repository (§6.1.2) and its integration does not
     duplicate or fork platform modules — a Shape C lab reuses the platform's shared modules
-    (`src/math.js`, `src/fonts.css`, styles) rather than shipping parallel copies.
+    (`src/math.js`, `src/fonts.css`, styles) rather than shipping parallel copies;
+11b. *(Shape C)* when the module shares the platform toolchain, the **platform** manifest and
+    lockfile are the authoritative ones and are **not** duplicated into the lab metadata directory;
+    the report declares both paths, and reproducibility is proven by the root build (§9.1) rather
+    than by a per-lab `npm ci`.
 
 `tests/almakhbar-integration.test.js` (12 tests, all passing) is the reference for the universal
-items 1–4 and 7–8, and for Shapes A/B item 9 (it reads the committed `dist/index.html` and asserts
-lab-specific content). **No Shape C lab exists yet**, so items 10–11 have no reference
+items 1–4 and 7–8, and for Shapes A/B items 9–9b (it reads the committed `dist/index.html` and
+asserts lab-specific content). **No Shape C lab exists yet**, so items 10–11b have no reference
 implementation — write them against the actual platform build, not against an imagined bundle.
 
 ### 9.3 Automated vs. manual — the bright line · **MANDATORY**
@@ -1001,12 +1072,22 @@ record of the first lab and must **not** be overwritten or reused.
 ### 10.2 Required sections · **MANDATORY**
 
 1. **Lab identity** — unit, lesson, exact official title, textbook pages, wrapper URL, lab URL.
-2. **Source branch and directory** — branch name, source commit SHA, directory, and whether the
-   directory equals the source branch tip plus the built artifact.
-   *(For the first lab: source branch `lab-source/unit-2-lesson-1` @ `fcb6341`; the integrated
-   directory differs only by the added `dist/index.html` — a good example of the provenance check.
-   A Shape C lab has no added artifact, so the expected result is that the directory equals the
-   source branch tip.)*
+2. **Source provenance** — the source branch name and source commit SHA, plus **every** path that
+   makes up the integrated contribution, and a statement of how that complete set was verified
+   against the source branch. Compare the *contribution*, never one directory in isolation:
+   - **Shapes A and B** — the lab directory, plus the explicitly permitted built artifact (and any
+     other permitted addition). The directory alone equals the source branch tip; the contribution
+     equals that plus the artifact.
+   - **Shape C** — the platform source module path(s) **and** the lab metadata directory
+     (`External-labs/unit-X/lesson-Y/`), with every path listed explicitly. State that the metadata
+     directory does **not** contain the executable source, and verify the pair against the source
+     branch tip.
+   *(For the first lab — Shape A: source branch `lab-source/unit-2-lesson-1` @ `fcb6341`; the
+   integrated directory differs from that tip only by the added `dist/index.html`, and that single
+   difference is the permitted artifact. A Shape C lab has no artifact, so its expected result is:
+   platform module + metadata directory together equal the source branch tip, item for item.)*
+   **If any path cannot be reconciled with the source branch tip, say so — an unexplained path is a
+   provenance defect, not a formatting detail.**
 3. **Technology and dependencies** — framework, bundler, styling, library versions, all external
    runtime origins, and any paid/back-end services (§4.6).
 4. **Integration architecture** — shape A/B/C (§4.3), why, and how isolation is achieved.
@@ -1056,9 +1137,11 @@ sentence «This PR is intentionally left open and unmerged for owner review.»
 
 ### 11.3 When a lab PR should be closed instead of merged · **MANDATORY**
 
-Missing source, missing lockfile, undeclared external dependency, scientific error, or a fabricated
-verification claim — any one of these means the PR is `NOT ACCEPTED` (§10.2, item 11) and must not be
-merged, even if CI is green. For **Shapes A and B** only, a missing or untracked production output is
+Missing source, missing authoritative lockfile, undeclared external dependency, scientific error, or
+a fabricated verification claim — any one of these means the PR is `NOT ACCEPTED` (§10.2, item 11)
+and must not be merged, even if CI is green. "Authoritative" is shape-aware: the lab's own lockfile
+for Shapes A and B, the platform lockfile for Shape C (§9.2 items 9b, 11b) — a Shape C lab is not
+rejected for lacking a lab-level lockfile it is forbidden to duplicate. For **Shapes A and B** only, a missing or untracked production output is
 also disqualifying (§6.4); for Shape C the equivalent disqualifier is a platform build that does not
 contain the integrated lab (B4).
 
@@ -1086,22 +1169,27 @@ correct; Shape C proves the platform build genuinely contains and serves the int
 
 ### A. Structure and preservation
 
-- [ ] **A1** Source directory is `External-labs/unit-X/lesson-Y/` and contains everything in §6.1.
+- [ ] **A1** The lab metadata directory is `External-labs/unit-X/lesson-Y/` and contains everything
+      in §6.1.1. *(A/B additionally: it holds the complete executable source per §6.1.2.)*
 - [ ] **A2** `README.md` follows §6.2, including real build instructions.
-- [ ] **A3** Lockfile committed (npm) and build is reproducible from a clean checkout.
+- [ ] **A3** The **authoritative** manifest and lockfile are committed and the build is reproducible
+      from a clean checkout — *(A/B)* the lab's own, in the lab directory; *(C)* the platform's,
+      declared in the report and not duplicated into the lab directory (§9.2 items 9b, 11b).
 - [ ] **A4** No `node_modules`, caches, secrets, `.env`, or OS/editor junk committed.
 - [ ] **A5** *(A/B)* Production output is committed and **tracked by git** (§6.4, §6.7).
 - [ ] **A6** *(A/B)* The committed artifact matches a clean rebuild (§6.6), with hash recorded.
 - [ ] **A7** *(all shapes)* Source branch `lab-source/unit-X/lesson-Y` exists and was not deleted or
       rewritten.
-- [ ] **A8** *(C)* No separate `dist/` is committed or expected for this lab; the lab's **source** is
-      fully preserved in the repository under a stated path, and the report says where it lives
-      (§6.1, §4.3).
+- [ ] **A8** *(C)* No separate `dist/` is committed or expected for this lab; the executable source
+      is preserved under the platform's `src/` conventions at a path **declared in the report**, the
+      metadata directory holds its documents and QA evidence, and the two together are the complete
+      contribution (§6.1.1, §6.1.2, §4.3).
 
 ### B. Build
 
-- [ ] **B1** A clean-checkout build succeeds (`npm ci && npm run build` inside the lab where a
-      lockfile exists; `npm run build` at the platform root) on the PR branch.
+- [ ] **B1** A clean-checkout build succeeds on the PR branch — *(A/B)* `npm ci && npm run build`
+      inside the lab; *(C)* `npm run build` at the platform root, which is the only build that
+      ships a Shape C lab (§6.2 item 5).
 - [ ] **B2** *(A/B)* `dist/` contains the entry page (wrapper) and
       `dist/External-labs/unit-X/lesson-Y/dist/index.html`.
 - [ ] **B3** *(all shapes)* The lab loads from a static server under a subpath with no root-absolute
@@ -1276,7 +1364,11 @@ Verified 2026-11-27 against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
 - **Date / toolchain:** <YYYY-MM-DD> · <OS> · Node <version> · <package manager> <version>
 - **Lab identity:** الوحدة <X> · الدرس <Y> · «<exact official title>» · textbook pp<a>–<b>
 - **Source branch:** `lab-source/unit-X/lesson-Y` @ `<sha>`
-- **Source directory:** `External-labs/unit-X/lesson-Y/`
+- **Metadata directory:** `External-labs/unit-X/lesson-Y/` (`README.md`, this report, QA evidence)
+- **Executable source:** <A/B:> `External-labs/unit-X/lesson-Y/` (complete)
+                        <C:>   `<platform src path(s)>` — declared here; **not** duplicated into the metadata directory
+- **Provenance check:** <A/B:> metadata dir == source tip, plus the permitted built artifact
+                        <C:> platform module(s) + metadata dir == source tip, path by path
 - **Output shape:** <A | B | C> (§4.3) — decides which acceptance items apply
 - **Lab URL:** <A/B:> `./lab-unitX-lessonY.html` → `./External-labs/unit-X/lesson-Y/dist/index.html`
                <C:>   `./<platform-page>.html` → source at `src/<lab-module>.js` (no separate dist)
@@ -1284,6 +1376,8 @@ Verified 2026-11-27 against `main` @ `3d3c0e9fce9cea820036f4663627ff7d1ee14397`
 
 ## 1. Technology and dependencies
 | Item | Version | Why |
+**Authoritative manifest / lockfile:** <A/B:> `External-labs/…/package.json` + `package-lock.json`
+                                      <C:> repo-root `package.json` + `package-lock.json` (not duplicated)
 ## 2. External runtime origins (declared)
 | Origin | Used for | If unreachable | Approved by |
 ## 3. Back-end / paid services
@@ -1341,9 +1435,11 @@ Declared output shape (§4.3): [ ] A   [ ] B   [ ] C
 Only the items for the selected shape apply. The other shape's items are marked N/A — never
 silently skipped, never counted as passes.
 
-A. [ ] A1 source dir  [ ] A2 README  [ ] A3 lockfile  [ ] A4 clean  [ ] A7 source branch intact
+A. [ ] A1 metadata dir (§6.1.1)  [ ] A2 README  [ ] A4 clean  [ ] A7 source branch intact
+   [ ] A3 authoritative manifest+lockfile declared & reproducible
+             (A/B: lab's own  |  C: platform's, not duplicated)
    A/B only:  [ ] A5 dist tracked  [ ] A6 rebuild match
-   C only:    [ ] A8 source preserved, no separate dist expected
+   C only:    [ ] A8 module at declared platform path + metadata dir, no separate dist
 B. [ ] B1 clean build  [ ] B3 subpath/relative URLs
    A/B only:  [ ] B2 dist contents (entry page + lab dist/index.html)
    C only:    [ ] B4 platform dist/ contains the shipped lab source + entry page references it
@@ -1354,7 +1450,7 @@ D. [ ] D1 interactions  [ ] D2 numbers  [ ] D3 diagrams  [ ] D4 questions
 E. [ ] E1 1366×768 + 1440×900 screenshots  [ ] E2 no overflow/clipping
    [ ] E3 console clean  [ ] E4 media  [ ] E5 degraded-network math still correct
    [ ] E6 no clipped scroll strip
-F. [ ] F1 no new failures  [ ] F2 integration tests (universal 1-8; A/B 9; C 10-11)
+F. [ ] F1 no new failures  [ ] F2 integration tests (universal 1-8; A/B 9 + 9b; C 10-11b)
    [ ] F3 report  [ ] F4 one lab only  [ ] F5 no secrets  [ ] F6 origins declared
    [ ] F7 PR open/unmerged  [ ] F8 no fabricated evidence
 Status: PASS / PASS WITH DECLARED LIMITATIONS / NOT ACCEPTED
